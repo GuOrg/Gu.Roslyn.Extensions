@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <CodeAnalysisRuleSet>Gu.Roslyn.CodeFixExtensions.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Gu.Roslyn.CodeFixExtensions.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -11,4 +12,8 @@
   </PropertyGroup>
 
   <Import Project="..\.paket\Paket.Restore.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gu.Roslyn.AnalyzerExtensions\Gu.Roslyn.AnalyzerExtensions.csproj" />
+  </ItemGroup>
 </Project>
