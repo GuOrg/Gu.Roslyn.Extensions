@@ -1,66 +1,64 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    internal static class TypeSymbolExt
+    public static partial class TypeSymbolExt
     {
-        internal static bool TryGetFieldRecursive(this ITypeSymbol type, string name, out IFieldSymbol field)
+        public static bool TryFindFieldRecursive(this ITypeSymbol type, string name, out IFieldSymbol field)
         {
-            return type.TryGetSingleMemberRecursive(name, out field);
+            return type.TryFindSingleMemberRecursive(name, out field);
         }
 
-        internal static bool TryGetEventRecursive(this ITypeSymbol type, string name, out IEventSymbol @event)
+        public static bool TryFindEventRecursive(this ITypeSymbol type, string name, out IEventSymbol @event)
         {
-            return type.TryGetSingleMemberRecursive(name, out @event);
+            return type.TryFindSingleMemberRecursive(name, out @event);
         }
 
-        internal static bool TryGetPropertyRecursive(this ITypeSymbol type, string name, out IPropertySymbol property)
+        public static bool TryFindPropertyRecursive(this ITypeSymbol type, string name, out IPropertySymbol property)
         {
             if (name == "Item[]")
             {
-                return type.TryGetSingleMemberRecursive(x => x.IsIndexer, out property);
+                return type.TryFindSingleMemberRecursive(x => x.IsIndexer, out property);
             }
 
-            return type.TryGetSingleMemberRecursive(name, out property);
+            return type.TryFindSingleMemberRecursive(name, out property);
         }
 
-        internal static bool TryGetFirstMethodRecursive(this ITypeSymbol type, string name, out IMethodSymbol result)
+        public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, out IMethodSymbol result)
         {
-            return type.TryGetFirstMemberRecursive(name, out result);
+            return type.TryFindFirstMemberRecursive(name, out result);
         }
 
-        internal static bool TryGetFirstMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
+        public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
         {
-            return type.TryGetFirstMemberRecursive(predicate, out result);
+            return type.TryFindFirstMemberRecursive(predicate, out result);
         }
 
-        internal static bool TryGetSingleMethodRecursive(this ITypeSymbol type, string name, out IMethodSymbol result)
+        public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, string name, out IMethodSymbol result)
         {
-            return type.TryGetSingleMemberRecursive(name, out result);
+            return type.TryFindSingleMemberRecursive(name, out result);
         }
 
-        internal static bool TryGetSingleMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
+        public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
         {
-            return type.TryGetSingleMemberRecursive(predicate, out result);
+            return type.TryFindSingleMemberRecursive(predicate, out result);
         }
 
-        internal static bool TryGetSingleMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
+        public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
         {
-            return type.TryGetSingleMemberRecursive(name, predicate, out result);
+            return type.TryFindSingleMemberRecursive(name, predicate, out result);
         }
 
-        internal static bool TryGetFirstMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, out IMethodSymbol property)
+        public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, out IMethodSymbol property)
         {
-            return type.TryGetSingleMemberRecursive(name, predicate, out property);
+            return type.TryFindFirstMemberRecursive(name, predicate, out property);
         }
 
-        internal static bool TryGetSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
+        private static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -90,7 +88,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return member != null;
         }
 
-        internal static bool TryGetSingleMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
+        private static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -124,7 +122,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return member != null;
         }
 
-        internal static bool TryGetSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
+        private static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -158,7 +156,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return member != null;
         }
 
-        internal static bool TryGetFirstMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
+        private static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -187,7 +185,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        internal static bool TryGetFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
+        private static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -214,7 +212,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        internal static bool TryGetFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
+        private static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -241,203 +239,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
-        }
-
-        internal static bool IsSameType(this ITypeSymbol first, ITypeSymbol other)
-        {
-            if (ReferenceEquals(first, other) ||
-                first?.Equals(other) == true)
-            {
-                return true;
-            }
-
-            if (first is ITypeParameterSymbol firstParameter &&
-                other is ITypeParameterSymbol otherParameter)
-            {
-                return firstParameter.MetadataName == otherParameter.MetadataName &&
-                       firstParameter.ContainingSymbol.Equals(otherParameter.ContainingSymbol);
-            }
-
-            return first is INamedTypeSymbol firstNamed &&
-                   other is INamedTypeSymbol otherNamed &&
-                   IsSameType(firstNamed, otherNamed);
-        }
-
-        internal static bool IsSameType(this INamedTypeSymbol first, INamedTypeSymbol other)
-        {
-            if (first == null ||
-                other == null)
-            {
-                return false;
-            }
-
-            if (first.IsDefinition ^ other.IsDefinition)
-            {
-                return IsSameType(first.OriginalDefinition, other.OriginalDefinition);
-            }
-
-            return first.Equals(other) ||
-                   AreEquivalent(first, other);
-        }
-
-        internal static bool IsRepresentationPreservingConversion(
-            this ITypeSymbol toType,
-            ExpressionSyntax valueExpression,
-            SemanticModel semanticModel,
-            CancellationToken cancellationToken)
-        {
-            var conversion = semanticModel.SemanticModelFor(valueExpression)
-                                          .ClassifyConversion(valueExpression, toType);
-            if (!conversion.Exists)
-            {
-                return false;
-            }
-
-            if (conversion.IsIdentity)
-            {
-                return true;
-            }
-
-            if (conversion.IsReference &&
-                conversion.IsImplicit)
-            {
-                return true;
-            }
-
-            if (conversion.IsNullable &&
-                conversion.IsNullLiteral)
-            {
-                return true;
-            }
-
-            if (conversion.IsBoxing ||
-                conversion.IsUnboxing)
-            {
-                return true;
-            }
-
-            if (toType.IsNullable(valueExpression, semanticModel, cancellationToken))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        internal static bool IsNullable(
-            this ITypeSymbol nullableType,
-            ExpressionSyntax value,
-            SemanticModel semanticModel,
-            CancellationToken cancellationToken)
-        {
-            var namedTypeSymbol = nullableType as INamedTypeSymbol;
-            if (namedTypeSymbol == null ||
-                !namedTypeSymbol.IsGenericType ||
-                namedTypeSymbol.Name != "Nullable" ||
-                namedTypeSymbol.TypeParameters.Length != 1)
-            {
-                return false;
-            }
-
-            if (value.IsKind(SyntaxKind.NullLiteralExpression))
-            {
-                return true;
-            }
-
-            var typeInfo = semanticModel.GetTypeInfoSafe(value, cancellationToken);
-            return namedTypeSymbol.TypeArguments[0].IsSameType(typeInfo.Type);
-        }
-
-        internal static bool Is(this ITypeSymbol type, QualifiedType qualifiedType)
-        {
-            while (type != null)
-            {
-                if (type == qualifiedType)
-                {
-                    return true;
-                }
-
-                foreach (var @interface in type.AllInterfaces)
-                {
-                    if (@interface == qualifiedType)
-                    {
-                        return true;
-                    }
-                }
-
-                type = type.BaseType;
-            }
-
-            return false;
-        }
-
-        internal static bool Is(this ITypeSymbol type, ITypeSymbol other)
-        {
-            if (other.IsInterface())
-            {
-                foreach (var @interface in type.AllInterfaces)
-                {
-                    if (IsSameType(@interface, other))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            while (type?.BaseType != null)
-            {
-                if (IsSameType(type, other))
-                {
-                    return true;
-                }
-
-                type = type.BaseType;
-            }
-
-            return false;
-        }
-
-        internal static bool IsInterface(this ITypeSymbol type)
-        {
-            if (type == null)
-            {
-                return false;
-            }
-
-            return type != KnownSymbol.Object && type.BaseType == null;
-        }
-
-        internal static bool AreEquivalent(this INamedTypeSymbol first, INamedTypeSymbol other)
-        {
-            if (ReferenceEquals(first, other))
-            {
-                return true;
-            }
-
-            if (first == null ||
-                other == null)
-            {
-                return false;
-            }
-
-            if (first.MetadataName != other.MetadataName ||
-                first.ContainingModule.MetadataName != other.ContainingModule.MetadataName ||
-                first.Arity != other.Arity)
-            {
-                return false;
-            }
-
-            for (var i = 0; i < first.Arity; i++)
-            {
-                if (!IsSameType(first.TypeArguments[i], other.TypeArguments[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }
