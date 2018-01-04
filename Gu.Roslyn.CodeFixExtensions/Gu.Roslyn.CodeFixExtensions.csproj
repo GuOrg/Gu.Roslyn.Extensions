@@ -1,17 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-    <CodeAnalysisRuleSet>Gu.Roslyn.AnalyzerExtensions.Tests.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Gu.Roslyn.CodeFixExtensions.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  
+
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

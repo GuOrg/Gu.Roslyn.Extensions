@@ -2,16 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
+    <CodeAnalysisRuleSet>Gu.Roslyn.AnalyzerExtensions.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Gu.Roslyn.AnalyzerExtensions.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet>Gu.Roslyn.AnalyzerExtensions.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>Gu.Roslyn.AnalyzerExtensions.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
