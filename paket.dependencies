@@ -1,0 +1,22 @@
+source http://www.nuget.org/api/v2/
+storage: none
+
+nuget Microsoft.CodeAnalysis.CSharp.Workspaces 1.2.1
+nuget System.Collections.Immutable 1.1.37
+nuget System.Reflection.Metadata 1.2.0
+nuget Microsoft.Composition 1.0.27
+
+group Analyzers
+  storage: none
+  source http://www.nuget.org/api/v2/
+  nuget AsyncUsageAnalyzers
+  nuget IDisposableAnalyzers  
+  nuget StyleCop.Analyzers
+  nuget Gu.Analyzers
+
+group Test
+  storage: none
+  source http://www.nuget.org/api/v2/
+  nuget Microsoft.CodeAnalysis.CSharp.Workspaces 1.2.1
+  nuget Gu.Roslyn.Asserts ~> 1
+  nuget NUnit
