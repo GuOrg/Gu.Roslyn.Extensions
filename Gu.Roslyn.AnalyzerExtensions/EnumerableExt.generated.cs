@@ -14,7 +14,7 @@
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -40,7 +40,7 @@
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IReadOnlyList<T> source, out T result)
@@ -64,7 +64,7 @@
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -93,7 +93,7 @@
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IReadOnlyList<T> source, out T result)
@@ -117,7 +117,7 @@
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -145,7 +145,7 @@
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IReadOnlyList<T> source, out T result)
@@ -170,7 +170,7 @@
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -200,7 +200,7 @@
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -221,7 +221,7 @@
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this ImmutableArray<T> source, out T result)
@@ -240,7 +240,7 @@
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -264,7 +264,7 @@
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this ImmutableArray<T> source, out T result)
@@ -283,7 +283,7 @@
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -306,7 +306,7 @@
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this ImmutableArray<T> source, out T result)
@@ -326,7 +326,7 @@
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -350,7 +350,7 @@
         /// <summary>
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -370,7 +370,7 @@
         /// <summary>
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle(this ChildSyntaxList source, out SyntaxNodeOrToken result)
@@ -388,7 +388,7 @@
         /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -411,7 +411,7 @@
         /// <summary>
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst(this ChildSyntaxList source, out SyntaxNodeOrToken result)
@@ -429,7 +429,7 @@
         /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -451,7 +451,7 @@
         /// <summary>
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast(this ChildSyntaxList source, out SyntaxNodeOrToken result)
@@ -470,7 +470,7 @@
         /// <summary>
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -495,7 +495,7 @@
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -517,7 +517,7 @@
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this SeparatedSyntaxList<T> source, out T result)
@@ -537,7 +537,7 @@
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -562,7 +562,7 @@
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this SeparatedSyntaxList<T> source, out T result)
@@ -582,7 +582,7 @@
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -606,7 +606,7 @@
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this SeparatedSyntaxList<T> source, out T result)
@@ -627,7 +627,7 @@
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -653,7 +653,7 @@
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -675,7 +675,7 @@
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this SyntaxList<T> source, out T result)
@@ -695,7 +695,7 @@
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -720,7 +720,7 @@
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this SyntaxList<T> source, out T result)
@@ -740,7 +740,7 @@
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -764,7 +764,7 @@
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this SyntaxList<T> source, out T result)
@@ -785,7 +785,7 @@
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -810,7 +810,7 @@
         /// <summary>
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -830,7 +830,7 @@
         /// <summary>
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle(this SyntaxNodeOrTokenList source, out SyntaxNodeOrToken result)
@@ -848,7 +848,7 @@
         /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -871,7 +871,7 @@
         /// <summary>
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst(this SyntaxNodeOrTokenList source, out SyntaxNodeOrToken result)
@@ -889,7 +889,7 @@
         /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -911,7 +911,7 @@
         /// <summary>
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast(this SyntaxNodeOrTokenList source, out SyntaxNodeOrToken result)
@@ -930,7 +930,7 @@
         /// <summary>
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -954,7 +954,7 @@
         /// <summary>
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -974,7 +974,7 @@
         /// <summary>
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle(this SyntaxTokenList source, out SyntaxToken result)
@@ -992,7 +992,7 @@
         /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -1015,7 +1015,7 @@
         /// <summary>
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst(this SyntaxTokenList source, out SyntaxToken result)
@@ -1033,7 +1033,7 @@
         /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -1055,7 +1055,7 @@
         /// <summary>
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast(this SyntaxTokenList source, out SyntaxToken result)
@@ -1074,7 +1074,7 @@
         /// <summary>
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -1098,7 +1098,7 @@
         /// <summary>
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -1118,7 +1118,7 @@
         /// <summary>
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle(this SyntaxTriviaList source, out SyntaxTrivia result)
@@ -1136,7 +1136,7 @@
         /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -1159,7 +1159,7 @@
         /// <summary>
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst(this SyntaxTriviaList source, out SyntaxTrivia result)
@@ -1177,7 +1177,7 @@
         /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -1199,7 +1199,7 @@
         /// <summary>
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast(this SyntaxTriviaList source, out SyntaxTrivia result)
@@ -1218,7 +1218,7 @@
         /// <summary>
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>

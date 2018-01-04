@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -46,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IEnumerable<T> source, out T result)
@@ -79,7 +79,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -120,7 +120,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IEnumerable<T> source, out T result)
@@ -147,7 +147,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>

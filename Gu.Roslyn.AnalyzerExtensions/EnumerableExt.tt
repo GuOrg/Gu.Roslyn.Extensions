@@ -39,7 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
 <# this.WriteTypeDoc(types); #>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -61,7 +61,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the single element in <paramref name="source"/>
         /// </summary>
 <# this.WriteTypeDoc(types); #>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<#= genericArg #>(this <#= colName #> source, out <#= itemName #> result)<#= constraint #>
@@ -81,7 +81,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
 <# this.WriteTypeDoc(types); #>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -106,7 +106,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the first element in <paramref name="source"/>
         /// </summary>
 <# this.WriteTypeDoc(types); #>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<#= genericArg #>(this <#= colName #> source, out <#= itemName #> result)<#= constraint #>
@@ -126,7 +126,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
 <# this.WriteTypeDoc(types); #>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
@@ -150,7 +150,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the last element in <paramref name="source"/>
         /// </summary>
 <# this.WriteTypeDoc(types); #>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<#= genericArg #>(this <#= colName #> source, out <#= itemName #> result)<#= constraint #>
@@ -171,7 +171,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
 <# this.WriteTypeDoc(types); #>
-        /// <param name="source">The source collection.</param>
+        /// <param name="source">The source collection, can be null.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
