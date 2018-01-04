@@ -105,7 +105,7 @@ namespace RoslynSandbox
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "missing", out parameter));
 
             var bazDeclaration = syntaxTree.FindMethodDeclaration("Baz");
-            Assert.AreEqual(true, barDeclaration.ParameterList.Parameters.TrySingle(out parameter));
+            Assert.AreEqual(true, bazDeclaration.ParameterList.Parameters.TrySingle(out parameter));
             Assert.AreEqual("int i", parameter.ToString());
         }
 
