@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.AnalyzerExtensions", "Gu.Roslyn.AnalyzerExtensions\Gu.Roslyn.AnalyzerExtensions.csproj", "{F139E0EC-7099-44C9-8539-B9C2899D638F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.AnalyzerExtensions.Tests", "Gu.Roslyn.AnalyzerExtensions.Tests\Gu.Roslyn.AnalyzerExtensions.Tests.csproj", "{ACAE23DE-9E73-4EEE-984C-F92B9DC0E59C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{A9187C9F-98FB-4696-B023-548C641E7B54}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+		.paket\paket.targets = .paket\paket.targets
+		.paket\Readme.paket.md = .paket\Readme.paket.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F139E0EC-7099-44C9-8539-B9C2899D638F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F139E0EC-7099-44C9-8539-B9C2899D638F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F139E0EC-7099-44C9-8539-B9C2899D638F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F139E0EC-7099-44C9-8539-B9C2899D638F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACAE23DE-9E73-4EEE-984C-F92B9DC0E59C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACAE23DE-9E73-4EEE-984C-F92B9DC0E59C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACAE23DE-9E73-4EEE-984C-F92B9DC0E59C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACAE23DE-9E73-4EEE-984C-F92B9DC0E59C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9063869C-EBBA-40DE-BF8A-8F9C851294CE}
+	EndGlobalSection
+EndGlobal
