@@ -103,7 +103,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     node.Modifiers.Any(SyntaxKind.ConstKeyword) ||
                     node.Modifiers.Any(SyntaxKind.PublicKeyword) ||
                     node.Modifiers.Any(SyntaxKind.ProtectedKeyword) ||
-                    node.Modifiers.Any(SyntaxKind.publicKeyword))
+                    node.Modifiers.Any(SyntaxKind.InternalKeyword))
                 {
                     return;
                 }

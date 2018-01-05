@@ -1,14 +1,17 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Collections.Concurrent;
     using System.Collections.Immutable;
     using Microsoft.CodeAnalysis;
 
     [System.Diagnostics.DebuggerDisplay("{System.String.Join(\".\", parts)}")]
     public class NamespaceParts
     {
+        private static readonly ConcurrentDictionary<string, NamespaceParts> Cache = new ConcurrentDictionary<string, NamespaceParts>();
+
         private readonly ImmutableList<string> parts;
 
-        public NamespaceParts(ImmutableList<string> parts)
+        private NamespaceParts(ImmutableList<string> parts)
         {
             this.parts = parts;
         }
@@ -46,7 +49,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         public static bool operator !=(INamespaceSymbol left, NamespaceParts right) => !(left == right);
 
-        public static NamespaceParts Create(string qualifiedName)
+        public static NamespaceParts GetOrCreate(string qualifiedName) => Cache.GetOrAdd(qualifiedName, Create);
+
+        private static NamespaceParts Create(string qualifiedName)
         {
             var parts = qualifiedName.Split('.').ToImmutableList();
             System.Diagnostics.Debug.Assert(parts.Count != 0, "parts.Length != 0");

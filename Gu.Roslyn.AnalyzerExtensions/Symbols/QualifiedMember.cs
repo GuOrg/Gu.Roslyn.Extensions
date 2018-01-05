@@ -1,16 +1,15 @@
 #pragma warning disable 660,661 // using a hack with operator overloads
-namespace IDisposableAnalyzers
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics;
-
     using Microsoft.CodeAnalysis;
 
     [DebuggerDisplay("{ContainingType.FullName,nq}.{Name,nq}")]
-    internal class QualifiedMember<T>
+    public class QualifiedMember<T>
         where T : ISymbol
     {
-        internal readonly string Name;
-        internal readonly QualifiedType ContainingType;
+        public readonly string Name;
+        public readonly QualifiedType ContainingType;
 
         public QualifiedMember(QualifiedType containingType, string name)
         {

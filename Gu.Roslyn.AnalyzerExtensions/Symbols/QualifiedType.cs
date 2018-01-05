@@ -5,12 +5,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
     [System.Diagnostics.DebuggerDisplay("FullName: {FullName}")]
     public class QualifiedType
     {
+        public static readonly QualifiedType Void = new QualifiedType("System.Void");
+        public static readonly QualifiedType Object = new QualifiedType("System.Object");
+        public static readonly QualifiedType Boolean = new QualifiedType("System.Boolean");
+
         public readonly string FullName;
         public readonly NamespaceParts Namespace;
         public readonly string Type;
 
         public QualifiedType(string fullName)
-            : this(fullName, NamespaceParts.Create(fullName), fullName.Substring(fullName.LastIndexOf('.') + 1))
+            : this(fullName, NamespaceParts.GetOrCreate(fullName), fullName.Substring(fullName.LastIndexOf('.') + 1))
         {
         }
 

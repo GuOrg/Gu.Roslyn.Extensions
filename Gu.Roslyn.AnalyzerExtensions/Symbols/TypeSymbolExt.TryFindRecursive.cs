@@ -1,10 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
-    using System.Threading;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     public static partial class TypeSymbolExt
     {
@@ -69,7 +66,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != KnownSymbol.Object)
+                   type != QualifiedType.Object)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -99,7 +96,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != KnownSymbol.Object)
+                   type != QualifiedType.Object)
             {
                 foreach (var symbol in type.GetMembers())
                 {
@@ -133,7 +130,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != KnownSymbol.Object)
+                   type != QualifiedType.Object)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -167,7 +164,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != KnownSymbol.Object)
+                   type != QualifiedType.Object)
             {
                 foreach (var symbol in type.GetMembers())
                 {
@@ -195,7 +192,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != KnownSymbol.Object)
+                   type != QualifiedType.Object)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -223,7 +220,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != KnownSymbol.Object)
+                   type != QualifiedType.Object)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {

@@ -1,8 +1,8 @@
-﻿namespace IDisposableAnalyzers
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
 
-    internal class QualifiedProperty : QualifiedMember<IPropertySymbol>
+    public class QualifiedProperty : QualifiedMember<IPropertySymbol>
     {
         public QualifiedProperty(QualifiedType containingType, string name)
             : base(containingType, name)
