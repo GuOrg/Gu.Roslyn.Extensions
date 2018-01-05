@@ -7,6 +7,9 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper for figuring out if the code uses underscore prefix in field names.
+    /// </summary>
     public static class Names
     {
         private enum Result
@@ -17,30 +20,16 @@ namespace Gu.Roslyn.CodeFixExtensions
             Maybe
         }
 
+        /// <summary>
+        /// Figuring out if the code uses underscore prefix in field names.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool UsesUnderscore(SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             using (var walker = Walker.Borrow())
             {
-                return UsesUnderscore(semanticModel, cancellationToken, walker);
-            }
-        }
-
-        public static bool UsesUnderscore(SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
-        {
-            using (var walker = Walker.Borrow(node))
-            {
-                if (walker.UsesThis == Result.Yes ||
-                    walker.UsesUnderScore == Result.No)
-                {
-                    return false;
-                }
-
-                if (walker.UsesUnderScore == Result.Yes ||
-                    walker.UsesThis == Result.No)
-                {
-                    return true;
-                }
-
                 return UsesUnderscore(semanticModel, cancellationToken, walker);
             }
         }
@@ -83,18 +72,6 @@ namespace Gu.Roslyn.CodeFixExtensions
             public Result UsesUnderScore { get; private set; }
 
             public static Walker Borrow() => Borrow(() => new Walker());
-
-            public static Walker Borrow(SyntaxNode node)
-            {
-                var walker = Borrow(() => new Walker());
-                while (node.Parent != null)
-                {
-                    node = node.Parent;
-                }
-
-                walker.Visit(node);
-                return walker;
-            }
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {

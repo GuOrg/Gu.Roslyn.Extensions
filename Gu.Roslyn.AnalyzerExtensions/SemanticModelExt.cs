@@ -9,21 +9,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public static class SemanticModelExt
     {
-        public static bool IsEither<T1, T2>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
-            where T1 : ISymbol
-            where T2 : ISymbol
-        {
-            return semanticModel.GetSymbolSafe(node, cancellationToken).IsEither<T1, T2>() ||
-                   semanticModel.GetDeclaredSymbolSafe(node, cancellationToken).IsEither<T1, T2>() ||
-                   semanticModel.GetTypeInfoSafe(node, cancellationToken).Type.IsEither<T1, T2>();
-        }
-
         public static ISymbol GetSymbolSafe(this SemanticModel semanticModel, AwaitExpressionSyntax node, CancellationToken cancellationToken)
         {
             return semanticModel.GetSymbolSafe(node.Expression, cancellationToken);
         }
 
         public static IMethodSymbol GetSymbolSafe(this SemanticModel semanticModel, ConstructorInitializerSyntax node, CancellationToken cancellationToken)
+        {
+            return (IMethodSymbol)semanticModel.GetSymbolSafe((SyntaxNode)node, cancellationToken);
+        }
+
+        public static IMethodSymbol GetSymbolSafe(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, CancellationToken cancellationToken)
         {
             return (IMethodSymbol)semanticModel.GetSymbolSafe((SyntaxNode)node, cancellationToken);
         }

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Concurrent;
@@ -6,7 +6,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
 
-    internal abstract class PooledWalker<T> : CSharpSyntaxWalker, IDisposable
+    public abstract class PooledWalker<T> : CSharpSyntaxWalker, IDisposable
         where T : PooledWalker<T>
     {
         private static readonly ConcurrentQueue<PooledWalker<T>> Cache = new ConcurrentQueue<PooledWalker<T>>();
@@ -41,12 +41,13 @@ namespace Gu.Roslyn.CodeFixExtensions
             if (disposing)
             {
                 this.refCount--;
-                Debug.Assert(this.refCount >= 0, "refCount>= 0");
-                if (this.refCount == 0)
+                if (this.refCount != 0)
                 {
-                    this.Clear();
-                    Cache.Enqueue(this);
+                    throw new InvalidOperationException("Can only be disposed once.");
                 }
+
+                this.Clear();
+                Cache.Enqueue(this);
             }
         }
 
