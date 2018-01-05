@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         public class GetDeclaredSymbolSafe
         {
             [Test]
-            public void GetDeclaredSymbolSafField()
+            public void GetDeclaredSymbolSafeType()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -22,7 +22,25 @@ namespace RoslynSandbox
         private readonly int bar;
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] {syntaxTree});
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = syntaxTree.FindClassDeclaration("Foo");
+                Assert.AreEqual(semanticModel.GetDeclaredSymbol(node), semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
+            public void GetDeclaredSymbolSafeField()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        private readonly int bar;
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var node = syntaxTree.FindFieldDeclaration("bar");
                 Assert.AreEqual(
@@ -31,7 +49,7 @@ namespace RoslynSandbox
             }
 
             [Test]
-            public void GetDeclaredSymbolSafConstructor()
+            public void GetDeclaredSymbolSafeConstructor()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -44,12 +62,55 @@ namespace RoslynSandbox
         }
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] {syntaxTree});
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var node = syntaxTree.FindConstructorDeclaration("Foo");
                 Assert.AreEqual(
                     semanticModel.GetDeclaredSymbol(node),
                     semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
+            public void GetDeclaredSymbolSafeParameter()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo(int i, double d)
+        {
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = syntaxTree.FindBestMatch<ParameterSyntax>("i");
+                Assert.AreEqual(
+                    semanticModel.GetDeclaredSymbol(node),
+                    semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
+            public void GetDeclaredSymbolSafeVariable()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo()
+        {
+            var i = 1;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = syntaxTree.FindBestMatch<VariableDeclarationSyntax>("i");
+                Assert.AreEqual(semanticModel.GetDeclaredSymbol(node.Variables[0]), semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
             [Test]
@@ -66,7 +127,7 @@ namespace RoslynSandbox
         public event EventHandler Bar;
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] {syntaxTree});
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var node = syntaxTree.FindBestMatch<EventFieldDeclarationSyntax>("Bar");
                 Assert.AreEqual(
@@ -86,9 +147,32 @@ namespace RoslynSandbox
         public int Bar { get; set; }
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] {syntaxTree});
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var node = syntaxTree.FindPropertyDeclaration("Bar");
+                Assert.AreEqual(
+                    semanticModel.GetDeclaredSymbol(node),
+                    semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
+            public void GetDeclaredSymbolSafeIndexer()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        public int this[int index]
+        {
+            get { return index; }
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = syntaxTree.FindBestMatch<IndexerDeclarationSyntax>("this");
                 Assert.AreEqual(
                     semanticModel.GetDeclaredSymbol(node),
                     semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
@@ -108,7 +192,7 @@ namespace RoslynSandbox
         }
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] {syntaxTree});
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var node = syntaxTree.FindMethodDeclaration("Bar");
                 Assert.AreEqual(

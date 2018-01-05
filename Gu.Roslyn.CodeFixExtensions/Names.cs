@@ -26,15 +26,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool UsesUnderscore(SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static bool UsesUnderscoreForFields(this SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             using (var walker = Walker.Borrow())
             {
-                return UsesUnderscore(semanticModel, cancellationToken, walker);
+                return UsesUnderscoreForFields(semanticModel, cancellationToken, walker);
             }
         }
 
-        private static bool UsesUnderscore(this SemanticModel semanticModel, CancellationToken cancellationToken, Walker walker)
+        private static bool UsesUnderscoreForFields(this SemanticModel semanticModel, CancellationToken cancellationToken, Walker walker)
         {
             foreach (var tree in semanticModel.Compilation.SyntaxTrees)
             {
