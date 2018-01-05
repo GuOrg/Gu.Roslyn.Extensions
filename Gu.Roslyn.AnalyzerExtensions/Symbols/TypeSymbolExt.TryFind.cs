@@ -55,6 +55,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return type.TryFindFirstMember(name, predicate, out property);
         }
 
+        public static bool TryFindFirstMember(this ITypeSymbol type, string name, out ISymbol result)
+        {
+            return type.TryFindFirstMember<ISymbol>(name, out result);
+        }
+
         private static bool TryFindSingleMember<TMember>(this ITypeSymbol type, string name, out TMember member)
             where TMember : class, ISymbol
         {

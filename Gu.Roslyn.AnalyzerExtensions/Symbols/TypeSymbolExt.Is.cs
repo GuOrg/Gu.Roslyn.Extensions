@@ -68,7 +68,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return type != QualifiedType.System.Object && type.BaseType == null;
         }
 
-        internal static bool IsSameType(this ITypeSymbol first, ITypeSymbol other)
+        public static bool IsSameType(this ITypeSymbol first, ITypeSymbol other)
         {
             if (Equals(first, other))
             {

@@ -50,9 +50,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return type.TryFindSingleMemberRecursive(name, predicate, out result);
         }
 
-        public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, out IMethodSymbol property)
+        public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
         {
-            return type.TryFindFirstMemberRecursive(name, predicate, out property);
+            return type.TryFindFirstMemberRecursive(name, predicate, out result);
+        }
+
+        public static bool TryFindFirstMemberRecursive(this ITypeSymbol type, string name, out ISymbol result)
+        {
+            return type.TryFindFirstMemberRecursive<ISymbol>(name, out result);
         }
 
         private static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
