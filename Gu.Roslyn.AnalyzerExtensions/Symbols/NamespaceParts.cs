@@ -36,7 +36,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return false;
                 }
 
-                if (ns.Name != right.parts[i])
+                if (ns.MetadataName != right.parts[i])
                 {
                     return false;
                 }
