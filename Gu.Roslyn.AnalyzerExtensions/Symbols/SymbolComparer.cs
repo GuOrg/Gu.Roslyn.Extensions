@@ -24,15 +24,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (x.Equals(y))
-            {
-                return true;
-            }
-
             if (x is INamedTypeSymbol xNamed &&
                 y is INamedTypeSymbol yNamed)
             {
                 return NamedTypeSymbolComparer.Equals(xNamed, yNamed);
+            }
+
+            if (x is ITypeSymbol xType &&
+                y is ITypeSymbol yType)
+            {
+                return TypeSymbolComparer.Equals(xType, yType);
+            }
+
+            if (x is IPropertySymbol xProp &&
+                y is IPropertySymbol yProp)
+            {
+                return PropertySymbolComparer.Equals(xProp, yProp);
             }
 
             return x.Equals(y) ||

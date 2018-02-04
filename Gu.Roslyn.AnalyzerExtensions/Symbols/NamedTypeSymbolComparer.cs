@@ -33,7 +33,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             for (var i = 0; i < x.Arity; i++)
             {
-                if (!SymbolComparer.Equals(x.TypeArguments[i], y.TypeArguments[i]))
+                if (!TypeSymbolComparer.Equals(x.TypeArguments[i], y.TypeArguments[i]))
                 {
                     return false;
                 }

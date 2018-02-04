@@ -24,11 +24,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (x.Equals(y))
-            {
-                return true;
-            }
-
             if (x is INamedTypeSymbol xNamed &&
                 y is INamedTypeSymbol yNamed)
             {
@@ -39,8 +34,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    x.ContainingNamespace?.MetadataName == y.ContainingNamespace?.MetadataName;
         }
 
+        /// <inheritdoc />
         bool IEqualityComparer<ITypeSymbol>.Equals(ITypeSymbol x, ITypeSymbol y) => Equals(x, y);
 
+        /// <inheritdoc />
         public int GetHashCode(ITypeSymbol obj)
         {
             return obj?.MetadataName.GetHashCode() ?? 0;
