@@ -50,6 +50,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return this;
             }
 
+            /// <inheritdoc/>
             [Obsolete("Use Return", true)]
 #pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
             public override string ToString() => throw new InvalidOperationException("Use StringBuilderPool.Return");
