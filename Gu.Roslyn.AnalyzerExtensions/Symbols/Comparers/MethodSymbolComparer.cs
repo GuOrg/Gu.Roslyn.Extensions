@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
@@ -55,5 +56,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return true;
         }
+
+        // ReSharper disable once UnusedMember.Local
+        [Obsolete("Should only be called with arguments of type IMethodSymbol.", error: true)]
+        public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
     }
 }
