@@ -32,7 +32,7 @@ namespace RoslynSandbox
             Assert.AreEqual(true, ParameterSymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(false, ParameterSymbolComparer.Equals(symbol1, symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), ParameterSymbolComparer.Default.GetHashCode(symbol1));
-            Assert.AreNotSame(SymbolComparer.Default.GetHashCode(symbol1), ParameterSymbolComparer.Default.GetHashCode(symbol2));
+            Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), ParameterSymbolComparer.Default.GetHashCode(symbol2));
         }
     }
 }

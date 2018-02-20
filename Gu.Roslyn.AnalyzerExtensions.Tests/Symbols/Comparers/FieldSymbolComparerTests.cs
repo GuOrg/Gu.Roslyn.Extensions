@@ -33,7 +33,41 @@ namespace RoslynSandbox
             Assert.AreEqual(true, FieldSymbolComparer.Equals((IFieldSymbol)symbol1, (IFieldSymbol)symbol1));
             Assert.AreEqual(false, FieldSymbolComparer.Equals((IFieldSymbol)symbol1, (IFieldSymbol)symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol1));
-            Assert.AreNotSame(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol2));
+            Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol2));
+        }
+
+        [Test]
+        public void Inherited()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        protected int Bar;
+    }
+
+    public class Bar : Foo
+    {
+        public Bar()
+        {
+            var temp = this.Bar;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node1 = syntaxTree.FindBestMatch<FieldDeclarationSyntax>("Bar");
+            var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
+            var node2 = syntaxTree.FindBestMatch<MemberAccessExpressionSyntax>("this.Bar");
+            var symbol2 = semanticModel.GetSymbolInfo(node2, CancellationToken.None).Symbol;
+            Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
+            Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol2));
+            Assert.AreEqual(true, FieldSymbolComparer.Equals((IFieldSymbol)symbol1, (IFieldSymbol)symbol1));
+            Assert.AreEqual(true, FieldSymbolComparer.Equals((IFieldSymbol)symbol1, (IFieldSymbol)symbol2));
+            Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol1));
+            Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol2));
         }
     }
 }

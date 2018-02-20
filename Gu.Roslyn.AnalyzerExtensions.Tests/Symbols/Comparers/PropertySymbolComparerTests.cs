@@ -35,7 +35,7 @@ namespace RoslynSandbox
             Assert.AreEqual(true, PropertySymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(false, PropertySymbolComparer.Equals(symbol1, symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), PropertySymbolComparer.Default.GetHashCode(symbol1));
-            Assert.AreNotSame(SymbolComparer.Default.GetHashCode(symbol1), PropertySymbolComparer.Default.GetHashCode(symbol2));
+            Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), PropertySymbolComparer.Default.GetHashCode(symbol2));
         }
     }
 }
