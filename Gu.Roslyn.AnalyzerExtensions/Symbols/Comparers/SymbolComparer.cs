@@ -78,25 +78,33 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         //// ReSharper disable UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
-        [Obsolete("Should only be called with arguments of type IFieldSymbol.", error: true)]
 #pragma warning disable SA1313 // Parameter names must begin with lower-case letter
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
         public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 
-        public static new bool Equals(IEventSymbol _, IEventSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
+        public static bool Equals(IEventSymbol _, IEventSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 
-        public static new bool Equals(IFieldSymbol _, IFieldSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
+        public static bool Equals(IFieldSymbol _, IFieldSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 
-        public static new bool Equals(ILocalSymbol _, ILocalSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
+        public static bool Equals(ILocalSymbol _, ILocalSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 
-        public static new bool Equals(IMethodSymbol _, IMethodSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
+        public static bool Equals(IMethodSymbol _, IMethodSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 
-        public static new bool Equals(INamedTypeSymbol _, INamedTypeSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
+        public static bool Equals(INamedTypeSymbol _, INamedTypeSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 
-        public static new bool Equals(IParameterSymbol _, IParameterSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
+        public static bool Equals(IParameterSymbol _, IParameterSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 
-        public static new bool Equals(IPropertySymbol _, IPropertySymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
+        public static bool Equals(IPropertySymbol _, IPropertySymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 
-        public static new bool Equals(ITypeSymbol _, ITypeSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
+        public static bool Equals(ITypeSymbol _, ITypeSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 #pragma warning restore SA1313 // Parameter names must begin with lower-case letter
         //// ReSharper restore UnusedMember.Global
         //// ReSharper restore UnusedParameter.Global

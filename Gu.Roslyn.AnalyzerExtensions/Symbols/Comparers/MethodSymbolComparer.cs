@@ -32,8 +32,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
-        [Obsolete("Should only be called with arguments of type IMethodSymbol.", error: true)]
 #pragma warning disable SA1313 // Parameter names must begin with lower-case letter
+        [Obsolete("Should only be called with arguments of type IMethodSymbol.", error: true)]
         public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 #pragma warning restore SA1313 // Parameter names must begin with lower-case letter
         //// ReSharper restore UnusedParameter.Global
