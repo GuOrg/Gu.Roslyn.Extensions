@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
-    internal class FieldSymbolComparer : IEqualityComparer<IFieldSymbol>
+    public class FieldSymbolComparer : IEqualityComparer<IFieldSymbol>
     {
-        internal static readonly FieldSymbolComparer Default = new FieldSymbolComparer();
+        public static readonly FieldSymbolComparer Default = new FieldSymbolComparer();
 
         private FieldSymbolComparer()
         {

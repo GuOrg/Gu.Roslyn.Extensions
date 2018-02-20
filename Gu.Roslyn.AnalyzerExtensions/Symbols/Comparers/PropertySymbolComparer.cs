@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
-    internal class PropertySymbolComparer : IEqualityComparer<IPropertySymbol>
+    public class PropertySymbolComparer : IEqualityComparer<IPropertySymbol>
     {
-        internal static readonly PropertySymbolComparer Default = new PropertySymbolComparer();
+        public static readonly PropertySymbolComparer Default = new PropertySymbolComparer();
 
         private PropertySymbolComparer()
         {

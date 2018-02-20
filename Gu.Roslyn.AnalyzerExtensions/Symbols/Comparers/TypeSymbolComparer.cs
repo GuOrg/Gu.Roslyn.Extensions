@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
-    internal class TypeSymbolComparer : IEqualityComparer<ITypeSymbol>
+    public class TypeSymbolComparer : IEqualityComparer<ITypeSymbol>
     {
-        internal static readonly TypeSymbolComparer Default = new TypeSymbolComparer();
+        public static readonly TypeSymbolComparer Default = new TypeSymbolComparer();
 
         private TypeSymbolComparer()
         {
@@ -24,10 +24,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (x is INamedTypeSymbol xNamed &&
-                y is INamedTypeSymbol yNamed)
+            if (x is INamedTypeSymbol xNamedType &&
+                y is INamedTypeSymbol yNamedType)
             {
-                return NamedTypeSymbolComparer.Equals(xNamed, yNamed);
+                return NamedTypeSymbolComparer.Equals(xNamedType, yNamedType);
             }
 
             return x.MetadataName == y.MetadataName &&

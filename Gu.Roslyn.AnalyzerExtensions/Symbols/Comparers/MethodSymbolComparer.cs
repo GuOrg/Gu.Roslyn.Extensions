@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
-    internal class MethodSymbolComparer : IEqualityComparer<IMethodSymbol>
+    public class MethodSymbolComparer : IEqualityComparer<IMethodSymbol>
     {
-        internal static readonly MethodSymbolComparer Default = new MethodSymbolComparer();
+        public static readonly MethodSymbolComparer Default = new MethodSymbolComparer();
 
         private MethodSymbolComparer()
         {

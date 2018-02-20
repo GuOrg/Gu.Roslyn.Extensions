@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
-    internal class NamedTypeSymbolComparer : IEqualityComparer<INamedTypeSymbol>
+    public class NamedTypeSymbolComparer : IEqualityComparer<INamedTypeSymbol>
     {
-        internal static readonly NamedTypeSymbolComparer Default = new NamedTypeSymbolComparer();
+        public static readonly NamedTypeSymbolComparer Default = new NamedTypeSymbolComparer();
 
         private NamedTypeSymbolComparer()
         {

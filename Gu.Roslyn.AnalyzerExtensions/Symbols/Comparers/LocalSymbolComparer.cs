@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
-    internal class LocalSymbolComparer : IEqualityComparer<ILocalSymbol>
+    public class LocalSymbolComparer : IEqualityComparer<ILocalSymbol>
     {
-        internal static readonly LocalSymbolComparer Default = new LocalSymbolComparer();
+        public static readonly LocalSymbolComparer Default = new LocalSymbolComparer();
 
         private LocalSymbolComparer()
         {

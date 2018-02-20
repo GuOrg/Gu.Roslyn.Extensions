@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
-    internal class ParameterSymbolComparer : IEqualityComparer<IParameterSymbol>
+    public class ParameterSymbolComparer : IEqualityComparer<IParameterSymbol>
     {
-        internal static readonly ParameterSymbolComparer Default = new ParameterSymbolComparer();
+        public static readonly ParameterSymbolComparer Default = new ParameterSymbolComparer();
 
         private ParameterSymbolComparer()
         {
