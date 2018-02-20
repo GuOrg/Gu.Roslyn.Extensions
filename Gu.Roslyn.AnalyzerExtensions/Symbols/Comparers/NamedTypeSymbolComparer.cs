@@ -56,9 +56,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         bool IEqualityComparer<INamedTypeSymbol>.Equals(INamedTypeSymbol x, INamedTypeSymbol y) => Equals(x, y);
 
         /// <inheritdoc/>
-        public int GetHashCode(INamedTypeSymbol obj)
-        {
-            return obj?.MetadataName.GetHashCode() ?? 0;
-        }
+        public int GetHashCode(INamedTypeSymbol obj) => TypeSymbolComparer.GetHashCode(obj);
     }
 }

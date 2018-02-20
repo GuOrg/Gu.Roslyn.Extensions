@@ -25,10 +25,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
+            if (x.TypeKind != y.TypeKind)
+            {
+                return false;
+            }
+
             if (x is INamedTypeSymbol xNamedType &&
                 y is INamedTypeSymbol yNamedType)
             {
                 return NamedTypeSymbolComparer.Equals(xNamedType, yNamedType);
+            }
+
+            if (x.TypeKind == TypeKind.TypeParameter)
+            {
+                if (x.MetadataName == y.MetadataName &&
+                    SymbolComparer.Equals(x.ContainingSymbol, y.ContainingSymbol))
+                {
+                    return true;
+                }
+
+                return false;
             }
 
             return x.MetadataName == y.MetadataName &&
@@ -44,13 +60,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning restore SA1313 // Parameter names must begin with lower-case letter
         //// ReSharper restore UnusedParameter.Global
 
+        public static int GetHashCode(ITypeSymbol obj)
+        {
+            if (obj == null)
+            {
+                return 0;
+            }
+
+            if (obj.TypeKind == TypeKind.TypeParameter)
+            {
+                return 1;
+            }
+
+            return obj?.MetadataName.GetHashCode() ?? 0;
+        }
+
         /// <inheritdoc />
         bool IEqualityComparer<ITypeSymbol>.Equals(ITypeSymbol x, ITypeSymbol y) => Equals(x, y);
 
         /// <inheritdoc />
-        public int GetHashCode(ITypeSymbol obj)
+        int IEqualityComparer<ITypeSymbol>.GetHashCode(ITypeSymbol obj)
         {
-            return obj?.MetadataName.GetHashCode() ?? 0;
+            return GetHashCode(obj);
         }
     }
 }

@@ -124,6 +124,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc/>
         public int GetHashCode(ISymbol obj)
         {
+            if (obj is ITypeSymbol typeSymbol)
+            {
+                return TypeSymbolComparer.GetHashCode(typeSymbol);
+            }
+
             return obj?.MetadataName.GetHashCode() ?? 0;
         }
     }
