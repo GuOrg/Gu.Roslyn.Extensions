@@ -25,16 +25,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (x is INamedTypeSymbol xNamedType &&
-                y is INamedTypeSymbol yNamedType)
+            if (x is IEventSymbol xEvent &&
+                y is IEventSymbol yEvent)
             {
-                return NamedTypeSymbolComparer.Equals(xNamedType, yNamedType);
-            }
-
-            if (x is ITypeSymbol xType &&
-                y is ITypeSymbol yType)
-            {
-                return TypeSymbolComparer.Equals(xType, yType);
+                return EventSymbolComparer.Equals(xEvent, yEvent);
             }
 
             if (x is IFieldSymbol xField &&
@@ -43,10 +37,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return FieldSymbolComparer.Equals(xField, yField);
             }
 
-            if (x is IPropertySymbol xProperty &&
-                y is IPropertySymbol yProperty)
+            if (x is ILocalSymbol xLocal &&
+                y is ILocalSymbol yLocal)
             {
-                return PropertySymbolComparer.Equals(xProperty, yProperty);
+                return LocalSymbolComparer.Equals(xLocal, yLocal);
             }
 
             if (x is IMethodSymbol xMethod &&
@@ -55,10 +49,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return MethodSymbolComparer.Equals(xMethod, yMethod);
             }
 
-            if (x is ILocalSymbol xLocal &&
-                y is ILocalSymbol yLocal)
+            if (x is INamedTypeSymbol xNamedType &&
+                y is INamedTypeSymbol yNamedType)
             {
-                return LocalSymbolComparer.Equals(xLocal, yLocal);
+                return NamedTypeSymbolComparer.Equals(xNamedType, yNamedType);
             }
 
             if (x is IParameterSymbol xParameter &&
@@ -67,8 +61,45 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return ParameterSymbolComparer.Equals(xParameter, yParameter);
             }
 
+            if (x is IPropertySymbol xProperty &&
+                y is IPropertySymbol yProperty)
+            {
+                return PropertySymbolComparer.Equals(xProperty, yProperty);
+            }
+
+            if (x is ITypeSymbol xType &&
+                y is ITypeSymbol yType)
+            {
+                return TypeSymbolComparer.Equals(xType, yType);
+            }
+
             return x.Equals(y);
         }
+
+        //// ReSharper disable UnusedMember.Global
+        //// ReSharper disable UnusedParameter.Global
+        [Obsolete("Should only be called with arguments of type IFieldSymbol.", error: true)]
+#pragma warning disable SA1313 // Parameter names must begin with lower-case letter
+        public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+
+        public static new bool Equals(IEventSymbol _, IEventSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+
+        public static new bool Equals(IFieldSymbol _, IFieldSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+
+        public static new bool Equals(ILocalSymbol _, ILocalSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+
+        public static new bool Equals(IMethodSymbol _, IMethodSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+
+        public static new bool Equals(INamedTypeSymbol _, INamedTypeSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+
+        public static new bool Equals(IParameterSymbol _, IParameterSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+
+        public static new bool Equals(IPropertySymbol _, IPropertySymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+
+        public static new bool Equals(ITypeSymbol _, ITypeSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+#pragma warning restore SA1313 // Parameter names must begin with lower-case letter
+        //// ReSharper restore UnusedMember.Global
+        //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc/>
         bool IEqualityComparer<ISymbol>.Equals(ISymbol x, ISymbol y) => Equals(x, y);
@@ -78,9 +109,5 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             return obj?.MetadataName.GetHashCode() ?? 0;
         }
-
-        // ReSharper disable once UnusedMember.Local
-        [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
-        public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
     }
 }
