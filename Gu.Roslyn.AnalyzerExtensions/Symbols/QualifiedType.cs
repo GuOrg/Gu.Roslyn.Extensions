@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     [global::System.Diagnostics.DebuggerDisplay("FullName: {FullName}")]
     public class QualifiedType
@@ -38,6 +39,51 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         public static bool operator !=(ITypeSymbol left, QualifiedType right) => !(left == right);
+
+        
+        public static bool operator ==(BaseTypeSyntax left, QualifiedType right)
+        {
+            if (left == null && right == null)
+            {
+                return true;
+            }
+
+            if (left == null || right == null)
+            {
+                return false;
+            }
+
+            return left.Type == right;
+        }
+
+        public static bool operator !=(BaseTypeSyntax left, QualifiedType right) => !(left == right);
+
+        public static bool operator ==(TypeSyntax left, QualifiedType right)
+        {
+            if (left == null && right == null)
+            {
+                return true;
+            }
+
+            if (left == null || right == null)
+            {
+                return false;
+            }
+
+            if (left is SimpleNameSyntax simple)
+            {
+                return simple.Identifier.ValueText == right.Type;
+            }
+
+            if (left is QualifiedNameSyntax qualified)
+            {
+                return right.Namespace.Matches(qualified.Left);
+            }
+
+            return false;
+        }
+
+        public static bool operator !=(TypeSyntax left, QualifiedType right) => !(left == right);
 
         public static class System
         {

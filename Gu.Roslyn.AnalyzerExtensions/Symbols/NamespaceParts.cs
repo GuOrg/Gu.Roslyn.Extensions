@@ -3,6 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Concurrent;
     using System.Collections.Immutable;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     [System.Diagnostics.DebuggerDisplay("{System.String.Join(\".\", parts)}")]
     public class NamespaceParts
@@ -50,6 +51,37 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool operator !=(INamespaceSymbol left, NamespaceParts right) => !(left == right);
 
         public static NamespaceParts GetOrCreate(string qualifiedName) => Cache.GetOrAdd(qualifiedName, Create);
+
+        internal bool Matches(NameSyntax nameSyntax)
+        {
+            return this.Matches(nameSyntax, this.parts.Count - 1);
+        }
+
+        private bool Matches(NameSyntax nameSyntax, int index)
+        {
+            if (nameSyntax is IdentifierNameSyntax identifier)
+            {
+                return index == 0 &&
+                       identifier.Identifier.ValueText == this.parts[0];
+            }
+
+            if (nameSyntax is QualifiedNameSyntax qns)
+            {
+                if (index < 1)
+                {
+                    return false;
+                }
+
+                if (qns.Right.Identifier.ValueText != this.parts[index])
+                {
+                    return false;
+                }
+
+                return this.Matches(qns.Left, index - 1);
+            }
+
+            return false;
+        }
 
         private static NamespaceParts Create(string qualifiedName)
         {
