@@ -38,13 +38,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (x.TypeKind == TypeKind.TypeParameter)
             {
-                if (x.MetadataName == y.MetadataName &&
-                    SymbolComparer.Equals(x.ContainingSymbol, y.ContainingSymbol))
-                {
-                    return true;
-                }
-
-                return false;
+                return x.MetadataName == y.MetadataName &&
+                       SymbolComparer.Equals(x.ContainingSymbol, y.ContainingSymbol);
             }
 
             return x.MetadataName == y.MetadataName &&
