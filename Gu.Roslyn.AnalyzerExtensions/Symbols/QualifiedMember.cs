@@ -39,6 +39,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
+            if (left.IsStatic)
+            {
+                return false;
+            }
+
             foreach (var @interface in left.ContainingType.AllInterfaces)
             {
                 if (@interface == right.ContainingType)
