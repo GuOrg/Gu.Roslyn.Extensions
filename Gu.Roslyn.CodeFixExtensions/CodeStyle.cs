@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis;
@@ -34,7 +35,21 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private static bool UnderscoreFields(this SemanticModel semanticModel, CancellationToken cancellationToken, FieldWalker fieldWalker)
+        /// <summary>
+        /// Figuring out if the code uses using directives inside namespaces.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static bool UsingDirectivesInsideNamespace(SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            using (var walker = UsingDirectiveWalker.Borrow())
+            {
+                return UsingDirectivesInsideNamespace(semanticModel, cancellationToken, walker);
+            }
+        }
+
+        private static bool UnderscoreFields(this SemanticModel semanticModel, CancellationToken cancellationToken, FieldWalker walker)
         {
             foreach (var tree in semanticModel.Compilation.SyntaxTrees)
             {
@@ -44,21 +59,49 @@ namespace Gu.Roslyn.CodeFixExtensions
                     continue;
                 }
 
-                fieldWalker.Visit(tree.GetRoot(cancellationToken));
-                if (fieldWalker.UsesThis == Result.Yes ||
-                    fieldWalker.UsesUnderScore == Result.No)
+                walker.Visit(tree.GetRoot(cancellationToken));
+                if (walker.UsesThis == Result.Yes ||
+                    walker.UsesUnderScore == Result.No)
                 {
                     return false;
                 }
 
-                if (fieldWalker.UsesUnderScore == Result.Yes ||
-                    fieldWalker.UsesThis == Result.No)
+                if (walker.UsesUnderScore == Result.Yes ||
+                    walker.UsesThis == Result.No)
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private static bool UsingDirectivesInsideNamespace(SemanticModel semanticModel, CancellationToken cancellationToken, UsingDirectiveWalker walker)
+        {
+            foreach (var tree in semanticModel.Compilation.SyntaxTrees)
+            {
+                if (tree.FilePath.EndsWith(".g.i.cs") ||
+                    tree.FilePath.EndsWith(".g.cs"))
+                {
+                    continue;
+                }
+
+                walker.Visit(tree.GetRoot(cancellationToken));
+                switch (walker.UsingDirectivesInside())
+                {
+                    case Result.Unknown:
+                        continue;
+                    case Result.Yes:
+                    case Result.Maybe:
+                        return true;
+                    case Result.No:
+                        return false;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return true;
         }
 
         private sealed class FieldWalker : PooledWalker<FieldWalker>
@@ -247,6 +290,51 @@ namespace Gu.Roslyn.CodeFixExtensions
                             throw new ArgumentOutOfRangeException();
                     }
                 }
+            }
+        }
+
+        private sealed class UsingDirectiveWalker : PooledWalker<UsingDirectiveWalker>
+        {
+            private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
+
+            public static UsingDirectiveWalker Borrow() => Borrow(() => new UsingDirectiveWalker());
+
+            public override void VisitUsingDirective(UsingDirectiveSyntax node)
+            {
+                this.usingDirectives.Add(node);
+                base.VisitUsingDirective(node);
+            }
+
+            public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+            {
+                // Stop walking here
+            }
+
+            public override void VisitStructDeclaration(StructDeclarationSyntax node)
+            {
+                // Stop walking here
+            }
+
+            internal Result UsingDirectivesInside()
+            {
+                if (this.usingDirectives.Count == 0)
+                {
+                    return Result.Unknown;
+                }
+
+                if (this.usingDirectives.TryFirst(x => x.FirstAncestor<NamespaceDeclarationSyntax>() != null, out _))
+                {
+                    return this.usingDirectives.TryFirst(x => x.FirstAncestor<NamespaceDeclarationSyntax>() == null, out _)
+                        ? Result.Maybe
+                        : Result.Yes;
+                }
+
+                return Result.No;
+            }
+
+            protected override void Clear()
+            {
+                this.usingDirectives.Clear();
             }
         }
     }
