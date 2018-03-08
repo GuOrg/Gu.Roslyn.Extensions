@@ -5,15 +5,12 @@
     <CodeAnalysisRuleSet>Gu.Roslyn.CodeFixExtensions.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Gu.Roslyn.CodeFixExtensions.xml</DocumentationFile>
   </PropertyGroup>
-
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
-  <Import Project="..\.paket\Paket.Restore.targets" />
-
   <ItemGroup>
     <ProjectReference Include="..\Gu.Roslyn.AnalyzerExtensions\Gu.Roslyn.AnalyzerExtensions.csproj" />
   </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
