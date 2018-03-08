@@ -10,7 +10,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     /// <summary>
     /// Helper for figuring out if the code uses underscore prefix in field names.
     /// </summary>
-    public static class Names
+    public static class CodeStyle
     {
         private enum Result
         {
@@ -26,15 +26,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool UsesUnderscoreForFields(this SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static bool UnderscoreFields(this SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            using (var walker = Walker.Borrow())
+            using (var walker = FieldWalker.Borrow())
             {
-                return UsesUnderscoreForFields(semanticModel, cancellationToken, walker);
+                return UnderscoreFields(semanticModel, cancellationToken, walker);
             }
         }
 
-        private static bool UsesUnderscoreForFields(this SemanticModel semanticModel, CancellationToken cancellationToken, Walker walker)
+        private static bool UnderscoreFields(this SemanticModel semanticModel, CancellationToken cancellationToken, FieldWalker fieldWalker)
         {
             foreach (var tree in semanticModel.Compilation.SyntaxTrees)
             {
@@ -44,15 +44,15 @@ namespace Gu.Roslyn.CodeFixExtensions
                     continue;
                 }
 
-                walker.Visit(tree.GetRoot(cancellationToken));
-                if (walker.UsesThis == Result.Yes ||
-                    walker.UsesUnderScore == Result.No)
+                fieldWalker.Visit(tree.GetRoot(cancellationToken));
+                if (fieldWalker.UsesThis == Result.Yes ||
+                    fieldWalker.UsesUnderScore == Result.No)
                 {
                     return false;
                 }
 
-                if (walker.UsesUnderScore == Result.Yes ||
-                    walker.UsesThis == Result.No)
+                if (fieldWalker.UsesUnderScore == Result.Yes ||
+                    fieldWalker.UsesThis == Result.No)
                 {
                     return true;
                 }
@@ -61,9 +61,9 @@ namespace Gu.Roslyn.CodeFixExtensions
             return false;
         }
 
-        private sealed class Walker : PooledWalker<Walker>
+        private sealed class FieldWalker : PooledWalker<FieldWalker>
         {
-            private Walker()
+            private FieldWalker()
             {
             }
 
@@ -71,7 +71,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             public Result UsesUnderScore { get; private set; }
 
-            public static Walker Borrow() => Borrow(() => new Walker());
+            public static FieldWalker Borrow() => Borrow(() => new FieldWalker());
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {

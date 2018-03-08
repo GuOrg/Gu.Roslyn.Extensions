@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    public class MethodSymbolExt
+    public static class MethodSymbolExt
     {
-        internal static bool TryGetMatchingParameter(IMethodSymbol method, ArgumentSyntax argument, out IParameterSymbol parameter)
+        internal static bool TryGetMatchingParameter(this IMethodSymbol method, ArgumentSyntax argument, out IParameterSymbol parameter)
         {
             if (argument.NameColon is NameColonSyntax nameColon &&
                 nameColon.Name is IdentifierNameSyntax name)

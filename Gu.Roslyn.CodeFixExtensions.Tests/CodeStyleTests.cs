@@ -5,7 +5,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class NamesTests
+    public class CodeStyleTests
     {
         [Test]
         public void DefaultsToFalse()
@@ -26,7 +26,7 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, Names.UsesUnderscoreForFields(semanticModel, CancellationToken.None));
+            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel, CancellationToken.None));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace RoslynSandbox
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, Names.UsesUnderscoreForFields(semanticModel, CancellationToken.None));
+            Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel, CancellationToken.None));
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace RoslynSandbox
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, Names.UsesUnderscoreForFields(semanticModel, CancellationToken.None));
+            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel, CancellationToken.None));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace RoslynSandbox
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, Names.UsesUnderscoreForFields(semanticModel, CancellationToken.None));
+            Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel, CancellationToken.None));
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace RoslynSandbox
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, Names.UsesUnderscoreForFields(semanticModel, CancellationToken.None));
+            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel, CancellationToken.None));
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace RoslynSandbox
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, Names.UsesUnderscoreForFields(semanticModel, CancellationToken.None));
+            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel, CancellationToken.None));
         }
 
         [Test]
@@ -154,7 +154,7 @@ namespace RoslynSandbox
             foreach (var tree in compilation.SyntaxTrees)
             {
                 var semanticModel = compilation.GetSemanticModel(tree);
-                Assert.AreEqual(true, Names.UsesUnderscoreForFields(semanticModel, CancellationToken.None));
+                Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel, CancellationToken.None));
             }
         }
     }
