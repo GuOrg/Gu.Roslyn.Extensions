@@ -173,6 +173,19 @@ namespace RoslynSandbox
         }
 
         [Test]
+        public void NoDirective()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+}");
+
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel, CancellationToken.None));
+        }
+
+        [Test]
         public void UsingDirectiveInsideAndOutsideNamespace()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
