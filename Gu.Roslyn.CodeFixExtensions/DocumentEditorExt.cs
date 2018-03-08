@@ -57,47 +57,56 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         public static DocumentEditor AddUsing(this DocumentEditor editor, UsingDirectiveSyntax usingDirective)
         {
-            using (var walker = UsingDirectiveWalker.Borrow(editor))
+            editor.ReplaceNode(
+                editor.OriginalRoot,
+                (root, _) => AddUsing(root as CompilationUnitSyntax, editor.SemanticModel, usingDirective));
+
+            return editor;
+        }
+
+        private static SyntaxNode AddUsing(CompilationUnitSyntax root, SemanticModel semanticModel, UsingDirectiveSyntax usingDirective)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            using (var walker = UsingDirectiveWalker.Borrow(root))
             {
                 if (walker.UsingDirectives.Count == 0)
                 {
                     if (walker.NamespaceDeclarations.TryFirst(out var namespaceDeclaration))
                     {
-                        if (CodeStyle.UsingDirectivesInsideNamespace(editor.SemanticModel, CancellationToken.None))
+                        if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel, CancellationToken.None))
                         {
-                            editor.ReplaceNode(namespaceDeclaration, namespaceDeclaration.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
+                            return root.ReplaceNode(namespaceDeclaration, namespaceDeclaration.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
                         }
-                        else if (editor.OriginalRoot is CompilationUnitSyntax compilationUnit)
-                        {
-                            editor.ReplaceNode(compilationUnit, compilationUnit.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
-                        }
+
+                        return root.ReplaceNode(root, root.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
                     }
 
-                    return editor;
+                    return root;
                 }
 
                 UsingDirectiveSyntax previous = null;
                 foreach (var directive in walker.UsingDirectives)
                 {
-                    switch (UsingDirectiveComparer.Compare(directive, usingDirective))
+                    var compare = UsingDirectiveComparer.Compare(directive, usingDirective);
+                    if (compare == 0)
                     {
-                        case -1:
-                            editor.InsertBefore(directive, usingDirective);
-                            return editor;
-                        case 0:
-                            return editor;
-                        case 1:
-                            previous = directive;
-                            break;
+                        return root;
+                    }
+
+                    if (compare > 0)
+                    {
+                        return root.InsertNodesBefore(directive, new[] { usingDirective });
                     }
 
                     previous = directive;
                 }
 
-                editor.InsertAfter(previous, usingDirective);
+                return root.InsertNodesAfter(previous, new[] { usingDirective });
             }
-
-            return editor;
         }
 
         private static TypeDeclarationSyntax AddSorted(SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax memberDeclaration)
@@ -248,7 +257,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             public IReadOnlyList<NamespaceDeclarationSyntax> NamespaceDeclarations => this.namespaceDeclarations;
 
-            public static UsingDirectiveWalker Borrow(DocumentEditor editor) => BorrowAndVisit(editor.OriginalRoot, () => new UsingDirectiveWalker());
+            public static UsingDirectiveWalker Borrow(CompilationUnitSyntax compilationUnit) => BorrowAndVisit(compilationUnit, () => new UsingDirectiveWalker());
 
             public override void VisitUsingDirective(UsingDirectiveSyntax node)
             {

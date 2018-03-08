@@ -20,46 +20,18 @@ namespace Gu.Roslyn.AnalyzerExtensions.SyntaxTree
                 {
                     if (xText == "System")
                     {
-                        return 1;
+                        return -1;
                     }
 
                     if (yText == "System")
                     {
-                        return -1;
+                        return 1;
                     }
 
                     return OrdinalIgnoreCase.Compare(xText, yText);
                 }
 
                 return CompareRecursive(xn.Parent as QualifiedNameSyntax, yn.Parent as QualifiedNameSyntax);
-                while (true)
-                {
-                
-
-                    var xqn = xn.Parent as QualifiedNameSyntax;
-                    var yqn = yn.Parent as QualifiedNameSyntax;
-                    if (xqn == null && yqn == null)
-                    {
-                        break;
-                    }
-
-                    if (xqn != null && yqn != null)
-                    {
-                        xn = xqn.Right;
-                        yn = yqn.Right;
-                        continue;
-                    }
-
-                    if (xqn == null)
-                    {
-                        return -1;
-                    }
-
-                    if (yqn == null)
-                    {
-                        return 1;
-                    }
-                }
             }
 
             return 0;
@@ -90,6 +62,24 @@ namespace Gu.Roslyn.AnalyzerExtensions.SyntaxTree
             {
                 return 0;
             }
+
+            if (xqn == null)
+            {
+                return -1;
+            }
+
+            if (yqn == null)
+            {
+                return 1;
+            }
+
+            var compare = OrdinalIgnoreCase.Compare(xqn.Right.Identifier.ValueText, yqn.Right.Identifier.ValueText);
+            if (compare == 0)
+            {
+                return CompareRecursive(xqn.Parent as QualifiedNameSyntax, yqn.Parent as QualifiedNameSyntax);
+            }
+
+            return compare;
         }
     }
 }
