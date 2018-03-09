@@ -31,8 +31,37 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             using (var walker = FieldWalker.Borrow())
             {
-                return UnderscoreFields(semanticModel, cancellationToken, walker);
+                switch (UnderscoreFields(semanticModel.SyntaxTree, cancellationToken, walker))
+                {
+                    case Result.Unknown:
+                    case Result.Maybe:
+                        break;
+                    case Result.Yes:
+                        return true;
+                    case Result.No:
+                        return false;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                foreach (var tree in semanticModel.Compilation.SyntaxTrees)
+                {
+                    switch (UnderscoreFields(tree, cancellationToken, walker))
+                    {
+                        case Result.Unknown:
+                        case Result.Maybe:
+                            break;
+                        case Result.Yes:
+                            return true;
+                        case Result.No:
+                            return false;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
             }
+
+            return false;
         }
 
         /// <summary>
@@ -49,39 +78,34 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private static bool UnderscoreFields(this SemanticModel semanticModel, CancellationToken cancellationToken, FieldWalker walker)
+        private static Result UnderscoreFields(this SyntaxTree tree, CancellationToken cancellationToken, FieldWalker walker)
         {
-            foreach (var tree in semanticModel.Compilation.SyntaxTrees)
+            if (IsExcluded(tree))
             {
-                if (tree.FilePath.EndsWith(".g.i.cs") ||
-                    tree.FilePath.EndsWith(".g.cs"))
-                {
-                    continue;
-                }
-
-                walker.Visit(tree.GetRoot(cancellationToken));
-                if (walker.UsesThis == Result.Yes ||
-                    walker.UsesUnderScore == Result.No)
-                {
-                    return false;
-                }
-
-                if (walker.UsesUnderScore == Result.Yes ||
-                    walker.UsesThis == Result.No)
-                {
-                    return true;
-                }
+                return Result.Unknown;
             }
 
-            return false;
+            walker.Visit(tree.GetRoot(cancellationToken));
+            if (walker.UsesThis == Result.Yes ||
+                walker.UsesUnderScore == Result.No)
+            {
+                return Result.No;
+            }
+
+            if (walker.UsesUnderScore == Result.Yes ||
+                walker.UsesThis == Result.No)
+            {
+                return Result.Yes;
+            }
+
+            return Result.Unknown;
         }
 
         private static bool UsingDirectivesInsideNamespace(SemanticModel semanticModel, CancellationToken cancellationToken, UsingDirectiveWalker walker)
         {
             foreach (var tree in semanticModel.Compilation.SyntaxTrees)
             {
-                if (tree.FilePath.EndsWith(".g.i.cs") ||
-                    tree.FilePath.EndsWith(".g.cs"))
+                if (IsExcluded(tree))
                 {
                     continue;
                 }
@@ -102,6 +126,12 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             return true;
+        }
+
+        private static bool IsExcluded(SyntaxTree syntaxTree)
+        {
+            return syntaxTree.FilePath.EndsWith(".g.i.cs") ||
+                   syntaxTree.FilePath.EndsWith(".g.cs");
         }
 
         private sealed class FieldWalker : PooledWalker<FieldWalker>
