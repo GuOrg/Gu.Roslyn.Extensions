@@ -71,4 +71,7 @@
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1633" Action="None" />
   </Rules>
+  <Rules AnalyzerId="Gu.Analyzers.Analyzers" RuleNamespace="Gu.Analyzers.Analyzers">
+    <Rule Id="GU0012" Action="Warning" />
+  </Rules>
 </RuleSet>
