@@ -1,71 +1,143 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System;
+    using System.Collections.Generic;
     using System.Threading;
+    using Gu.Roslyn.AnalyzerExtensions.SyntaxTree;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    internal static class NullCheck
+    public static class NullCheck
     {
-        internal static bool IsCheckedBefore(ISymbol symbol, SyntaxNode context, SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static bool IsChecked(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-            //if (ifStatement.Condition is BinaryExpressionSyntax binary &&
-            //    binary.IsKind(SyntaxKind.EqualsExpression))
-            //{
-            //    if (binary.Left.IsKind(SyntaxKind.NullLiteralExpression) &&
-            //        IsSymbol(binary.Right))
-            //    {
-            //        return !IsAssignedBefore(ifStatement);
-            //    }
+            if (parameter == null ||
+                scope == null)
+            {
+                return false;
+            }
 
-            //    if (IsSymbol(binary.Left) &&
-            //        binary.Right.IsKind(SyntaxKind.NullLiteralExpression))
-            //    {
-            //        return !IsAssignedBefore(ifStatement);
-            //    }
-            //}
-            //else if (ifStatement.Condition is InvocationExpressionSyntax invocation)
-            //{
-            //    if (invocation.Expression is IdentifierNameSyntax identifierName &&
-            //        invocation.ArgumentList != null &&
-            //        invocation.ArgumentList.Arguments.Count == 2 &&
-            //        (identifierName.Identifier.ValueText == "ReferenceEquals" ||
-            //         identifierName.Identifier.ValueText == "Equals"))
-            //    {
-            //        if (invocation.ArgumentList.Arguments.TrySingle(x => x.Expression?.IsKind(SyntaxKind.NullLiteralExpression) == true, out _) &&
-            //            invocation.ArgumentList.Arguments.TrySingle(x => IsSymbol(x.Expression), out _))
-            //        {
-            //            return !IsAssignedBefore(ifStatement);
-            //        }
-            //    }
-            //    else if (invocation.Expression is MemberAccessExpressionSyntax memberAccess &&
-            //             memberAccess.Name is IdentifierNameSyntax memberIdentifier &&
-            //             invocation.ArgumentList != null &&
-            //             invocation.ArgumentList.Arguments.Count == 2 &&
-            //             (memberIdentifier.Identifier.ValueText == "ReferenceEquals" ||
-            //              memberIdentifier.Identifier.ValueText == "Equals"))
-            //    {
-            //        if (invocation.ArgumentList.Arguments.TrySingle(x => x.Expression?.IsKind(SyntaxKind.NullLiteralExpression) == true, out _) &&
-            //            invocation.ArgumentList.Arguments.TrySingle(x => IsSymbol(x.Expression), out _))
-            //        {
-            //            return !IsAssignedBefore(ifStatement);
-            //        }
-            //    }
-            //}
+            using (var walker = NullCheckWalker.Borrow(scope))
+            {
+                return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out _);
+            }
+        }
+
+        public static bool IsCheckedBefore(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (parameter == null ||
+                scope == null)
+            {
+                return false;
+            }
+
+            using (var walker = NullCheckWalker.Borrow(scope.FirstAncestorOrSelf<MemberDeclarationSyntax>()))
+            {
+                return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
+                       check.IsBeforeInScope(scope) == true;
+            }
         }
 
         private sealed class NullCheckWalker : PooledWalker<NullCheckWalker>
         {
+            private readonly List<BinaryExpressionSyntax> binaryExpressions = new List<BinaryExpressionSyntax>();
+            private readonly List<IsPatternExpressionSyntax> isPatterns = new List<IsPatternExpressionSyntax>();
+            private readonly List<InvocationExpressionSyntax> invocations = new List<InvocationExpressionSyntax>();
+
             private NullCheckWalker()
             {
             }
 
             public static NullCheckWalker Borrow(SyntaxNode scope) => BorrowAndVisit(scope, () => new NullCheckWalker());
 
+            public override void VisitBinaryExpression(BinaryExpressionSyntax node)
+            {
+                if (node.IsKind(SyntaxKind.EqualsExpression) &&
+                    (node.Left.IsKind(SyntaxKind.NullLiteralExpression) ||
+                     node.Right.IsKind(SyntaxKind.NullLiteralExpression)))
+                {
+                    this.binaryExpressions.Add(node);
+                }
+
+                if (node.IsKind(SyntaxKind.CoalesceExpression) &&
+                    node.Left.IsKind(SyntaxKind.IdentifierName))
+                {
+                    this.binaryExpressions.Add(node);
+                }
+
+                base.VisitBinaryExpression(node);
+            }
+
+            public override void VisitIsPatternExpression(IsPatternExpressionSyntax node)
+            {
+                if (node.Pattern is ConstantPatternSyntax constantPattern &&
+                    constantPattern.Expression.IsKind(SyntaxKind.NullLiteralExpression))
+                {
+                    this.isPatterns.Add(node);
+                }
+
+                base.VisitIsPatternExpression(node);
+            }
+
+            public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+            {
+                if (node.ArgumentList?.Arguments.Count == 2 &&
+                    node.ArgumentList.Arguments.TrySingle(x => x.Expression.IsKind(SyntaxKind.NullLiteralExpression), out _) &&
+                    node.TryGetMethodName(out var name) &&
+                    (name == "Equals" || name == "ReferenceEquals"))
+                {
+                    this.invocations.Add(node);
+                }
+
+                base.VisitInvocationExpression(node);
+            }
+
+            public bool TryGetFirst(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax check)
+            {
+                foreach (var binaryExpression in this.binaryExpressions)
+                {
+                    if (Is(binaryExpression.Left) ||
+                        Is(binaryExpression.Right))
+                    {
+                        check = binaryExpression;
+                        return true;
+                    }
+                }
+
+                foreach (var isPattern in this.isPatterns)
+                {
+                    if (Is(isPattern.Expression))
+                    {
+                        check = isPattern;
+                        return true;
+                    }
+                }
+
+                foreach (var invocation in this.invocations)
+                {
+                    if (invocation.ArgumentList.Arguments.TryFirst(x => Is(x.Expression), out _))
+                    {
+                        check = invocation;
+                        return true;
+                    }
+                }
+
+                check = null;
+                return false;
+
+                bool Is(ExpressionSyntax expression)
+                {
+                    return expression is IdentifierNameSyntax identifier &&
+                           identifier.Identifier.ValueText == parameter.Name &&
+                           semanticModel.GetSymbolSafe(expression, cancellationToken) == parameter;
+                }
+            }
+
             protected override void Clear()
             {
+                this.binaryExpressions.Clear();
+                this.isPatterns.Clear();
+                this.invocations.Clear();
             }
         }
     }
