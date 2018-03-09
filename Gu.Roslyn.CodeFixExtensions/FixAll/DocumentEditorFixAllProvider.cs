@@ -10,35 +10,21 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.Editing;
 
-    /// <inheritdoc />
     public class DocumentEditorFixAllProvider : FixAllProvider
     {
-        /// <summary>
-        /// For FixAllScope.Document
-        /// </summary>
-        public static readonly DocumentEditorFixAllProvider PerDocument = new DocumentEditorFixAllProvider(ImmutableArray.Create(FixAllScope.Document));
+        public static readonly DocumentEditorFixAllProvider Default = new DocumentEditorFixAllProvider();
 
-        /// <summary>
-        /// For FixAllScope.Document and FixAllScope.Project
-        /// </summary>
-        public static readonly DocumentEditorFixAllProvider PerDocumentAndProject = new DocumentEditorFixAllProvider(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project));
+        private static readonly ImmutableArray<FixAllScope> SupportedFixAllScopes = ImmutableArray.Create(FixAllScope.Document);
 
-        /// <summary>
-        /// For FixAllScope.Document, FixAllScope.Project and FixAllScope.Solution
-        /// </summary>
-        public static readonly DocumentEditorFixAllProvider AllScopes = new DocumentEditorFixAllProvider(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project, FixAllScope.Solution));
-
-        private readonly ImmutableArray<FixAllScope> scopes;
-
-        private DocumentEditorFixAllProvider(ImmutableArray<FixAllScope> scopes)
+        private DocumentEditorFixAllProvider()
         {
-            this.scopes = scopes;
         }
 
-        /// <inheritdoc />
-        public override IEnumerable<FixAllScope> GetSupportedFixAllScopes() => this.scopes;
+        public override IEnumerable<FixAllScope> GetSupportedFixAllScopes()
+        {
+            return SupportedFixAllScopes;
+        }
 
-        /// <inheritdoc />
         public override async Task<CodeAction> GetFixAsync(FixAllContext fixAllContext)
         {
             var diagnostics = await fixAllContext.GetDocumentDiagnosticsAsync(fixAllContext.Document)

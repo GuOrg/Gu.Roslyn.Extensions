@@ -7,7 +7,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CodeActions;
     using Microsoft.CodeAnalysis.Editing;
 
-    internal class DocumentEditorAction : CodeAction
+    public class DocumentEditorAction : CodeAction
     {
         private readonly Document document;
 
