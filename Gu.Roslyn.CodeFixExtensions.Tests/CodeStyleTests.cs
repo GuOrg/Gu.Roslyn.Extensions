@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
-    using System.Threading;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
@@ -20,7 +19,7 @@ namespace RoslynSandbox
 
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel, CancellationToken.None));
+                Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
             }
 
             [Test]
@@ -33,7 +32,7 @@ namespace RoslynSandbox
 
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel, CancellationToken.None));
+                Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
             }
 
             [Test]
@@ -49,7 +48,7 @@ namespace RoslynSandbox
 
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel, CancellationToken.None));
+                Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
             }
 
             [Test]
@@ -63,7 +62,7 @@ namespace RoslynSandbox
 
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                Assert.AreEqual(false, CodeStyle.UsingDirectivesInsideNamespace(semanticModel, CancellationToken.None));
+                Assert.AreEqual(false, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
             }
         }
     }

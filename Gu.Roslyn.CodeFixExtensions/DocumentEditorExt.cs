@@ -2,7 +2,6 @@ namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.AnalyzerExtensions.SyntaxTree;
     using Microsoft.CodeAnalysis;
@@ -77,7 +76,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 {
                     if (walker.NamespaceDeclarations.TryFirst(out var namespaceDeclaration))
                     {
-                        if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel, CancellationToken.None))
+                        if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel))
                         {
                             return root.ReplaceNode(namespaceDeclaration, namespaceDeclaration.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
                         }
