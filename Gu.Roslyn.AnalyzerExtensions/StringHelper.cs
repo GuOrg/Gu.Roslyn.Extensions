@@ -2,6 +2,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
 
+
     internal static class StringHelper
     {
         internal static bool IsParts(this string text, string start, string end, StringComparison stringComparison = StringComparison.Ordinal)
