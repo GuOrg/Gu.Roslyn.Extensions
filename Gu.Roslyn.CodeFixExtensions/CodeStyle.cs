@@ -2,7 +2,6 @@ namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -25,7 +24,6 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Figuring out if the code uses underscore prefix in field names.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool UnderscoreFields(this SemanticModel semanticModel)
         {
@@ -68,7 +66,6 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Figuring out if the code uses using directives inside namespaces.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool UsingDirectivesInsideNamespace(SemanticModel semanticModel)
         {
