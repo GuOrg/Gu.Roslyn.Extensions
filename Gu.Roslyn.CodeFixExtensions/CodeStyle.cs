@@ -74,8 +74,37 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             using (var walker = UsingDirectiveWalker.Borrow())
             {
-                return UsingDirectivesInsideNamespace(semanticModel, cancellationToken, walker);
+                switch (UsingDirectivesInsideNamespace(semanticModel.SyntaxTree, cancellationToken, walker))
+                {
+                    case Result.Unknown:
+                    case Result.Maybe:
+                        break;
+                    case Result.Yes:
+                        return true;
+                    case Result.No:
+                        return false;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                foreach (var tree in semanticModel.Compilation.SyntaxTrees)
+                {
+                    switch (UsingDirectivesInsideNamespace(tree, cancellationToken, walker))
+                    {
+                        case Result.Unknown:
+                        case Result.Maybe:
+                            break;
+                        case Result.Yes:
+                            return true;
+                        case Result.No:
+                            return false;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
             }
+
+            return true;
         }
 
         private static Result UnderscoreFields(this SyntaxTree tree, CancellationToken cancellationToken, FieldWalker walker)
@@ -101,31 +130,15 @@ namespace Gu.Roslyn.CodeFixExtensions
             return Result.Unknown;
         }
 
-        private static bool UsingDirectivesInsideNamespace(SemanticModel semanticModel, CancellationToken cancellationToken, UsingDirectiveWalker walker)
+        private static Result UsingDirectivesInsideNamespace(this SyntaxTree tree, CancellationToken cancellationToken, UsingDirectiveWalker walker)
         {
-            foreach (var tree in semanticModel.Compilation.SyntaxTrees)
+            if (IsExcluded(tree))
             {
-                if (IsExcluded(tree))
-                {
-                    continue;
-                }
-
-                walker.Visit(tree.GetRoot(cancellationToken));
-                switch (walker.UsingDirectivesInside())
-                {
-                    case Result.Unknown:
-                        continue;
-                    case Result.Yes:
-                    case Result.Maybe:
-                        return true;
-                    case Result.No:
-                        return false;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                return Result.Unknown;
             }
 
-            return true;
+            walker.Visit(tree.GetRoot(cancellationToken));
+            return walker.UsingDirectivesInside();
         }
 
         private static bool IsExcluded(SyntaxTree syntaxTree)
