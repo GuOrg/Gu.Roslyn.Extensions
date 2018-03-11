@@ -9,7 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.Editing;
 
-    public class DocumentEditorFixAllProvider : FixAllProvider
+    public sealed class DocumentEditorFixAllProvider : FixAllProvider
     {
         public static readonly DocumentEditorFixAllProvider Document = new DocumentEditorFixAllProvider(ImmutableArray.Create(FixAllScope.Document));
 
