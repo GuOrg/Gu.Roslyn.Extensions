@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return compare;
             }
 
-            compare = CompareAccessability(x.Modifiers, y.Modifiers);
+            compare = CompareConstStaticInstance(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
                 return compare;
