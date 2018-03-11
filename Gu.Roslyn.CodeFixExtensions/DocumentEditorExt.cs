@@ -3,7 +3,6 @@ namespace Gu.Roslyn.CodeFixExtensions
     using System;
     using System.Collections.Generic;
     using Gu.Roslyn.AnalyzerExtensions;
-    using Gu.Roslyn.AnalyzerExtensions.SyntaxTree;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;

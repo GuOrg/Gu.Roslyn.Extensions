@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 {
-    using Gu.Roslyn.AnalyzerExtensions.SyntaxTree;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;

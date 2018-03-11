@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.SyntaxTree
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Threading;
     using Microsoft.CodeAnalysis;

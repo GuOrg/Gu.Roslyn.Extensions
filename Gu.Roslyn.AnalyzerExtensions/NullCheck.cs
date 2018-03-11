@@ -2,7 +2,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
     using System.Threading;
-    using Gu.Roslyn.AnalyzerExtensions.SyntaxTree;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;

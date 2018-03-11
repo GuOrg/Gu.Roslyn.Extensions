@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.SyntaxTree
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -42,8 +42,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.SyntaxTree
                 otherBlock?.Contains(node) == true ||
                 block?.Contains(other) == true)
             {
-                var firstAnon = node.FirstAncestor<AnonymousFunctionExpressionSyntax>();
-                var otherAnon = other.FirstAncestor<AnonymousFunctionExpressionSyntax>();
+                var firstAnon = FirstAncestor<AnonymousFunctionExpressionSyntax>(node);
+                var otherAnon = FirstAncestor<AnonymousFunctionExpressionSyntax>(other);
                 if (!ReferenceEquals(firstAnon, otherAnon))
                 {
                     return true;
@@ -58,8 +58,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.SyntaxTree
         internal static bool SharesAncestor<T>(this SyntaxNode first, SyntaxNode other)
             where T : SyntaxNode
         {
-            var firstAncestor = first.FirstAncestor<T>();
-            var otherAncestor = other.FirstAncestor<T>();
+            var firstAncestor = FirstAncestor<T>(first);
+            var otherAncestor = FirstAncestor<T>(other);
             if (firstAncestor == null ||
                 otherAncestor == null)
             {
