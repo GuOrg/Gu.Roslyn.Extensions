@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
         private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    public class Foo
+    public class Foo : IFoo
     {
         public static int PublicStaticGet { get; } = 1;
 
@@ -23,9 +23,17 @@ namespace RoslynSandbox
 
         public int PublicGet { get; }
 
+        object IFoo.PublicGet => this.PublicGet;
+
         public int PublicExpressionBody => this.PublicGet;
 
         public int PublicGetSet { get; set; }
+
+        object IFoo.PublicGetSet
+        {
+            get { return this.PublicGetSet; }
+            set { this.PublicGetSet = (int) value; }
+        }
 
         public int PublicGetInternalSet { get; internal set; }
 
@@ -41,7 +49,20 @@ namespace RoslynSandbox
 
         internal int InternalGetInternalSet { get; private set; }
 
-        public int this[int index] => this.list[index];
+        private int PrivateGet { get; }
+
+        private int PrivateExpressionBody => this.InternalGet;
+
+        private int PrivateGetSet { get; set; }
+
+        public int this[int index] => index;
+    }
+
+    public interface IFoo
+    {
+        object PublicGet { get; }
+
+        object PublicGetSet { get; set; }
     }
 }");
 
