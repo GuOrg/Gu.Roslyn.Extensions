@@ -26,13 +26,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return 1;
             }
 
+            if (IsInitializedWith(x, y))
+            {
+                return 1;
+            }
+
+            if (IsInitializedWith(y, x))
+            {
+                return -1;
+            }
+
             var compare = CompareAccessability(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
                 return compare;
             }
 
-            compare = CompareConstStaticInstance(x.Modifiers, y.Modifiers);
+            compare = CompareScope(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
                 return compare;
@@ -83,7 +93,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
-        private static int CompareConstStaticInstance(SyntaxTokenList x, SyntaxTokenList y)
+        private static int CompareScope(SyntaxTokenList x, SyntaxTokenList y)
         {
             return Index(x).CompareTo(Index(y));
 
@@ -101,6 +111,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 return 2;
             }
+        }
+
+        private static bool IsInitializedWith(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        {
+            if (y.Modifiers.Any(SyntaxKind.ConstKeyword, SyntaxKind.StaticKeyword) &&
+                x.Declaration.Variables.TryLast(out var variable) &&
+                variable.Initializer is EqualsValueClauseSyntax initializer &&
+                !(initializer.Value is LiteralExpressionSyntax))
+            {
+                using (var walker = IdentifierNameWalker.Borrow(initializer))
+                {
+                    foreach (var identifierName in walker.IdentifierNames)
+                    {
+                        if (y.Declaration.Variables.TryFirst(v => v.Identifier.ValueText == identifierName.Identifier.ValueText, out _))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static int CompareReadOnly(SyntaxTokenList x, SyntaxTokenList y)

@@ -47,6 +47,26 @@ namespace RoslynSandbox
             Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
         }
 
+        [Test]
+        public void InitializedWithOther()
+        {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    class Foo
+    {
+        public const int PublicConst1 = PublicConst2;
+        public const int PublicConst2 = 3;
+    }
+}");
+            var x = syntaxTree.FindFieldDeclaration("public const int PublicConst1 = PublicConst2");
+            var y = syntaxTree.FindFieldDeclaration("public const int PublicConst2 = 3");
+            Assert.AreEqual(1, FieldDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
+        }
+
         private static IEnumerable<TestCaseData> CreateTestCases()
         {
             var foo = SyntaxTree.FindClassDeclaration("Foo");
