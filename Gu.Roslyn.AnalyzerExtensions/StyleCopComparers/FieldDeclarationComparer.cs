@@ -9,8 +9,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
     {
         public static readonly FieldDeclarationComparer Default = new FieldDeclarationComparer();
 
-        public int Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        public static int Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
+            if (object.ReferenceEquals(x, y))
+            {
+                return 0;
+            }
+
+            if (x == null)
+            {
+                return -1;
+            }
+
+            if (y == null)
+            {
+                return 1;
+            }
+
             var compare = CompareAccessability(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
@@ -23,7 +38,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return compare;
             }
 
-            return CompareReadOnly(x.Modifiers, y.Modifiers);
+            compare = CompareReadOnly(x.Modifiers, y.Modifiers);
+            if (compare != 0)
+            {
+                return compare;
+            }
+
+            return x.SpanStart.CompareTo(y.SpanStart);
+        }
+
+        int IComparer<FieldDeclarationSyntax>.Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        {
+            return Compare(x, y);
         }
 
         private static int CompareAccessability(SyntaxTokenList x, SyntaxTokenList y)
@@ -53,12 +79,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return 3;
                 }
 
-                if (list.Any(SyntaxKind.PrivateKeyword))
-                {
-                    return 4;
-                }
-
-                return 5;
+                return 4;
             }
         }
 
