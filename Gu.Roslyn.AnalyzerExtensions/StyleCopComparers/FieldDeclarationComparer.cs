@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         public static int Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            if (object.ReferenceEquals(x, y))
+            if (ReferenceEquals(x, y))
             {
                 return 0;
             }
@@ -57,10 +57,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return x.SpanStart.CompareTo(y.SpanStart);
         }
 
-        int IComparer<FieldDeclarationSyntax>.Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
-        {
-            return Compare(x, y);
-        }
+        int IComparer<FieldDeclarationSyntax>.Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y) => Compare(x, y);
 
         private static int CompareAccessability(SyntaxTokenList x, SyntaxTokenList y)
         {
