@@ -8,13 +8,33 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class PropertyDeclarationComparerTests
+    public class BasePropertyDeclarationComparerTests
     {
         private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
+    using System;
+
     public class Foo : IFoo
     {
+        public event EventHandler PublicEvent1
+        {
+            add { throw new NotImplementedException(); }
+            remove { throw new NotImplementedException(); }
+        }
+
+        public event EventHandler PublicEvent2
+        {
+            add { throw new NotImplementedException(); }
+            remove { throw new NotImplementedException(); }
+        }
+
+        internal event EventHandler InternalEvent2
+        {
+            add { throw new NotImplementedException(); }
+            remove { throw new NotImplementedException(); }
+        }
+
         public static int PublicStaticGet { get; } = 1;
 
         public static int PublicStaticGet1 { get; } = PublicStaticGet;
@@ -54,6 +74,8 @@ namespace RoslynSandbox
         private int PrivateExpressionBody => this.InternalGet;
 
         private int PrivateGetSet { get; set; }
+
+        public int this[int index] => index;
     }
 
     public interface IFoo
@@ -67,12 +89,12 @@ namespace RoslynSandbox
         private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases().ToArray();
 
         [TestCaseSource(nameof(TestCaseSource))]
-        public void Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+        public void Compare(BasePropertyDeclarationSyntax x, BasePropertyDeclarationSyntax y)
         {
-            Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, PropertyDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, PropertyDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, BasePropertyDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1, BasePropertyDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, BasePropertyDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, BasePropertyDeclarationComparer.Compare(y, y));
         }
 
         [Test]
@@ -89,10 +111,10 @@ namespace RoslynSandbox
 }");
             var x = syntaxTree.FindPropertyDeclaration("public static int PublicStatic1 { get; } = PublicStatic2");
             var y = syntaxTree.FindPropertyDeclaration("public static int PublicStatic2 { get; } = 3");
-            Assert.AreEqual(1, PropertyDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, PropertyDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, PropertyDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(1, BasePropertyDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(-1, BasePropertyDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, BasePropertyDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, BasePropertyDeclarationComparer.Compare(y, y));
         }
 
         private static IEnumerable<TestCaseData> CreateTestCases()
