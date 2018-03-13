@@ -42,7 +42,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return compare;
             }
 
-            compare = BasePropertyDeclarationComparer.CompareScope(x.Modifiers, y.Modifiers);
+            compare = BasePropertyDeclarationComparer.CompareScope(x, y);
             if (compare != 0)
             {
                 return compare;

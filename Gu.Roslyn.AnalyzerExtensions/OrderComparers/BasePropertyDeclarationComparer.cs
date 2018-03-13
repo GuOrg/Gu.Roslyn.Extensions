@@ -62,7 +62,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return compare;
             }
 
-            compare = CompareScope(x.Modifiers, y.Modifiers);
+            compare = CompareScope(x, y);
             if (compare != 0)
             {
                 return compare;
@@ -128,9 +128,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
-        internal static int CompareScope(SyntaxTokenList x, SyntaxTokenList y)
+        internal static int CompareScope(BasePropertyDeclarationSyntax x, BasePropertyDeclarationSyntax y)
         {
-            return Index(x).CompareTo(Index(y));
+            return Index(x.Modifiers).CompareTo(Index(y.Modifiers));
 
             int Index(SyntaxTokenList list)
             {

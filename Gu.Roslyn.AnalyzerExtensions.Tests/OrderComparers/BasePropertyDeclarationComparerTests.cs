@@ -41,6 +41,8 @@ namespace RoslynSandbox
 
         public static int PublicStaticExpressionBody => PublicStaticGet;
 
+        public static int PublicStaticGetSet { get; set; }
+
         public int PublicGet { get; }
 
         object IFoo.PublicGet => this.PublicGet;
@@ -60,6 +62,14 @@ namespace RoslynSandbox
         public int PublicGetPrivateSet1 { get; private set; }
 
         public int PublicGetPrivateSet2 { get; private set; }
+
+        internal static int InternalStaticGet { get; } = 1;
+
+        internal static int InternalStaticGet1 { get; } = internalStaticGet;
+
+        internal static int InternalStaticExpressionBody => internalStaticGet;
+
+        internal static int InternalStaticGetSet { get; set; }
 
         internal int InternalGet { get; }
 
