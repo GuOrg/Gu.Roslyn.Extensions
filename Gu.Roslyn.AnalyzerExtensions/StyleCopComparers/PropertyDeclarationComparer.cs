@@ -52,7 +52,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            var compare = CompareAccessability(x.Modifiers, y.Modifiers);
+            var compare = CompareAccessability(x, y);
             if (compare != 0)
             {
                 return compare;
@@ -64,10 +64,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return compare;
             }
 
-            compare = CompareSetter(x, y);
+            compare = CompareSetterAccessability(x, y);
             if (compare != 0)
             {
                 return compare;
+            }
+
+            if (x.TryGetGetter(out _) &&
+                !y.TryGetGetter(out _))
+            {
+                return -1;
+            }
+
+            if (!x.TryGetGetter(out _) &&
+                y.TryGetGetter(out _))
+            {
+                return 1;
             }
 
             return x.SpanStart.CompareTo(y.SpanStart);
@@ -75,31 +87,37 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         int IComparer<BasePropertyDeclarationSyntax>.Compare(BasePropertyDeclarationSyntax x, BasePropertyDeclarationSyntax y) => Compare(x, y);
 
-        private static int CompareAccessability(SyntaxTokenList x, SyntaxTokenList y)
+        private static int CompareAccessability(BasePropertyDeclarationSyntax x, BasePropertyDeclarationSyntax y)
         {
             return Index(x).CompareTo(Index(y));
 
-            int Index(SyntaxTokenList list)
+            int Index(BasePropertyDeclarationSyntax property)
             {
-                if (list.Any(SyntaxKind.PublicKeyword))
+                if (property.ExplicitInterfaceSpecifier != null ||
+                    property.Modifiers.Any(SyntaxKind.PublicKeyword))
                 {
                     return 0;
                 }
 
-                if (list.Any(SyntaxKind.ProtectedKeyword) &&
-                    list.Any(SyntaxKind.InternalKeyword))
+                if (property.Modifiers.Any(SyntaxKind.ProtectedKeyword) &&
+                    property.Modifiers.Any(SyntaxKind.InternalKeyword))
                 {
                     return 1;
                 }
 
-                if (list.Any(SyntaxKind.InternalKeyword))
+                if (property.Modifiers.Any(SyntaxKind.InternalKeyword))
                 {
                     return 2;
                 }
 
-                if (list.Any(SyntaxKind.ProtectedKeyword))
+                if (property.Modifiers.Any(SyntaxKind.ProtectedKeyword))
                 {
                     return 3;
+                }
+
+                if (property.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                {
+                    return 4;
                 }
 
                 return 2;
@@ -142,21 +160,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        private static int CompareSetter(BasePropertyDeclarationSyntax x, BasePropertyDeclarationSyntax y)
+        private static int CompareSetterAccessability(BasePropertyDeclarationSyntax x, BasePropertyDeclarationSyntax y)
         {
-            if (x.TryGetSetter(out var xSetter) &&
-                y.TryGetSetter(out var ySetter))
+            if (x.TryGetSetter(out var xSetter))
             {
-                return Index(xSetter.Modifiers).CompareTo(Index(ySetter.Modifiers));
+                if (y.TryGetSetter(out var ySetter))
+                {
+                    return Index(xSetter.Modifiers).CompareTo(Index(ySetter.Modifiers));
+                }
+
+                return 1;
             }
 
-            if (xSetter == null &&
-                !y.TryGetSetter(out ySetter))
-            {
-                return 0;
-            }
-
-            return 1;
+            return y.TryGetSetter(out _) ? -1 : 0;
 
             int Index(SyntaxTokenList list)
             {
@@ -179,6 +195,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 if (list.Any(SyntaxKind.ProtectedKeyword))
                 {
                     return 3;
+                }
+
+                if (list.Any(SyntaxKind.PrivateKeyword))
+                {
+                    return 4;
                 }
 
                 return 0;

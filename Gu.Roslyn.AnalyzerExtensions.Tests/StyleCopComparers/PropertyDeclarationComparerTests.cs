@@ -47,7 +47,7 @@ namespace RoslynSandbox
 
         internal int InternalGetSet { get; set; }
 
-        internal int InternalGetInternalSet { get; private set; }
+        internal int InternalGetPrivateSet { get; private set; }
 
         private int PrivateGet { get; }
 
