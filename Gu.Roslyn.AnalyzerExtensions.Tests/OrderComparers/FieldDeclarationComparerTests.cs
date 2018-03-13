@@ -67,6 +67,38 @@ namespace RoslynSandbox
             Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
         }
 
+        [Test]
+        public void BackingField()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    class Foo
+    {
+        private int value2;
+        private int value1;
+
+        public int Value1
+        {
+            get => value1;
+            set => value1 = value;
+        }
+
+        public int Value2
+        {
+            get => value2;
+            set => value2 = value;
+        }
+    }
+}");
+            var x = syntaxTree.FindFieldDeclaration("private int value2");
+            var y = syntaxTree.FindFieldDeclaration("private int value1");
+            Assert.AreEqual(1, FieldDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
+        }
+
         private static IEnumerable<TestCaseData> CreateTestCases()
         {
             var foo = SyntaxTree.FindClassDeclaration("Foo");

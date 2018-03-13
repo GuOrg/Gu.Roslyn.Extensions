@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.OrderComparers
 {
     using System.Collections.Generic;
     using System.Linq;
