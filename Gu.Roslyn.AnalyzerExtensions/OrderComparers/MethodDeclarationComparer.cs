@@ -2,7 +2,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     public class MethodDeclarationComparer : IComparer<MethodDeclarationSyntax>
@@ -43,35 +42,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         int IComparer<MethodDeclarationSyntax>.Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y) => Compare(x, y);
 
-        internal static int CompareAccessability(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+        private static int CompareAccessability(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
         {
-            return Index(x).CompareTo(Index(y));
+            return MemberDeclarationComparer.CompareAccessability(Accessibility(x), Accessibility(y));
 
-            int Index(MethodDeclarationSyntax method)
+            Accessibility Accessibility(MethodDeclarationSyntax method)
             {
-                if (method.ExplicitInterfaceSpecifier != null ||
-                    method.Modifiers.Any(SyntaxKind.PublicKeyword))
+                if (method.ExplicitInterfaceSpecifier != null)
                 {
-                    return 0;
+                    return Microsoft.CodeAnalysis.Accessibility.Public;
                 }
 
-                if (method.Modifiers.Any(SyntaxKind.ProtectedKeyword) &&
-                    method.Modifiers.Any(SyntaxKind.InternalKeyword))
-                {
-                    return 1;
-                }
-
-                if (method.Modifiers.Any(SyntaxKind.InternalKeyword))
-                {
-                    return 2;
-                }
-
-                if (method.Modifiers.Any(SyntaxKind.ProtectedKeyword))
-                {
-                    return 3;
-                }
-
-                return 4;
+                return method.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
             }
         }
     }

@@ -36,19 +36,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return -1;
             }
 
-            var compare = BasePropertyDeclarationComparer.CompareAccessability(x, y);
+            var compare = CompareAccessability(x, y);
             if (compare != 0)
             {
                 return compare;
             }
 
-            compare = BasePropertyDeclarationComparer.CompareScope(x, y);
+            compare = MemberDeclarationComparer.CompareScope(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
                 return compare;
             }
 
-            compare = BasePropertyDeclarationComparer.CompareSetterAccessability(x, y);
+            compare = CompareSetterAccessability(x, y);
             if (compare != 0)
             {
                 return compare;
@@ -90,6 +90,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
+        }
+
+        private static int CompareAccessability(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+        {
+            return MemberDeclarationComparer.CompareAccessability(Accessibility(x), Accessibility(y));
+        }
+
+        private static int CompareSetterAccessability(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+        {
+            if (x.TryGetSetter(out var xSetter))
+            {
+                if (y.TryGetSetter(out var ySetter))
+                {
+                    return MemberDeclarationComparer.CompareAccessability(
+                        ySetter.Modifiers.Accessibility(Accessibility(y)),
+                        xSetter.Modifiers.Accessibility(Accessibility(x)));
+                }
+
+                return 1;
+            }
+
+            return y.TryGetSetter(out _) ? -1 : 0;
+        }
+
+        private static Accessibility Accessibility(PropertyDeclarationSyntax method)
+        {
+            if (method.ExplicitInterfaceSpecifier != null)
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Public;
+            }
+
+            return method.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
         }
     }
 }

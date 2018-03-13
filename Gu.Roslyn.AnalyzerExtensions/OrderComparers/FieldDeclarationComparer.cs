@@ -36,13 +36,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return -1;
             }
 
-            var compare = CompareAccessability(x.Modifiers, y.Modifiers);
+            var compare = MemberDeclarationComparer.CompareAccessability(x.Modifiers, y.Modifiers, Accessibility.Private);
             if (compare != 0)
             {
                 return compare;
             }
 
-            compare = CompareScope(x.Modifiers, y.Modifiers);
+            compare = MemberDeclarationComparer.CompareScope(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
                 return compare;
@@ -58,57 +58,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         int IComparer<FieldDeclarationSyntax>.Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y) => Compare(x, y);
-
-        private static int CompareAccessability(SyntaxTokenList x, SyntaxTokenList y)
-        {
-            return Index(x).CompareTo(Index(y));
-
-            int Index(SyntaxTokenList list)
-            {
-                if (list.Any(SyntaxKind.PublicKeyword))
-                {
-                    return 0;
-                }
-
-                if (list.Any(SyntaxKind.ProtectedKeyword) &&
-                    list.Any(SyntaxKind.InternalKeyword))
-                {
-                    return 1;
-                }
-
-                if (list.Any(SyntaxKind.InternalKeyword))
-                {
-                    return 2;
-                }
-
-                if (list.Any(SyntaxKind.ProtectedKeyword))
-                {
-                    return 3;
-                }
-
-                return 4;
-            }
-        }
-
-        private static int CompareScope(SyntaxTokenList x, SyntaxTokenList y)
-        {
-            return Index(x).CompareTo(Index(y));
-
-            int Index(SyntaxTokenList list)
-            {
-                if (list.Any(SyntaxKind.ConstKeyword))
-                {
-                    return 0;
-                }
-
-                if (list.Any(SyntaxKind.StaticKeyword))
-                {
-                    return 1;
-                }
-
-                return 2;
-            }
-        }
 
         private static bool IsInitializedWith(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {

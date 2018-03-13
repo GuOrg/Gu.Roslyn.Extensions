@@ -34,6 +34,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return Microsoft.CodeAnalysis.Accessibility.Protected;
             }
 
+            if (list.Any(SyntaxKind.PrivateKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Private;
+            }
+
             return whenMissing;
         }
     }

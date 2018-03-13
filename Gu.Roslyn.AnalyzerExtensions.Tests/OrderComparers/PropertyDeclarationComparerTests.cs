@@ -27,6 +27,12 @@ namespace RoslynSandbox
 
         public int PublicExpressionBody => this.PublicGet;
 
+        public int PublicGetPrivateSet1 { get; private set; }
+
+        public int PublicGetPrivateSet2 { get; private set; }
+
+        public int PublicGetInternalSet { get; internal set; }
+
         public int PublicGetSet { get; set; }
 
         object IFoo.PublicGetSet
@@ -35,19 +41,13 @@ namespace RoslynSandbox
             set { this.PublicGetSet = (int) value; }
         }
 
-        public int PublicGetInternalSet { get; internal set; }
-
-        public int PublicGetPrivateSet1 { get; private set; }
-
-        public int PublicGetPrivateSet2 { get; private set; }
-
         internal int InternalGet { get; }
 
         internal int InternalExpressionBody => this.InternalGet;
 
-        internal int InternalGetSet { get; set; }
-
         internal int InternalGetPrivateSet { get; private set; }
+
+        internal int InternalGetSet { get; set; }
 
         private int PrivateGet { get; }
 
@@ -73,6 +73,15 @@ namespace RoslynSandbox
             Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0, PropertyDeclarationComparer.Compare(x, x));
             Assert.AreEqual(0, PropertyDeclarationComparer.Compare(y, y));
+        }
+
+        [TestCaseSource(nameof(TestCaseSource))]
+        public void BasePropertyDeclarationComparerCompare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+        {
+            Assert.AreEqual(-1, BasePropertyDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1, BasePropertyDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, BasePropertyDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, BasePropertyDeclarationComparer.Compare(y, y));
         }
 
         [Test]
