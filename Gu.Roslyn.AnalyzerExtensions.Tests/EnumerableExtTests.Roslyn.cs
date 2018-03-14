@@ -120,7 +120,7 @@ namespace RoslynSandbox
     {
         internal int Bar() => 1;
 
-        internal void Bar(int i) => i;
+        internal int Bar(int i) => i;
     }
 }");
             var type = syntaxTree.FindClassDeclaration("Foo");
@@ -128,8 +128,11 @@ namespace RoslynSandbox
 
             Assert.AreEqual(false, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.Identifier.ValueText == "Bar", out member));
 
+            Assert.AreEqual(true, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.ParameterList.Parameters.Count == 0, out member));
+            Assert.AreEqual("internal int Bar() => 1;", member.ToString());
+
             Assert.AreEqual(true, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.ParameterList.Parameters.Count == 1, out member));
-            Assert.AreEqual("internal void Bar(int i) => i;", member.ToString());
+            Assert.AreEqual("internal int Bar(int i) => i;", member.ToString());
         }
 
         [TestCase(0, "int i")]
