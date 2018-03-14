@@ -2,6 +2,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public partial class EnumerableExtTests
@@ -107,6 +108,28 @@ namespace RoslynSandbox
             var bazDeclaration = syntaxTree.FindMethodDeclaration("Baz");
             Assert.AreEqual(true, bazDeclaration.ParameterList.Parameters.TrySingle(out parameter));
             Assert.AreEqual("int i", parameter.ToString());
+        }
+
+        [Test]
+        public void TrySingleMethod()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal int Bar() => 1;
+
+        internal void Bar(int i) => i;
+    }
+}");
+            var type = syntaxTree.FindClassDeclaration("Foo");
+            Assert.AreEqual(false, type.Members.TrySingle(out var member));
+
+            Assert.AreEqual(false, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.Identifier.ValueText == "Bar", out member));
+
+            Assert.AreEqual(true, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.ParameterList.Parameters.Count == 1, out member));
+            Assert.AreEqual("internal void Bar(int i) => i;", member.ToString());
         }
 
         [TestCase(0, "int i")]

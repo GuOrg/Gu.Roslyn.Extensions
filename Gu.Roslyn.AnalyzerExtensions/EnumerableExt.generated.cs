@@ -76,16 +76,24 @@
                 return false;
             }
 
-            foreach (var item in source)
+            for (var i = 0; i < source.Count; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(T);
             return false;
         }
 
@@ -247,16 +255,24 @@
         public static bool TrySingle<T>(this ImmutableArray<T> source, Func<T, bool> predicate, out T result)
         {
             result = default(T);
-            foreach (var item in source)
+            for (var i = 0; i < source.Length; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.Length; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(T);
             return false;
         }
 
@@ -395,16 +411,24 @@
         public static bool TrySingle(this ChildSyntaxList source, Func<SyntaxNodeOrToken, bool> predicate, out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
-            foreach (var item in source)
+            for (var i = 0; i < source.Count; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(SyntaxNodeOrToken);
             return false;
         }
 
@@ -545,16 +569,24 @@
             where T : SyntaxNode
         {
             result = default(T);
-            foreach (var item in source)
+            for (var i = 0; i < source.Count; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(T);
             return false;
         }
 
@@ -703,16 +735,24 @@
             where T : SyntaxNode
         {
             result = default(T);
-            foreach (var item in source)
+            for (var i = 0; i < source.Count; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(T);
             return false;
         }
 
@@ -855,16 +895,24 @@
         public static bool TrySingle(this SyntaxNodeOrTokenList source, Func<SyntaxNodeOrToken, bool> predicate, out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
-            foreach (var item in source)
+            for (var i = 0; i < source.Count; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(SyntaxNodeOrToken);
             return false;
         }
 
@@ -999,16 +1047,24 @@
         public static bool TrySingle(this SyntaxTokenList source, Func<SyntaxToken, bool> predicate, out SyntaxToken result)
         {
             result = default(SyntaxToken);
-            foreach (var item in source)
+            for (var i = 0; i < source.Count; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(SyntaxToken);
             return false;
         }
 
@@ -1143,16 +1199,24 @@
         public static bool TrySingle(this SyntaxTriviaList source, Func<SyntaxTrivia, bool> predicate, out SyntaxTrivia result)
         {
             result = default(SyntaxTrivia);
-            foreach (var item in source)
+            for (var i = 0; i < source.Count; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(SyntaxTrivia);
             return false;
         }
 

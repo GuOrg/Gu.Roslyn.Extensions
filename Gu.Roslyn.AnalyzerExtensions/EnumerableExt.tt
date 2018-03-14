@@ -89,16 +89,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             result = default(<#= itemName #>);
 <# this.WriteIfNullReturnFalse(types); #>
-            foreach (var item in source)
+            for (var i = 0; i < source.<#= count #>; i++)
             {
+                var item = source[i];
                 if (predicate(item))
                 {
                     result = item;
+                    for (var j = i + 1; j < source.<#= count #>; j++)
+                    {
+                        if (predicate(source[j]))
+                        {
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }
 
-            result = default(<#= itemName #>);
             return false;
         }
 
