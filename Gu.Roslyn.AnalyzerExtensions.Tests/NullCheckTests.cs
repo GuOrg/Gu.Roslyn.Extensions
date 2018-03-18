@@ -9,9 +9,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     public class NullCheckTests
     {
         [TestCase("text == null")]
+        [TestCase("text != null")]
         [TestCase("text == null && other == null")]
         [TestCase("text is null")]
-        public void WhenOldStyleNullCheck(string check)
+        public void IsCheckedWhenOldStyleNullCheck(string check)
         {
             var testCode = @"
 namespace RoslynSandbox
@@ -43,7 +44,7 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public void CoalesceThrow()
+        public void IsCheckedWhenCoalesceThrow()
         {
             var testCode = @"
 namespace RoslynSandbox
@@ -68,9 +69,8 @@ namespace RoslynSandbox
             Assert.AreEqual(true, NullCheck.IsChecked(symbol, parameter.FirstAncestor<ConstructorDeclarationSyntax>(), semanticModel, CancellationToken.None));
         }
 
-        [Explicit("Maybe is probably better here.")]
         [Test]
-        public void WhenOldStyleNullCheckOrOtherCheck()
+        public void IsCheckedWhenOldStyleNullCheckOrOtherCheck()
         {
             var testCode = @"
 namespace RoslynSandbox
@@ -97,7 +97,7 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var parameter = syntaxTree.FindBestMatch<ParameterSyntax>("text");
             var symbol = semanticModel.GetDeclaredSymbol(parameter);
-            Assert.AreEqual(false, NullCheck.IsChecked(symbol, parameter.FirstAncestor<ConstructorDeclarationSyntax>(), semanticModel, CancellationToken.None));
+            Assert.AreEqual(true, NullCheck.IsChecked(symbol, parameter.FirstAncestor<ConstructorDeclarationSyntax>(), semanticModel, CancellationToken.None));
         }
     }
 }

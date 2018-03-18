@@ -1,10 +1,13 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     public static class SyntaxNodeExt
     {
+        public static bool IsEitherKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2) => node.IsKind(kind1) || node.IsKind(kind2);
+
         public static T FirstAncestor<T>(this SyntaxNode node)
             where T : SyntaxNode
         {

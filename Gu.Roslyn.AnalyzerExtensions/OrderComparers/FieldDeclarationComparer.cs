@@ -174,7 +174,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
             {
-                assignments.Add(node);
+                this.assignments.Add(node);
                 base.VisitAssignmentExpression(node);
             }
 

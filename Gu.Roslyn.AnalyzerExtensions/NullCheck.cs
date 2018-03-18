@@ -37,7 +37,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
-        private sealed class NullCheckWalker : PooledWalker<NullCheckWalker>
+        public static NullCheckWalker For(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            var walker = NullCheckWalker.Borrow(scope.FirstAncestorOrSelf<MemberDeclarationSyntax>());
+            walker.Filter(parameter, semanticModel, cancellationToken);
+            return walker;
+        }
+
+        public sealed class NullCheckWalker : PooledWalker<NullCheckWalker>
         {
             private readonly List<BinaryExpressionSyntax> binaryExpressions = new List<BinaryExpressionSyntax>();
             private readonly List<IsPatternExpressionSyntax> isPatterns = new List<IsPatternExpressionSyntax>();
@@ -51,7 +58,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             public override void VisitBinaryExpression(BinaryExpressionSyntax node)
             {
-                if (node.IsKind(SyntaxKind.EqualsExpression) &&
+                if (node.IsEitherKind(SyntaxKind.EqualsExpression, SyntaxKind.NotEqualsExpression) &&
                     (node.Left.IsKind(SyntaxKind.NullLiteralExpression) ||
                      node.Right.IsKind(SyntaxKind.NullLiteralExpression)))
                 {
@@ -95,8 +102,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 foreach (var binaryExpression in this.binaryExpressions)
                 {
-                    if (Is(binaryExpression.Left) ||
-                        Is(binaryExpression.Right))
+                    if (Is(binaryExpression.Left, parameter, semanticModel, cancellationToken) ||
+                        Is(binaryExpression.Right, parameter, semanticModel, cancellationToken))
                     {
                         check = binaryExpression;
                         return true;
@@ -105,7 +112,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 foreach (var isPattern in this.isPatterns)
                 {
-                    if (Is(isPattern.Expression))
+                    if (Is(isPattern.Expression, parameter, semanticModel, cancellationToken))
                     {
                         check = isPattern;
                         return true;
@@ -114,7 +121,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 foreach (var invocation in this.invocations)
                 {
-                    if (invocation.ArgumentList.Arguments.TryFirst(x => Is(x.Expression), out _))
+                    if (invocation.ArgumentList.Arguments.TryFirst(x => Is(x.Expression, parameter, semanticModel, cancellationToken), out _))
                     {
                         check = invocation;
                         return true;
@@ -123,12 +130,35 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 check = null;
                 return false;
+            }
 
-                bool Is(ExpressionSyntax expression)
+            internal void Filter(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
+            {
+                for (var i = this.binaryExpressions.Count - 1; i >= 0; i--)
                 {
-                    return expression is IdentifierNameSyntax identifier &&
-                           identifier.Identifier.ValueText == parameter.Name &&
-                           semanticModel.GetSymbolSafe(expression, cancellationToken) == parameter;
+                    var binary = this.binaryExpressions[i];
+                    if (Is(binary.Left, parameter, semanticModel, cancellationToken) ||
+                        Is(binary.Right, parameter, semanticModel, cancellationToken))
+                    {
+                        this.binaryExpressions.RemoveAt(i);
+                    }
+                }
+
+                for (var i = this.isPatterns.Count - 1; i >= 0; i--)
+                {
+                    if (Is(this.isPatterns[i], parameter, semanticModel, cancellationToken))
+                    {
+                        this.isPatterns.RemoveAt(i);
+                    }
+                }
+
+                for (var i = this.invocations.Count - 1; i >= 0; i--)
+                {
+                    var invocation = this.invocations[i];
+                    if (!invocation.ArgumentList.Arguments.TryFirst(x => Is(x.Expression, parameter, semanticModel, cancellationToken), out _))
+                    {
+                        this.invocations.RemoveAt(i);
+                    }
                 }
             }
 
@@ -137,6 +167,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 this.binaryExpressions.Clear();
                 this.isPatterns.Clear();
                 this.invocations.Clear();
+            }
+
+            private static bool Is(ExpressionSyntax expression, IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
+            {
+                return expression is IdentifierNameSyntax identifier &&
+                       identifier.Identifier.ValueText == parameter.Name &&
+                       ParameterSymbolComparer.Equals(semanticModel.GetSymbolSafe(expression, cancellationToken) as IParameterSymbol, parameter);
             }
         }
     }
