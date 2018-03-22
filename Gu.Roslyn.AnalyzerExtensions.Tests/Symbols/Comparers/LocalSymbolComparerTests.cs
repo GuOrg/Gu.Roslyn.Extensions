@@ -4,7 +4,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public class LocalSymbolComparerTests
@@ -27,9 +26,9 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindBestMatch<VariableDeclarationSyntax>("bar1");
+            var node1 = syntaxTree.FindVariableDeclaration("bar1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Variables[0], CancellationToken.None);
-            var node2 = syntaxTree.FindBestMatch<VariableDeclarationSyntax>("bar2");
+            var node2 = syntaxTree.FindVariableDeclaration("bar2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2.Variables[0], CancellationToken.None);
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(false, SymbolComparer.Equals(symbol1, symbol2));

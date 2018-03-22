@@ -4,7 +4,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public class FieldSymbolComparerTests
@@ -24,9 +23,9 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindBestMatch<FieldDeclarationSyntax>("bar1");
+            var node1 = syntaxTree.FindFieldDeclaration("bar1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
-            var node2 = syntaxTree.FindBestMatch<FieldDeclarationSyntax>("bar2");
+            var node2 = syntaxTree.FindFieldDeclaration("bar2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2.Declaration.Variables[0], CancellationToken.None);
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(false, SymbolComparer.Equals(symbol1, symbol2));
@@ -58,9 +57,9 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindBestMatch<FieldDeclarationSyntax>("Bar");
+            var node1 = syntaxTree.FindFieldDeclaration("Bar");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
-            var node2 = syntaxTree.FindBestMatch<MemberAccessExpressionSyntax>("this.Bar");
+            var node2 = syntaxTree.FindMemberAccessExpression("this.Bar");
             var symbol2 = semanticModel.GetSymbolInfo(node2, CancellationToken.None).Symbol;
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol2));

@@ -4,7 +4,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public class EventSymbolComparerTests
@@ -26,9 +25,9 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindBestMatch<EventFieldDeclarationSyntax>("Bar1");
+            var node1 = syntaxTree.FindEventFieldDeclaration("Bar1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
-            var node2 = syntaxTree.FindBestMatch<EventFieldDeclarationSyntax>("Bar2");
+            var node2 = syntaxTree.FindEventFieldDeclaration("Bar2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2.Declaration.Variables[0], CancellationToken.None);
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(false, SymbolComparer.Equals(symbol1, symbol2));

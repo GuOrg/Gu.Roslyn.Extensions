@@ -93,7 +93,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case MemberAccessExpressionSyntax memberAccess:
                     return memberAccess.Expression is InstanceExpressionSyntax;
                 case IdentifierNameSyntax identifierName:
-                    return !IdentifierNameWalker.IsLocalOrParameter(identifierName);
+                    return !IdentifierTypeWalker.IsLocalOrParameter(identifierName);
                 default:
                     return false;
             }

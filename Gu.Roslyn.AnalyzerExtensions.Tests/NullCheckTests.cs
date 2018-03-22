@@ -38,7 +38,7 @@ namespace RoslynSandbox
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var parameter = syntaxTree.FindBestMatch<ParameterSyntax>("text");
+            var parameter = syntaxTree.FindParameter("text");
             var symbol = semanticModel.GetDeclaredSymbol(parameter);
             Assert.AreEqual(true, NullCheck.IsChecked(symbol, parameter.FirstAncestor<ConstructorDeclarationSyntax>(), semanticModel, CancellationToken.None));
         }
@@ -64,7 +64,7 @@ namespace RoslynSandbox
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var parameter = syntaxTree.FindBestMatch<ParameterSyntax>("text");
+            var parameter = syntaxTree.FindParameter("text");
             var symbol = semanticModel.GetDeclaredSymbol(parameter);
             Assert.AreEqual(true, NullCheck.IsChecked(symbol, parameter.FirstAncestor<ConstructorDeclarationSyntax>(), semanticModel, CancellationToken.None));
         }
@@ -95,7 +95,7 @@ namespace RoslynSandbox
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var parameter = syntaxTree.FindBestMatch<ParameterSyntax>("text");
+            var parameter = syntaxTree.FindParameter("text");
             var symbol = semanticModel.GetDeclaredSymbol(parameter);
             Assert.AreEqual(true, NullCheck.IsChecked(symbol, parameter.FirstAncestor<ConstructorDeclarationSyntax>(), semanticModel, CancellationToken.None));
         }

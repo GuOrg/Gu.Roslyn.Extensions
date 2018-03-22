@@ -6,7 +6,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public class NamedTypeSymbolComparerTests
@@ -28,9 +27,9 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindBestMatch<TypeDeclarationSyntax>("Foo1");
+            var node1 = syntaxTree.FindTypeDeclaration("Foo1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1, CancellationToken.None);
-            var node2 = syntaxTree.FindBestMatch<TypeDeclarationSyntax>("Foo2");
+            var node2 = syntaxTree.FindTypeDeclaration("Foo2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2, CancellationToken.None);
             Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
             Assert.AreEqual(false, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
