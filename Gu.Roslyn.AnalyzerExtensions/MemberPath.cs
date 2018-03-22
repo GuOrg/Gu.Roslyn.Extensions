@@ -4,27 +4,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
     public static class MemberPath
     {
-        //internal static bool TryGet(IdentifierNameSyntax expression, out ExpressionSyntax path)
-        //{
-        //    ExpressionSyntax node = expression;
-        //    while (TryGetMemberName(node, out _, out path))
-        //    {
-        //        node = path;
-        //    }
-
-        //    return !IdentifierTypeWalker.IsLocalOrParameter(path);
-        //}
-
-        public static bool Intersects(ExpressionSyntax path, ExpressionSyntax part)
-        {
-            if (Equals(path, part))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         public static bool Equals(ExpressionSyntax x, ExpressionSyntax y)
         {
             if (ReferenceEquals(x, y))
@@ -38,33 +17,29 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (TryGetMemberName(x, out var xn, out var subx))
+            using (var xWalker = IdentifierNameWalker.Borrow(x))
+            using (var yWalker = IdentifierNameWalker.Borrow(y))
             {
-                if (TryGetMemberName(y, out var yn, out var suby))
+                if (xWalker.IdentifierNames.Count != yWalker.IdentifierNames.Count)
                 {
-                    if (xn != yn)
+                    return false;
+                }
+
+                for (var i = 0; i < xWalker.IdentifierNames.Count; i++)
+                {
+                    if (xWalker.IdentifierNames[i].Identifier.ValueText != yWalker.IdentifierNames[i].Identifier.ValueText)
                     {
                         return false;
                     }
-
-                    if (IsRoot(x))
-                    {
-                        return IsRoot(y);
-                    }
-
-                    return Equals(subx, suby);
                 }
-
-                return false;
             }
 
-            return false;
+            return true;
         }
 
-        public static bool TryGetMemberName(ExpressionSyntax expression, out string name, out ExpressionSyntax subExpression)
+        public static bool TryGetMemberName(ExpressionSyntax expression, out string name)
         {
             name = null;
-            subExpression = null;
             switch (expression)
             {
                 case IdentifierNameSyntax identifierName:
@@ -72,14 +47,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     break;
                 case MemberAccessExpressionSyntax memberAccess:
                     name = memberAccess.Name.Identifier.ValueText;
-                    subExpression = memberAccess.Expression;
                     break;
                 case MemberBindingExpressionSyntax memberBinding:
                     name = memberBinding.Name.Identifier.ValueText;
                     break;
                 case ConditionalAccessExpressionSyntax conditionalAccess:
-                    TryGetMemberName(conditionalAccess.WhenNotNull, out name, out _);
-                    subExpression = conditionalAccess.Expression;
+                    TryGetMemberName(conditionalAccess.WhenNotNull, out name);
                     break;
             }
 

@@ -20,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public int GetHashCode(ExpressionSyntax obj)
         {
-            if (MemberPath.TryGetMemberName(obj, out var name, out _))
+            if (MemberPath.TryGetMemberName(obj, out var name))
             {
                 return name.GetHashCode();
             }
