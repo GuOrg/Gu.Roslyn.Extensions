@@ -1,5 +1,8 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Collections.Generic;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     public static class MemberPath
@@ -17,17 +20,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var xWalker = IdentifierNameWalker.Borrow(x))
-            using (var yWalker = IdentifierNameWalker.Borrow(y))
+            using (var xWalker = PathWalker.Borrow(x))
+            using (var yWalker = PathWalker.Borrow(y))
             {
-                if (xWalker.IdentifierNames.Count != yWalker.IdentifierNames.Count)
+                var xPath = xWalker.IdentifierNames;
+                var yPath = yWalker.IdentifierNames;
+                if (xPath.Count == 0 ||
+                    xPath.Count != yPath.Count)
                 {
                     return false;
                 }
 
-                for (var i = 0; i < xWalker.IdentifierNames.Count; i++)
+                for (var i = 0; i < xPath.Count; i++)
                 {
-                    if (xWalker.IdentifierNames[i].Identifier.ValueText != yWalker.IdentifierNames[i].Identifier.ValueText)
+                    if (xPath[i].Identifier.ValueText != yPath[i].Identifier.ValueText)
                     {
                         return false;
                     }
@@ -59,16 +65,56 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return name != null;
         }
 
-        private static bool IsRoot(ExpressionSyntax expression)
+        public sealed class PathWalker : PooledWalker<PathWalker>
         {
-            switch (expression)
+            private readonly List<IdentifierNameSyntax> identifierNames = new List<IdentifierNameSyntax>();
+
+            private PathWalker()
             {
-                case MemberAccessExpressionSyntax memberAccess:
-                    return memberAccess.Expression is InstanceExpressionSyntax;
-                case IdentifierNameSyntax identifierName:
-                    return !IdentifierTypeWalker.IsLocalOrParameter(identifierName);
-                default:
-                    return false;
+            }
+
+            public IReadOnlyList<IdentifierNameSyntax> IdentifierNames => this.identifierNames;
+
+            public static PathWalker Borrow(ExpressionSyntax node)
+            {
+                var walker = BorrowAndVisit(node, () => new PathWalker());
+                if (walker.identifierNames.TryFirst(out var first))
+                {
+                    if (first.Parent is InstanceExpressionSyntax)
+                    {
+                        return walker;
+                    }
+
+                    if (IdentifierTypeWalker.IsLocalOrParameter(first))
+                    {
+                        walker.identifierNames.Clear();
+                    }
+                }
+
+                return walker;
+            }
+
+            public override void Visit(SyntaxNode node)
+            {
+                switch (node.Kind())
+                {
+                    case SyntaxKind.ConditionalAccessExpression:
+                    case SyntaxKind.SimpleMemberAccessExpression:
+                    case SyntaxKind.MemberBindingExpression:
+                    case SyntaxKind.IdentifierName:
+                        base.Visit(node);
+                        break;
+                }
+            }
+
+            public override void VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                this.identifierNames.Add(node);
+            }
+
+            protected override void Clear()
+            {
+                this.identifierNames.Clear();
             }
         }
     }
