@@ -7,6 +7,29 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
 
     internal class MemberPathTests
     {
+        [Test]
+        public void EqualsSimpleValue()
+        {
+            var testCode = @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        private int value;
+
+        public int Value
+        {
+            get => this.value;
+            set => this.value = value;
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var getExpression = syntaxTree.FindAccessorDeclaration("get => this.value;").ExpressionBody.Expression;
+            var setExpression = ((AssignmentExpressionSyntax)syntaxTree.FindAccessorDeclaration("set => this.value = value;").ExpressionBody.Expression).Left;
+            Assert.AreEqual(true, MemberPath.Equals(getExpression, setExpression));
+        }
+
         [TestCase("get => this.value1;", "set => this.value1 = value;", true)]
         [TestCase("get => this.value1;", "set => value1 = value;", true)]
         [TestCase("get => value1;", "set => this.value1 = value;", true)]
