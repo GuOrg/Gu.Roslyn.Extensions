@@ -7,22 +7,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
     {
         public static bool TryFindFieldRecursive(this ITypeSymbol type, string name, out IFieldSymbol field)
         {
-            return type.TryFindSingleMemberRecursive(name, out field);
+            return type.TryFindFirstMemberRecursive(name, out field);
         }
 
         public static bool TryFindEventRecursive(this ITypeSymbol type, string name, out IEventSymbol @event)
         {
-            return type.TryFindSingleMemberRecursive(name, out @event);
+            return type.TryFindFirstMemberRecursive(name, out @event);
         }
 
         public static bool TryFindPropertyRecursive(this ITypeSymbol type, string name, out IPropertySymbol property)
         {
             if (name == "Item[]")
             {
-                return type.TryFindSingleMemberRecursive(x => x.IsIndexer, out property);
+                return type.TryFindFirstMemberRecursive(x => x.IsIndexer, out property);
             }
 
-            return type.TryFindSingleMemberRecursive(name, out property);
+            return type.TryFindFirstMemberRecursive(name, out property);
         }
 
         public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, out IMethodSymbol result)
