@@ -25,7 +25,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return node.FirstAncestorOrSelf<T>();
         }
 
-        internal static bool IsInExpressionTree(this SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static bool IsInExpressionTree(this SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             var lambda = node.FirstAncestor<LambdaExpressionSyntax>();
             while (lambda != null)
@@ -43,7 +43,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        public static bool? IsBeforeInScope(this SyntaxNode node, SyntaxNode other)
+        public static bool? IsExecutedBefore(this SyntaxNode node, SyntaxNode other)
         {
             if (node is null ||
                 other is null)

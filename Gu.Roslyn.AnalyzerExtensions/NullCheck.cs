@@ -33,7 +33,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             using (var walker = NullCheckWalker.Borrow(scope.FirstAncestorOrSelf<MemberDeclarationSyntax>()))
             {
                 return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
-                       check.IsBeforeInScope(scope) == true;
+                       check.IsExecutedBefore(scope) == true;
             }
         }
 

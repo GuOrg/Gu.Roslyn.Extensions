@@ -24,7 +24,7 @@ internal class Foo
 }");
                 var first = syntaxTree.FindStatement(firstStatement);
                 var other = syntaxTree.FindStatement(otherStatement);
-                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
             [TestCase("var temp = 1;", "temp = 2;", true)]
@@ -56,7 +56,7 @@ namespace RoslynSandbox
 }");
                 var first = syntaxTree.FindStatement(firstStatement);
                 var other = syntaxTree.FindStatement(otherStatement);
-                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
             [TestCase("var temp = 1;", "temp = 2;", true)]
@@ -86,7 +86,7 @@ namespace RoslynSandbox
 }");
                 var first = syntaxTree.FindStatement(firstStatement);
                 var other = syntaxTree.FindStatement(otherStatement);
-                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
             [TestCase("var temp = 1;", "temp = 2;", true)]
@@ -118,7 +118,7 @@ namespace RoslynSandbox
 }");
                 var first = syntaxTree.FindStatement(firstStatement);
                 var other = syntaxTree.FindStatement(otherStatement);
-                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
             [TestCase("var temp = 1;", "temp = 4;", true)]
@@ -151,7 +151,7 @@ namespace RoslynSandbox
 }");
                 var first = syntaxTree.FindStatement(firstStatement);
                 var other = syntaxTree.FindStatement(otherStatement);
-                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
             [TestCase("1", "2", true)]
@@ -179,7 +179,7 @@ namespace RoslynSandbox
 }");
                 var first = syntaxTree.FindLiteralExpression(firstInt);
                 var other = syntaxTree.FindLiteralExpression(otherInt);
-                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
             [TestCase("1", "2", true)]
@@ -218,7 +218,7 @@ namespace RoslynSandbox
 }");
                 var first = syntaxTree.FindLiteralExpression(firstInt);
                 var other = syntaxTree.FindLiteralExpression(otherInt);
-                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
             [TestCase("1", "2", true)]
@@ -257,7 +257,7 @@ namespace RoslynSandbox
 }");
                 var first = syntaxTree.FindLiteralExpression(firstInt);
                 var other = syntaxTree.FindLiteralExpression(otherInt);
-                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
         }
     }
