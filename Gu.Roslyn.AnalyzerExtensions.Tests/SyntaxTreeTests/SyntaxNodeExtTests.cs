@@ -188,8 +188,47 @@ namespace RoslynSandbox
             [TestCase("3", "1", false)]
             [TestCase("2", "3", null)]
             [TestCase("3", "2", null)]
-            [TestCase("4", "5", null)]
-            [TestCase("5", "4", null)]
+            [TestCase("4", "5", true)]
+            [TestCase("5", "4", false)]
+            [TestCase("3", "4", null)]
+            [TestCase("4", "3", null)]
+            public void LambdaLocalClosure(string firstInt, string otherInt, bool? expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    using System;
+
+    public class Foo
+    {
+        public Foo()
+        {
+            var a = 1;
+            this.E += (_, __) => a = 3;
+            this.E += (_, __) =>
+            {
+                a = 4;
+                a = 5;
+            };
+            a = 2;
+        }
+
+        public event EventHandler E;
+    }
+}");
+                var first = syntaxTree.FindLiteralExpression(firstInt);
+                var other = syntaxTree.FindLiteralExpression(otherInt);
+                Assert.AreEqual(expected, first.IsBeforeInScope(other));
+            }
+
+            [TestCase("1", "2", true)]
+            [TestCase("2", "1", false)]
+            [TestCase("1", "3", true)]
+            [TestCase("3", "1", false)]
+            [TestCase("2", "3", null)]
+            [TestCase("3", "2", null)]
+            [TestCase("4", "5", true)]
+            [TestCase("5", "4", false)]
             [TestCase("3", "4", null)]
             [TestCase("4", "3", null)]
             public void LambdaParameterClosure(string firstInt, string otherInt, bool? expected)

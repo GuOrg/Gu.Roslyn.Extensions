@@ -51,52 +51,76 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (node.Contains(other) &&
-                node.SpanStart < other.SpanStart)
-            {
-                return true;
-            }
-
             if (!node.SharesAncestor<MemberDeclarationSyntax>(other))
             {
                 return null;
             }
 
-            if (other.FirstAncestor<AnonymousFunctionExpressionSyntax>() is AnonymousFunctionExpressionSyntax lambda)
+            if (other.FirstAncestor<AnonymousFunctionExpressionSyntax>() is AnonymousFunctionExpressionSyntax otherLambda)
             {
+                if (node.FirstAncestor<AnonymousFunctionExpressionSyntax>() is AnonymousFunctionExpressionSyntax nodeLambda)
+                {
+                    if (ReferenceEquals(nodeLambda, otherLambda))
+                    {
+                        return IsBeforeInScopeCore();
+                    }
 
+                    return null;
+                }
+
+                return node.SpanStart < otherLambda.SpanStart ? true : (bool?)null;
             }
-
-            var statement = node.FirstAncestorOrSelf<StatementSyntax>();
-            var otherStatement = other.FirstAncestorOrSelf<StatementSyntax>();
-            if (statement == null ||
-                otherStatement == null)
+            else if (node.FirstAncestor<AnonymousFunctionExpressionSyntax>() is AnonymousFunctionExpressionSyntax nodeLambda)
             {
+                if (other.SpanStart < nodeLambda.SpanStart)
+                {
+                    return false;
+                }
+
                 return null;
             }
 
-            var block = statement.Parent as BlockSyntax;
-            var otherBlock = otherStatement.Parent as BlockSyntax;
-            if (block == null && otherBlock == null)
-            {
-                return false;
-            }
+            return IsBeforeInScopeCore();
 
-            if (ReferenceEquals(block, otherBlock) ||
-                otherBlock?.Contains(node) == true ||
-                block?.Contains(other) == true)
+            bool? IsBeforeInScopeCore()
             {
-                var firstAnon = FirstAncestor<AnonymousFunctionExpressionSyntax>(node);
-                var otherAnon = FirstAncestor<AnonymousFunctionExpressionSyntax>(other);
-                if (!ReferenceEquals(firstAnon, otherAnon))
+                if (node.Contains(other) &&
+                    node.SpanStart < other.SpanStart)
                 {
                     return true;
                 }
 
-                return statement.SpanStart < otherStatement.SpanStart;
-            }
+                var statement = node.FirstAncestorOrSelf<StatementSyntax>();
+                var otherStatement = other.FirstAncestorOrSelf<StatementSyntax>();
+                if (statement == null ||
+                    otherStatement == null)
+                {
+                    return null;
+                }
 
-            return false;
+                var block = statement.Parent as BlockSyntax;
+                var otherBlock = otherStatement.Parent as BlockSyntax;
+                if (block == null && otherBlock == null)
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(block, otherBlock) ||
+                    otherBlock?.Contains(node) == true ||
+                    block?.Contains(other) == true)
+                {
+                    var firstAnon = FirstAncestor<AnonymousFunctionExpressionSyntax>(node);
+                    var otherAnon = FirstAncestor<AnonymousFunctionExpressionSyntax>(other);
+                    if (!ReferenceEquals(firstAnon, otherAnon))
+                    {
+                        return true;
+                    }
+
+                    return statement.SpanStart < otherStatement.SpanStart;
+                }
+
+                return false;
+            }
         }
 
         internal static bool SharesAncestor<T>(this SyntaxNode first, SyntaxNode other)
