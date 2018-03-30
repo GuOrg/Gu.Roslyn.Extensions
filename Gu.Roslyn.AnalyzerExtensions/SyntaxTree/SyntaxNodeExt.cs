@@ -45,8 +45,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         public static bool? IsBeforeInScope(this SyntaxNode node, SyntaxNode other)
         {
-            var statement = node?.FirstAncestorOrSelf<StatementSyntax>();
-            var otherStatement = other?.FirstAncestorOrSelf<StatementSyntax>();
+            if (node is null ||
+                other is null)
+            {
+                return false;
+            }
+
+            if (node.Contains(other) &&
+                node.SpanStart < other.SpanStart)
+            {
+                return true;
+            }
+
+            if (!node.SharesAncestor<MemberDeclarationSyntax>(other))
+            {
+                return null;
+            }
+
+            if (other.FirstAncestor<AnonymousFunctionExpressionSyntax>() is AnonymousFunctionExpressionSyntax lambda)
+            {
+
+            }
+
+            var statement = node.FirstAncestorOrSelf<StatementSyntax>();
+            var otherStatement = other.FirstAncestorOrSelf<StatementSyntax>();
             if (statement == null ||
                 otherStatement == null)
             {
