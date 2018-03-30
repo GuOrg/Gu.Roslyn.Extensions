@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -22,6 +23,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return node.FirstAncestorOrSelf<T>();
+        }
+
+        internal static bool IsInExpressionTree(this SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            var lambda = node.FirstAncestor<LambdaExpressionSyntax>();
+            while (lambda != null)
+            {
+                var lambdaType = semanticModel.GetTypeInfoSafe(lambda, cancellationToken).ConvertedType;
+                if (lambdaType != null &&
+                    lambdaType.Is(KnownSymbol.Expression))
+                {
+                    return true;
+                }
+
+                lambda = lambda.FirstAncestor<LambdaExpressionSyntax>();
+            }
+
+            return false;
         }
 
         public static bool? IsBeforeInScope(this SyntaxNode node, SyntaxNode other)
