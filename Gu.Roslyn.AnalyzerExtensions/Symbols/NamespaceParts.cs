@@ -1,18 +1,15 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Collections.Concurrent;
     using System.Collections.Immutable;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    [System.Diagnostics.DebuggerDisplay("{System.String.Join(\".\", parts)}")]
-    public class NamespaceParts
+    [System.Diagnostics.DebuggerDisplay("{System.String.Join(\".\", Parts)}")]
+    internal class NamespaceParts
     {
-        private static readonly ConcurrentDictionary<string, NamespaceParts> Cache = new ConcurrentDictionary<string, NamespaceParts>();
-
         private readonly ImmutableList<string> parts;
 
-        private NamespaceParts(ImmutableList<string> parts)
+        public NamespaceParts(ImmutableList<string> parts)
         {
             this.parts = parts;
         }
@@ -37,7 +34,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return false;
                 }
 
-                if (ns.MetadataName != right.parts[i])
+                if (ns.Name != right.parts[i])
                 {
                     return false;
                 }
@@ -50,7 +47,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         public static bool operator !=(INamespaceSymbol left, NamespaceParts right) => !(left == right);
 
-        public static NamespaceParts GetOrCreate(string qualifiedName) => Cache.GetOrAdd(qualifiedName, Create);
+        internal static NamespaceParts Create(string qualifiedName)
+        {
+            var parts = qualifiedName.Split('.').ToImmutableList();
+            System.Diagnostics.Debug.Assert(parts.Count != 0, "Parts.Length != 0");
+            return new NamespaceParts(parts.RemoveAt(parts.Count - 1));
+        }
 
         internal bool Matches(NameSyntax nameSyntax)
         {
@@ -81,13 +83,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
-        }
-
-        private static NamespaceParts Create(string qualifiedName)
-        {
-            var parts = qualifiedName.Split('.').ToImmutableList();
-            System.Diagnostics.Debug.Assert(parts.Count != 0, "parts.Length != 0");
-            return new NamespaceParts(parts.RemoveAt(parts.Count - 1));
         }
     }
 }
