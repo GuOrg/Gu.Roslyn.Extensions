@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -43,6 +44,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (method != null &&
                 method.DeclaringSyntaxReferences.TrySingle(out var reference))
             {
+                Debug.Assert(method.AssociatedSymbol == null, "method.AssociatedSymbol == null");
                 declaration = reference.GetSyntax(cancellationToken) as MethodDeclarationSyntax;
             }
 
