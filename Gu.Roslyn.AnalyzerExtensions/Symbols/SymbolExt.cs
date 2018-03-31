@@ -38,14 +38,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return declaration != null;
         }
 
-        internal static bool TrySingleDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, out MethodDeclarationSyntax declaration)
+        internal static bool TrySingleDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, out BaseMethodDeclarationSyntax declaration)
         {
             declaration = null;
             if (method != null &&
                 method.DeclaringSyntaxReferences.TrySingle(out var reference))
             {
                 Debug.Assert(method.AssociatedSymbol == null, "method.AssociatedSymbol == null");
-                declaration = reference.GetSyntax(cancellationToken) as MethodDeclarationSyntax;
+                declaration = reference.GetSyntax(cancellationToken) as BaseMethodDeclarationSyntax;
             }
 
             return declaration != null;
@@ -87,10 +87,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (symbol.DeclaringSyntaxReferences.TrySingle(out var reference))
             {
                 var syntax = reference.GetSyntax(cancellationToken);
-                if (symbol.IsEither<IFieldSymbol, ILocalSymbol>() &&
-                    syntax is VariableDeclaratorSyntax declarator)
+                if (syntax is VariableDeclaratorSyntax declarator)
                 {
-                    syntax = declarator.FirstAncestor<FieldDeclarationSyntax>();
+                    syntax = declarator.FirstAncestorOrSelf<T>();
                 }
 
                 declaration = syntax as T;
