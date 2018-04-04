@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             base.VisitArgument(node);
         }
 
-        internal static MutationWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new MutationWalker());
+        public static MutationWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new MutationWalker());
 
         protected override void Clear()
         {
