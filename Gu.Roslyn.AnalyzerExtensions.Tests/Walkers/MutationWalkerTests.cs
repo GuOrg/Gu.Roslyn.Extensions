@@ -34,9 +34,9 @@ namespace RoslynSandbox
             }
         }
 
-        [TestCase("out")]
-        [TestCase("ref")]
-        public void SingleRefOut(string refOrOut)
+        [TestCase("out this.value")]
+        [TestCase("ref this.value")]
+        public void SingleRefOut(string arg)
         {
             var testCode = @"
 namespace RoslynSandbox
@@ -56,13 +56,13 @@ namespace RoslynSandbox
         }
     }
 }";
-            testCode = testCode.AssertReplace("out", refOrOut);
+            testCode = testCode.AssertReplace("out this.value", arg);
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
             var setter = syntaxTree.FindClassDeclaration("Foo");
             using (var walker = MutationWalker.Borrow(setter))
             {
                 Assert.AreEqual(2, walker.Count);
-                Assert.AreEqual($"{refOrOut} this.value", walker[0].ToString());
+                Assert.AreEqual(arg, walker[0].ToString());
                 Assert.AreEqual("i = 1", walker[1].ToString());
             }
         }
