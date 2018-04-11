@@ -6,7 +6,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
     public static partial class SemanticModelExt
     {
-        
         /// <summary>
         /// Same as SemanticModel.GetDeclaredSymbol but works when <paramref name="node"/> is not in the syntax tree.
         /// </summary>
@@ -153,6 +152,5 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return semanticModel.SemanticModelFor(node)
                                 ?.GetDeclaredSymbol(node, cancellationToken);
         }
-
     }
 }

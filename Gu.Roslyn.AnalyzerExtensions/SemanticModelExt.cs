@@ -1,3 +1,4 @@
+// ReSharper disable UnusedMember.Global
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Threading;
@@ -9,6 +10,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public static partial class SemanticModelExt
     {
+        public static bool TryGetSymbol<TSymbol>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, out TSymbol symbol)
+            where TSymbol : class, ISymbol
+        {
+            symbol = GetSymbolSafe(semanticModel, node, cancellationToken) as TSymbol ??
+                     GetDeclaredSymbolSafe(semanticModel, node, cancellationToken) as TSymbol;
+            return symbol != null;
+        }
+
         /// <summary>
         /// Same as SemanticModel.GetSymbolInfo().Symbol but works when <paramref name="node"/> is not in the syntax tree.
         /// Unwraps the await
@@ -97,6 +106,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The semantic model.</param>
         /// <param name="expression">The expression.</param>
         /// <returns>The semantic model that corresponds to <paramref name="expression"/></returns>
+
+        /// <summary>
+        /// Gets the semantic model for <paramref name="expression"/>
+        /// This can be needed for partial classes.
+        /// </summary>
+        /// <param name="semanticModel">The semantic model.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>The semantic model that corresponds to <paramref name="expression"/></returns>
         public static SemanticModel SemanticModelFor(this SemanticModel semanticModel, SyntaxNode expression)
         {
             if (semanticModel == null ||
@@ -111,23 +128,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return semanticModel;
             }
 
-            if (semanticModel.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
-            {
-                return semanticModel.Compilation.GetSemanticModel(expression.SyntaxTree);
-            }
+            return Cache.GetOrAdd(expression.SyntaxTree, GetSemanticModel);
 
-            foreach (var metadataReference in semanticModel.Compilation.References)
+            SemanticModel GetSemanticModel(SyntaxTree syntaxTree)
             {
-                if (metadataReference is CompilationReference compilationReference)
+                if (semanticModel.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
                 {
-                    if (compilationReference.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
+                    return semanticModel.Compilation.GetSemanticModel(expression.SyntaxTree);
+                }
+
+                foreach (var metadataReference in semanticModel.Compilation.References)
+                {
+                    if (metadataReference is CompilationReference compilationReference)
                     {
-                        return compilationReference.Compilation.GetSemanticModel(expression.SyntaxTree);
+                        if (compilationReference.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
+                        {
+                            return compilationReference.Compilation.GetSemanticModel(expression.SyntaxTree);
+                        }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
         }
     }
 }
