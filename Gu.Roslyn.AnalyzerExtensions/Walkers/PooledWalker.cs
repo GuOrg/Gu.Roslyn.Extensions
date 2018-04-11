@@ -3,16 +3,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System;
     using System.Collections.Concurrent;
     using System.Diagnostics;
+    using System.Linq;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
 
-    public abstract class PooledWalker<T> : CSharpSyntaxWalker, IDisposable
+    internal abstract class PooledWalker<T> : CSharpSyntaxWalker, IDisposable
         where T : PooledWalker<T>
     {
         private static readonly ConcurrentQueue<PooledWalker<T>> Cache = new ConcurrentQueue<PooledWalker<T>>();
-        private int refCount;
 
-        /// <inheritdoc />
+        protected PooledWalker(SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node)
+            : base(depth)
+        {
+        }
+
         public void Dispose()
         {
             this.Dispose(true);
@@ -32,7 +36,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 walker = create();
             }
 
-            walker.refCount = 1;
             return (T)walker;
         }
 
@@ -40,12 +43,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (disposing)
             {
-                this.refCount--;
-                if (this.refCount != 0)
-                {
-                    throw new InvalidOperationException("Can only be disposed once.");
-                }
-
+                Debug.Assert(!Cache.Contains(this), "!Cache.Contains(this)");
                 this.Clear();
                 Cache.Enqueue(this);
             }
@@ -56,7 +54,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Conditional("DEBUG")]
         protected void ThrowIfDisposed()
         {
-            if (this.refCount <= 0)
+            if (Cache.Contains(this))
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
             }
