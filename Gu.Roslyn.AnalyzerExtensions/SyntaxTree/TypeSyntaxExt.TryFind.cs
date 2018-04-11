@@ -3,9 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    internal static partial class TypeSyntaxExt
+    public static partial class TypeSyntaxExt
     {
-        internal static bool TryFindField(this TypeDeclarationSyntax type, string name, out FieldDeclarationSyntax match)
+        public static bool TryFindField(this TypeDeclarationSyntax type, string name, out FieldDeclarationSyntax match)
         {
             match = null;
             if (type == null)
@@ -26,7 +26,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        internal static bool TryFindMethod(this TypeDeclarationSyntax type, string name, out MethodDeclarationSyntax match)
+        public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, out MethodDeclarationSyntax match)
         {
             match = null;
             if (type == null)
@@ -47,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        internal static bool TryFindProperty(this TypeDeclarationSyntax type, string name, out PropertyDeclarationSyntax match)
+        public static bool TryFindProperty(this TypeDeclarationSyntax type, string name, out PropertyDeclarationSyntax match)
         {
             match = null;
             if (type == null)
