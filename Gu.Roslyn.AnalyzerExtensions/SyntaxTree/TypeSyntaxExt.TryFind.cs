@@ -1,20 +1,11 @@
+// ReSharper disable UnusedMember.Global
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    public static class TypeSyntaxExt
+    internal static partial class TypeSyntaxExt
     {
-        public static bool IsVoid(this TypeSyntax type)
-        {
-            if (type is PredefinedTypeSyntax predefinedType)
-            {
-                return predefinedType.Keyword.ValueText == "void";
-            }
-
-            return false;
-        }
-
-        public static bool TryFindField(this TypeDeclarationSyntax type, string name, out FieldDeclarationSyntax match)
+        internal static bool TryFindField(this TypeDeclarationSyntax type, string name, out FieldDeclarationSyntax match)
         {
             match = null;
             if (type == null)
@@ -35,7 +26,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, out MethodDeclarationSyntax match)
+        internal static bool TryFindMethod(this TypeDeclarationSyntax type, string name, out MethodDeclarationSyntax match)
         {
             match = null;
             if (type == null)
@@ -56,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        public static bool TryFindProperty(this TypeDeclarationSyntax type, string name, out PropertyDeclarationSyntax match)
+        internal static bool TryFindProperty(this TypeDeclarationSyntax type, string name, out PropertyDeclarationSyntax match)
         {
             match = null;
             if (type == null)
