@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
 
-    internal abstract class PooledWalker<T> : CSharpSyntaxWalker, IDisposable
+    public abstract class PooledWalker<T> : CSharpSyntaxWalker, IDisposable
         where T : PooledWalker<T>
     {
         private static readonly ConcurrentQueue<PooledWalker<T>> Cache = new ConcurrentQueue<PooledWalker<T>>();
