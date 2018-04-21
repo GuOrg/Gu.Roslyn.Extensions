@@ -9,7 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     /// <summary>
     /// Helper methods for registering <see cref="DocumentEditorAction"/>
     /// </summary>
-    public static class CodeFixContextExt
+    internal static class CodeFixContextExt
     {
         public static void RegisterDocumentEditorFix(
             this CodeFixContext context,

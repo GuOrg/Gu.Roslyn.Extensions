@@ -2,8 +2,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
 
-    internal static class Cache
+    public static class Cache
     {
-        internal static TValue GetOrAdd<TKey, TValue>(TKey key, Func<TKey, TValue> valueFactory) => Cache<TKey, TValue>.GetOrAdd(key, valueFactory);
+        public static TValue GetOrAdd<TKey, TValue>(TKey key, Func<TKey, TValue> valueFactory) => Cache<TKey, TValue>.GetOrAdd(key, valueFactory);
     }
 }

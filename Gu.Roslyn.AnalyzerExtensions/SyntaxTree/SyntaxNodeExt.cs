@@ -32,7 +32,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 var lambdaType = semanticModel.GetTypeInfoSafe(lambda, cancellationToken).ConvertedType;
                 if (lambdaType != null &&
-                    lambdaType.Is(KnownSymbol.Expression))
+                    lambdaType.Is(KnownSymbol.System.Linq.Expression))
                 {
                     return true;
                 }
@@ -123,7 +123,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
-        internal static bool SharesAncestor<T>(this SyntaxNode first, SyntaxNode other)
+        public static bool SharesAncestor<T>(this SyntaxNode first, SyntaxNode other)
             where T : SyntaxNode
         {
             var firstAncestor = FirstAncestor<T>(first);

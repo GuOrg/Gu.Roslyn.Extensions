@@ -4,7 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    internal sealed class IdentifierNameWalker : PooledWalker<IdentifierNameWalker>
+    public sealed class IdentifierNameWalker : PooledWalker<IdentifierNameWalker>
     {
         private readonly List<IdentifierNameSyntax> identifierNames = new List<IdentifierNameSyntax>();
 

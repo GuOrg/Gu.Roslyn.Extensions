@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    public class BaseMethodDeclarationComparer : IComparer<BaseMethodDeclarationSyntax>
+    public sealed class BaseMethodDeclarationComparer : IComparer<BaseMethodDeclarationSyntax>
     {
         public static readonly BaseMethodDeclarationComparer Default = new BaseMethodDeclarationComparer();
 

@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -58,14 +59,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        [Obsolete("Use type.TypeKind == TypeKind.Interface")]
         public static bool IsInterface(this ITypeSymbol type)
         {
-            if (type == null)
-            {
-                return false;
-            }
-
-            return type != QualifiedType.System.Object && type.BaseType == null;
+            return type.TypeKind == TypeKind.Interface;
         }
 
         public static bool IsSameType(this ITypeSymbol first, ITypeSymbol other)

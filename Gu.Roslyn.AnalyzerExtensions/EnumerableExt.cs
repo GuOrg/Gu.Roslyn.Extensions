@@ -9,6 +9,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static partial class EnumerableExt
     {
         /// <summary>
+        /// Returns <paramref name="before"/> then <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="before">The item to retuns before <paramref name="source"/>.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/>.</returns>
+        public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source, T before)
+        {
+            yield return before;
+            foreach (var item in source)
+            {
+                yield return item;
+            }
+        }
+
+        /// <summary>
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -173,6 +189,75 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             result = default(T);
             return false;
+        }
+
+        /// <summary>
+        /// Try getting the first element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The first element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        internal static bool TryLast<T>(this IEnumerable<T> source, out T result)
+        {
+            result = default(T);
+            if (source == null)
+            {
+                return false;
+            }
+
+            using (var e = source.GetEnumerator())
+            {
+                if (!e.MoveNext())
+                {
+                    return false;
+                }
+
+                while (e.MoveNext())
+                {
+                    result = e.Current;
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Try getting the first element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The first element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        internal static bool TryLast<T, TResult>(this IEnumerable<T> source, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            if (source == null)
+            {
+                return false;
+            }
+
+            using (var e = source.GetEnumerator())
+            {
+                if (!e.MoveNext())
+                {
+                    return false;
+                }
+
+                var found = false;
+                while (e.MoveNext())
+                {
+                    if (e.Current is TResult item)
+                    {
+                        result = item;
+                        found = true;
+                    }
+                }
+
+                return found;
+            }
         }
     }
 }

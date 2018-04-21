@@ -3,29 +3,29 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
 
-    internal static class Trivia
+    public static class Trivia
     {
-        internal static SyntaxNode WithTriviaFrom(this SyntaxNode node, SyntaxNode other)
+        public static SyntaxNode WithTriviaFrom(this SyntaxNode node, SyntaxNode other)
         {
             return node.WithLeadingTriviaFrom(other)
                 .WithTrailingTriviaFrom(other);
         }
 
-        internal static SyntaxNode WithLeadingTriviaFrom(this SyntaxNode node, SyntaxNode other)
+        public static SyntaxNode WithLeadingTriviaFrom(this SyntaxNode node, SyntaxNode other)
         {
             return other.HasLeadingTrivia
                 ? node.WithLeadingTrivia(other.GetLeadingTrivia())
                 : node;
         }
 
-        internal static SyntaxNode WithTrailingTriviaFrom(this SyntaxNode node, SyntaxNode other)
+        public static SyntaxNode WithTrailingTriviaFrom(this SyntaxNode node, SyntaxNode other)
         {
             return other.HasTrailingTrivia
                 ? node.WithTrailingTrivia(other.GetTrailingTrivia())
                 : node;
         }
 
-        internal static T WithLeadingElasticLineFeed<T>(this T node)
+        public static T WithLeadingElasticLineFeed<T>(this T node)
             where T : SyntaxNode
         {
             if (node.HasLeadingTrivia)
@@ -38,7 +38,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             return node.WithLeadingTrivia(SyntaxFactory.ElasticLineFeed);
         }
 
-        internal static T WithLeadingLineFeed<T>(this T node)
+        public static T WithLeadingLineFeed<T>(this T node)
             where T : SyntaxNode
         {
             if (node.HasLeadingTrivia)
@@ -51,7 +51,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             return node.WithLeadingTrivia(SyntaxFactory.LineFeed);
         }
 
-        internal static T WithTrailingElasticLineFeed<T>(this T node)
+        public static T WithTrailingElasticLineFeed<T>(this T node)
             where T : SyntaxNode
         {
             if (node.HasTrailingTrivia)
@@ -64,7 +64,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             return node.WithTrailingTrivia(SyntaxFactory.ElasticLineFeed);
         }
 
-        internal static T WithTrailingLineFeed<T>(this T node)
+        public static T WithTrailingLineFeed<T>(this T node)
             where T : SyntaxNode
         {
             if (node.HasTrailingTrivia)

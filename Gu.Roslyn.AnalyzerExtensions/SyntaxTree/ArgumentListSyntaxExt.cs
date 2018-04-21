@@ -3,19 +3,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    internal static class ArgumentListSyntaxExt
+    public static class ArgumentListSyntaxExt
     {
-        internal static bool TryGetMatchingArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryGetMatchingArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
             return TryGetMatchingArgument(invocation?.ArgumentList, parameter, out argument);
         }
 
-        internal static bool TryGetMatchingArgument(this ObjectCreationExpressionSyntax objectCreation, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryGetMatchingArgument(this ObjectCreationExpressionSyntax objectCreation, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
             return TryGetMatchingArgument(objectCreation?.ArgumentList, parameter, out argument);
         }
 
-        internal static bool TryGetMatchingArgument(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryGetMatchingArgument(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
             argument = null;
             if (argumentList == null ||

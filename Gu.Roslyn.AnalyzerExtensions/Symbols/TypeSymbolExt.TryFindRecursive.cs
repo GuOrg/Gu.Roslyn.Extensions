@@ -71,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != QualifiedType.System.Object)
+                   type != KnownSymbol.System.Object)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -101,7 +101,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != QualifiedType.System.Object)
+                   type != KnownSymbol.System.Object)
             {
                 foreach (var symbol in type.GetMembers())
                 {
@@ -135,7 +135,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != QualifiedType.System.Object)
+                   type != KnownSymbol.System.Object)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -169,7 +169,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != QualifiedType.System.Object)
+                   type != KnownSymbol.System.Object)
             {
                 foreach (var symbol in type.GetMembers())
                 {
@@ -197,7 +197,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != QualifiedType.System.Object)
+                   type != KnownSymbol.System.Object)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -225,7 +225,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             while (type != null &&
-                   type != QualifiedType.System.Object)
+                   type != KnownSymbol.System.Object)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {

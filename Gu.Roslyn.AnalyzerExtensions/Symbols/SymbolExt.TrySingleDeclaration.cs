@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
     public static partial class SymbolExt
     {
-        internal static bool TrySingleDeclaration(this IFieldSymbol field, CancellationToken cancellationToken, out FieldDeclarationSyntax declaration)
+        public static bool TrySingleDeclaration(this IFieldSymbol field, CancellationToken cancellationToken, out FieldDeclarationSyntax declaration)
         {
             declaration = null;
             if (field != null &&
@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return declaration != null;
         }
 
-        internal static bool TrySingleDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, out PropertyDeclarationSyntax declaration)
+        public static bool TrySingleDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, out PropertyDeclarationSyntax declaration)
         {
             declaration = null;
             if (property != null &&
@@ -31,7 +31,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return declaration != null;
         }
 
-        internal static bool TrySingleDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, out BaseMethodDeclarationSyntax declaration)
+        public static bool TrySingleDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, out BaseMethodDeclarationSyntax declaration)
         {
             declaration = null;
             if (method != null &&
@@ -44,7 +44,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return declaration != null;
         }
 
-        internal static bool TrySingleDeclaration(this IParameterSymbol parameter, CancellationToken cancellationToken, out ParameterSyntax declaration)
+        public static bool TrySingleDeclaration(this IParameterSymbol parameter, CancellationToken cancellationToken, out ParameterSyntax declaration)
         {
             declaration = null;
             if (parameter != null &&
@@ -56,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return declaration != null;
         }
 
-        internal static bool TrySingleDeclaration(this ILocalSymbol local, CancellationToken cancellationToken, out SyntaxNode declaration)
+        public static bool TrySingleDeclaration(this ILocalSymbol local, CancellationToken cancellationToken, out SyntaxNode declaration)
         {
             declaration = null;
             if (local != null &&
@@ -68,7 +68,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return declaration != null;
         }
 
-        internal static bool TrySingleDeclaration<T>(this ISymbol symbol, CancellationToken cancellationToken, out T declaration)
+        public static bool TrySingleDeclaration<T>(this ISymbol symbol, CancellationToken cancellationToken, out T declaration)
             where T : SyntaxNode
         {
             declaration = null;

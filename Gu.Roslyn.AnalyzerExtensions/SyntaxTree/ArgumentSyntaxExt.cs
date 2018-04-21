@@ -6,9 +6,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    internal static class ArgumentSyntaxExt
+    public static class ArgumentSyntaxExt
     {
-        internal static bool TryGetStringValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string result)
+        public static bool TryGetStringValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string result)
         {
             result = null;
             if (argument?.Expression == null)
@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        internal static bool TryGetTypeofValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out ITypeSymbol result)
+        public static bool TryGetTypeofValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out ITypeSymbol result)
         {
             result = null;
             if (argument?.Expression == null || semanticModel == null)

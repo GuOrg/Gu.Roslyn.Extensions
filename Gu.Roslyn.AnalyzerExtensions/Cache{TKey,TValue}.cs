@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Diagnostics;
     using System.Threading;
 
-    internal static class Cache<TKey, TValue>
+    public static class Cache<TKey, TValue>
     {
         private static readonly ConcurrentDictionary<TKey, TValue> Inner = new ConcurrentDictionary<TKey, TValue>();
         //// ReSharper disable once StaticMemberInGenericType
@@ -26,7 +26,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             Inner.Clear();
         }
 
-        internal static Transaction_ Transaction()
+        public static Transaction_ Transaction()
         {
 #pragma warning disable GU0011 // Don't ignore the return value.
             Interlocked.Increment(ref refCount);
@@ -41,7 +41,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         // ReSharper disable once InconsistentNaming
-        internal struct Transaction_ : IDisposable
+        public struct Transaction_ : IDisposable
         {
             public void Dispose()
             {

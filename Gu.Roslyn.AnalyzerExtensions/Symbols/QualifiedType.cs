@@ -92,13 +92,5 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return left == right.Type ||
                    (right.alias != null && left == right.alias);
         }
-
-        public static class System
-        {
-            public static readonly QualifiedType Void = new QualifiedType("System.Void", "void");
-            public static readonly QualifiedType Object = new QualifiedType("System.Object", "object");
-            public static readonly QualifiedType Boolean = new QualifiedType("System.Boolean", "bool");
-            public static readonly QualifiedType String = new QualifiedType("System.String", "string");
-        }
     }
 }

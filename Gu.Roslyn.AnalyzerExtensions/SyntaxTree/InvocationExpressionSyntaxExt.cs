@@ -64,7 +64,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
-        internal static bool TryGetInvokedSymbol(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol result)
+        public static bool IsNameOf(this InvocationExpressionSyntax invocation)
+        {
+            return invocation.TryGetMethodName(out var name) &&
+                   name == "nameof";
+        }
+
+        public static bool TryGetInvokedSymbol(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol result)
         {
             result = null;
             if (invocation == null)
@@ -86,12 +92,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
-        }
-
-        internal static bool IsNameOf(this InvocationExpressionSyntax invocation)
-        {
-            return invocation.TryGetMethodName(out var name) &&
-                   name == "nameof";
         }
     }
 }

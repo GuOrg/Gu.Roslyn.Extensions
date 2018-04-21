@@ -23,26 +23,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         public int Count => this.inner.Count;
 
-        public bool Add(T item)
-        {
-            this.ThrowIfDisposed();
-            return this.inner.Add(item);
-        }
-
-        public IEnumerator<T> GetEnumerator() => this.inner.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-
-        void IDisposable.Dispose()
-        {
-            if (Interlocked.Decrement(ref this.refCount) == 0)
-            {
-                Debug.Assert(!Cache.Contains(this), "!Cache.Contains(this)");
-                this.inner.Clear();
-                Cache.Enqueue(this);
-            }
-        }
-
         /// <summary>
         /// The result from this call is meant to be used in a using.
         /// </summary>
@@ -61,7 +41,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// The result from this call is meant to be used in a using.
         /// </summary>
-        internal static PooledSet<T> BorrowOrIncrementUsage(PooledSet<T> set)
+        public static PooledSet<T> BorrowOrIncrementUsage(PooledSet<T> set)
         {
             if (set == null)
             {
@@ -71,6 +51,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
             var current = Interlocked.Increment(ref set.refCount);
             Debug.Assert(current >= 1, $"{nameof(BorrowOrIncrementUsage)} set.refCount == {current}");
             return set;
+        }
+
+        public bool Add(T item)
+        {
+            this.ThrowIfDisposed();
+            return this.inner.Add(item);
+        }
+
+        public IEnumerator<T> GetEnumerator() => this.inner.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+        void IDisposable.Dispose()
+        {
+            if (Interlocked.Decrement(ref this.refCount) == 0)
+            {
+                Debug.Assert(!Cache.Contains(this), "!Cache.Contains(this)");
+                this.inner.Clear();
+                Cache.Enqueue(this);
+            }
         }
 
         [Conditional("DEBUG")]
