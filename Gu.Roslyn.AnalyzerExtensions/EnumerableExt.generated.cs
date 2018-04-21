@@ -1,4 +1,4 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -156,6 +156,35 @@
 
             result = source[0];
             return true;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirst<T, TResult>(this IReadOnlyList<T> source, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            if (source == null)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -362,6 +391,30 @@
 
             result = source[0];
             return true;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirst<T, TResult>(this ImmutableArray<T> source, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Length; i++)
+            {
+                if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -713,6 +766,31 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirst<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -909,6 +987,31 @@
 
             result = source[0];
             return true;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirst<T, TResult>(this SyntaxList<T> source, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

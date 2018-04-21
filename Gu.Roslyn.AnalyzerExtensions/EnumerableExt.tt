@@ -165,6 +165,33 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return true;
         }
 
+<# if (types.GenericArg != string.Empty) { #>
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+<# this.WriteTypeDoc(types); #>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirst<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
+            where TResult : T
+        {
+            result = default(TResult);
+<# this.WriteIfNullReturnFalse(types); #>
+            for (var i = 0; i < source.<#= count #>; i++)
+            {
+                if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+<# } #>
         /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
