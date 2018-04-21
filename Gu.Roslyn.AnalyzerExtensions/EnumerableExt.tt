@@ -237,6 +237,41 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return true;
         }
 
+<# if (types.GenericArg != string.Empty) { #>
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+<# this.WriteTypeDoc(types); #>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLast<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
+            where TResult : T
+        {
+            result = default(TResult);
+<# this.WriteIfNullReturnFalse(types); #>
+            for (var i = source.<#= count #> - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item)
+                {
+                    for (var j = i - 1; j >= 0; j--)
+                    {
+                        if (source[j] is TResult)
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+<# } #>
         /// <summary>
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>

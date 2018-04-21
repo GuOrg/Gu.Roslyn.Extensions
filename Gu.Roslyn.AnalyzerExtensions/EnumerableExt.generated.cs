@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -241,6 +241,43 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLast<T, TResult>(this IReadOnlyList<T> source, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            if (source == null)
+            {
+                return false;
+            }
+
+            for (var i = source.Count - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item)
+                {
+                    for (var j = i - 1; j >= 0; j--)
+                    {
+                        if (source[j] is TResult)
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -458,6 +495,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             result = source[source.Length - 1];
             return true;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLast<T, TResult>(this ImmutableArray<T> source, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = source.Length - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item)
+                {
+                    for (var j = i - 1; j >= 0; j--)
+                    {
+                        if (source[j] is TResult)
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -836,6 +905,39 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLast<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = source.Count - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item)
+                {
+                    for (var j = i - 1; j >= 0; j--)
+                    {
+                        if (source[j] is TResult)
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the last element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -1057,6 +1159,39 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             result = source[source.Count - 1];
             return true;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLast<T, TResult>(this SyntaxList<T> source, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = source.Count - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item)
+                {
+                    for (var j = i - 1; j >= 0; j--)
+                    {
+                        if (source[j] is TResult)
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
