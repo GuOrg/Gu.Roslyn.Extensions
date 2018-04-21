@@ -7,19 +7,22 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
     <Version>0.2.0-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
-    <PackageTags>roslyn analyzer codefix</PackageTags>
+    <PackageTags>roslyn analyzer</PackageTags>
     <PackageReleaseNotes>Initial</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
   </PropertyGroup>
-  
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Update="EnumerableExt.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
