@@ -68,7 +68,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T, TResult>(this IReadOnlyList<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -166,7 +166,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T, TResult>(this IReadOnlyList<T> source, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this IReadOnlyList<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -248,7 +248,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T, TResult>(this IReadOnlyList<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -355,7 +355,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T, TResult>(this ImmutableArray<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this ImmutableArray<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -438,7 +438,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T, TResult>(this ImmutableArray<T> source, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this ImmutableArray<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -505,7 +505,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T, TResult>(this ImmutableArray<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this ImmutableArray<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -756,7 +756,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -842,7 +842,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -912,7 +912,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1013,7 +1013,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T, TResult>(this SyntaxList<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this SyntaxList<T> source, out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1099,7 +1099,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T, TResult>(this SyntaxList<T> source, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this SyntaxList<T> source, out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1169,7 +1169,7 @@
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T, TResult>(this SyntaxList<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this SyntaxList<T> source, out TResult result)
             where T : SyntaxNode
             where TResult : T
         {

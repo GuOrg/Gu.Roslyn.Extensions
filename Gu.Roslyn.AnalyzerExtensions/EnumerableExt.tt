@@ -86,7 +86,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
+        public static bool TrySingleOfType<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
             where TResult : T
         {
             result = default(TResult);
@@ -174,7 +174,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
+        public static bool TryFirstOfType<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
             where TResult : T
         {
             result = default(TResult);
@@ -246,7 +246,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
+        public static bool TryLastOfType<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
             where TResult : T
         {
             result = default(TResult);

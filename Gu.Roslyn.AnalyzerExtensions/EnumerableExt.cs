@@ -99,7 +99,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T, TResult>(this IEnumerable<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -205,7 +205,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T, TResult>(this IEnumerable<T> source, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -300,7 +300,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T, TResult>(this IEnumerable<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
