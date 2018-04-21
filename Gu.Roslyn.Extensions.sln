@@ -10,13 +10,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{A9187C9F-98FB-4696-B023-548C641E7B54}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
 		.paket\paket.targets = .paket\paket.targets
 		.paket\Readme.paket.md = .paket\Readme.paket.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Roslyn.CodeFixExtensions", "Gu.Roslyn.CodeFixExtensions\Gu.Roslyn.CodeFixExtensions.csproj", "{0153B29C-9038-43C1-BE4E-F762A37B6989}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.CodeFixExtensions", "Gu.Roslyn.CodeFixExtensions\Gu.Roslyn.CodeFixExtensions.csproj", "{0153B29C-9038-43C1-BE4E-F762A37B6989}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Roslyn.CodeFixExtensions.Tests", "Gu.Roslyn.CodeFixExtensions.Tests\Gu.Roslyn.CodeFixExtensions.Tests.csproj", "{2D651617-731A-4453-BE69-883CE6797881}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.CodeFixExtensions.Tests", "Gu.Roslyn.CodeFixExtensions.Tests\Gu.Roslyn.CodeFixExtensions.Tests.csproj", "{2D651617-731A-4453-BE69-883CE6797881}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
