@@ -1,21 +1,37 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     public static class PropertyDeclarationSyntaxExt
     {
-        public static bool TryGetGetter(this BasePropertyDeclarationSyntax property, out AccessorDeclarationSyntax result)
+        public static bool IsGetOnly(this BasePropertyDeclarationSyntax property)
         {
-            result = null;
-            return property?.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.GetAccessorDeclaration), out result) == true;
+            if (property.TryGetGetter(out var getter) &&
+                getter.Body == null &&
+                getter.ExpressionBody == null)
+            {
+                return !property.TryGetSetter(out _);
+            }
+
+            return false;
         }
 
-        public static bool TryGetSetter(this BasePropertyDeclarationSyntax property, out AccessorDeclarationSyntax result)
+        public static bool IsAutoProperty(this BasePropertyDeclarationSyntax property)
         {
-            result = null;
-            return property?.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.SetAccessorDeclaration), out result) == true;
+            if (property.TryGetGetter(out var getter) &&
+                getter.Body == null &&
+                getter.ExpressionBody == null)
+            {
+                if (property.TryGetSetter(out var setter))
+                {
+                    return setter.Body == null &&
+                           setter.ExpressionBody == null;
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

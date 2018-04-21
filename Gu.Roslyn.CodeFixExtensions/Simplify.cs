@@ -5,9 +5,9 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Simplification;
 
-    internal static class Simplify
+    public static class Simplify
     {
-        internal static T WithSimplifiedNames<T>(this T node)
+        public static T WithSimplifiedNames<T>(this T node)
             where T : SyntaxNode
         {
             return (T)SimplifyNamesRewriter.Default.Visit(node);

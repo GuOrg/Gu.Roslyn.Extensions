@@ -1,8 +1,8 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
-    internal static class StringExt
+    public static class StringExt
     {
-        internal static string ToFirstCharLower(this string text)
+        public static string ToFirstCharLower(this string text)
         {
             if (string.IsNullOrEmpty(text))
             {
