@@ -92,6 +92,44 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TrySingle<T, TResult>(this IEnumerable<T> source, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            if (source == null)
+            {
+                return false;
+            }
+
+            using (var e = source.GetEnumerator())
+            {
+                if (e.MoveNext())
+                {
+                    if (e.Current is TResult item)
+                    {
+                        result = item;
+                        if (!e.MoveNext())
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+
+                result = default(TResult);
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -160,6 +198,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Try getting the first element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="result">The first element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirst<T, TResult>(this IEnumerable<T> source, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            if (source == null)
+            {
+                return false;
+            }
+
+            using (var e = source.GetEnumerator())
+            {
+                if (e.MoveNext())
+                {
+                    if (e.Current is TResult item)
+                    {
+                        result = item;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -198,7 +268,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        internal static bool TryLast<T>(this IEnumerable<T> source, out T result)
+        public static bool TryLast<T>(this IEnumerable<T> source, out T result)
         {
             result = default(T);
             if (source == null)
@@ -230,7 +300,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        internal static bool TryLast<T, TResult>(this IEnumerable<T> source, out TResult result)
+        public static bool TryLast<T, TResult>(this IEnumerable<T> source, out TResult result)
             where TResult : T
         {
             result = default(TResult);
