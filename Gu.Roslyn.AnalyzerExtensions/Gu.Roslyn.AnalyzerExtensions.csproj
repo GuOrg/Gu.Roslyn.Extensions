@@ -7,15 +7,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.2.0.3-dev</Version>
+    <Version>0.2.0.4-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
-    <PackageTags>roslyn analyzer</PackageTags>
-    <PackageReleaseNotes>Initial</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
+    <PackageTags>roslyn analyzer</PackageTags>
+    <PackageReleaseNotes>Bugfixes EnumerableExt</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,16 +28,21 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>EnumerableExt.generated.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  <ItemGroup>
+
     <Compile Update="EnumerableExt.generated.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>EnumerableExt.tt</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Exec Command="$(SolutionDir).paket\paket.exe pack ..\publish" />
+  </Target>
+
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
