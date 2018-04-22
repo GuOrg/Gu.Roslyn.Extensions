@@ -28,10 +28,15 @@ namespace RoslynSandbox
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryFirst(out var parameter));
             Assert.AreEqual("int i", parameter.ToString());
 
+            Assert.AreEqual(true, ctor.ParameterList.Parameters.TryFirstOfType(out parameter));
+            Assert.AreEqual("int i", parameter.ToString());
+
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryFirst(x => x.Identifier.ValueText == "i", out parameter));
             Assert.AreEqual("int i", parameter.ToString());
+
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryFirst(x => x.Identifier.ValueText == "d", out parameter));
             Assert.AreEqual("double d", parameter.ToString());
+
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryFirst(x => x.Identifier.ValueText == "missing", out parameter));
 
             var barDeclaration = syntaxTree.FindMethodDeclaration("Bar");
@@ -60,10 +65,15 @@ namespace RoslynSandbox
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLast(out var parameter));
             Assert.AreEqual("double d", parameter.ToString());
 
+            Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLastOfType(out parameter));
+            Assert.AreEqual("double d", parameter.ToString());
+
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLast(x => x.Identifier.ValueText == "i", out parameter));
             Assert.AreEqual("int i", parameter.ToString());
+
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLast(x => x.Identifier.ValueText == "d", out parameter));
             Assert.AreEqual("double d", parameter.ToString());
+
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryLast(x => x.Identifier.ValueText == "missing", out parameter));
 
             var barDeclaration = syntaxTree.FindMethodDeclaration("Bar");
@@ -97,8 +107,10 @@ namespace RoslynSandbox
 
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "i", out parameter));
             Assert.AreEqual("int i", parameter.ToString());
+
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "d", out parameter));
             Assert.AreEqual("double d", parameter.ToString());
+
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "missing", out parameter));
 
             var barDeclaration = syntaxTree.FindMethodDeclaration("Bar");
@@ -107,6 +119,9 @@ namespace RoslynSandbox
 
             var bazDeclaration = syntaxTree.FindMethodDeclaration("Baz");
             Assert.AreEqual(true, bazDeclaration.ParameterList.Parameters.TrySingle(out parameter));
+            Assert.AreEqual("int i", parameter.ToString());
+
+            Assert.AreEqual(true, bazDeclaration.ParameterList.Parameters.TrySingleOfType(out parameter));
             Assert.AreEqual("int i", parameter.ToString());
         }
 

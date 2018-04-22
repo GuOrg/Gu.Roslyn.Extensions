@@ -261,14 +261,6 @@
             {
                 if (source[i] is TResult item)
                 {
-                    for (var j = i - 1; j >= 0; j--)
-                    {
-                        if (source[j] is TResult)
-                        {
-                            return false;
-                        }
-                    }
-
                     result = item;
                     return true;
                 }
@@ -513,14 +505,6 @@
             {
                 if (source[i] is TResult item)
                 {
-                    for (var j = i - 1; j >= 0; j--)
-                    {
-                        if (source[j] is TResult)
-                        {
-                            return false;
-                        }
-                    }
-
                     result = item;
                     return true;
                 }
@@ -921,14 +905,6 @@
             {
                 if (source[i] is TResult item)
                 {
-                    for (var j = i - 1; j >= 0; j--)
-                    {
-                        if (source[j] is TResult)
-                        {
-                            return false;
-                        }
-                    }
-
                     result = item;
                     return true;
                 }
@@ -1178,14 +1154,6 @@
             {
                 if (source[i] is TResult item)
                 {
-                    for (var j = i - 1; j >= 0; j--)
-                    {
-                        if (source[j] is TResult)
-                        {
-                            return false;
-                        }
-                    }
-
                     result = item;
                     return true;
                 }

@@ -114,11 +114,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     if (e.Current is TResult item)
                     {
-                        result = item;
-                        if (!e.MoveNext())
+                        while (e.MoveNext())
                         {
-                            return true;
+                            if (e.Current is TResult)
+                            {
+                                return false;
+                            }
                         }
+
+                        result = item;
+                        return true;
                     }
 
                     return false;
@@ -252,7 +257,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     result = e.Current;
                     if (predicate(result))
                     {
-                       return true;
+                        return true;
                     }
                 }
             }
@@ -317,7 +322,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 var found = false;
-                while (e.MoveNext())
+                do
                 {
                     if (e.Current is TResult item)
                     {
@@ -325,7 +330,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         found = true;
                     }
                 }
-
+                while (e.MoveNext());
                 return found;
             }
         }
