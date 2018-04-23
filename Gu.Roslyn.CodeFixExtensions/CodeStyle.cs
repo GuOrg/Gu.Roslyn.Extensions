@@ -27,7 +27,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool UnderscoreFields(this SemanticModel semanticModel)
         {
-            using (var walker = FieldWalker.Borrow())
+            using (var walker = UnderscoreFieldWalker.Borrow())
             {
                 switch (UnderscoreFields(semanticModel.SyntaxTree, walker))
                 {
@@ -104,7 +104,51 @@ namespace Gu.Roslyn.CodeFixExtensions
             return true;
         }
 
-        private static Result UnderscoreFields(this SyntaxTree tree, FieldWalker walker)
+        /// <summary>
+        /// Figuring out if backing fields are adjacent to their properties.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="newLineBetween">If there is a new line between the field and the property.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static bool BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)
+        {
+            using (var walker = BackingFieldsAdjacentWalker.Borrow())
+            {
+                switch (BackingFieldsAdjacent(semanticModel.SyntaxTree, walker, out newLineBetween))
+                {
+                    case Result.Unknown:
+                    case Result.Maybe:
+                        break;
+                    case Result.Yes:
+                        return true;
+                    case Result.No:
+                        return false;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                foreach (var tree in semanticModel.Compilation.SyntaxTrees)
+                {
+                    switch (BackingFieldsAdjacent(tree, walker, out newLineBetween))
+                    {
+                        case Result.Unknown:
+                        case Result.Maybe:
+                            break;
+                        case Result.Yes:
+                            return true;
+                        case Result.No:
+                            return false;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+            }
+
+            newLineBetween = false;
+            return false;
+        }
+
+        private static Result UnderscoreFields(this SyntaxTree tree, UnderscoreFieldWalker walker)
         {
             if (IsExcluded(tree))
             {
@@ -145,15 +189,31 @@ namespace Gu.Roslyn.CodeFixExtensions
             return walker.UsingDirectivesInside();
         }
 
+        private static Result BackingFieldsAdjacent(this SyntaxTree tree, BackingFieldsAdjacentWalker walker, out bool newLineBetween)
+        {
+            if (IsExcluded(tree))
+            {
+                newLineBetween = false;
+                return Result.Unknown;
+            }
+
+            if (tree.TryGetRoot(out var root))
+            {
+                walker.Visit(root);
+            }
+
+            return walker.Adjacent(out newLineBetween);
+        }
+
         private static bool IsExcluded(SyntaxTree syntaxTree)
         {
             return syntaxTree.FilePath.EndsWith(".g.i.cs") ||
                    syntaxTree.FilePath.EndsWith(".g.cs");
         }
 
-        private sealed class FieldWalker : PooledWalker<FieldWalker>
+        private sealed class UnderscoreFieldWalker : PooledWalker<UnderscoreFieldWalker>
         {
-            private FieldWalker()
+            private UnderscoreFieldWalker()
             {
             }
 
@@ -161,7 +221,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             public Result UsesUnderScore { get; private set; }
 
-            public static FieldWalker Borrow() => Borrow(() => new FieldWalker());
+            public static UnderscoreFieldWalker Borrow() => Borrow(() => new UnderscoreFieldWalker());
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
@@ -382,6 +442,96 @@ namespace Gu.Roslyn.CodeFixExtensions
             protected override void Clear()
             {
                 this.usingDirectives.Clear();
+            }
+        }
+
+        private sealed class BackingFieldsAdjacentWalker : PooledWalker<BackingFieldsAdjacentWalker>
+        {
+            private Result result;
+            private bool newLine;
+
+            public static BackingFieldsAdjacentWalker Borrow() => Borrow(() => new BackingFieldsAdjacentWalker());
+
+            public override void VisitReturnStatement(ReturnStatementSyntax node)
+            {
+                if (node.Parent is BlockSyntax block &&
+                    block.Parent is AccessorDeclarationSyntax accessor &&
+                    accessor.Parent is AccessorListSyntax accessorList &&
+                    accessorList.Parent is PropertyDeclarationSyntax property)
+                {
+                    this.TryUpdateAdjacent(property, node.Expression);
+                }
+
+                base.VisitReturnStatement(node);
+            }
+
+            public override void VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
+            {
+                switch (node.Parent)
+                {
+                    case AccessorDeclarationSyntax accessor when accessor.Parent is AccessorListSyntax accessorList &&
+                                                                 accessorList.Parent is PropertyDeclarationSyntax property:
+                        this.TryUpdateAdjacent(property, node.Expression);
+                        break;
+                    case PropertyDeclarationSyntax property:
+                        this.TryUpdateAdjacent(property, node.Expression);
+                        break;
+                }
+
+                base.VisitArrowExpressionClause(node);
+            }
+
+            public Result Adjacent(out bool newLineBetween)
+            {
+                newLineBetween = this.newLine;
+                return this.result;
+            }
+
+            protected override void Clear()
+            {
+                this.result = Result.Unknown;
+            }
+
+            private void TryUpdateAdjacent(PropertyDeclarationSyntax property, ExpressionSyntax returnValue)
+            {
+                switch (returnValue)
+                {
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is ThisExpressionSyntax:
+                        this.TryUpdateAdjacent(property, memberAccess.Name.Identifier.ValueText);
+                        break;
+                    case IdentifierNameSyntax identifierName:
+                        this.TryUpdateAdjacent(property, identifierName.Identifier.ValueText);
+                        break;
+                }
+            }
+
+            private void TryUpdateAdjacent(PropertyDeclarationSyntax property, string candidate)
+            {
+                if (property.Parent is TypeDeclarationSyntax typeDeclaration &&
+                    typeDeclaration.TryFindField(candidate, out var field))
+                {
+                    var index = typeDeclaration.Members.IndexOf(property);
+                    if (index > 0 &&
+                        typeDeclaration.Members[index - 1] == field)
+                    {
+                        for (var i = index - 2; i >= 0; i--)
+                        {
+                            if (!(typeDeclaration.Members[index] is FieldDeclarationSyntax))
+                            {
+                                this.result = Result.Yes;
+                                this.newLine = property.HasLeadingTrivia &&
+                                               property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia);
+                            }
+                        }
+
+                        if (!property.HasLeadingTrivia ||
+                            !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))
+                        {
+                            this.result = Result.Yes;
+                            this.newLine = false;
+                        }
+                    }
+                }
             }
         }
     }
