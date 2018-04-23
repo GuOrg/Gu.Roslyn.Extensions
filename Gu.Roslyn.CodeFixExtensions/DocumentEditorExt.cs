@@ -7,7 +7,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
     public static partial class DocumentEditorExt
     {
-        public static DocumentEditor ReplaceNode<T>(this DocumentEditor editor, T node, Func<T, T> replacement)
+        public static DocumentEditor ReplaceNode<T>(this DocumentEditor editor, T node, Func<T, SyntaxNode> replacement)
             where T : SyntaxNode
         {
             editor.ReplaceNode(node, (x, _) => replacement((T)x));

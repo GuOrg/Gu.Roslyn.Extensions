@@ -30,7 +30,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
-        /// Add the using directive and respect if the convenion is inside or outside of namespace and sorted with system first.
+        /// Add the field and respect StyleCop ordering.
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/></param>
         /// <param name="containingType">The containing type.</param>
@@ -79,24 +79,52 @@ namespace Gu.Roslyn.CodeFixExtensions
             return backingField;
         }
 
+        /// <summary>
+        /// Add the field and respect StyleCop ordering.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/></param>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="event">The <see cref="EventDeclarationSyntax"/></param>
+        /// <returns>The <paramref name="editor"/></returns>
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventDeclarationSyntax @event)
         {
             editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (ClassDeclarationSyntax)node, @event));
             return editor;
         }
 
+        /// <summary>
+        /// Add the field and respect StyleCop ordering.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/></param>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="event">The <see cref="EventFieldDeclarationSyntax"/></param>
+        /// <returns>The <paramref name="editor"/></returns>
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventFieldDeclarationSyntax @event)
         {
             editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (ClassDeclarationSyntax)node, @event));
             return editor;
         }
 
+        /// <summary>
+        /// Add the field and respect StyleCop ordering.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/></param>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/></param>
+        /// <returns>The <paramref name="editor"/></returns>
         public static DocumentEditor AddProperty(this DocumentEditor editor, TypeDeclarationSyntax containingType, BasePropertyDeclarationSyntax property)
         {
             editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (TypeDeclarationSyntax)node, property));
             return editor;
         }
 
+        /// <summary>
+        /// Add the field and respect StyleCop ordering.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/></param>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="method">The <see cref="MethodDeclarationSyntax"/></param>
+        /// <returns>The <paramref name="editor"/></returns>
         public static DocumentEditor AddMethod(this DocumentEditor editor, TypeDeclarationSyntax containingType, MethodDeclarationSyntax method)
         {
             editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (TypeDeclarationSyntax)node, method));
