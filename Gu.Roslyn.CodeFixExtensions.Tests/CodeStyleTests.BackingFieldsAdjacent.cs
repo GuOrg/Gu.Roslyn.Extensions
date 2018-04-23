@@ -8,24 +8,108 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
         public class BackingFieldsAdjacent
         {
             [Test]
-            public void DefaultsToStyleCop()
+            public void DefaultsToStyleCopEmptyClass()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-public class Foo
-{
-    private int value1;
-
-    public int Value1
+    public class Foo
     {
-        get => this.value1;
-        set => this.value1 = value;
     }
-}
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                Assert.AreEqual(false, CodeStyle.BackingFieldsAdjacent(semanticModel, out _));
+            }
+
+            [Test]
+            public void DefaultsToStyleCopWhenOneProperty()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        private int value1;
+
+        public int Value1
+        {
+            get => this.value1;
+            set => this.value1 = value;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                Assert.AreEqual(false, CodeStyle.BackingFieldsAdjacent(semanticModel, out _));
+            }
+
+            [Test]
+            public void FindsAdjacentInCompilation()
+            {
+                var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+    }
+}");
+
+                var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+        }
+
+        private int value1;
+
+        public int Value1
+        {
+            get => this.value1;
+            set => this.value1 = value;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree1, syntaxTree2 });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree1);
+                Assert.AreEqual(true, CodeStyle.BackingFieldsAdjacent(semanticModel, out var newLine));
+                Assert.AreEqual(true, newLine);
+            }
+
+            [Test]
+            public void FindsStyleCopInCompilation()
+            {
+                var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+    }
+}");
+
+                var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        private int value1;
+
+        public Foo()
+        {
+        }
+
+        public int Value1
+        {
+            get => this.value1;
+            set => this.value1 = value;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree1, syntaxTree2 });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree1);
                 Assert.AreEqual(false, CodeStyle.BackingFieldsAdjacent(semanticModel, out _));
             }
 
@@ -35,20 +119,20 @@ public class Foo
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-public class Foo
-{
-    private int value1;
-
-    public Foo()
+    public class Foo
     {
-    }
+        private int value1;
 
-    public int Value1
-    {
-        get => this.value1;
-        set => this.value1 = value;
+        public Foo()
+        {
+        }
+
+        public int Value1
+        {
+            get => this.value1;
+            set => this.value1 = value;
+        }
     }
-}
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
@@ -61,19 +145,19 @@ public class Foo
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-public class Foo
-{
-    public Foo()
+    public class Foo
     {
-    }
+        public Foo()
+        {
+        }
 
-    private int value1;
-    public int Value1
-    {
-        get => this.value1;
-        set => this.value1 = value;
+        private int value1;
+        public int Value1
+        {
+            get => this.value1;
+            set => this.value1 = value;
+        }
     }
-}
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
@@ -87,20 +171,20 @@ public class Foo
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-public class Foo
-{
-    public Foo()
+    public class Foo
     {
-    }
+        public Foo()
+        {
+        }
 
-    private int value1;
+        private int value1;
 
-    public int Value1
-    {
-        get => this.value1;
-        set => this.value1 = value;
+        public int Value1
+        {
+            get => this.value1;
+            set => this.value1 = value;
+        }
     }
-}
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);

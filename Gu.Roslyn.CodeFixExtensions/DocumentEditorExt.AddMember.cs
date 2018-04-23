@@ -75,7 +75,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             var type = (TypeDeclarationSyntax)propertyDeclaration.Parent;
             editor.ReplaceNode(
                 type,
-                (node, generator) => AddBackingField(editor, (TypeDeclarationSyntax)node, backingField, propertyDeclaration));
+                (node, generator) => AddBackingField(editor, (TypeDeclarationSyntax)node, backingField, property.Name));
             return backingField;
         }
 
@@ -176,62 +176,54 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private static TypeDeclarationSyntax AddBackingField(this DocumentEditor editor, TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, PropertyDeclarationSyntax propertyDeclaration)
+        private static TypeDeclarationSyntax AddBackingField(this DocumentEditor editor, TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, string propertyName)
         {
-            var index = type.Members.IndexOf(propertyDeclaration);
-            for (var i = index + 1; i < type.Members.Count; i++)
+            if (type.TryFindProperty(propertyName, out var property))
             {
-                if (type.Members[i] is PropertyDeclarationSyntax other)
+                if (editor.SemanticModel.BackingFieldsAdjacent(out var newLine))
                 {
-                    if (other.TrySingleReturned(out var expression) &&
-                        TryGetFieldName(expression, out var fieldName) &&
-                        type.TryFindField(fieldName, out var otherField))
+                    if (newLine ||
+                        !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))
                     {
-                        return type.InsertNodesBefore(otherField, new[] { backingField });
+                        return type.InsertNodesBefore(property, new[] { backingField });
                     }
-                }
-                else
-                {
-                    break;
-                }
-            }
 
-            for (var i = index - 1; i >= 0; i--)
-            {
-                if (type.Members[i] is PropertyDeclarationSyntax other)
+                    return type.InsertNodesBefore(property, new[] { backingField });
+                }
+
+                var index = type.Members.IndexOf(property);
+                for (var i = index + 1; i < type.Members.Count; i++)
                 {
-                    if (other.TrySingleReturned(out var expression) &&
-                        TryGetFieldName(expression, out var fieldName) &&
-                        type.TryFindField(fieldName, out var otherField))
+                    if (type.Members[i] is PropertyDeclarationSyntax other)
                     {
-                        return type.InsertNodesAfter(otherField, new[] { backingField });
+                        if (other.TryGetBackingField(out var otherField))
+                        {
+                            return type.InsertNodesBefore(otherField, new[] { backingField });
+                        }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
-                else
+
+                for (var i = index - 1; i >= 0; i--)
                 {
-                    break;
+                    if (type.Members[i] is PropertyDeclarationSyntax other)
+                    {
+                        if (other.TryGetBackingField(out var otherField))
+                        {
+                            return type.InsertNodesAfter(otherField, new[] { backingField });
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
             return AddSorted(editor.Generator, type, backingField);
-
-            bool TryGetFieldName(ExpressionSyntax candidate, out string name)
-            {
-                if (candidate is IdentifierNameSyntax identifierName)
-                {
-                    name = identifierName.Identifier.ValueText;
-                    return true;
-                }
-
-                if (candidate is MemberAccessExpressionSyntax memberAccess &&
-                    memberAccess.Expression is ThisExpressionSyntax)
-                {
-                    return TryGetFieldName(memberAccess.Name, out name);
-                }
-
-                name = null;
-                return false;
-            }
         }
 
         private static TypeDeclarationSyntax AddSorted(SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax memberDeclaration)

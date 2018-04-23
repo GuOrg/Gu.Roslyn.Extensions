@@ -510,7 +510,27 @@ namespace Gu.Roslyn.CodeFixExtensions
                 if (property.Parent is TypeDeclarationSyntax typeDeclaration &&
                     typeDeclaration.TryFindField(candidate, out var field))
                 {
-                    
+                    var index = typeDeclaration.Members.IndexOf(property);
+                    if (index > 0 &&
+                        typeDeclaration.Members[index - 1] == field)
+                    {
+                        for (var i = index - 2; i >= 0; i--)
+                        {
+                            if (!(typeDeclaration.Members[index] is FieldDeclarationSyntax))
+                            {
+                                this.result = Result.Yes;
+                                this.newLine = property.HasLeadingTrivia &&
+                                               property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia);
+                            }
+                        }
+
+                        if (!property.HasLeadingTrivia ||
+                            !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))
+                        {
+                            this.result = Result.Yes;
+                            this.newLine = false;
+                        }
+                    }
                 }
             }
         }
