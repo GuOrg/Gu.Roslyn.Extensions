@@ -1,11 +1,7 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
-    using System.Collections.Generic;
-    using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Editing;
     using Microsoft.CodeAnalysis.Formatting;
 

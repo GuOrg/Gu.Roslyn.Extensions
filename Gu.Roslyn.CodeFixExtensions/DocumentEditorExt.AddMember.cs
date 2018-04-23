@@ -3,13 +3,11 @@ namespace Gu.Roslyn.CodeFixExtensions
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
     using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Editing;
-    using Microsoft.CodeAnalysis.Formatting;
 
     /// <summary>
     /// Helper methods for adding members sorted according to how StyleCop wants it.
@@ -45,7 +43,8 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
-        /// Add the using directive and respect if the convenion is inside or outside of namespace and sorted with system first.
+        /// Add the backing field and figure out placement.
+        /// StyleCop ordering is the default but it also checks for if field adjacent to property is used.
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/></param>
         /// <param name="propertyDeclaration">The <see cref="FieldDeclarationSyntax"/></param>
@@ -76,7 +75,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             var type = (TypeDeclarationSyntax)propertyDeclaration.Parent;
             editor.ReplaceNode(
                 type,
-                (node, generator) => AddBackingField((TypeDeclarationSyntax)node, backingField, property.Name, generator));
+                (node, generator) => AddBackingField(editor, (TypeDeclarationSyntax)node, backingField, propertyDeclaration));
             return backingField;
         }
 
@@ -89,6 +88,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventFieldDeclarationSyntax @event)
         {
             editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (ClassDeclarationSyntax)node, @event));
+            return editor;
+        }
+
+        public static DocumentEditor AddProperty(this DocumentEditor editor, TypeDeclarationSyntax containingType, BasePropertyDeclarationSyntax property)
+        {
+            editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (TypeDeclarationSyntax)node, property));
             return editor;
         }
 
@@ -143,8 +148,45 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private static TypeDeclarationSyntax AddBackingField(TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, string propertyName, SyntaxGenerator syntaxGenerator)
+        private static TypeDeclarationSyntax AddBackingField(this DocumentEditor editor, TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, PropertyDeclarationSyntax propertyDeclaration)
         {
+            var index = type.Members.IndexOf(propertyDeclaration);
+            for (var i = index + 1; i < type.Members.Count; i++)
+            {
+                if (type.Members[i] is PropertyDeclarationSyntax other)
+                {
+                    if (other.TrySingleReturnedInGetter(out var expression) &&
+                        TryGetFieldName(expression, out var fieldName) &&
+                        type.TryFindField(fieldName, out var otherField))
+                    {
+                        return type.InsertNodesBefore(otherField, new[] { backingField });
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (var i = index - 1; i >= 0; i--)
+            {
+                if (type.Members[i] is PropertyDeclarationSyntax other)
+                {
+                    if (other.TrySingleReturnedInGetter(out var expression) &&
+                        TryGetFieldName(expression, out var fieldName) &&
+                        type.TryFindField(fieldName, out var otherField))
+                    {
+                        return type.InsertNodesAfter(otherField, new[] { backingField });
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return AddSorted(editor.Generator, type, backingField);
+
             bool TryGetFieldName(ExpressionSyntax candidate, out string name)
             {
                 if (candidate is IdentifierNameSyntax identifierName)
@@ -162,48 +204,6 @@ namespace Gu.Roslyn.CodeFixExtensions
                 name = null;
                 return false;
             }
-
-            if (type.TryFindProperty(propertyName, out var propertyDeclaration))
-            {
-                var index = type.Members.IndexOf(propertyDeclaration);
-                for (var i = index + 1; i < type.Members.Count; i++)
-                {
-                    if (type.Members[i] is PropertyDeclarationSyntax other)
-                    {
-                        if (other.TrySingleReturnedInGetter(out var expression) &&
-                            TryGetFieldName(expression, out var fieldName) &&
-                            type.TryFindField(fieldName, out var otherField))
-                        {
-                            return type.InsertNodesBefore(otherField, new[] { backingField });
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                for (var i = index - 1; i >= 0; i--)
-                {
-                    if (type.Members[i] is PropertyDeclarationSyntax other)
-                    {
-                        if (other.TrySingleReturnedInGetter(out var expression) &&
-                            TryGetFieldName(expression, out var fieldName) &&
-                            type.TryFindField(fieldName, out var otherField))
-                        {
-                            return type.InsertNodesAfter(otherField, new[] { backingField });
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                return AddSorted(syntaxGenerator, type, backingField);
-            }
-
-            return type;
         }
 
         private static TypeDeclarationSyntax AddSorted(SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax memberDeclaration)
