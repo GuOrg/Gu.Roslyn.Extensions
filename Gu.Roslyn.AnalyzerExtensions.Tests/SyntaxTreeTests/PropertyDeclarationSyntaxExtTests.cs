@@ -161,5 +161,99 @@ namespace RoslynSandbox
             var property = syntaxTree.FindPropertyDeclaration(name);
             Assert.AreEqual(expected, property.IsGetOnly());
         }
+
+        [TestCase("ExpressionBody")]
+        [TestCase("ExpressionBodyGetter")]
+        [TestCase("StatementBodyGetter")]
+        [TestCase("ExpressionBodyBackingField")]
+        [TestCase("StatementBodyBackingField")]
+        public void TryGetBackingFieldWhenTrue(string name)
+        {
+            var code = @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        private int backingField;
+
+        public int ExpressionBody => this.backingField;
+
+        public int ExpressionBodyGetter
+        {
+            get => this.backingField;
+        }
+
+        public int StatementBodyGetter
+        {
+            get { return this.backingField; }
+        }
+
+        public int ExpressionBodyBackingField
+        {
+            get => this.backingField;
+            set => this.backingField = value;
+        }
+
+        public int StatementBodyBackingField
+        {
+            get { return this.backingField; }
+            set { this.backingField = value; }
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var property = syntaxTree.FindPropertyDeclaration(name);
+            Assert.AreEqual(false, property.TryGetBackingField(out var backingField));
+            Assert.AreEqual("private int backingField", backingField.ToString());
+        }
+
+        [TestCase("GetOnly")]
+        [TestCase("ExpressionBody")]
+        [TestCase("ExpressionBodyGetter")]
+        [TestCase("StatementBodyGetter")]
+        [TestCase("AutoGetSet")]
+        [TestCase("ExpressionBodyBackingField")]
+        [TestCase("StatementBodyBackingField")]
+        public void TryGetBackingFieldWhenFalse(string name)
+        {
+            var code = @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int GetOnly { get; }
+
+        public int ExpressionBody => this.GetOnly;
+
+        public int ExpressionBodyGetter
+        {
+            get => this.GetOnly;
+        }
+
+        public int StatementBodyGetter
+        {
+            get { return this.GetOnly; }
+        }
+
+        public int AutoGetSet { get; set; }
+
+        public int ExpressionBodyBackingField
+        {
+            get => this.AutoGetSet;
+            set => this.AutoGetSet = value;
+        }
+
+        public int StatementBodyBackingField
+        {
+            get { return this.AutoGetSet; }
+            set { this.AutoGetSet = value; }
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var property = syntaxTree.FindPropertyDeclaration(name);
+            Assert.AreEqual(false, property.TryGetBackingField(out var backingField));
+            Assert.AreEqual(null, backingField.ToString());
+        }
     }
 }

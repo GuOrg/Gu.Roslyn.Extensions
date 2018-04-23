@@ -183,7 +183,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 if (type.Members[i] is PropertyDeclarationSyntax other)
                 {
-                    if (other.TrySingleReturnedInGetter(out var expression) &&
+                    if (other.TrySingleReturned(out var expression) &&
                         TryGetFieldName(expression, out var fieldName) &&
                         type.TryFindField(fieldName, out var otherField))
                     {
@@ -200,7 +200,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 if (type.Members[i] is PropertyDeclarationSyntax other)
                 {
-                    if (other.TrySingleReturnedInGetter(out var expression) &&
+                    if (other.TrySingleReturned(out var expression) &&
                         TryGetFieldName(expression, out var fieldName) &&
                         type.TryFindField(fieldName, out var otherField))
                     {
