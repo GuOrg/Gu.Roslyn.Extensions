@@ -5,8 +5,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helpers for <see cref="InvocationExpressionSyntax"/>
+    /// </summary>
     public static class InvocationExpressionSyntaxExt
     {
+        /// <summary>
+        /// Check if the invocation is potentially returning void from the usage.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <returns>True if it possibly return void.</returns>
         public static bool IsPotentialReturnVoid(this InvocationExpressionSyntax invocation)
         {
             if (invocation.Parent is ArgumentSyntax ||
@@ -25,6 +33,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return true;
         }
 
+        /// <summary>
+        /// Check if the invocation is potentially is a member call in the containing instance.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <returns>True if it possibly is a member call in the containing instance.</returns>
+        public static bool IsPotentialThis(this InvocationExpressionSyntax invocation)
+        {
+            switch (invocation.Expression)
+            {
+                case IdentifierNameSyntax _:
+                    return true;
+                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is ThisExpressionSyntax:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try to get the invoked method's name.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <param name="name">The name of the invoked method.</param>
+        /// <returns>True if the name was found.</returns>
         public static bool TryGetMethodName(this InvocationExpressionSyntax invocation, out string name)
         {
             name = null;
