@@ -1,7 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.Editing;
