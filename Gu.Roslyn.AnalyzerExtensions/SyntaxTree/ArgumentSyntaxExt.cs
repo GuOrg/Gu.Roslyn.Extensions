@@ -6,59 +6,93 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Extension methods for <see cref="ArgumentSyntax"/>
+    /// </summary>
     public static class ArgumentSyntaxExt
     {
+        /// <summary>
+        /// Try get the value of the argument if it is a constant string.
+        /// </summary>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="result">The string contents of <paramref name="argument"/></param>
+        /// <returns>True if the argument expression was a constant string.</returns>
         public static bool TryGetStringValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string result)
         {
-            result = null;
-            if (argument?.Expression == null)
+            return TryGetStringValue(argument.Expression, out result);
+
+            bool TryGetStringValue(ExpressionSyntax expression, out string text)
             {
+                text = null;
+                if (expression == null)
+                {
+                    return false;
+                }
+
+                switch (expression)
+                {
+                    case LiteralExpressionSyntax literal when literal.IsKind(SyntaxKind.StringLiteralExpression):
+                        text = literal.Token.ValueText;
+                        return true;
+                    case LiteralExpressionSyntax literal when literal.IsKind(SyntaxKind.NullLiteralExpression):
+                        text = null;
+                        return true;
+                    case CastExpressionSyntax cast:
+                        return TryGetStringValue(cast.Expression, out text);
+                    case InvocationExpressionSyntax invocation when invocation.IsNameOf():
+                        if (invocation.ArgumentList != null &&
+                            invocation.ArgumentList.Arguments.TrySingle(out var nameofArg))
+                        {
+                            switch (nameofArg.Expression)
+                            {
+                                case IdentifierNameSyntax identifierName:
+                                    text = identifierName.Identifier.ValueText;
+                                    return true;
+                                case MemberAccessExpressionSyntax memberAccess:
+                                    text = memberAccess.Name.Identifier.ValueText;
+                                    return true;
+                                default:
+                                    var constantValue = semanticModel.GetConstantValueSafe(invocation, cancellationToken);
+                                    if (constantValue.HasValue &&
+                                        constantValue.Value is string s)
+                                    {
+                                        text = s;
+                                        return true;
+                                    }
+
+                                    break;
+                            }
+                        }
+
+                        return false;
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Identifier.ValueText == "Empty":
+                        switch (memberAccess.Expression)
+                        {
+                            case PredefinedTypeSyntax predefinedType when predefinedType.Keyword.ValueText == "string":
+                                text = string.Empty;
+                                return true;
+                            case IdentifierNameSyntax source when string.Equals(source.Identifier.ValueText, "string", StringComparison.OrdinalIgnoreCase):
+                                text = string.Empty;
+                                return true;
+                        }
+
+                        return false;
+                }
+
                 return false;
             }
-
-            switch (argument.Expression)
-            {
-                case LiteralExpressionSyntax literal when literal.IsKind(SyntaxKind.StringLiteralExpression):
-                    result = literal.Token.ValueText;
-                    return true;
-                case LiteralExpressionSyntax literal when literal.IsKind(SyntaxKind.NullLiteralExpression):
-                    result = null;
-                    return true;
-                case InvocationExpressionSyntax invocation when invocation.IsNameOf():
-                    if (invocation.ArgumentList != null &&
-                        invocation.ArgumentList.Arguments.TrySingle(out var nameofArg))
-                    {
-                        switch (nameofArg.Expression)
-                        {
-                            case IdentifierNameSyntax identifierName:
-                                result = identifierName.Identifier.ValueText;
-                                return true;
-                            case MemberAccessExpressionSyntax memberAccess:
-                                result = memberAccess.Name.Identifier.ValueText;
-                                return true;
-                            default:
-                                var constantValue = semanticModel.GetConstantValueSafe(invocation, cancellationToken);
-                                if (constantValue.HasValue && constantValue.Value is string)
-                                {
-                                    result = (string)constantValue.Value;
-                                    return true;
-                                }
-
-                                break;
-                        }
-                    }
-
-                    return false;
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is IdentifierNameSyntax source &&
-                                                                    string.Equals(source.Identifier.ValueText, "string", StringComparison.OrdinalIgnoreCase) &&
-                                                                    memberAccess.Name.Identifier.ValueText == "Empty":
-                    result = string.Empty;
-                    return true;
-            }
-
-            return false;
         }
 
+        /// <summary>
+        /// Try get the value of the argument if it is a typeof() call.
+        /// </summary>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="result">The string contents of <paramref name="argument"/></param>
+        /// <returns>True if the call is typeof() and we could figure out the type.</returns>
         public static bool TryGetTypeofValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out ITypeSymbol result)
         {
             result = null;
@@ -70,7 +104,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (argument.Expression is TypeOfExpressionSyntax typeOf)
             {
                 var typeSyntax = typeOf.Type;
-                var typeInfo = ModelExtensions.GetTypeInfo(semanticModel.SemanticModelFor(typeSyntax), typeSyntax, cancellationToken);
+                var typeInfo = semanticModel.GetTypeInfoSafe(typeSyntax, cancellationToken);
                 result = typeInfo.Type;
                 return result != null;
             }
