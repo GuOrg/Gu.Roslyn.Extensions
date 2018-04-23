@@ -203,8 +203,8 @@ namespace RoslynSandbox
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var property = syntaxTree.FindPropertyDeclaration(name);
-            Assert.AreEqual(false, property.TryGetBackingField(out var backingField));
-            Assert.AreEqual("private int backingField", backingField.ToString());
+            Assert.AreEqual(true, property.TryGetBackingField(out var backingField));
+            Assert.AreEqual("private int backingField;", backingField.ToString());
         }
 
         [TestCase("GetOnly")]
@@ -253,7 +253,6 @@ namespace RoslynSandbox
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var property = syntaxTree.FindPropertyDeclaration(name);
             Assert.AreEqual(false, property.TryGetBackingField(out var backingField));
-            Assert.AreEqual(null, backingField.ToString());
         }
     }
 }
