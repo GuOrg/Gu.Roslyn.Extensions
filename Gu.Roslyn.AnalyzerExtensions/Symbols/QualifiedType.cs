@@ -137,15 +137,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return this.FullName.GetHashCode();
         }
 
+        protected bool Equals(QualifiedType other)
+        {
+            return string.Equals(this.FullName, other.FullName);
+        }
+
         private static bool NameEquals(string left, QualifiedType right)
         {
             return left == right.Type ||
                    (right.Alias != null && left == right.Alias);
-        }
-
-        protected bool Equals(QualifiedType other)
-        {
-            return string.Equals(this.FullName, other.FullName);
         }
     }
 }

@@ -3,6 +3,9 @@ namespace Gu.Roslyn.CodeFixExtensions
     using System;
     using Microsoft.CodeAnalysis;
 
+    /// <summary>
+    /// Helpers for <see cref="Accessibility"/>
+    /// </summary>
     public static class AccessibilityExt
     {
         /// <summary>

@@ -49,7 +49,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Check if <paramref name="type"/> is <paramref name="other"/>
         /// </summary>
         /// <param name="type">The <see cref="ITypeSymbol"/></param>
-        /// <param name="other">The <see cref="ITypeSymbol"/></param>
+        /// <param name="other">The other <see cref="ITypeSymbol"/></param>
         /// <returns>True if <paramref name="type"/> is <paramref name="other"/> </returns>
         public static bool Is(this ITypeSymbol type, ITypeSymbol other)
         {

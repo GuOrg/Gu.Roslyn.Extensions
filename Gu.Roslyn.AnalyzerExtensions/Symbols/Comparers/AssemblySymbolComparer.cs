@@ -4,6 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
 
+    /// <inheritdoc />
     public class AssemblySymbolComparer : IEqualityComparer<IAssemblySymbol>
     {
         public static readonly AssemblySymbolComparer Default = new AssemblySymbolComparer();
