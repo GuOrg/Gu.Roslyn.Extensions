@@ -1,10 +1,9 @@
 #pragma warning disable GU0008 // Avoid relay properties.
-namespace Gu.Analyzers
+namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Immutable;
     using System.Threading;
-    using Gu.Roslyn.CodeFixExtensions;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.Editing;
@@ -47,11 +46,7 @@ namespace Gu.Analyzers
         /// <param name="action">The <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
         /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="P:Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
         /// <param name="diagnostic">The subset of <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
-        public void RegisterCodeFix(
-            string title,
-            Action<DocumentEditor, CancellationToken> action,
-            Type equivalenceKey,
-            Diagnostic diagnostic)
+        public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, Type equivalenceKey, Diagnostic diagnostic)
         {
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey.FullName),
@@ -65,11 +60,7 @@ namespace Gu.Analyzers
         /// <param name="action">The <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
         /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="P:Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
         /// <param name="diagnostic">The subset of <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
-        public void RegisterCodeFix(
-            string title,
-            Action<DocumentEditor, CancellationToken> action,
-            string equivalenceKey,
-            Diagnostic diagnostic)
+        public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, string equivalenceKey, Diagnostic diagnostic)
         {
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey),

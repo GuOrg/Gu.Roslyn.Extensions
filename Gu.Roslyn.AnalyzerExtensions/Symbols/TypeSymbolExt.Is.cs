@@ -6,8 +6,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helpers for working with <see cref="ITypeSymbol"/>
+    /// </summary>
     public static partial class TypeSymbolExt
     {
+        /// <summary>
+        /// Check if <paramref name="type"/> is <paramref name="qualifiedType"/>
+        /// </summary>
+        /// <param name="type">The <see cref="ITypeSymbol"/></param>
+        /// <param name="qualifiedType">The <see cref="QualifiedType"/></param>
+        /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType"/> </returns>
         public static bool Is(this ITypeSymbol type, QualifiedType qualifiedType)
         {
             if (type == null || qualifiedType == null)
@@ -36,6 +45,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <summary>
+        /// Check if <paramref name="type"/> is <paramref name="other"/>
+        /// </summary>
+        /// <param name="type">The <see cref="ITypeSymbol"/></param>
+        /// <param name="other">The <see cref="ITypeSymbol"/></param>
+        /// <returns>True if <paramref name="type"/> is <paramref name="other"/> </returns>
         public static bool Is(this ITypeSymbol type, ITypeSymbol other)
         {
             if (type == null || other == null)
