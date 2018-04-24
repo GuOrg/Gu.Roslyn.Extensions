@@ -33,7 +33,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         public static bool Is(this ITypeSymbol type, ITypeSymbol other)
         {
-            if (other.IsInterface())
+            if (other.TypeKind == TypeKind.Interface)
             {
                 foreach (var @interface in type.AllInterfaces)
                 {
@@ -59,58 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        [Obsolete("Use type.TypeKind == TypeKind.Interface")]
-        public static bool IsInterface(this ITypeSymbol type)
-        {
-            return type.TypeKind == TypeKind.Interface;
-        }
-
-        public static bool IsSameType(this ITypeSymbol first, ITypeSymbol other)
-        {
-            if (Equals(first, other))
-            {
-                return true;
-            }
-
-            if (first == null || other == null)
-            {
-                return false;
-            }
-
-            if (first is ITypeParameterSymbol firstParameter &&
-                other is ITypeParameterSymbol otherParameter)
-            {
-                return firstParameter.MetadataName == otherParameter.MetadataName &&
-                       firstParameter.ContainingSymbol.Equals(otherParameter.ContainingSymbol);
-            }
-
-            return first is INamedTypeSymbol firstNamed &&
-                   other is INamedTypeSymbol otherNamed &&
-                   IsSameType(firstNamed, otherNamed);
-        }
-
-        internal static bool IsSameType(this INamedTypeSymbol first, INamedTypeSymbol other)
-        {
-            if (first == null ||
-                other == null)
-            {
-                return false;
-            }
-
-            if (first.IsDefinition ^ other.IsDefinition)
-            {
-                return IsSameType(first.OriginalDefinition, other.OriginalDefinition);
-            }
-
-            return first.Equals(other) ||
-                   AreEquivalent(first, other);
-        }
-
-        internal static bool IsRepresentationPreservingConversion(
-            this ITypeSymbol toType,
-            ExpressionSyntax valueExpression,
-            SemanticModel semanticModel,
-            CancellationToken cancellationToken)
+        public static bool IsRepresentationPreservingConversion(this ITypeSymbol toType, ExpressionSyntax valueExpression, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             var conversion = semanticModel.SemanticModelFor(valueExpression)
                                           .ClassifyConversion(valueExpression, toType);
@@ -150,11 +99,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        internal static bool IsNullable(
-            this ITypeSymbol nullableType,
-            ExpressionSyntax value,
-            SemanticModel semanticModel,
-            CancellationToken cancellationToken)
+        public static bool IsNullable(this ITypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             var namedTypeSymbol = nullableType as INamedTypeSymbol;
             if (namedTypeSymbol == null ||
@@ -174,7 +119,54 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return namedTypeSymbol.TypeArguments[0].IsSameType(typeInfo.Type);
         }
 
-        internal static bool AreEquivalent(this INamedTypeSymbol first, INamedTypeSymbol other)
+        [Obsolete("Use type.TypeKind == TypeKind.Interface")]
+        public static bool IsInterface(this ITypeSymbol type)
+        {
+            return type.TypeKind == TypeKind.Interface;
+        }
+
+        private static bool IsSameType(this ITypeSymbol first, ITypeSymbol other)
+        {
+            if (Equals(first, other))
+            {
+                return true;
+            }
+
+            if (first == null || other == null)
+            {
+                return false;
+            }
+
+            if (first is ITypeParameterSymbol firstParameter &&
+                other is ITypeParameterSymbol otherParameter)
+            {
+                return firstParameter.MetadataName == otherParameter.MetadataName &&
+                       firstParameter.ContainingSymbol.Equals(otherParameter.ContainingSymbol);
+            }
+
+            return first is INamedTypeSymbol firstNamed &&
+                   other is INamedTypeSymbol otherNamed &&
+                   IsSameType(firstNamed, otherNamed);
+        }
+
+        private static bool IsSameType(this INamedTypeSymbol first, INamedTypeSymbol other)
+        {
+            if (first == null ||
+                other == null)
+            {
+                return false;
+            }
+
+            if (first.IsDefinition ^ other.IsDefinition)
+            {
+                return IsSameType(first.OriginalDefinition, other.OriginalDefinition);
+            }
+
+            return first.Equals(other) ||
+                   AreEquivalent(first, other);
+        }
+
+        private static bool AreEquivalent(this INamedTypeSymbol first, INamedTypeSymbol other)
         {
             if (ReferenceEquals(first, other))
             {
