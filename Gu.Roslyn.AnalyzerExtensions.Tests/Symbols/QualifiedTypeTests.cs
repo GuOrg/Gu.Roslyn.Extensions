@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     public class QualifiedTypeTests
     {
         [Test]
-        public void GetDeclaredSymbolSafeMethod()
+        public void Equality()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

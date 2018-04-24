@@ -10,6 +10,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
     {
         public static bool Is(this ITypeSymbol type, QualifiedType qualifiedType)
         {
+            if (type == null || qualifiedType == null)
+            {
+                return false;
+            }
+
             while (type != null)
             {
                 if (type == qualifiedType)
@@ -33,6 +38,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         public static bool Is(this ITypeSymbol type, ITypeSymbol other)
         {
+            if (type == null || other == null)
+            {
+                return false;
+            }
+
+            if (other == KnownSymbol.System.Object)
+            {
+                return true;
+            }
+
             if (other.TypeKind == TypeKind.Interface)
             {
                 foreach (var @interface in type.AllInterfaces)
@@ -57,6 +72,47 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
+        }
+
+        public static bool IsSameType(this ITypeSymbol x, ITypeSymbol y)
+        {
+            if (Equals(x, y))
+            {
+                return true;
+            }
+
+            if (x == null || y == null)
+            {
+                return false;
+            }
+
+            if (x is ITypeParameterSymbol firstParameter &&
+                y is ITypeParameterSymbol otherParameter)
+            {
+                return firstParameter.MetadataName == otherParameter.MetadataName &&
+                       firstParameter.ContainingSymbol.Equals(otherParameter.ContainingSymbol);
+            }
+
+            return x is INamedTypeSymbol firstNamed &&
+                   y is INamedTypeSymbol otherNamed &&
+                   NamedTypeSymbolComparer.Equals(firstNamed, otherNamed);
+        }
+
+        public static bool IsSameType(this INamedTypeSymbol first, INamedTypeSymbol other)
+        {
+            if (first == null ||
+                other == null)
+            {
+                return false;
+            }
+
+            if (first.IsDefinition ^ other.IsDefinition)
+            {
+                return IsSameType(first.OriginalDefinition, other.OriginalDefinition);
+            }
+
+            return first.Equals(other) ||
+                   AreEquivalent(first, other);
         }
 
         public static bool IsRepresentationPreservingConversion(this ITypeSymbol toType, ExpressionSyntax valueExpression, SemanticModel semanticModel, CancellationToken cancellationToken)
@@ -123,47 +179,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool IsInterface(this ITypeSymbol type)
         {
             return type.TypeKind == TypeKind.Interface;
-        }
-
-        private static bool IsSameType(this ITypeSymbol first, ITypeSymbol other)
-        {
-            if (Equals(first, other))
-            {
-                return true;
-            }
-
-            if (first == null || other == null)
-            {
-                return false;
-            }
-
-            if (first is ITypeParameterSymbol firstParameter &&
-                other is ITypeParameterSymbol otherParameter)
-            {
-                return firstParameter.MetadataName == otherParameter.MetadataName &&
-                       firstParameter.ContainingSymbol.Equals(otherParameter.ContainingSymbol);
-            }
-
-            return first is INamedTypeSymbol firstNamed &&
-                   other is INamedTypeSymbol otherNamed &&
-                   IsSameType(firstNamed, otherNamed);
-        }
-
-        private static bool IsSameType(this INamedTypeSymbol first, INamedTypeSymbol other)
-        {
-            if (first == null ||
-                other == null)
-            {
-                return false;
-            }
-
-            if (first.IsDefinition ^ other.IsDefinition)
-            {
-                return IsSameType(first.OriginalDefinition, other.OriginalDefinition);
-            }
-
-            return first.Equals(other) ||
-                   AreEquivalent(first, other);
         }
 
         private static bool AreEquivalent(this INamedTypeSymbol first, INamedTypeSymbol other)
