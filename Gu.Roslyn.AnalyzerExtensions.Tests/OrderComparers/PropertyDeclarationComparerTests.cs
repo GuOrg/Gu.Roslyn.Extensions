@@ -75,15 +75,6 @@ namespace RoslynSandbox
             Assert.AreEqual(0, PropertyDeclarationComparer.Compare(y, y));
         }
 
-        [TestCaseSource(nameof(TestCaseSource))]
-        public void BasePropertyDeclarationComparerCompare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, BasePropertyDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, BasePropertyDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, BasePropertyDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, BasePropertyDeclarationComparer.Compare(y, y));
-        }
-
         [Test]
         public void InitializedWithOther()
         {

@@ -36,7 +36,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return -1;
             }
 
-            var compare = CompareAccessability(x, y);
+            var compare = MemberDeclarationComparer.CompareAccessability(Accessibility(x), Accessibility(y));
             if (compare != 0)
             {
                 return compare;
@@ -66,7 +66,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return 1;
             }
 
-            return x.SpanStart.CompareTo(y.SpanStart);
+            return MemberDeclarationComparer.CompareSpanStart(x.SpanStart, y.SpanStart);
         }
 
         int IComparer<PropertyDeclarationSyntax>.Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y) => Compare(x, y);
@@ -90,11 +90,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
-        }
-
-        private static int CompareAccessability(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
-        {
-            return MemberDeclarationComparer.CompareAccessability(Accessibility(x), Accessibility(y));
         }
 
         private static int CompareSetterAccessability(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)

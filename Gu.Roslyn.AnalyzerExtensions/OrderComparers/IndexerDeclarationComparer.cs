@@ -4,11 +4,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    public class MethodDeclarationComparer : IComparer<MethodDeclarationSyntax>
+    public class IndexerDeclarationComparer : IComparer<IndexerDeclarationSyntax>
     {
-        public static readonly MethodDeclarationComparer Default = new MethodDeclarationComparer();
+        public static readonly IndexerDeclarationComparer Default = new IndexerDeclarationComparer();
 
-        public static int Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+        public static int Compare(IndexerDeclarationSyntax x, IndexerDeclarationSyntax y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -40,16 +40,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return MemberDeclarationComparer.CompareSpanStart(x.SpanStart, y.SpanStart);
         }
 
-        int IComparer<MethodDeclarationSyntax>.Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y) => Compare(x, y);
+        int IComparer<IndexerDeclarationSyntax>.Compare(IndexerDeclarationSyntax x, IndexerDeclarationSyntax y) => Compare(x, y);
 
-        private static Accessibility Accessibility(MethodDeclarationSyntax method)
+        private static Accessibility Accessibility(IndexerDeclarationSyntax indexer)
         {
-            if (method.ExplicitInterfaceSpecifier != null)
+            if (indexer.ExplicitInterfaceSpecifier != null)
             {
                 return Microsoft.CodeAnalysis.Accessibility.Public;
             }
 
-            return method.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
+            return indexer.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
         }
     }
 }

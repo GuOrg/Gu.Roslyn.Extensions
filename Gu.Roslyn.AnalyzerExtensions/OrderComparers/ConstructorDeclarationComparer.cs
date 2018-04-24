@@ -25,7 +25,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return 1;
             }
 
-            var compare = BaseMethodDeclarationComparer.CompareScope(x, y);
+            var compare = MemberDeclarationComparer.CompareScope(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
                 return compare;
@@ -37,7 +37,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return compare;
             }
 
-            return x.SpanStart.CompareTo(y.SpanStart);
+            return MemberDeclarationComparer.CompareSpanStart(x.SpanStart, y.SpanStart);
         }
 
         int IComparer<ConstructorDeclarationSyntax>.Compare(ConstructorDeclarationSyntax x, ConstructorDeclarationSyntax y) => Compare(x, y);

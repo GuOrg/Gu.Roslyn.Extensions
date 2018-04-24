@@ -21,8 +21,8 @@ namespace RoslynSandbox
 {
     public abstract class Foo
     {
-        public int Filed1 = 1;
-        private int filed1;
+        public int Field1 = 1;
+        private int field1;
 
         public Foo()
         {
@@ -64,8 +64,8 @@ namespace RoslynSandbox
 {
     public abstract class Foo
     {
-        public int Filed1 = 1;
-        private int filed1;
+        public int Field1 = 1;
+        private int field1;
         private bool disposable;
 
         public Foo()

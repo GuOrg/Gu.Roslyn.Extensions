@@ -60,7 +60,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return compare;
             }
 
-            return x.SpanStart.CompareTo(y.SpanStart);
+            return MemberDeclarationComparer.CompareSpanStart(x.SpanStart, y.SpanStart);
         }
 
         int IComparer<FieldDeclarationSyntax>.Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y) => Compare(x, y);
