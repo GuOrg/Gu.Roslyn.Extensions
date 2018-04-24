@@ -3,6 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper methods for working with <see cref="TypeDeclarationSyntax"/>
+    /// </summary>
     public static partial class TypeSyntaxExt
     {
         public static bool TryFindField(this TypeDeclarationSyntax type, string name, out FieldDeclarationSyntax match)

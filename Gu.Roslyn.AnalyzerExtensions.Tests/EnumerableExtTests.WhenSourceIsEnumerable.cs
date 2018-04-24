@@ -135,6 +135,48 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 Assert.AreEqual(false, ((IEnumerable<int>)null).TryElementAt(0, out var result));
                 Assert.AreEqual(0, result);
             }
+
+            [Test]
+            public void TryLast()
+            {
+                Assert.AreEqual(true, Enumerable.Range(1, 3).TryLast(out var result));
+                Assert.AreEqual(3, result);
+            }
+
+            [Test]
+            public void TryLastWhenEmpty()
+            {
+                Assert.AreEqual(false, Enumerable.Empty<int>().TryLast(out var result));
+                Assert.AreEqual(0, result);
+            }
+
+            [Test]
+            public void TryLastWhenNull()
+            {
+                Assert.AreEqual(false, ((IEnumerable<int>)null).TryLast(out var result));
+                Assert.AreEqual(0, result);
+            }
+
+            [Test]
+            public void TryLastWithPredicate()
+            {
+                Assert.AreEqual(true, Enumerable.Range(1, 3).TryLast(x => x == 2, out var result));
+                Assert.AreEqual(2, result);
+            }
+
+            [Test]
+            public void TryLastWithPredicateWhenEmpty()
+            {
+                Assert.AreEqual(false, Enumerable.Empty<int>().TryLast(x => x == 2, out var result));
+                Assert.AreEqual(0, result);
+            }
+
+            [Test]
+            public void TryLastWithPredicateWhenNull()
+            {
+                Assert.AreEqual(false, ((IEnumerable<int>)null).TryLast(x => x == 2, out var result));
+                Assert.AreEqual(0, result);
+            }
         }
     }
 }
