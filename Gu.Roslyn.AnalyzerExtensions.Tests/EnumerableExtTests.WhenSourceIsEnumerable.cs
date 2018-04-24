@@ -59,11 +59,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 Assert.AreEqual(0, result);
             }
 
-            [Test]
-            public void TryFirstWithPredicate()
+            [TestCase(1)]
+            [TestCase(2)]
+            [TestCase(3)]
+            public void TryFirstWithPredicate(int n)
             {
-                Assert.AreEqual(true, Enumerable.Range(1, 3).TryFirst(x => x == 2, out var result));
-                Assert.AreEqual(2, result);
+                Assert.AreEqual(true, Enumerable.Range(1, 3).TryFirst(x => x == n, out var result));
+                Assert.AreEqual(n, result);
             }
 
             [Test]
@@ -101,11 +103,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 Assert.AreEqual(0, result);
             }
 
-            [Test]
-            public void TryFirstOfTypeWithPredicate()
+            [TestCase(1)]
+            [TestCase(2)]
+            [TestCase(3)]
+            public void TryFirstOfTypeWithPredicate(int n)
             {
-                Assert.AreEqual(true, Enumerable.Range(1, 3).TryFirstOfType(x => x == 2, out int result));
-                Assert.AreEqual(2, result);
+                Assert.AreEqual(true, Enumerable.Range(1, 3).TryFirstOfType(x => x == n, out int result));
+                Assert.AreEqual(n, result);
             }
 
             [Test]
@@ -150,11 +154,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 Assert.AreEqual(0, result);
             }
 
-            [Test]
-            public void TrySingleWithPredicate()
+            [TestCase(1)]
+            [TestCase(2)]
+            [TestCase(3)]
+            public void TrySingleWithPredicate(int n)
             {
-                Assert.AreEqual(true, Enumerable.Range(1, 5).TrySingle(x => x == 2, out var result));
-                Assert.AreEqual(2, result);
+                Assert.AreEqual(true, Enumerable.Range(1, 5).TrySingle(x => x == n, out var result));
+                Assert.AreEqual(n, result);
             }
 
             [Test]
@@ -206,11 +212,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 Assert.AreEqual(0, result);
             }
 
-            [Test]
-            public void TrySingleOfTypeWithPredicate()
+            [TestCase(1)]
+            [TestCase(2)]
+            [TestCase(3)]
+            public void TrySingleOfTypeWithPredicate(int n)
             {
-                Assert.AreEqual(true, Enumerable.Range(1, 5).TrySingleOfType(x => x == 2, out int result));
-                Assert.AreEqual(2, result);
+                Assert.AreEqual(true, Enumerable.Range(1, 5).TrySingleOfType(x => x == n, out int result));
+                Assert.AreEqual(n, result);
             }
 
             [Test]
@@ -255,11 +263,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 Assert.AreEqual(0, result);
             }
 
-            [Test]
-            public void TryLastWithPredicate()
+            [TestCase(1)]
+            [TestCase(2)]
+            [TestCase(3)]
+            public void TryLastWithPredicate(int n)
             {
-                Assert.AreEqual(true, Enumerable.Range(1, 3).TryLast(x => x == 2, out var result));
-                Assert.AreEqual(2, result);
+                Assert.AreEqual(true, Enumerable.Range(1, 3).TryLast(x => x == n, out var result));
+                Assert.AreEqual(n, result);
             }
 
             [Test]
@@ -297,11 +307,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 Assert.AreEqual(0, result);
             }
 
-            [Test]
-            public void TryLastOfTypeWithPredicate()
+            [TestCase(1)]
+            [TestCase(2)]
+            [TestCase(3)]
+            public void TryLastOfTypeWithPredicate(int n)
             {
-                Assert.AreEqual(true, Enumerable.Range(1, 3).TryLastOfType(x => x == 2, out int result));
-                Assert.AreEqual(2, result);
+                Assert.AreEqual(true, Enumerable.Range(1, 3).TryLastOfType(x => x == n, out int result));
+                Assert.AreEqual(n, result);
             }
 
             [Test]
