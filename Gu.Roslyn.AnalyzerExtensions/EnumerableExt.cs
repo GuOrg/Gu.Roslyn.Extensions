@@ -154,7 +154,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             using (var e = source.GetEnumerator())
             {
-                if (e.MoveNext())
+                while (e.MoveNext())
                 {
                     if (e.Current is TResult item &&
                         predicate(item))
@@ -171,8 +171,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         result = item;
                         return true;
                     }
-
-                    return false;
                 }
 
                 result = default(TResult);
@@ -267,13 +265,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             using (var e = source.GetEnumerator())
             {
-                if (e.MoveNext())
+                if (e.MoveNext() &&
+                    e.Current is TResult item)
                 {
-                    if (e.Current is TResult item)
-                    {
-                        result = item;
-                        return true;
-                    }
+                    result = item;
+                    return true;
                 }
 
                 return false;
@@ -300,7 +296,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             using (var e = source.GetEnumerator())
             {
-                if (e.MoveNext())
+                while (e.MoveNext())
                 {
                     if (e.Current is TResult item &&
                         predicate(item))
@@ -334,9 +330,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 while (e.MoveNext())
                 {
-                    result = e.Current;
-                    if (predicate(result))
+                    if (predicate(e.Current))
                     {
+                        result = e.Current;
                         return true;
                     }
                 }
