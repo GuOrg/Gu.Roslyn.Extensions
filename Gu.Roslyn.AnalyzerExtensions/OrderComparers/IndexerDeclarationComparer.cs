@@ -4,10 +4,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <inheritdoc />
     public class IndexerDeclarationComparer : IComparer<IndexerDeclarationSyntax>
     {
+        /// <summary>  The default instance. </summary>
         public static readonly IndexerDeclarationComparer Default = new IndexerDeclarationComparer();
 
+        /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
+        /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
+        /// <param name="x">The first node to compare.</param>
+        /// <param name="y">The second node to compare.</param>
         public static int Compare(IndexerDeclarationSyntax x, IndexerDeclarationSyntax y)
         {
             if (ReferenceEquals(x, y))
@@ -40,6 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return MemberDeclarationComparer.CompareSpanStart(x.SpanStart, y.SpanStart);
         }
 
+        /// <inheritdoc />
         int IComparer<IndexerDeclarationSyntax>.Compare(IndexerDeclarationSyntax x, IndexerDeclarationSyntax y) => Compare(x, y);
 
         private static Accessibility Accessibility(IndexerDeclarationSyntax indexer)

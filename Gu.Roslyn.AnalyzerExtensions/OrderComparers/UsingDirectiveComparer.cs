@@ -4,11 +4,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    public class UsingDirectiveComparer : IComparer<UsingDirectiveSyntax>
+    /// <inheritdoc />
+    public sealed class UsingDirectiveComparer : IComparer<UsingDirectiveSyntax>
     {
+        /// <summary>  The default instance. </summary>
         public static readonly UsingDirectiveComparer Default = new UsingDirectiveComparer();
         private static readonly StringComparer OrdinalIgnoreCase = StringComparer.OrdinalIgnoreCase;
 
+        /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
+        /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
+        /// <param name="x">The first node to compare.</param>
+        /// <param name="y">The second node to compare.</param>
         public static int Compare(UsingDirectiveSyntax x, UsingDirectiveSyntax y)
         {
             if (TryGetRoot(x.Name, out var xn) &&

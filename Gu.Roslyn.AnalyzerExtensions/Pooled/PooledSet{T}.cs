@@ -21,11 +21,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
         }
 
+        /// <inheritdoc />
         public int Count => this.inner.Count;
 
         /// <summary>
         /// The result from this call is meant to be used in a using.
         /// </summary>
+        /// <returns>A <see cref="PooledSet{T}"/></returns>
         public static PooledSet<T> Borrow()
         {
             if (Cache.TryDequeue(out var set))
@@ -41,6 +43,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// The result from this call is meant to be used in a using.
         /// </summary>
+        /// <param name="set">A previously borrowed set or null.</param>
+        /// <returns>A newly borrowed set or the same instance with incremented ref count.</returns>
         public static PooledSet<T> BorrowOrIncrementUsage(PooledSet<T> set)
         {
             if (set == null)
@@ -53,16 +57,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return set;
         }
 
+        /// <summary>
+        /// Add an item to the set.
+        /// </summary>
+        /// <param name="item">The item</param>
+        /// <returns>True if the item was added.</returns>
         public bool Add(T item)
         {
             this.ThrowIfDisposed();
             return this.inner.Add(item);
         }
 
+        /// <inheritdoc />
         public IEnumerator<T> GetEnumerator() => this.inner.GetEnumerator();
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
+        /// <inheritdoc />
         void IDisposable.Dispose()
         {
             if (Interlocked.Decrement(ref this.refCount) == 0)

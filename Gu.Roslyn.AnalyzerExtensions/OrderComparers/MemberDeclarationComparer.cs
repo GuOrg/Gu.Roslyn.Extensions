@@ -7,6 +7,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
     public class MemberDeclarationComparer
     {
+        /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
+        /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
+        /// <param name="x">The first node to compare.</param>
+        /// <param name="y">The second node to compare.</param>
         public static int Compare(MemberDeclarationSyntax x, MemberDeclarationSyntax y)
         {
             if (TryCompare<FieldDeclarationSyntax>(x, y, FieldDeclarationComparer.Compare, out var result) ||
@@ -22,6 +26,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return 0;
         }
 
+        /// <summary>
+        /// Compare const &lt; static &lt; member
+        /// </summary>
+        /// <param name="x">The first modifiers.</param>
+        /// <param name="y">The other modifiers.</param>
+        /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         internal static int CompareScope(SyntaxTokenList x, SyntaxTokenList y)
         {
             return Index(x).CompareTo(Index(y));
@@ -42,6 +52,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <summary>
+        /// Compare public &lt; internal &lt; protected
+        /// </summary>
+        /// <param name="x">The first modifiers.</param>
+        /// <param name="y">The other modifiers.</param>
+        /// <param name="default">The default value when missing.</param>
+        /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         internal static int CompareAccessability(SyntaxTokenList x, SyntaxTokenList y, Accessibility @default)
         {
             return CompareAccessability(
@@ -49,6 +66,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 y.Accessibility(@default));
         }
 
+        /// <summary>
+        /// Compare public &lt; internal &lt; protected
+        /// </summary>
+        /// <param name="x">The first modifiers.</param>
+        /// <param name="y">The other modifiers.</param>
+        /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         internal static int CompareAccessability(Accessibility x, Accessibility y)
         {
             return Index(x).CompareTo(Index(y));
@@ -73,6 +96,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <summary>
+        /// Compare current document order.
+        /// If the node is not in a document zero is returned.
+        /// </summary>
+        /// <param name="x">The first modifiers.</param>
+        /// <param name="y">The other modifiers.</param>
+        /// <returns>A signed integer that indicates if the node is before or after the other in the document.</returns>
         internal static int CompareSpanStart(int x, int y)
         {
             if (x == 0 || y == 0)

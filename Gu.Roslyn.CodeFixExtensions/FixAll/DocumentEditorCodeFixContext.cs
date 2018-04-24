@@ -24,7 +24,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public Document Document => this.context.Document;
 
         /// <summary>
-        /// The <see cref="CancellationToken"/>
+        /// Gets the <see cref="CancellationToken"/>
         /// </summary>
         public CancellationToken CancellationToken => this.context.CancellationToken;
 
@@ -34,7 +34,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public TextSpan Span => this.context.Span;
 
         /// <summary>
-        /// Diagnostics to fix.
+        /// Gets the diagnostics to fix.
         /// NOTE: All the diagnostics in this collection have the same <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Span" />.
         /// </summary>
         public ImmutableArray<Diagnostic> Diagnostics => this.context.Diagnostics;
