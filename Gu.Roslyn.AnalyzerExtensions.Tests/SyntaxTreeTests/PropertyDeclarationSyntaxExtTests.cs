@@ -252,7 +252,7 @@ namespace RoslynSandbox
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var property = syntaxTree.FindPropertyDeclaration(name);
-            Assert.AreEqual(false, property.TryGetBackingField(out var backingField));
+            Assert.AreEqual(false, property.TryGetBackingField(out _));
         }
     }
 }

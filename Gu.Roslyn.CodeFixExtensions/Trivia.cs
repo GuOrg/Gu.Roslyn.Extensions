@@ -15,10 +15,10 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="target">The target to copy trivia to.</param>
         /// <param name="source">The source to copy trivia from.</param>
         /// <returns><paramref name="target"/> with trivia from <paramref name="source"/></returns>
-        public static T WithTriviaFrom<T>(this T targe, SyntaxNode source)
+        public static T WithTriviaFrom<T>(this T target, SyntaxNode source)
             where T : SyntaxNode
         {
-            return targe.WithLeadingTriviaFrom(source)
+            return target.WithLeadingTriviaFrom(source)
                 .WithTrailingTriviaFrom(source);
         }
 
@@ -55,6 +55,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add leading elastic line feed to <paramref name="node"/>
         /// </summary>
+        /// <typeparam name="T">The type of <see cref="SyntaxNode"/></typeparam>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <returns><paramref name="node"/> with leading elastic line feed.</returns>
         public static T WithLeadingElasticLineFeed<T>(this T node)
@@ -73,6 +74,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add leading line feed to <paramref name="node"/>
         /// </summary>
+        /// <typeparam name="T">The type of <see cref="SyntaxNode"/></typeparam>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <returns><paramref name="node"/> with leading line feed.</returns>
         public static T WithLeadingLineFeed<T>(this T node)
@@ -91,6 +93,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add trailing elastic line feed to <paramref name="node"/>
         /// </summary>
+        /// <typeparam name="T">The type of <see cref="SyntaxNode"/></typeparam>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <returns><paramref name="node"/> with trailing elastic line feed.</returns>
         public static T WithTrailingElasticLineFeed<T>(this T node)
@@ -109,6 +112,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add trailing line feed to <paramref name="node"/>
         /// </summary>
+        /// <typeparam name="T">The type of <see cref="SyntaxNode"/></typeparam>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <returns><paramref name="node"/> with trailing line feed.</returns>
         public static T WithTrailingLineFeed<T>(this T node)

@@ -45,11 +45,30 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add the backing field and figure out placement.
         /// StyleCop ordering is the default but it also checks for if field adjacent to property is used.
+        /// The property is unchanged by this call.
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/></param>
         /// <param name="propertyDeclaration">The <see cref="FieldDeclarationSyntax"/></param>
-        /// <returns>The <paramref name="editor"/></returns>
+        /// <returns>A <see cref="FieldDeclarationSyntax"/></returns>
         public static FieldDeclarationSyntax AddBackingField(this DocumentEditor editor, PropertyDeclarationSyntax propertyDeclaration)
+        {
+            var property = editor.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
+            var type = (TypeDeclarationSyntax)propertyDeclaration.Parent;
+            var backingField = CreateBackingField(editor, propertyDeclaration);
+            editor.ReplaceNode(
+                type,
+                (node, generator) => AddBackingField(editor, (TypeDeclarationSyntax)node, backingField, property.Name));
+            return backingField;
+        }
+
+        /// <summary>
+        /// Create a backing <see cref="FieldDeclarationSyntax"/> for the <paramref name="propertyDeclaration"/>
+        /// Handles name collisions and reserved keywords.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/></param>
+        /// <param name="propertyDeclaration">The <see cref="FieldDeclarationSyntax"/></param>
+        /// <returns>A <see cref="FieldDeclarationSyntax"/></returns>
+        public static FieldDeclarationSyntax CreateBackingField(this DocumentEditor editor, PropertyDeclarationSyntax propertyDeclaration)
         {
             var property = editor.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
             var name = editor.SemanticModel.UnderscoreFields()
@@ -66,17 +85,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                 name = "@" + name;
             }
 
-            var backingField = (FieldDeclarationSyntax)editor.Generator.FieldDeclaration(
+            return (FieldDeclarationSyntax)editor.Generator.FieldDeclaration(
                 name,
                 accessibility: Accessibility.Private,
                 modifiers: DeclarationModifiers.None,
                 type: propertyDeclaration.Type,
                 initializer: propertyDeclaration.Initializer?.Value);
-            var type = (TypeDeclarationSyntax)propertyDeclaration.Parent;
-            editor.ReplaceNode(
-                type,
-                (node, generator) => AddBackingField(editor, (TypeDeclarationSyntax)node, backingField, property.Name));
-            return backingField;
         }
 
         /// <summary>

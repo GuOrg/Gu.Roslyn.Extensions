@@ -2,33 +2,81 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper methods for working with <see cref="PropertyDeclarationSyntax"/>
+    /// </summary>
     public static class PropertyDeclarationSyntaxExt
     {
-        public static bool IsGetOnly(this BasePropertyDeclarationSyntax property)
+        /// <summary>
+        /// Return the backing field from checking what the getter returns.
+        /// Assumes
+        /// 1. Only one return.
+        /// 2. The field can be found in the Parent type declaration so inheritance and partial not handled.
+        /// </summary>
+        /// <param name="property">The <see cref="PropertyDeclarationSyntax"/></param>
+        /// <param name="backingField">The backing field if found.</param>
+        /// <returns>True if a backing field was found.</returns>
+        public static bool TryGetBackingField(this PropertyDeclarationSyntax property, out FieldDeclarationSyntax backingField)
         {
-            if (property.TryGetGetter(out var getter) &&
-                getter.Body == null &&
-                getter.ExpressionBody == null)
+            if (TrySingleReturned(property, out var returned) &&
+                property.Parent is TypeDeclarationSyntax type)
             {
-                return !property.TryGetSetter(out _);
+                switch (returned)
+                {
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is ThisExpressionSyntax:
+                        return type.TryFindField(memberAccess.Name.Identifier.ValueText, out backingField);
+                    case IdentifierNameSyntax identifierName:
+                        return type.TryFindField(identifierName.Identifier.ValueText, out backingField);
+                }
             }
 
+            backingField = null;
             return false;
         }
 
-        public static bool IsAutoProperty(this BasePropertyDeclarationSyntax property)
+        /// <summary>
+        /// Get the single returned value from the getter.
+        /// </summary>
+        /// <param name="property">The <see cref="PropertyDeclarationSyntax"/></param>
+        /// <param name="result">The returned <see cref="ExpressionSyntax"/>.</param>
+        /// <returns>True if a single return was found.</returns>
+        public static bool TrySingleReturned(this PropertyDeclarationSyntax property, out ExpressionSyntax result)
         {
-            if (property.TryGetGetter(out var getter) &&
-                getter.Body == null &&
-                getter.ExpressionBody == null)
+            result = null;
+            if (property == null)
             {
-                if (property.TryGetSetter(out var setter))
+                return false;
+            }
+
+            var expressionBody = property.ExpressionBody;
+            if (expressionBody != null)
+            {
+                result = expressionBody.Expression;
+                return result != null;
+            }
+
+            if (property.TryGetGetter(out var getter))
+            {
+                expressionBody = getter.ExpressionBody;
+                if (expressionBody != null)
                 {
-                    return setter.Body == null &&
-                           setter.ExpressionBody == null;
+                    result = expressionBody.Expression;
+                    return result != null;
                 }
 
-                return true;
+                var body = getter.Body;
+                if (body == null ||
+                    body.Statements.Count == 0)
+                {
+                    return false;
+                }
+
+                if (body.Statements.TrySingle(out var statement) &&
+                    statement is ReturnStatementSyntax returnStatement)
+                {
+                    result = returnStatement.Expression;
+                    return result != null;
+                }
             }
 
             return false;
