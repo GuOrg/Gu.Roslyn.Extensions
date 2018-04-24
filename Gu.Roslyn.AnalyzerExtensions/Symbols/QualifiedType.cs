@@ -3,16 +3,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// For comparison with roslyn types.
+    /// </summary>
     [global::System.Diagnostics.DebuggerDisplay("{this.FullName}")]
     public class QualifiedType
     {
-        internal readonly string FullName;
-        internal readonly NamespaceParts Namespace;
-        internal readonly string Type;
-        private readonly string @alias;
-
-        public QualifiedType(string qualifiedName, string alias = null)
-            : this(qualifiedName, NamespaceParts.Create(qualifiedName), qualifiedName.Substring(qualifiedName.LastIndexOf('.') + 1), alias)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QualifiedType"/> class.
+        /// </summary>
+        /// <param name="fullName">For example 'System.String'</param>
+        /// <param name="alias">For example 'string'</param>
+        public QualifiedType(string fullName, string alias = null)
+            : this(fullName, NamespaceParts.Create(fullName), fullName.Substring(fullName.LastIndexOf('.') + 1), alias)
         {
         }
 
@@ -21,8 +24,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.FullName = fullName;
             this.Namespace = @namespace;
             this.Type = type;
-            this.alias = alias;
+            this.Alias = alias;
         }
+
+        /// <summary>
+        /// Gets the fully qualified name of the type.
+        /// </summary>
+        public string FullName { get; }
+
+        /// <summary>
+        /// Gets the namespace
+        /// </summary>
+        public NamespaceParts Namespace { get; }
+
+        /// <summary>
+        /// Gets the type name
+        /// </summary>
+        public string Type { get; }
+
+        /// <summary>
+        /// Gets the type alias, can be null.
+        /// </summary>
+        public string Alias { get; }
 
         public static bool operator ==(ITypeSymbol left, QualifiedType right)
         {
@@ -87,10 +110,42 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         public static bool operator !=(TypeSyntax left, QualifiedType right) => !(left == right);
 
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return Equals((QualifiedType)obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return this.FullName.GetHashCode();
+        }
+
         private static bool NameEquals(string left, QualifiedType right)
         {
             return left == right.Type ||
-                   (right.alias != null && left == right.alias);
+                   (right.Alias != null && left == right.Alias);
+        }
+
+        protected bool Equals(QualifiedType other)
+        {
+            return string.Equals(this.FullName, other.FullName);
         }
     }
 }

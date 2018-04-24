@@ -5,8 +5,19 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.Editing;
     using Microsoft.CodeAnalysis.Formatting;
 
+    /// <summary>
+    /// Helpers for working with <see cref="DocumentEditor"/>
+    /// </summary>
     public static partial class DocumentEditorExt
     {
+        /// <summary>
+        /// Same as DocumentEditor.ReplaceNode but nicer types.
+        /// </summary>
+        /// <typeparam name="T">The type of the node.</typeparam>
+        /// <param name="editor">The <see cref="DocumentEditor"/></param>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="replacement">The replacement factory.</param>
+        /// <returns>The <see cref="DocumentEditor"/></returns>
         public static DocumentEditor ReplaceNode<T>(this DocumentEditor editor, T node, Func<T, SyntaxNode> replacement)
             where T : SyntaxNode
         {
@@ -14,6 +25,12 @@ namespace Gu.Roslyn.CodeFixExtensions
             return editor;
         }
 
+        /// <summary>
+        /// Add <see cref="Formatter.Annotation"/> to <paramref name="node"/>
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/></param>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <returns><paramref name="node"/> with <see cref="Formatter.Annotation"/></returns>
         public static DocumentEditor FormatNode(this DocumentEditor editor, SyntaxNode node)
         {
             if (node == null)

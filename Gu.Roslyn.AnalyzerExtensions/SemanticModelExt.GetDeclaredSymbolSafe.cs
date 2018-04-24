@@ -4,6 +4,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helpers for getting declared symbol when not sure it is in the syntax tree of the semantic model.
+    /// </summary>
     public static partial class SemanticModelExt
     {
         /// <summary>

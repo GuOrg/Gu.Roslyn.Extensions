@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     [System.Diagnostics.DebuggerDisplay("{System.String.Join(\".\", Parts)}")]
-    internal class NamespaceParts
+    public class NamespaceParts
     {
         private readonly ImmutableList<string> parts;
 

@@ -9,17 +9,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Walks code as it is executed.
     /// </summary>
+    /// <typeparam name="T">The inheriting type.</typeparam>
     public abstract class ExecutionWalker<T> : PooledWalker<T>
         where T : ExecutionWalker<T>
     {
         private readonly HashSet<SyntaxNode> visited = new HashSet<SyntaxNode>();
 
+        /// <summary>
+        /// Gets or sets if the walker should walk declarations of invoked methods etc.
+        /// </summary>
         protected Search Search { get; set; }
 
+        /// <summary>
+        /// Gets or sets the <see cref="SemanticModel"/>
+        /// </summary>
         protected SemanticModel SemanticModel { get; set; }
 
+        /// <summary>
+        /// Gets or sets the <see cref="CancellationToken"/>
+        /// </summary>
         protected CancellationToken CancellationToken { get; set; }
 
+        /// <inheritdoc />
         public override void Visit(SyntaxNode node)
         {
             if (node is AnonymousFunctionExpressionSyntax)
@@ -37,12 +48,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             base.Visit(node);
         }
 
+        /// <inheritdoc />
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             base.VisitInvocationExpression(node);
             this.VisitChained(node);
         }
 
+        /// <inheritdoc />
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             base.VisitIdentifierName(node);
@@ -73,6 +86,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <inheritdoc />
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
             base.VisitAssignmentExpression(node);
@@ -86,18 +100,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <inheritdoc />
         public override void VisitConstructorInitializer(ConstructorInitializerSyntax node)
         {
             base.VisitConstructorInitializer(node);
             this.VisitChained(node);
         }
 
+        /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             base.VisitObjectCreationExpression(node);
             this.VisitChained(node);
         }
 
+        /// <inheritdoc />
         protected override void Clear()
         {
             this.visited.Clear();

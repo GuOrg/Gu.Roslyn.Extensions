@@ -7,21 +7,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
 
+    /// <summary>
+    /// A silly optimization for pooling syntax walkers.
+    /// </summary>
+    /// <typeparam name="T">The inheriting type.</typeparam>
     public abstract class PooledWalker<T> : CSharpSyntaxWalker, IDisposable
         where T : PooledWalker<T>
     {
         private static readonly ConcurrentQueue<PooledWalker<T>> Cache = new ConcurrentQueue<PooledWalker<T>>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PooledWalker{T}"/> class.
+        /// </summary>
+        /// <param name="depth">Where the walker should stop.</param>
         protected PooledWalker(SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node)
             : base(depth)
         {
         }
 
-        public void Dispose()
+        /// <inheritdoc />
+        void IDisposable.Dispose()
         {
-            this.Dispose(true);
+            Debug.Assert(!Cache.Contains(this), "!Cache.Contains(this)");
+            this.Clear();
+            Cache.Enqueue(this);
         }
 
+        /// <summary>
+        /// Returns a walker that have visited <paramref name="node"/>
+        /// </summary>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="create">The factory for creating a walker if not found in cache.</param>
+        /// <returns>The walker that have visited <paramref name="node"/>.</returns>
         protected static T BorrowAndVisit(SyntaxNode node, Func<T> create)
         {
             var walker = Borrow(create);
@@ -29,6 +46,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return walker;
         }
 
+        /// <summary>
+        /// Returns a walker from cache or a new instance.
+        /// Returned to cache on dispose.
+        /// </summary>
+        /// <param name="create">The factory for creating a walker if not found in cache.</param>
+        /// <returns>The walker.</returns>
         protected static T Borrow(Func<T> create)
         {
             if (!Cache.TryDequeue(out var walker))
@@ -39,16 +62,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return (T)walker;
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Debug.Assert(!Cache.Contains(this), "!Cache.Contains(this)");
-                this.Clear();
-                Cache.Enqueue(this);
-            }
-        }
-
+        /// <summary>
+        /// Remember to clear all lists etc so that they don't spill over to the next use.
+        /// </summary>
         protected abstract void Clear();
 
         [Conditional("DEBUG")]

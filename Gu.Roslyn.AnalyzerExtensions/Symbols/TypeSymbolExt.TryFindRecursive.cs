@@ -3,18 +3,45 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System;
     using Microsoft.CodeAnalysis;
 
+    /// <summary>
+    /// Helpers for finding members of <see cref="ITypeSymbol"/> or base types.
+    /// </summary>
     public static partial class TypeSymbolExt
     {
+        /// <summary>
+        /// Try finding the <see cref="IFieldSymbol"/> by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the field.</param>
+        /// <param name="field">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindFieldRecursive(this ITypeSymbol type, string name, out IFieldSymbol field)
         {
             return type.TryFindFirstMemberRecursive(name, out field);
         }
 
+        /// <summary>
+        /// Try finding the <see cref="IEventSymbol"/> by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the event.</param>
+        /// <param name="event">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindEventRecursive(this ITypeSymbol type, string name, out IEventSymbol @event)
         {
             return type.TryFindFirstMemberRecursive(name, out @event);
         }
 
+        /// <summary>
+        /// Try finding the <see cref="IPropertySymbol"/> by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <param name="property">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindPropertyRecursive(this ITypeSymbol type, string name, out IPropertySymbol property)
         {
             if (name == "Item[]")
@@ -25,36 +52,94 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return type.TryFindFirstMemberRecursive(name, out property);
         }
 
+        /// <summary>
+        /// Try finding the <see cref="IMethodSymbol"/> by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="result">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, out IMethodSymbol result)
         {
             return type.TryFindFirstMemberRecursive(name, out result);
         }
 
+        /// <summary>
+        /// Try finding the <see cref="IMethodSymbol"/> by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The func to filter by.</param>
+        /// <param name="result">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
         {
             return type.TryFindFirstMemberRecursive(predicate, out result);
         }
 
+        /// <summary>
+        /// Try finding the only <see cref="IMethodSymbol"/> by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="result">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, string name, out IMethodSymbol result)
         {
             return type.TryFindSingleMemberRecursive(name, out result);
         }
 
+        /// <summary>
+        /// Try finding the only <see cref="IMethodSymbol"/> by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The func to filter by.</param>
+        /// <param name="result">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
         {
             return type.TryFindSingleMemberRecursive(predicate, out result);
         }
 
+        /// <summary>
+        /// Try finding the only <see cref="IMethodSymbol"/> by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="predicate">The func to filter by.</param>
+        /// <param name="result">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
         {
             return type.TryFindSingleMemberRecursive(name, predicate, out result);
         }
 
+        /// <summary>
+        /// Try finding the first matching <see cref="IMethodSymbol"/>.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="predicate">The func to filter by.</param>
+        /// <param name="result">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, out IMethodSymbol result)
         {
             return type.TryFindFirstMemberRecursive(name, predicate, out result);
         }
 
+        /// <summary>
+        /// Try finding the first member by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="result">The match.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindFirstMemberRecursive(this ITypeSymbol type, string name, out ISymbol result)
         {
             return type.TryFindFirstMemberRecursive<ISymbol>(name, out result);

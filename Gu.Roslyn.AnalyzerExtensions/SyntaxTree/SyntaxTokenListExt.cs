@@ -5,8 +5,31 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
     public static class SyntaxTokenListExt
     {
+        /// <summary>
+        /// Check if the list contains any of <paramref name="k1"/> or <paramref name="k2"/>
+        /// </summary>
+        /// <param name="list">The <see cref="SyntaxTokenList"/></param>
+        /// <param name="k1">The first <see cref="SyntaxKind"/></param>
+        /// <param name="k2">The other <see cref="SyntaxKind"/></param>
+        /// <returns>True if match was found</returns>
         public static bool Any(this SyntaxTokenList list, SyntaxKind k1, SyntaxKind k2) => list.Any(k1) || list.Any(k2);
 
+        /// <summary>
+        /// Check if the list contains any of <paramref name="k1"/> or <paramref name="k2"/> or <paramref name="k3"/>
+        /// </summary>
+        /// <param name="list">The <see cref="SyntaxTokenList"/></param>
+        /// <param name="k1">The first <see cref="SyntaxKind"/></param>
+        /// <param name="k2">The other <see cref="SyntaxKind"/></param>
+        /// <param name="k3">The third <see cref="SyntaxKind"/></param>
+        /// <returns>True if match was found</returns>
+        public static bool Any(this SyntaxTokenList list, SyntaxKind k1, SyntaxKind k2, SyntaxKind k3) => list.Any(k1) || list.Any(k2) || list.Any(k3);
+
+        /// <summary>
+        /// Get the corresponding accessibility
+        /// </summary>
+        /// <param name="list">The <see cref="SyntaxTokenList"/> with modifiers.</param>
+        /// <param name="whenMissing">The default accessibility.</param>
+        /// <returns>The <see cref="Accessibility"/></returns>
         public static Accessibility Accessibility(this SyntaxTokenList list, Accessibility whenMissing)
         {
             if (list.Any(SyntaxKind.PublicKeyword))

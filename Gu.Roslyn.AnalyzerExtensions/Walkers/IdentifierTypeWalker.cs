@@ -10,12 +10,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         private readonly List<ParameterSyntax> parameters = new List<ParameterSyntax>();
         private readonly List<VariableDeclaratorSyntax> variableDeclarators = new List<VariableDeclaratorSyntax>();
 
+        /// <inheritdoc />
         public override void VisitParameter(ParameterSyntax node)
         {
             this.parameters.Add(node);
             base.VisitParameter(node);
         }
 
+        /// <inheritdoc />
         public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
         {
             this.variableDeclarators.Add(node);
