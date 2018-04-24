@@ -232,7 +232,6 @@ namespace RoslynSandbox
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
 
-            [Explicit]
             [Test]
             public async Task AddBackingFieldAdjacentToProperty()
             {

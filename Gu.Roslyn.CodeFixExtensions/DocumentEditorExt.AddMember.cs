@@ -202,7 +202,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                         return type.InsertNodesBefore(property, new[] { backingField });
                     }
 
-                    return type.InsertNodesBefore(property, new[] { backingField });
+                    return type.InsertNodesBefore(property, new[] { backingField.WithTrailingTrivia(null) });
                 }
 
                 var index = type.Members.IndexOf(property);
