@@ -11,6 +11,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         //// ReSharper disable once StaticMemberInGenericType
         private static int refCount;
 
+        /// <summary>
+        /// Start a cache transaction.
+        /// </summary>
         public static void Begin()
         {
 #pragma warning disable GU0011 // Don't ignore the return value.
@@ -18,6 +21,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning restore GU0011 // Don't ignore the return value.
         }
 
+        /// <summary>
+        /// End a cache transaction, the cache is purged when ref count is zero.
+        /// </summary>
         public static void End()
         {
 #pragma warning disable GU0011 // Don't ignore the return value.
@@ -26,6 +32,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             Inner.Clear();
         }
 
+        /// <summary>
+        /// Start a cache transaction and end it when disposing.
+        /// </summary>
         public static Transaction_ Transaction()
         {
 #pragma warning disable GU0011 // Don't ignore the return value.
@@ -35,7 +44,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return default(Transaction_);
         }
 
-        internal static TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
+        /// <summary>
+        /// Get an item from cache or create and add and return.
+        /// </summary>
+        /// <param name="key">The cache key.</param>
+        /// <param name="valueFactory">The factory for new items.</param>
+        /// <returns>The cached value.</returns>
+        public static TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
         {
             return refCount == 0 ? valueFactory(key) : Inner.GetOrAdd(key, valueFactory);
         }
@@ -43,6 +58,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         // ReSharper disable once InconsistentNaming
         public struct Transaction_ : IDisposable
         {
+            /// <inheritdoc />
             public void Dispose()
             {
                 if (Interlocked.Decrement(ref refCount) <= 0)
