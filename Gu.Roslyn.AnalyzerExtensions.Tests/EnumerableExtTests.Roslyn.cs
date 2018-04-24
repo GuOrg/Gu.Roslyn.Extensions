@@ -31,6 +31,9 @@ namespace RoslynSandbox
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryFirstOfType(out parameter));
             Assert.AreEqual("int i", parameter.ToString());
 
+            Assert.AreEqual(true, ctor.ParameterList.Parameters.TryFirstOfType(x => x.Identifier.ValueText == "i", out parameter));
+            Assert.AreEqual("int i", parameter.ToString());
+
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryFirst(x => x.Identifier.ValueText == "i", out parameter));
             Assert.AreEqual("int i", parameter.ToString());
 
@@ -71,7 +74,13 @@ namespace RoslynSandbox
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLast(x => x.Identifier.ValueText == "i", out parameter));
             Assert.AreEqual("int i", parameter.ToString());
 
+            Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLastOfType(x => x.Identifier.ValueText == "i", out parameter));
+            Assert.AreEqual("int i", parameter.ToString());
+
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLast(x => x.Identifier.ValueText == "d", out parameter));
+            Assert.AreEqual("double d", parameter.ToString());
+
+            Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLastOfType(x => x.Identifier.ValueText == "d", out parameter));
             Assert.AreEqual("double d", parameter.ToString());
 
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryLast(x => x.Identifier.ValueText == "missing", out parameter));
@@ -108,7 +117,13 @@ namespace RoslynSandbox
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "i", out parameter));
             Assert.AreEqual("int i", parameter.ToString());
 
+            Assert.AreEqual(true, ctor.ParameterList.Parameters.TrySingleOfType(x => x.Identifier.ValueText == "i", out parameter));
+            Assert.AreEqual("int i", parameter.ToString());
+
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "d", out parameter));
+            Assert.AreEqual("double d", parameter.ToString());
+
+            Assert.AreEqual(true, ctor.ParameterList.Parameters.TrySingleOfType(x => x.Identifier.ValueText == "d", out parameter));
             Assert.AreEqual("double d", parameter.ToString());
 
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "missing", out parameter));

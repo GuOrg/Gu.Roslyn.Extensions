@@ -128,7 +128,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            return Equals((QualifiedType)obj);
+            return this.Equals((QualifiedType)obj);
         }
 
         /// <inheritdoc />

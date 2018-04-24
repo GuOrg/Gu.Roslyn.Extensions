@@ -98,6 +98,46 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            if (source == null)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (source[j] is TResult temp &&
+                            predicate(temp))
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -188,6 +228,37 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirstOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            if (source == null)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -260,6 +331,37 @@
             for (var i = source.Count - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            if (source == null)
+            {
+                return false;
+            }
+
+            for (var i = source.Count - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
                 {
                     result = item;
                     return true;
@@ -372,6 +474,41 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TrySingleOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Length; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    for (var j = i + 1; j < source.Length; j++)
+                    {
+                        if (source[j] is TResult temp &&
+                            predicate(temp))
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -447,6 +584,32 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirstOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Length; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -504,6 +667,32 @@
             for (var i = source.Length - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLastOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, out TResult result)
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = source.Length - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
                 {
                     result = item;
                     return true;
@@ -766,6 +955,42 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TrySingleOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (source[j] is TResult temp &&
+                            predicate(temp))
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -844,6 +1069,33 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirstOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -904,6 +1156,33 @@
             for (var i = source.Count - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLastOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = source.Count - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
                 {
                     result = item;
                     return true;
@@ -1015,6 +1294,42 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TrySingleOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    for (var j = i + 1; j < source.Count; j++)
+                    {
+                        if (source[j] is TResult temp &&
+                            predicate(temp))
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -1093,6 +1408,33 @@
         }
 
         /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirstOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = 0; i < source.Count; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
@@ -1153,6 +1495,33 @@
             for (var i = source.Count - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLastOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+            where T : SyntaxNode
+            where TResult : T
+        {
+            result = default(TResult);
+            for (var i = source.Count - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
                 {
                     result = item;
                     return true;

@@ -111,6 +111,42 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+<# this.WriteTypeDoc(types); #>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TrySingleOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, out TResult result)<#= constraint #>
+            where TResult : T
+        {
+            result = default(TResult);
+<# this.WriteIfNullReturnFalse(types); #>
+            for (var i = 0; i < source.<#= count #>; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    for (var j = i + 1; j < source.<#= count #>; j++)
+                    {
+                        if (source[j] is TResult temp &&
+                            predicate(temp))
+                        {
+                            return false;
+                        }
+                    }
+
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 <# } #>
         /// <summary>
         /// Try getting the single element in <paramref name="source"/> matching <paramref name="predicate"/>
@@ -191,6 +227,33 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+<# this.WriteTypeDoc(types); #>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryFirstOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, out TResult result)<#= constraint #>
+            where TResult : T
+        {
+            result = default(TResult);
+<# this.WriteIfNullReturnFalse(types); #>
+            for (var i = 0; i < source.<#= count #>; i++)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 <# } #>
         /// <summary>
         /// Try getting the first element in <paramref name="source"/> matching <paramref name="predicate"/>
@@ -254,6 +317,33 @@ namespace Gu.Roslyn.AnalyzerExtensions
             for (var i = source.<#= count #> - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item)
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try getting the single element in <paramref name="source"/>
+        /// </summary>
+<# this.WriteTypeDoc(types); #>
+        /// <typeparam name="TResult">The type to filter by.</typeparam>
+        /// <param name="source">The source collection, can be null.</param>
+        /// <param name="predicate">The filter</param>
+        /// <param name="result">The single element, can be null.</param>
+        /// <returns>True if an element was found.</returns>
+        public static bool TryLastOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, out TResult result)<#= constraint #>
+            where TResult : T
+        {
+            result = default(TResult);
+<# this.WriteIfNullReturnFalse(types); #>
+            for (var i = source.<#= count #> - 1; i >= 0; i--)
+            {
+                if (source[i] is TResult item &&
+                    predicate(item))
                 {
                     result = item;
                     return true;
