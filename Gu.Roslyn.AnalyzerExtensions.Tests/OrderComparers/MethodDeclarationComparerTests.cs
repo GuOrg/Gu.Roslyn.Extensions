@@ -47,6 +47,15 @@ namespace RoslynSandbox
             Assert.AreEqual(0, MethodDeclarationComparer.Compare(y, y));
         }
 
+        [TestCaseSource(nameof(TestCaseSource))]
+        public void MemberDeclarationComparerCompare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+        {
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
+        }
+
         private static IEnumerable<TestCaseData> CreateTestCases()
         {
             var foo = SyntaxTree.FindClassDeclaration("Foo");

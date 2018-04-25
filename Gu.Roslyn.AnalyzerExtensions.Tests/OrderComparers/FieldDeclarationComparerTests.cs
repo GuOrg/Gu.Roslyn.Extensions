@@ -47,6 +47,15 @@ namespace RoslynSandbox
             Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
         }
 
+        [TestCaseSource(nameof(TestCaseSource))]
+        public void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        {
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
+        }
+
         [Test]
         public void InitializedWithOther()
         {
