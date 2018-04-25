@@ -98,7 +98,7 @@ namespace RoslynSandbox
 }";
                 testCode = testCode.AssertReplace("this.foo.Get<int>(1)", code);
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
-                var invocation = syntaxTree.FindInvocation(code);
+                var invocation = syntaxTree.FindExpression(code);
                 using (var walker = MemberPath.PathWalker.Borrow(invocation))
                 {
                     Assert.AreEqual(expected, string.Join(".", walker.IdentifierNames.Select(x => x)));
