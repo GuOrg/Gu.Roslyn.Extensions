@@ -7,7 +7,7 @@ Extensions for analyzers &amp; code fixes.
 - [Pooled](#pooled)
   - [PooledSet<T>](#pooledset-t)
   - [StringBuilderPool](#stringbuilderpool)
-- [StyleCopComparares](#stylecopcomparares)
+- [StyleCopComparers](#stylecopcomparers)
 - [Symbols](#symbols)
   - [QualifiedType](#qualifiedtype)
   - [QualifiedMember](#qualifiedmember)
@@ -79,7 +79,7 @@ var text = StringBuilderPool.Borrow()
                             .Return();
 ```
 
-# StyleCopComparares
+# StyleCopComparers
 
 Comparers that compare member declarations with stylecop order.
 

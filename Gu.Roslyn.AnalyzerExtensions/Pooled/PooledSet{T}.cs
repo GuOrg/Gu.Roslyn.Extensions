@@ -72,6 +72,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return this.inner.Add(item);
         }
 
+        /// <summary>
+        /// <see cref="HashSet{T}.Contains"/>
+        /// </summary>
+        /// <param name="item">The item</param>
+        /// <returns>True if the item was added.</returns>
+        public bool Contains(T item)
+        {
+            this.ThrowIfDisposed();
+            return this.inner.Contains(item);
+        }
+
         /// <inheritdoc />
         public IEnumerator<T> GetEnumerator() => this.inner.GetEnumerator();
 

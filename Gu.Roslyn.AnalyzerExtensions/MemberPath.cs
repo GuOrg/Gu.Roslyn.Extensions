@@ -64,6 +64,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
         //// ReSharper restore UnusedParameter.Global
 
         /// <summary>
+        /// Tries to find foo in this.foo.Bar.Baz
+        /// </summary>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="member">The root member.</param>
+        /// <returns>True if root was found.</returns>
+        public static bool TryFindRoot(ExpressionSyntax expression, out IdentifierNameSyntax member)
+        {
+            using (var xWalker = PathWalker.Borrow(expression))
+            {
+                return xWalker.IdentifierNames.TryFirst(out member);
+            }
+        }
+
+        /// <summary>
         /// Try get the member name of the expression
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
@@ -127,14 +141,31 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <inheritdoc />
             public override void Visit(SyntaxNode node)
             {
+                switch (node)
+                {
+                    case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
+                        base.Visit(binary.Left);
+                        return;
+                    case CastExpressionSyntax cast:
+                        base.Visit(cast.Expression);
+                        return;
+                    case InvocationExpressionSyntax invocation when invocation.Expression is IdentifierNameSyntax identifierName:
+                        base.Visit(identifierName);
+                        return;
+                    case InvocationExpressionSyntax invocation when invocation.Expression is MemberAccessExpressionSyntax memberAccess:
+                        base.Visit(memberAccess);
+                        return;
+                }
+
                 switch (node.Kind())
                 {
                     case SyntaxKind.ConditionalAccessExpression:
                     case SyntaxKind.SimpleMemberAccessExpression:
                     case SyntaxKind.MemberBindingExpression:
                     case SyntaxKind.IdentifierName:
+                    case SyntaxKind.ParenthesizedExpression:
                         base.Visit(node);
-                        break;
+                        return;
                 }
             }
 
