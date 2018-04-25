@@ -130,54 +130,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    AreEquivalent(first, other);
         }
 
-        /// <summary>
-        /// For example a boxed int cannot be cast to a double.
-        /// </summary>
-        /// <param name="toType">The type to cast to.</param>
-        /// <param name="valueExpression">The expression containing the value.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>True if a boxed instance can be cast.</returns>
-        public static bool IsRepresentationPreservingConversion(this ITypeSymbol toType, ExpressionSyntax valueExpression, SemanticModel semanticModel, CancellationToken cancellationToken)
-        {
-            var conversion = semanticModel.SemanticModelFor(valueExpression)
-                                          .ClassifyConversion(valueExpression, toType);
-            if (!conversion.Exists)
-            {
-                return false;
-            }
-
-            if (conversion.IsIdentity)
-            {
-                return true;
-            }
-
-            if (conversion.IsReference &&
-                conversion.IsImplicit)
-            {
-                return true;
-            }
-
-            if (conversion.IsNullable &&
-                conversion.IsNullLiteral)
-            {
-                return true;
-            }
-
-            if (conversion.IsBoxing ||
-                conversion.IsUnboxing)
-            {
-                return true;
-            }
-
-            if (toType.IsNullable(valueExpression, semanticModel, cancellationToken))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         public static bool IsNullable(this ITypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             var namedTypeSymbol = nullableType as INamedTypeSymbol;

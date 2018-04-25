@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class SemanticModelExtTests
+    public partial class SemanticModelExtTests
     {
         public class GetDeclaredSymbolSafe
         {

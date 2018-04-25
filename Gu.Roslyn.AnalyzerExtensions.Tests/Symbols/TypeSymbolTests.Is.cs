@@ -4,7 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class TypeSymbolTests
+    public class TypeSymbolTests
     {
         public class Is
         {
