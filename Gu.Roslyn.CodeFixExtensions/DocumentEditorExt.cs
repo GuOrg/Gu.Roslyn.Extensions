@@ -26,6 +26,23 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
+        /// Same as DocumentEditor.ReplaceNode but nicer types.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/></param>
+        /// <param name="oldToken">The <see cref="SyntaxToken"/></param>
+        /// <param name="newToken">The new <see cref="SyntaxToken"/>.</param>
+        /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
+        public static DocumentEditor ReplaceToken(this DocumentEditor editor, SyntaxToken oldToken, SyntaxToken newToken)
+        {
+            editor.ReplaceNode(oldToken.Parent, (x, g) =>
+            {
+                var syntaxToken = x.FindToken(oldToken.SpanStart);
+                return x.ReplaceToken(syntaxToken, newToken);
+            });
+            return editor;
+        }
+
+        /// <summary>
         /// Add <see cref="Formatter.Annotation"/> to <paramref name="node"/>
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/></param>
