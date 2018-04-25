@@ -15,7 +15,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     public static partial class DocumentEditorExt
     {
         /// <summary>
-        /// Add the using directive and respect if the convenion is inside or outside of namespace and sorted with system first.
+        /// Add the using directive and respect if the convention is inside or outside of namespace and sorted with system first.
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/></param>
         /// <param name="usingDirective">The <see cref="UsingDirectiveSyntax"/></param>

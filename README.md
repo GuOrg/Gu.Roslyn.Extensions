@@ -3,6 +3,56 @@ Extensions for analyzers &amp; code fixes.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ipk8pqx4n4m7y8u8/branch/master?svg=true)](https://ci.appveyor.com/project/JohanLarsson/gu-roslyn-extensions/branch/master)
 
+- [Gu.Roslyn.Extensions](#guroslynextensions)
+- [Pooled](#pooled)
+  - [PooledSet<T>](#pooledset-t)
+  - [StringBuilderPool](#stringbuilderpool)
+- [StyleCopComparares](#stylecopcomparares)
+- [Symbols](#symbols)
+  - [QualifiedType](#qualifiedtype)
+  - [QualifiedMember](#qualifiedmember)
+  - [SymbolExt](#symbolext)
+    - [TrySingleDeclaration](#trysingledeclaration)
+  - [TypeSymbolExt](#typesymbolext)
+    - [Is](#is)
+    - [TryFindMember](#tryfindmember)
+    - [TryFindMemberRecursive](#tryfindmemberrecursive)
+- [Syntax](#syntax)
+  - [ArgumentListSyntaxExt](#argumentlistsyntaxext)
+    - [TryGetMatchingArgument](#trygetmatchingargument)
+  - [ArgumentSyntaxExt](#argumentsyntaxext)
+    - [TryGetStringValue](#trygetstringvalue)
+    - [TryGetMatchingParameter](#trygetmatchingparameter)
+  - [BasePropertyDeclarationSyntaxExt](#basepropertydeclarationsyntaxext)
+    - [TryGetGetter and TryGetSetter](#trygetgetter-and-trygetsetter)
+    - [IsGetOnly](#isgetonly)
+    - [IsAutoProperty](#isautoproperty)
+  - [SyntaxNodeExt](#syntaxnodeext)
+    - [IsExecutedBefore](#isexecutedbefore)
+  - [TypeSyntaxExt](#typesyntaxext)
+    - [TryFindMember](#tryfindmember)
+- [Walkers](#walkers)
+  - [ExecutionWalker<T> : PooledWalker<T>](#executionwalker-t--pooledwalker-t)
+    - [PooledWalker<T>](#pooledwalker-t)
+    - [Cache<TKey, TValue>](#cache-tkey--tvalue)
+    - [EnumarebleExt](#enumarebleext)
+- [FixAll](#fixall)
+  - [DocumentEditorCodeFixProvider](#documenteditorcodefixprovider)
+- [CodeStyle](#codestyle)
+  - [UnderscoreFields](#underscorefields)
+  - [UsingDirectivesInsideNamespace](#usingdirectivesinsidenamespace)
+  - [BackingFieldsAdjacent](#backingfieldsadjacent)
+- [DocumentEditorExt](#documenteditorext)
+  - [AddUsing](#addusing)
+  - [AddField](#addfield)
+  - [AddProperty](#addproperty)
+  - [AddMethod](#addmethod)
+- [Simplify](#simplify)
+  - [WithSimplifiedNames<T>](#withsimplifiednames-t)
+- [Trivia](#trivia)
+  - [WithTriviaFrom](#withtriviafrom)
+  - [WithLeadingTriviaFrom](#withleadingtriviafrom)
+  - [WithTrailingTriviaFrom](#withtrailingtriviafrom)
 
 # Pooled
 
@@ -193,3 +243,118 @@ internal sealed class IdentifierNameWalker : PooledWalker<IdentifierNameWalker>
 
 For caching expensive calls
 
+```cs
+public override void Initialize(AnalysisContext context)
+{
+    context.CacheToCompilationEnd<SyntaxTree, SemanticModel>();
+}
+```
+
+### EnumarebleExt
+
+Extension methods for enumarebls 
+- TrySingle
+- TryLast
+- TryElementAt
+
+# FixAll
+## DocumentEditorCodeFixProvider
+A fix all provider that use document editor for batch fixes.
+
+```cs
+[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(UseParameterCodeFixProvider))]
+[Shared]
+internal class UseParameterCodeFixProvider : DocumentEditorCodeFixProvider
+{
+    /// <inheritdoc/>
+    public override ImmutableArray<string> FixableDiagnosticIds { get; } =
+        ImmutableArray.Create(GU0014PreferParameter.DiagnosticId);
+
+    /// <inheritdoc/>
+    protected override async Task RegisterCodeFixesAsync(DocumentEditorCodeFixContext context)
+    {
+        var syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken)
+                                        .ConfigureAwait(false);
+
+        foreach (var diagnostic in context.Diagnostics)
+        {
+            if (diagnostic.Properties.TryGetValue("Name", out var name))
+            {
+                if (syntaxRoot.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true) is MemberAccessExpressionSyntax memberAccess)
+                {
+                    context.RegisterCodeFix(
+                        "Prefer parameter.",
+                        (editor, _) => editor.ReplaceNode(
+                            memberAccess,
+                            SyntaxFactory.IdentifierName(name)
+                                            .WithLeadingTriviaFrom(memberAccess)),
+                        "Prefer parameter.",
+                        diagnostic);
+                }
+                else if (syntaxRoot.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true) is IdentifierNameSyntax identifierName)
+                {
+                    context.RegisterCodeFix(
+                        "Prefer parameter.",
+                        (editor, _) => editor.ReplaceNode(
+                            identifierName,
+                            identifierName.WithIdentifier(SyntaxFactory.Identifier(name))
+                                            .WithLeadingTriviaFrom(identifierName)),
+                        "Prefer parameter.",
+                        diagnostic);
+                }
+            }
+        }
+    }
+}
+```
+
+# CodeStyle
+
+Helpers for determinining the code style used in the project.
+
+## UnderscoreFields
+
+## UsingDirectivesInsideNamespace
+
+## BackingFieldsAdjacent 
+Figures out if backing field is placed like stylecop wants it or adjacent to the property.
+
+# DocumentEditorExt
+
+Helpers for adding members sorted according to how StyleCop wants it.
+
+## AddUsing
+
+Adds the using sorted and figures out if it shoul add outside or insside the namespace from the current document then project.
+
+## AddField 
+
+Adds the field at the position StyleCop wants it.
+
+## AddProperty 
+
+Adds the property at the position StyleCop wants it.
+
+## AddMethod 
+
+Adds the method at the position StyleCop wants it.
+
+# Simplify
+
+## WithSimplifiedNames<T> 
+Uses a syntax rewriter that adds `Simplifier.Annotation` to all `QualifiedNameSyntax`
+
+# Trivia
+
+Helpers for copying triviat from other nodes.
+
+## WithTriviaFrom
+Copy trivia from a node.
+
+## WithLeadingTriviaFrom
+
+Copy leading trivia from a node.
+
+## WithTrailingTriviaFrom
+
+Copy trailing trivia from a node.
