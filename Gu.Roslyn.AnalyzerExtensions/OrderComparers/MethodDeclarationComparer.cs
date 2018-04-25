@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <inheritdoc />
     public class MethodDeclarationComparer : IComparer<MethodDeclarationSyntax>
     {
-        /// <summary>  The default instance. </summary>
+        /// <summary> The default instance. </summary>
         public static readonly MethodDeclarationComparer Default = new MethodDeclarationComparer();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>

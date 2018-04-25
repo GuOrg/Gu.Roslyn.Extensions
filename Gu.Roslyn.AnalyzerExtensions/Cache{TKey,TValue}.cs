@@ -5,6 +5,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Diagnostics;
     using System.Threading;
 
+    /// <summary> A cache </summary>
+    /// <typeparam name="TKey">The key type.</typeparam>
+    /// <typeparam name="TValue">The value type.</typeparam>
     public static class Cache<TKey, TValue>
     {
         private static readonly ConcurrentDictionary<TKey, TValue> Inner = new ConcurrentDictionary<TKey, TValue>();

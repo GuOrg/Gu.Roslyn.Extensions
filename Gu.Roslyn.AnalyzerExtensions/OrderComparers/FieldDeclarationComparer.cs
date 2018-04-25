@@ -8,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <inheritdoc />
     public class FieldDeclarationComparer : IComparer<FieldDeclarationSyntax>
     {
-        /// <summary>  The default instance. </summary>
+        /// <summary> The default instance. </summary>
         public static readonly FieldDeclarationComparer Default = new FieldDeclarationComparer();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
@@ -128,6 +128,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
             }
 
+            /// <inheritdoc />
+            public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
+            {
+                this.assignments.Add(node);
+                base.VisitAssignmentExpression(node);
+            }
+
             internal static bool TryGetSetter(FieldDeclarationSyntax field, out AccessorDeclarationSyntax setter)
             {
                 setter = null;
@@ -179,12 +186,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
-            {
-                this.assignments.Add(node);
-                base.VisitAssignmentExpression(node);
-            }
-
+            /// <inheritdoc />
             protected override void Clear()
             {
                 this.assignments.Clear();

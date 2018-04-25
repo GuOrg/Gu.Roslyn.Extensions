@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <inheritdoc />
     public sealed class UsingDirectiveComparer : IComparer<UsingDirectiveSyntax>
     {
-        /// <summary>  The default instance. </summary>
+        /// <summary> The default instance. </summary>
         public static readonly UsingDirectiveComparer Default = new UsingDirectiveComparer();
         private static readonly StringComparer OrdinalIgnoreCase = StringComparer.OrdinalIgnoreCase;
 

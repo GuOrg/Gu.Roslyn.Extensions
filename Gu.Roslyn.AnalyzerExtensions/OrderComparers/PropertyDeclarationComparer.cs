@@ -8,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <inheritdoc />
     public class PropertyDeclarationComparer : IComparer<PropertyDeclarationSyntax>
     {
-        /// <summary>  The default instance. </summary>
+        /// <summary> The default instance. </summary>
         public static readonly PropertyDeclarationComparer Default = new PropertyDeclarationComparer();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>

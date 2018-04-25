@@ -7,12 +7,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <inheritdoc />
     public class SymbolComparer : IEqualityComparer<ISymbol>
     {
+        /// <summary> The default instance. </summary>
         public static readonly SymbolComparer Default = new SymbolComparer();
 
         private SymbolComparer()
         {
         }
 
+        /// <summary> Determines equality by delegating to other comparares. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
         public static bool Equals(ISymbol x, ISymbol y)
         {
             if (ReferenceEquals(x, y))
@@ -85,6 +90,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         //// ReSharper disable UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1313 // Parameter names must begin with lower-case letter
 #pragma warning disable SA1600 // Elements must be documented
         [Obsolete("Should only be called with arguments of type ISymbol.", error: true)]
@@ -118,6 +124,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool Equals(ITypeSymbol _, ITypeSymbol __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 #pragma warning restore SA1600 // Elements must be documented
 #pragma warning restore SA1313 // Parameter names must begin with lower-case letter
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         //// ReSharper restore UnusedMember.Global
         //// ReSharper restore UnusedParameter.Global
 

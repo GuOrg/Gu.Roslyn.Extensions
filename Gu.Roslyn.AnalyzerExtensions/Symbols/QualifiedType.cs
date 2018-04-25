@@ -47,6 +47,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public string Alias { get; }
 
+        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/> </summary>
+        /// <param name="left">The <see cref="ITypeSymbol"/></param>
+        /// <param name="right">The <see cref="QualifiedType"/></param>
+        /// <returns>True if found equal</returns>
         public static bool operator ==(ITypeSymbol left, QualifiedType right)
         {
             if (left == null && right == null)
@@ -63,8 +67,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    left.ContainingNamespace == right.Namespace;
         }
 
+        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
+        /// <param name="left">The <see cref="ITypeSymbol"/></param>
+        /// <param name="right">The <see cref="QualifiedType"/></param>
+        /// <returns>True if not found equal</returns>
         public static bool operator !=(ITypeSymbol left, QualifiedType right) => !(left == right);
 
+        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/> </summary>
+        /// <param name="left">The <see cref="BaseTypeSyntax"/></param>
+        /// <param name="right">The <see cref="QualifiedType"/></param>
+        /// <returns>True if found equal</returns>
         public static bool operator ==(BaseTypeSyntax left, QualifiedType right)
         {
             if (left == null && right == null)
@@ -80,8 +92,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return left.Type == right;
         }
 
+        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
+        /// <param name="left">The <see cref="BaseTypeSyntax"/></param>
+        /// <param name="right">The <see cref="QualifiedType"/></param>
+        /// <returns>True if not found equal</returns>
         public static bool operator !=(BaseTypeSyntax left, QualifiedType right) => !(left == right);
 
+        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/> </summary>
+        /// <param name="left">The <see cref="TypeSyntax"/></param>
+        /// <param name="right">The <see cref="QualifiedType"/></param>
+        /// <returns>True if found equal</returns>
         public static bool operator ==(TypeSyntax left, QualifiedType right)
         {
             if (left == null && right == null)
@@ -108,12 +128,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
+        /// <param name="left">The <see cref="TypeSyntax"/></param>
+        /// <param name="right">The <see cref="QualifiedType"/></param>
+        /// <returns>True if not found equal</returns>
         public static bool operator !=(TypeSyntax left, QualifiedType right) => !(left == right);
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -137,6 +161,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return this.FullName.GetHashCode();
         }
 
+        /// <summary>
+        /// Check if equal.
+        /// </summary>
+        /// <param name="other">The other instance.</param>
+        /// <returns>True if equal.</returns>
         protected bool Equals(QualifiedType other)
         {
             return string.Equals(this.FullName, other.FullName);
@@ -145,7 +174,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         private static bool NameEquals(string left, QualifiedType right)
         {
             return left == right.Type ||
-                   (right.Alias != null && left == right.Alias);
+                   (right.Alias != null &&
+                    left == right.Alias);
         }
     }
 }

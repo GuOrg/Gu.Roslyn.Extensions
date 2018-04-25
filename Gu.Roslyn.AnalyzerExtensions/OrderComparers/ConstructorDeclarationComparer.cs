@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <inheritdoc />
     public class ConstructorDeclarationComparer : IComparer<ConstructorDeclarationSyntax>
     {
-        /// <summary>  The default instance. </summary>
+        /// <summary> The default instance. </summary>
         public static readonly ConstructorDeclarationComparer Default = new ConstructorDeclarationComparer();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
