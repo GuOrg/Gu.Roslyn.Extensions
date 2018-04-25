@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -89,6 +88,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <summary> Check if <paramref name="x"/> is the same type as <paramref name="y"/> </summary>
+        /// <param name="x">The first type.</param>
+        /// <param name="y">The other type.</param>
+        /// <returns>True if same type.</returns>
         public static bool IsSameType(this ITypeSymbol x, ITypeSymbol y)
         {
             if (Equals(x, y))
@@ -113,23 +116,35 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    NamedTypeSymbolComparer.Equals(firstNamed, otherNamed);
         }
 
-        public static bool IsSameType(this INamedTypeSymbol first, INamedTypeSymbol other)
+        /// <summary> Check if <paramref name="x"/> is the same type as <paramref name="y"/> </summary>
+        /// <param name="x">The first type.</param>
+        /// <param name="y">The other type.</param>
+        /// <returns>True if same type.</returns>
+        public static bool IsSameType(this INamedTypeSymbol x, INamedTypeSymbol y)
         {
-            if (first == null ||
-                other == null)
+            if (x == null ||
+                y == null)
             {
                 return false;
             }
 
-            if (first.IsDefinition ^ other.IsDefinition)
+            if (x.IsDefinition ^ y.IsDefinition)
             {
-                return IsSameType(first.OriginalDefinition, other.OriginalDefinition);
+                return IsSameType(x.OriginalDefinition, y.OriginalDefinition);
             }
 
-            return first.Equals(other) ||
-                   AreEquivalent(first, other);
+            return x.Equals(y) ||
+                   AreEquivalent(x, y);
         }
 
+        /// <summary>
+        /// Check if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>
+        /// </summary>
+        /// <param name="nullableType">The <see cref="ITypeSymbol"/></param>
+        /// <param name="value">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/></returns>
         public static bool IsNullable(this ITypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             var namedTypeSymbol = nullableType as INamedTypeSymbol;
@@ -146,14 +161,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            var typeInfo = semanticModel.GetTypeInfoSafe(value, cancellationToken);
-            return namedTypeSymbol.TypeArguments[0].IsSameType(typeInfo.Type);
-        }
-
-        [Obsolete("Use type.TypeKind == TypeKind.Interface")]
-        public static bool IsInterface(this ITypeSymbol type)
-        {
-            return type.TypeKind == TypeKind.Interface;
+            return semanticModel.TryGetTypeInfo(value, cancellationToken, out ITypeSymbol type) &&
+                   type is INamedTypeSymbol namedType &&
+                   namedType.TypeArguments.TrySingle(out var typeArg) &&
+                   IsSameType(typeArg, nullableType);
         }
 
         private static bool AreEquivalent(this INamedTypeSymbol first, INamedTypeSymbol other)

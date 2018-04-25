@@ -79,14 +79,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// For example a boxed int cannot be cast to a double.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="toType">The type to cast to.</param>
-        /// <param name="valueExpression">The expression containing the value.</param>
+        /// <param name="expression">The expression containing the value.</param>
+        /// <param name="destination">The type to cast to.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if a boxed instance can be cast.</returns>
-        public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax valueExpression, ITypeSymbol toType,  CancellationToken cancellationToken)
+        public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax expression, ITypeSymbol destination,  CancellationToken cancellationToken)
         {
-            var conversion = semanticModel.SemanticModelFor(valueExpression)
-                                          .ClassifyConversion(valueExpression, toType);
+            var conversion = semanticModel.SemanticModelFor(expression)
+                                          .ClassifyConversion(expression, destination);
             if (!conversion.Exists)
             {
                 return false;
@@ -115,7 +115,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            if (toType.IsNullable(valueExpression, semanticModel, cancellationToken))
+            if (destination.IsNullable(expression, semanticModel, cancellationToken))
             {
                 return true;
             }

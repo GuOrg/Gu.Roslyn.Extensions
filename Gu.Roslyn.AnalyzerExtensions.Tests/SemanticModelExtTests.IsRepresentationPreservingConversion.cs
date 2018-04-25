@@ -67,6 +67,5 @@ namespace RoslynSandbox
                 Assert.AreEqual(false, semanticModel.IsRepresentationPreservingConversion(expressionSyntax, method.ReturnType, CancellationToken.None));
             }
         }
-
     }
 }
