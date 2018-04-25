@@ -1,20 +1,20 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparares
 {
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <inheritdoc />
-    public class MethodDeclarationComparer : IComparer<MethodDeclarationSyntax>
+    public class IndexerDeclarationComparer : IComparer<IndexerDeclarationSyntax>
     {
         /// <summary> The default instance. </summary>
-        public static readonly MethodDeclarationComparer Default = new MethodDeclarationComparer();
+        public static readonly IndexerDeclarationComparer Default = new IndexerDeclarationComparer();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
         /// <param name="y">The second node to compare.</param>
-        public static int Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+        public static int Compare(IndexerDeclarationSyntax x, IndexerDeclarationSyntax y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -47,16 +47,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <inheritdoc />
-        int IComparer<MethodDeclarationSyntax>.Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y) => Compare(x, y);
+        int IComparer<IndexerDeclarationSyntax>.Compare(IndexerDeclarationSyntax x, IndexerDeclarationSyntax y) => Compare(x, y);
 
-        private static Accessibility Accessibility(MethodDeclarationSyntax method)
+        private static Accessibility Accessibility(IndexerDeclarationSyntax indexer)
         {
-            if (method.ExplicitInterfaceSpecifier != null)
+            if (indexer.ExplicitInterfaceSpecifier != null)
             {
                 return Microsoft.CodeAnalysis.Accessibility.Public;
             }
 
-            return method.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
+            return indexer.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
         }
     }
 }

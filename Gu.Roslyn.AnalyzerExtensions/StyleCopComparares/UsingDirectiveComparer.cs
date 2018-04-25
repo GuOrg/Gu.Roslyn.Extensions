@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparares
 {
     using System;
     using System.Collections.Generic;

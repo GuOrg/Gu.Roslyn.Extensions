@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
 {
     using NUnit.Framework;
 

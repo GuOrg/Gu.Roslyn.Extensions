@@ -1,20 +1,20 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparares
 {
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <inheritdoc />
-    public class ConstructorDeclarationComparer : IComparer<ConstructorDeclarationSyntax>
+    public class MethodDeclarationComparer : IComparer<MethodDeclarationSyntax>
     {
         /// <summary> The default instance. </summary>
-        public static readonly ConstructorDeclarationComparer Default = new ConstructorDeclarationComparer();
+        public static readonly MethodDeclarationComparer Default = new MethodDeclarationComparer();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
         /// <param name="y">The second node to compare.</param>
-        public static int Compare(ConstructorDeclarationSyntax x, ConstructorDeclarationSyntax y)
+        public static int Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -31,13 +31,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return 1;
             }
 
-            var compare = MemberDeclarationComparer.CompareScope(x.Modifiers, y.Modifiers);
+            var compare = MemberDeclarationComparer.CompareAccessability(Accessibility(x), Accessibility(y));
             if (compare != 0)
             {
                 return compare;
             }
 
-            compare = MemberDeclarationComparer.CompareAccessability(x.Modifiers, y.Modifiers, Accessibility.Private);
+            compare = MemberDeclarationComparer.CompareScope(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
                 return compare;
@@ -47,6 +47,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <inheritdoc />
-        int IComparer<ConstructorDeclarationSyntax>.Compare(ConstructorDeclarationSyntax x, ConstructorDeclarationSyntax y) => Compare(x, y);
+        int IComparer<MethodDeclarationSyntax>.Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y) => Compare(x, y);
+
+        private static Accessibility Accessibility(MethodDeclarationSyntax method)
+        {
+            if (method.ExplicitInterfaceSpecifier != null)
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Public;
+            }
+
+            return method.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
+        }
     }
 }

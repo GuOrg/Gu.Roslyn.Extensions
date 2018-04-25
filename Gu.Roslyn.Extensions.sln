@@ -19,6 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.CodeFixExtensions
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.CodeFixExtensions.Tests", "Gu.Roslyn.CodeFixExtensions.Tests\Gu.Roslyn.CodeFixExtensions.Tests.csproj", "{2D651617-731A-4453-BE69-883CE6797881}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{26F7F8AB-52FA-4EEE-9559-CF6260F962B4}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+		RELEASE_NOTES.md = RELEASE_NOTES.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

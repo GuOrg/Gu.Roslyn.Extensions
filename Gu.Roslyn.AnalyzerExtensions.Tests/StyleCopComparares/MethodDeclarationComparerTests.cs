@@ -1,7 +1,8 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.OrderComparers
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparares
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparares;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;

@@ -25,6 +25,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return new PooledStringBuilder();
         }
 
+        /// <summary>
+        /// Wrapping a <see cref="StringBuilder"/>
+        /// </summary>
         public class PooledStringBuilder
         {
             private readonly StringBuilder inner = new StringBuilder();
@@ -51,8 +54,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             /// <inheritdoc/>
-            [Obsolete("Use Return", true)]
 #pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
+            [Obsolete("Use Return", error: true)]
             public override string ToString() => throw new InvalidOperationException("Use StringBuilderPool.Return");
 #pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
 
