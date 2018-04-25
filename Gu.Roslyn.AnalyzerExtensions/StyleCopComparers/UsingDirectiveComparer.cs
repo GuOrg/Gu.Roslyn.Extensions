@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparares
+namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System;
     using System.Collections.Generic;
@@ -43,6 +43,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparares
             return 0;
         }
 
+        /// <inheritdoc />
         int IComparer<UsingDirectiveSyntax>.Compare(UsingDirectiveSyntax x, UsingDirectiveSyntax y) => Compare(x, y);
 
         private static bool TryGetRoot(NameSyntax uds, out SimpleNameSyntax name)

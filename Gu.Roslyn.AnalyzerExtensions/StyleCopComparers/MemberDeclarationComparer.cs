@@ -1,10 +1,13 @@
-namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparares
+namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// For comparing order according to StyleCop
+    /// </summary>
     public class MemberDeclarationComparer
     {
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>

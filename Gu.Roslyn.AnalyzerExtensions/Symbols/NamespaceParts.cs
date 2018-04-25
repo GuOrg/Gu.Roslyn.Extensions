@@ -8,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// For comparison with roslyn <see cref="INamespaceSymbol"/>.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{System.String.Join(\".\", Parts)}")]
-    public class NamespaceParts
+    public sealed class NamespaceParts
     {
         private readonly ImmutableList<string> parts;
 
@@ -65,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Create a new instance from <paramref name="qualifiedName"/>
         /// </summary>
-        /// <param name="qualifiedName">The namepace name ex: 'System.Collections'</param>
+        /// <param name="qualifiedName">The namespace name ex: 'System.Collections'</param>
         /// <returns>The created instance.</returns>
         public static NamespaceParts Create(string qualifiedName)
         {
@@ -74,7 +74,29 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return new NamespaceParts(parts.RemoveAt(parts.Count - 1));
         }
 
-        /// <summary> Check if this isntance describes the namespace <paramref name="nameSyntax"/> </summary>
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            return obj is NamespaceParts && this.Equals((NamespaceParts)obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return this.parts[this.parts.Count - 1].GetHashCode();
+        }
+
+        /// <summary> Check if this instance describes the namespace <paramref name="nameSyntax"/> </summary>
         /// <param name="nameSyntax">The <see cref="NameSyntax"/></param>
         /// <returns>True if found to be the same namespace.</returns>
         internal bool Matches(NameSyntax nameSyntax)
@@ -103,6 +125,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 return this.Matches(qns.Left, index - 1);
+            }
+
+            return false;
+        }
+
+        private bool Equals(NamespaceParts other)
+        {
+            if (this.parts.Count == other.parts.Count)
+            {
+                for (var i = 0; i < this.parts.Count; i++)
+                {
+                    if (this.parts[i] != other.parts[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
 
             return false;

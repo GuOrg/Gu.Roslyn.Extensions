@@ -111,6 +111,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <summary>
+        /// Filter null checks to be for <paramref name="parameter"/>
+        /// </summary>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         internal void Filter(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             for (var i = this.binaryExpressions.Count - 1; i >= 0; i--)
@@ -141,6 +147,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <inheritdoc />
         protected override void Clear()
         {
             this.binaryExpressions.Clear();

@@ -145,6 +145,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                                 ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
+        /// <summary>
+        /// Same as SemanticModel.GetDeclaredSymbol but works when <paramref name="node"/> is not in the syntax tree.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>An <see cref="ISymbol"/> or null</returns>
         public static ISymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
         {
             if (node is FieldDeclarationSyntax fieldDeclaration)

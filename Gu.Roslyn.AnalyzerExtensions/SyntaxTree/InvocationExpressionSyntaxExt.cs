@@ -110,7 +110,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if the invocation is typeof()
         /// </summary>
-        /// <param name="invocation">The invocation</param>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
         /// <returns>True if the invocation is typeof()</returns>
         public static bool IsTypeOf(this InvocationExpressionSyntax invocation)
         {
@@ -118,6 +118,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    name == "typeof";
         }
 
+        /// <summary>
+        /// Try to get the method symbol if it matches <paramref name="expected"/>
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <param name="expected">The <see cref="QualifiedMethod"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="result">The <see cref="IMethodSymbol"/></param>
+        /// <returns>True if the invocation is for the expected method.</returns>
         public static bool TryGetInvokedSymbol(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol result)
         {
             result = null;

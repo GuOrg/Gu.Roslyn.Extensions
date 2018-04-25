@@ -65,6 +65,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning restore SA1313 // Parameter names must begin with lower-case letter
         //// ReSharper restore UnusedParameter.Global
 
+        /// <summary>Returns the hash code for this string.</summary>
+        /// <param name="obj">The instance.</param>
+        /// <returns>A 32-bit signed integer hash code.</returns>
         public static int GetHashCode(ITypeSymbol obj)
         {
             if (obj == null)

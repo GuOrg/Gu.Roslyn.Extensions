@@ -67,6 +67,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         protected abstract void Clear();
 
+        /// <summary>
+        /// Throws an <see cref="ObjectDisposedException"/> if the instance is disposed.
+        /// </summary>
         [Conditional("DEBUG")]
         protected void ThrowIfDisposed()
         {

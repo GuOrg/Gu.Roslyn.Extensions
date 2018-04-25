@@ -9,10 +9,17 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.Editing;
     using Microsoft.CodeAnalysis.Text;
 
+    /// <summary>
+    /// A CodeFixContext for usage with <see cref="DocumentEditorCodeFixProvider"/>
+    /// </summary>
     public struct DocumentEditorCodeFixContext
     {
         private readonly CodeFixContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DocumentEditorCodeFixContext"/> struct.
+        /// </summary>
+        /// <param name="context">The <see cref="CodeFixContext"/></param>
         public DocumentEditorCodeFixContext(CodeFixContext context)
         {
             this.context = context;

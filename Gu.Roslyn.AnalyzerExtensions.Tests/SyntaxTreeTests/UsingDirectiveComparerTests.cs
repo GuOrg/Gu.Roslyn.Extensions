@@ -1,7 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 {
     using System;
-    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparares;
+    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 

@@ -17,7 +17,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/></param>
         /// <param name="node">The <see cref="SyntaxNode"/></param>
         /// <param name="replacement">The replacement factory.</param>
-        /// <returns>The <see cref="DocumentEditor"/></returns>
+        /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor ReplaceNode<T>(this DocumentEditor editor, T node, Func<T, SyntaxNode> replacement)
             where T : SyntaxNode
         {
@@ -30,7 +30,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/></param>
         /// <param name="node">The <see cref="SyntaxNode"/></param>
-        /// <returns><paramref name="node"/> with <see cref="Formatter.Annotation"/></returns>
+        /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor FormatNode(this DocumentEditor editor, SyntaxNode node)
         {
             if (node == null)
