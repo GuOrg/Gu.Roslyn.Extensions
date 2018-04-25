@@ -34,6 +34,10 @@ namespace RoslynSandbox
         private int Private4 = 4;
         int Private5;
         
+        public Foo()
+        {
+        }
+
         public event EventHandler PublicEvent1;
 
         public event EventHandler PublicEvent2
@@ -113,6 +117,7 @@ namespace RoslynSandbox
         object Public();
     }
 }");
+
         private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases().ToArray();
 
         [TestCaseSource(nameof(TestCaseSource))]
