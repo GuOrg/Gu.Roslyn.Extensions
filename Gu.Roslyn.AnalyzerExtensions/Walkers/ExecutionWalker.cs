@@ -52,7 +52,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             base.VisitInvocationExpression(node);
-            this.VisitChained(node);
+            this.VisitRecursive(node);
         }
 
         /// <inheritdoc />
@@ -104,14 +104,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitConstructorInitializer(ConstructorInitializerSyntax node)
         {
             base.VisitConstructorInitializer(node);
-            this.VisitChained(node);
+            this.VisitRecursive(node);
         }
 
         /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             base.VisitObjectCreationExpression(node);
-            this.VisitChained(node);
+            this.VisitRecursive(node);
         }
 
         /// <inheritdoc />
@@ -122,7 +122,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.CancellationToken = CancellationToken.None;
         }
 
-        protected void VisitChained(SyntaxNode node)
+        /// <summary>
+        /// This is called when for example an invocation is reached. Now we decide if we want to walk the declaration of the invocation.
+        /// </summary>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        protected void VisitRecursive(SyntaxNode node)
         {
             if (node == null)
             {
@@ -132,15 +136,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (this.Search == Search.Recursive &&
                 this.visited.Add(node))
             {
-                var method = this.SemanticModel.GetSymbolSafe(node, this.CancellationToken);
-                if (method == null)
+                if (this.SemanticModel.TryGetSymbol<ISymbol>(node, this.CancellationToken, out var symbol) &&
+                    symbol.TrySingleDeclaration<SyntaxNode>(this.CancellationToken, out var declaration))
                 {
-                    return;
-                }
-
-                foreach (var reference in method.DeclaringSyntaxReferences)
-                {
-                    this.Visit(reference.GetSyntax(this.CancellationToken));
+                    this.Visit(declaration);
                 }
             }
         }

@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for wroking with <see cref="BasePropertyDeclarationSyntax"/>
+    /// Helper methods for working with <see cref="BasePropertyDeclarationSyntax"/>
     /// </summary>
     public static class BasePropertyDeclarationSyntaxExt
     {

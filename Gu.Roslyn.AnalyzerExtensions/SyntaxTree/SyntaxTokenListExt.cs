@@ -3,6 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
 
+    /// <summary>
+    /// Helpers for working with <see cref="SyntaxTokenList"/>
+    /// </summary>
     public static class SyntaxTokenListExt
     {
         /// <summary>

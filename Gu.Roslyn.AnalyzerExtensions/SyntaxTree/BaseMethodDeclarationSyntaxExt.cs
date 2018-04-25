@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/></param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
-        /// <returns>True if a matching poarameter was found.</returns>
+        /// <returns>True if a matching parameter was found.</returns>
         public static bool TryGetMatchingParameter(this BaseMethodDeclarationSyntax method, ArgumentSyntax argument, out ParameterSyntax parameter)
         {
             parameter = null;

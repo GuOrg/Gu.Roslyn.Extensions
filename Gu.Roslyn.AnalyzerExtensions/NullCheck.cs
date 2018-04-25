@@ -1,13 +1,22 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Collections.Generic;
     using System.Threading;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper for determining if parameters are checked for null.
+    /// </summary>
     public static class NullCheck
     {
+        /// <summary>
+        /// Check if <paramref name="parameter"/> is checked for null.
+        /// </summary>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
+        /// <param name="scope">The scope to walk.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>True if <paramref name="parameter"/> is checked for null.</returns>
         public static bool IsChecked(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (parameter == null ||
@@ -22,159 +31,42 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
-        public static bool IsCheckedBefore(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+        /// <summary>
+        /// Check if <paramref name="parameter"/> is checked for null before <paramref name="location"/>.
+        /// </summary>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
+        /// <param name="location">The location where we want to know if <paramref name="parameter"/> is checked for null.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>True if <paramref name="parameter"/> is checked for null before <paramref name="location"/>.</returns>
+        public static bool IsCheckedBefore(IParameterSymbol parameter, SyntaxNode location, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (parameter == null ||
-                scope == null)
+                location == null)
             {
                 return false;
             }
 
-            using (var walker = NullCheckWalker.Borrow(scope.FirstAncestorOrSelf<MemberDeclarationSyntax>()))
+            using (var walker = NullCheckWalker.Borrow(location.FirstAncestorOrSelf<MemberDeclarationSyntax>()))
             {
                 return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
-                       check.IsExecutedBefore(scope) == true;
+                       check.IsExecutedBefore(location) == true;
             }
         }
 
+        /// <summary>
+        /// Get a <see cref="NullCheckWalker"/> filtered by all null checks for <paramref name="parameter"/>
+        /// </summary>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
+        /// <param name="scope">The scope to walk.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>A <see cref="NullCheckWalker"/> filtered by all null checks for <paramref name="parameter"/></returns>
         public static NullCheckWalker For(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             var walker = NullCheckWalker.Borrow(scope.FirstAncestorOrSelf<MemberDeclarationSyntax>());
             walker.Filter(parameter, semanticModel, cancellationToken);
             return walker;
-        }
-
-        public sealed class NullCheckWalker : PooledWalker<NullCheckWalker>
-        {
-            private readonly List<BinaryExpressionSyntax> binaryExpressions = new List<BinaryExpressionSyntax>();
-            private readonly List<IsPatternExpressionSyntax> isPatterns = new List<IsPatternExpressionSyntax>();
-            private readonly List<InvocationExpressionSyntax> invocations = new List<InvocationExpressionSyntax>();
-
-            private NullCheckWalker()
-            {
-            }
-
-            public static NullCheckWalker Borrow(SyntaxNode scope) => BorrowAndVisit(scope, () => new NullCheckWalker());
-
-            public override void VisitBinaryExpression(BinaryExpressionSyntax node)
-            {
-                if (node.IsEitherKind(SyntaxKind.EqualsExpression, SyntaxKind.NotEqualsExpression) &&
-                    (node.Left.IsKind(SyntaxKind.NullLiteralExpression) ||
-                     node.Right.IsKind(SyntaxKind.NullLiteralExpression)))
-                {
-                    this.binaryExpressions.Add(node);
-                }
-
-                if (node.IsKind(SyntaxKind.CoalesceExpression) &&
-                    node.Left.IsKind(SyntaxKind.IdentifierName))
-                {
-                    this.binaryExpressions.Add(node);
-                }
-
-                base.VisitBinaryExpression(node);
-            }
-
-            public override void VisitIsPatternExpression(IsPatternExpressionSyntax node)
-            {
-                if (node.Pattern is ConstantPatternSyntax constantPattern &&
-                    constantPattern.Expression.IsKind(SyntaxKind.NullLiteralExpression))
-                {
-                    this.isPatterns.Add(node);
-                }
-
-                base.VisitIsPatternExpression(node);
-            }
-
-            public override void VisitInvocationExpression(InvocationExpressionSyntax node)
-            {
-                if (node.ArgumentList?.Arguments.Count == 2 &&
-                    node.ArgumentList.Arguments.TrySingle(x => x.Expression.IsKind(SyntaxKind.NullLiteralExpression), out _) &&
-                    node.TryGetMethodName(out var name) &&
-                    (name == "Equals" || name == "ReferenceEquals"))
-                {
-                    this.invocations.Add(node);
-                }
-
-                base.VisitInvocationExpression(node);
-            }
-
-            public bool TryGetFirst(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax check)
-            {
-                foreach (var binaryExpression in this.binaryExpressions)
-                {
-                    if (Is(binaryExpression.Left, parameter, semanticModel, cancellationToken) ||
-                        Is(binaryExpression.Right, parameter, semanticModel, cancellationToken))
-                    {
-                        check = binaryExpression;
-                        return true;
-                    }
-                }
-
-                foreach (var isPattern in this.isPatterns)
-                {
-                    if (Is(isPattern.Expression, parameter, semanticModel, cancellationToken))
-                    {
-                        check = isPattern;
-                        return true;
-                    }
-                }
-
-                foreach (var invocation in this.invocations)
-                {
-                    if (invocation.ArgumentList.Arguments.TryFirst(x => Is(x.Expression, parameter, semanticModel, cancellationToken), out _))
-                    {
-                        check = invocation;
-                        return true;
-                    }
-                }
-
-                check = null;
-                return false;
-            }
-
-            internal void Filter(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
-            {
-                for (var i = this.binaryExpressions.Count - 1; i >= 0; i--)
-                {
-                    var binary = this.binaryExpressions[i];
-                    if (Is(binary.Left, parameter, semanticModel, cancellationToken) ||
-                        Is(binary.Right, parameter, semanticModel, cancellationToken))
-                    {
-                        this.binaryExpressions.RemoveAt(i);
-                    }
-                }
-
-                for (var i = this.isPatterns.Count - 1; i >= 0; i--)
-                {
-                    if (Is(this.isPatterns[i], parameter, semanticModel, cancellationToken))
-                    {
-                        this.isPatterns.RemoveAt(i);
-                    }
-                }
-
-                for (var i = this.invocations.Count - 1; i >= 0; i--)
-                {
-                    var invocation = this.invocations[i];
-                    if (!invocation.ArgumentList.Arguments.TryFirst(x => Is(x.Expression, parameter, semanticModel, cancellationToken), out _))
-                    {
-                        this.invocations.RemoveAt(i);
-                    }
-                }
-            }
-
-            protected override void Clear()
-            {
-                this.binaryExpressions.Clear();
-                this.isPatterns.Clear();
-                this.invocations.Clear();
-            }
-
-            private static bool Is(ExpressionSyntax expression, IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
-            {
-                return expression is IdentifierNameSyntax identifier &&
-                       identifier.Identifier.ValueText == parameter.Name &&
-                       ParameterSymbolComparer.Equals(semanticModel.GetSymbolSafe(expression, cancellationToken) as IParameterSymbol, parameter);
-            }
         }
     }
 }

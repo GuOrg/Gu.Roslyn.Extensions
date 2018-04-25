@@ -2,8 +2,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
 
+    /// <summary>
+    /// Helpers for working with strings.
+    /// </summary>
     public static class StringHelper
     {
+        /// <summary>
+        /// Check if <paramref name="text"/> is start + end
+        /// </summary>
+        /// <param name="text">The text</param>
+        /// <param name="start">The start</param>
+        /// <param name="end">The end</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/></param>
+        /// <returns>True if <paramref name="text"/> is start + end</returns>
         public static bool IsParts(this string text, string start, string end, StringComparison stringComparison = StringComparison.Ordinal)
         {
             if (text == null)
@@ -30,6 +41,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    text.EndsWith(end, stringComparison);
         }
 
+        /// <summary>
+        /// Check if <paramref name="text"/> is start + middle + end
+        /// </summary>
+        /// <param name="text">The text</param>
+        /// <param name="start">The start</param>
+        /// <param name="middle">The middle</param>
+        /// <param name="end">The end</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/></param>
+        /// <returns>True if <paramref name="text"/> is start + end</returns>
         public static bool IsParts(this string text, string start, string middle, string end, StringComparison stringComparison = StringComparison.Ordinal)
         {
             if (text == null)

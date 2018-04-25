@@ -96,10 +96,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <summary>
+        /// Check if the invocation is nameof()
+        /// </summary>
+        /// <param name="invocation">The invocation</param>
+        /// <returns>True if the invocation is nameof()</returns>
         public static bool IsNameOf(this InvocationExpressionSyntax invocation)
         {
             return invocation.TryGetMethodName(out var name) &&
                    name == "nameof";
+        }
+
+        /// <summary>
+        /// Check if the invocation is typeof()
+        /// </summary>
+        /// <param name="invocation">The invocation</param>
+        /// <returns>True if the invocation is typeof()</returns>
+        public static bool IsTypeOf(this InvocationExpressionSyntax invocation)
+        {
+            return invocation.TryGetMethodName(out var name) &&
+                   name == "typeof";
         }
 
         public static bool TryGetInvokedSymbol(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol result)

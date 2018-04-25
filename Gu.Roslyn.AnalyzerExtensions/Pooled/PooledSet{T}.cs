@@ -8,6 +8,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Linq;
     using System.Threading;
 
+    /// <summary>
+    /// A <see cref="HashSet{T}"/> for re-use.
+    /// </summary>
+    /// <typeparam name="T">The type of items in the use.</typeparam>
     [DebuggerTypeProxy(typeof(PooledSetDebugView<>))]
     [DebuggerDisplay("Count = {this.Count}, refCount = {this.refCount}")]
     public sealed class PooledSet<T> : IDisposable, IReadOnlyCollection<T>
@@ -58,7 +62,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Add an item to the set.
+        /// <see cref="HashSet{T}.Add"/>
         /// </summary>
         /// <param name="item">The item</param>
         /// <returns>True if the item was added.</returns>

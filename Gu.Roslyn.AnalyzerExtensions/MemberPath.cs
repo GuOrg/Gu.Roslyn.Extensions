@@ -1,12 +1,20 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper fow working with member paths like foo.Bar?.Baz
+    /// </summary>
     public static class MemberPath
     {
+        /// <summary> Compares equality by path. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
         public static bool Equals(ExpressionSyntax x, ExpressionSyntax y)
         {
             if (ReferenceEquals(x, y))
@@ -43,7 +51,25 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return true;
         }
 
-        public static bool TryGetMemberName(ExpressionSyntax expression, out string name)
+        //// ReSharper disable once UnusedMember.Global
+        //// ReSharper disable UnusedParameter.Global
+#pragma warning disable SA1313 // Parameter names must begin with lower-case letter
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements must be documented
+        [Obsolete("Should only be called with arguments of type IAssemblySymbol.", error: true)]
+        public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
+#pragma warning restore SA1600 // Elements must be documented
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore SA1313 // Parameter names must begin with lower-case letter
+        //// ReSharper restore UnusedParameter.Global
+
+        /// <summary>
+        /// Try get the member name of the expression
+        /// </summary>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="name">The name.</param>
+        /// <returns>True if a name was found</returns>
+        public static bool TryGetMemberName(this ExpressionSyntax expression, out string name)
         {
             name = null;
             switch (expression)
@@ -65,6 +91,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return name != null;
         }
 
+        /// <inheritdoc />
         public sealed class PathWalker : PooledWalker<PathWalker>
         {
             private readonly List<IdentifierNameSyntax> identifierNames = new List<IdentifierNameSyntax>();
@@ -73,8 +100,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
             }
 
+            /// <summary>
+            /// Gets the <see cref="IdentifierNameSyntax"/> found in the path.
+            /// </summary>
             public IReadOnlyList<IdentifierNameSyntax> IdentifierNames => this.identifierNames;
 
+            /// <summary>
+            /// <see cref="PooledWalker{T}.Borrow"/>
+            /// </summary>
+            /// <param name="node">The path to walk.</param>
+            /// <returns>A walker</returns>
             public static PathWalker Borrow(ExpressionSyntax node)
             {
                 var walker = BorrowAndVisit(node, () => new PathWalker());
@@ -89,6 +124,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return walker;
             }
 
+            /// <inheritdoc />
             public override void Visit(SyntaxNode node)
             {
                 switch (node.Kind())
@@ -102,11 +138,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            /// <inheritdoc />
             public override void VisitIdentifierName(IdentifierNameSyntax node)
             {
                 this.identifierNames.Add(node);
             }
 
+            /// <inheritdoc />
             protected override void Clear()
             {
                 this.identifierNames.Clear();

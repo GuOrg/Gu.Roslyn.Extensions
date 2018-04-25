@@ -5,10 +5,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <inheritdoc />
     internal sealed class IdentifierTypeWalker : PooledWalker<IdentifierTypeWalker>
     {
         private readonly List<ParameterSyntax> parameters = new List<ParameterSyntax>();
-        private readonly List<VariableDeclaratorSyntax> variableDeclarators = new List<VariableDeclaratorSyntax>();
+        private readonly List<VariableDeclaratorSyntax> locals = new List<VariableDeclaratorSyntax>();
 
         /// <inheritdoc />
         public override void VisitParameter(ParameterSyntax node)
@@ -20,10 +21,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
         {
-            this.variableDeclarators.Add(node);
+            this.locals.Add(node);
             base.VisitVariableDeclarator(node);
         }
 
+        /// <summary>
+        /// Check if <paramref name="identifier"/> is a local or a parameter
+        /// </summary>
+        /// <param name="identifier">The <see cref="IdentifierNameSyntax"/></param>
+        /// <returns>True  if <paramref name="identifier"/> is a local or a parameter</returns>
         internal static bool IsLocalOrParameter(IdentifierNameSyntax identifier)
         {
             if (identifier == null)
@@ -54,7 +60,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
-                foreach (var declarator in walker.variableDeclarators)
+                foreach (var declarator in walker.locals)
                 {
                     if (identifier.Identifier.ValueText == declarator.Identifier.ValueText)
                     {
@@ -66,10 +72,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <inheritdoc />
         protected override void Clear()
         {
             this.parameters.Clear();
-            this.variableDeclarators.Clear();
+            this.locals.Clear();
         }
     }
 }

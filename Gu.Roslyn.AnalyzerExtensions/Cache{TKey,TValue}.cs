@@ -58,6 +58,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return refCount == 0 ? valueFactory(key) : Inner.GetOrAdd(key, valueFactory);
         }
 
+        /// <summary>
+        /// A transaction that decrements ref count when disposed.
+        /// </summary>
         // ReSharper disable once InconsistentNaming
         public struct Transaction_ : IDisposable
         {
