@@ -73,6 +73,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// <see cref="HashSet{T}.Remove"/>
+        /// </summary>
+        /// <param name="item">The item</param>
+        /// <returns>True if the item was Removeed.</returns>
+        public bool Remove(T item)
+        {
+            this.ThrowIfDisposed();
+            return this.inner.Remove(item);
+        }
+
+        /// <summary>
         /// <see cref="HashSet{T}.Contains"/>
         /// </summary>
         /// <param name="item">The item</param>
@@ -82,6 +93,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.ThrowIfDisposed();
             return this.inner.Contains(item);
         }
+
+        /// <summary>
+        /// <see cref="HashSet{T}.SetEquals"/>
+        /// </summary>
+        /// <param name="items">The item</param>
+        /// <returns>True if the item was added.</returns>
+        public bool SetEquals(IEnumerable<T> items) => this.inner.SetEquals(items);
+
+        /// <summary> <see cref="HashSet{T}.UnionWith"/> </summary>
+        /// <param name="other">The items to union with.</param>
+        public void UnionWith(IEnumerable<T> other) => this.inner.UnionWith(other);
+
+        /// <summary> <see cref="HashSet{T}.IntersectWith"/> </summary>
+        /// <param name="other">The items to union with.</param>
+        public void IntersectWith(IEnumerable<T> other) => this.inner.IntersectWith(other);
+
+        /// <summary> <see cref="HashSet{T}.ExceptWith"/> </summary>
+        /// <param name="other">The items to union with.</param>
+        public void ExceptWith(IEnumerable<T> other) => this.inner.ExceptWith(other);
+
+        /// <summary>
+        /// <see cref="HashSet{T}.Clear"/>
+        /// </summary>
+        public void Clear() => this.inner.Clear();
 
         /// <inheritdoc />
         public IEnumerator<T> GetEnumerator() => this.inner.GetEnumerator();
