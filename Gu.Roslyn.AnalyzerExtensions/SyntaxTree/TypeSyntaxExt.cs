@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for working with <see cref="TypeSyntax"/>
     /// </summary>
-    public static partial class TypeSyntaxExt
+    public static class TypeSyntaxExt
     {
         /// <summary>
         /// Check if the type is void
