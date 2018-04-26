@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="qualifiedType1">The first <see cref="QualifiedType"/></param>
         /// <param name="qualifiedType2">The second <see cref="QualifiedType"/></param>
         /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/></returns>
-        internal static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2) => type == qualifiedType1 || type == qualifiedType2;
+        public static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2) => type == qualifiedType1 || type == qualifiedType2;
 
         /// <summary>
         /// Check if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/> or <paramref name="qualifiedType3"/>
@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="qualifiedType2">The second <see cref="QualifiedType"/></param>
         /// <param name="qualifiedType3">The third <see cref="QualifiedType"/></param>
         /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/> or <paramref name="qualifiedType3"/></returns>
-        internal static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, QualifiedType qualifiedType3) => type == qualifiedType1 || type == qualifiedType2 || type == qualifiedType3;
+        public static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, QualifiedType qualifiedType3) => type == qualifiedType1 || type == qualifiedType2 || type == qualifiedType3;
 
         /// <summary>
         /// Check if <paramref name="type"/> is <paramref name="qualifiedType"/>
