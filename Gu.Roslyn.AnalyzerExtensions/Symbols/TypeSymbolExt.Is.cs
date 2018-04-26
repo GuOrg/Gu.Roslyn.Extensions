@@ -10,6 +10,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public static partial class TypeSymbolExt
     {
+        internal static bool IsEither(this ITypeSymbol symbol, QualifiedType t1, QualifiedType t2) => symbol == t1 || symbol == t2;
+
+        internal static bool IsEither(this ITypeSymbol symbol, QualifiedType t1, QualifiedType t2, QualifiedType t3) => symbol == t1 || symbol == t2 || symbol == t3;
+
         /// <summary>
         /// Check if <paramref name="type"/> is <paramref name="qualifiedType"/>
         /// </summary>
