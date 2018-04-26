@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard13</TargetFramework>
+    <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
     <CodeAnalysisRuleSet>Gu.Roslyn.AnalyzerExtensions.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
