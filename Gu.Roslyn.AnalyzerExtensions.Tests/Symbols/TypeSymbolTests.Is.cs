@@ -56,6 +56,29 @@ namespace RoslynSandbox
                 Assert.AreEqual(false, a.Is(b));
                 Assert.AreEqual(true, b.Is(a));
             }
+
+            [Test]
+            public void InheritsGeneric()
+            {
+                var code = @"
+namespace RoslynSandbox
+{
+    class A<T>
+    {
+    }
+
+    class B : A<int>
+    {
+    }
+}";
+                var syntaxTree = CSharpSyntaxTree.ParseText(code);
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var a = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("A"));
+                var b = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("B"));
+                Assert.AreEqual(false, a.Is(b));
+                Assert.AreEqual(true, b.Is(a));
+            }
         }
     }
 }

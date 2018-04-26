@@ -10,9 +10,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public static partial class TypeSymbolExt
     {
-        internal static bool IsEither(this ITypeSymbol symbol, QualifiedType t1, QualifiedType t2) => symbol == t1 || symbol == t2;
+        /// <summary>
+        /// Check if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>
+        /// </summary>
+        /// <param name="type">The <see cref="ITypeSymbol"/></param>
+        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/></param>
+        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/></param>
+        /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/></returns>
+        internal static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2) => type == qualifiedType1 || type == qualifiedType2;
 
-        internal static bool IsEither(this ITypeSymbol symbol, QualifiedType t1, QualifiedType t2, QualifiedType t3) => symbol == t1 || symbol == t2 || symbol == t3;
+        /// <summary>
+        /// Check if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/> or <paramref name="qualifiedType3"/>
+        /// </summary>
+        /// <param name="type">The <see cref="ITypeSymbol"/></param>
+        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/></param>
+        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/></param>
+        /// <param name="qualifiedType3">The third <see cref="QualifiedType"/></param>
+        /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/> or <paramref name="qualifiedType3"/></returns>
+        internal static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, QualifiedType qualifiedType3) => type == qualifiedType1 || type == qualifiedType2 || type == qualifiedType3;
 
         /// <summary>
         /// Check if <paramref name="type"/> is <paramref name="qualifiedType"/>
@@ -117,7 +132,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return x is INamedTypeSymbol firstNamed &&
                    y is INamedTypeSymbol otherNamed &&
-                   NamedTypeSymbolComparer.Equals(firstNamed, otherNamed);
+                   IsSameType(firstNamed, otherNamed);
         }
 
         /// <summary> Check if <paramref name="x"/> is the same type as <paramref name="y"/> </summary>
