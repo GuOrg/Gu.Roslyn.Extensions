@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helper methods for working with <see cref="TypeDeclarationSyntax"/>
     /// </summary>
-    public static partial class TypeSyntaxExt
+    public static class TypeDeclarationSyntaxExt
     {
         /// <summary>
         /// Find a <see cref="FieldDeclarationSyntax"/> by name.

@@ -11,6 +11,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class SyntaxNodeExt
     {
         /// <summary>
+        /// Get the <see cref="FileLinePositionSpan"/> for the token in the containing document.
+        /// </summary>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="FileLinePositionSpan"/> for the token in the containing document.</returns>
+        public static FileLinePositionSpan FileLinePositionSpan(this SyntaxNode node, CancellationToken cancellationToken)
+        {
+            return node.SyntaxTree.GetLineSpan(node.Span, cancellationToken);
+        }
+
+        /// <summary>
         /// Check if <paramref name="node"/> is either of <paramref name="kind1"/> or <paramref name="kind2"/>
         /// </summary>
         /// <param name="node">The <see cref="SyntaxNode"/></param>

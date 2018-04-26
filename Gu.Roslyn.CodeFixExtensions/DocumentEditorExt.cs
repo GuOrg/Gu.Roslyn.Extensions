@@ -34,11 +34,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor ReplaceToken(this DocumentEditor editor, SyntaxToken oldToken, SyntaxToken newToken)
         {
-            editor.ReplaceNode(oldToken.Parent, (x, g) =>
-            {
-                var syntaxToken = x.FindToken(oldToken.SpanStart);
-                return x.ReplaceToken(syntaxToken, newToken);
-            });
+            editor.ReplaceNode(oldToken.Parent, oldToken.Parent.ReplaceToken(oldToken, newToken));
             return editor;
         }
 
