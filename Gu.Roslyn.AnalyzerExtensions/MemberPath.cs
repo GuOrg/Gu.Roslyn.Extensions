@@ -71,9 +71,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if root was found.</returns>
         public static bool TryFindRoot(ExpressionSyntax expression, out IdentifierNameSyntax member)
         {
-            using (var xWalker = PathWalker.Borrow(expression))
+            using (var walker = PathWalker.Borrow(expression))
             {
-                return xWalker.IdentifierNames.TryFirst(out member);
+                return walker.IdentifierNames.TryFirst(out member);
             }
         }
 
@@ -127,14 +127,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             public static PathWalker Borrow(ExpressionSyntax node)
             {
                 var walker = BorrowAndVisit(node, () => new PathWalker());
-                if (walker.identifierNames.TryFirst(out var first))
-                {
-                    if (IdentifierTypeWalker.IsLocalOrParameter(first))
-                    {
-                        walker.identifierNames.Clear();
-                    }
-                }
-
                 return walker;
             }
 

@@ -24,7 +24,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             [TestCase("this.foo.Inner.foo?.Inner", "foo")]
             [TestCase("(meh as Foo)?.Inner", "meh")]
             [TestCase("((Foo)meh)?.Inner", "meh")]
-            public void ForPropertyOrField(string code, string expected)
+            public void PropertyOrField(string code, string expected)
             {
                 var testCode = @"
 namespace RoslynSandbox
@@ -103,6 +103,39 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
                 var invocation = syntaxTree.FindExpression(code);
                 Assert.AreEqual(true, MemberPath.TryFindRoot(invocation, out var member));
+                Assert.AreEqual(expected, member.ToString());
+
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var symbol = semanticModel.GetSymbolSafe(member, CancellationToken.None);
+                Assert.AreEqual(expected, symbol.Name);
+            }
+
+            [TestCase("foo.Inner", "foo")]
+            public void MemberAccessExpression(string code, string expected)
+            {
+                var testCode = @"
+namespace RoslynSandbox
+{
+    public sealed class Foo
+    {
+        private readonly Foo foo;
+
+        public Foo(Foo foo, Foo inner)
+        {
+            this.foo = foo;
+            this.Inner = inner;
+        }
+
+        public static object Bar(Foo foo) => foo.Inner;
+
+        public Foo Inner { get; }
+    }
+}";
+                testCode = testCode.AssertReplace("foo.Inner", code);
+                var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+                var value = syntaxTree.FindMemberAccessExpression(code);
+                Assert.AreEqual(true, MemberPath.TryFindRoot(value, out var member));
                 Assert.AreEqual(expected, member.ToString());
 
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
