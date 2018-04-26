@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// For comparison with roslyn <see cref="IEventSymbol"/>.
     /// </summary>
-    internal class QualifiedEvent : QualifiedMember<IEventSymbol>
+    public class QualifiedEvent : QualifiedMember<IEventSymbol>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="QualifiedEvent"/> class.

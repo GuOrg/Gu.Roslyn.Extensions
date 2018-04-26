@@ -177,5 +177,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    (right.Alias != null &&
                     left == right.Alias);
         }
+
+        /// <summary>
+        /// Contains types from the System namespace.
+        /// </summary>
+        public static class System
+        {
+            /// <summary> System.Void </summary>
+            public static readonly QualifiedType Void = new QualifiedType("System.Void", "void");
+
+            /// <summary> System.Object </summary>
+            public static readonly QualifiedType Object = new QualifiedType("System.Object", "object");
+
+            /// <summary> System.Boolean </summary>
+            public static readonly QualifiedType Boolean = new QualifiedType("System.Boolean", "bool");
+
+            /// <summary> System.String </summary>
+            public static readonly QualifiedType String = new QualifiedType("System.String", "string");
+
+            /// <summary> System.Linq </summary>
+            public static class Linq
+            {
+                /// <summary> System.Linq.Expressions.Expression </summary>
+                internal static readonly QualifiedType Expression = new QualifiedType("System.Linq.Expressions.Expression");
+            }
+        }
     }
 }

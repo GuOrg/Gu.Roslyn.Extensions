@@ -76,7 +76,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (other == KnownSymbol.System.Object)
+            if (other == QualifiedType.System.Object)
             {
                 return true;
             }

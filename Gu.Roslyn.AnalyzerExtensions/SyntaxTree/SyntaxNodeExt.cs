@@ -94,7 +94,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 var lambdaType = semanticModel.GetTypeInfoSafe(lambda, cancellationToken).ConvertedType;
                 if (lambdaType != null &&
-                    lambdaType.Is(KnownSymbol.System.Linq.Expression))
+                    lambdaType.Is(QualifiedType.System.Linq.Expression))
                 {
                     return true;
                 }
