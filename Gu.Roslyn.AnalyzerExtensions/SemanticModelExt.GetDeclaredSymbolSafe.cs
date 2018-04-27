@@ -210,7 +210,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Same as SemanticModel.GetDeclaredSymbol but works when <paramref name="node"/> is not in the syntax tree.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="node">The <see cref="ConstructorDeclarationSyntax"/></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>An <see cref="IMethodSymbol"/> or null</returns>
         public static IMethodSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, ConstructorDeclarationSyntax node, CancellationToken cancellationToken)
