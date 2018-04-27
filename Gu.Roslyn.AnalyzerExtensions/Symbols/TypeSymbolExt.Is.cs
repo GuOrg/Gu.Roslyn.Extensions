@@ -166,24 +166,47 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/></returns>
         public static bool IsNullable(this ITypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            var namedTypeSymbol = nullableType as INamedTypeSymbol;
-            if (namedTypeSymbol == null ||
-                !namedTypeSymbol.IsGenericType ||
-                namedTypeSymbol.Name != "Nullable" ||
-                namedTypeSymbol.TypeParameters.Length != 1)
+            if (nullableType == null ||
+                value == null)
             {
                 return false;
             }
 
-            if (value.IsKind(SyntaxKind.NullLiteralExpression))
+
+            return nullableType is INamedTypeSymbol namedType &&
+                   IsNullable(namedType, value, semanticModel, cancellationToken);
+        }
+
+        /// <summary>
+        /// Check if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>
+        /// </summary>
+        /// <param name="nullableType">The <see cref="ITypeSymbol"/></param>
+        /// <param name="value">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/></returns>
+        public static bool IsNullable(this INamedTypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (nullableType == null ||
+                value == null)
             {
-                return true;
+                return false;
             }
 
-            return semanticModel.TryGetTypeInfo(value, cancellationToken, out ITypeSymbol type) &&
-                   type is INamedTypeSymbol namedType &&
-                   namedType.TypeArguments.TrySingle(out var typeArg) &&
-                   IsSameType(typeArg, nullableType);
+            if (nullableType.IsGenericType &&
+                nullableType.Name == "Nullable" &&
+                nullableType.TypeArguments.TrySingle(out var typeArg))
+            {
+                if (value.IsKind(SyntaxKind.NullLiteralExpression))
+                {
+                    return true;
+                }
+
+                return semanticModel.TryGetTypeInfo(value, cancellationToken, out var type) &&
+                       IsSameType(typeArg, type);
+            }
+
+            return false;
         }
 
         private static bool AreEquivalent(this INamedTypeSymbol first, INamedTypeSymbol other)

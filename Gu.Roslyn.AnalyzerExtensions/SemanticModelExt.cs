@@ -103,8 +103,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            if (conversion.IsNullable &&
-                conversion.IsNullLiteral)
+            if (conversion.IsNullable)
+            {
+                if (conversion.IsNullLiteral)
+                {
+                    return true;
+                }
+
+                if (TypeSymbolExt.IsNullable(destination, expression, semanticModel, cancellationToken))
+                {
+                    return true;
+                }
+            }
+
+            if (conversion.IsBoxing ||
+                conversion.IsUnboxing)
             {
                 return true;
             }
@@ -112,6 +125,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (conversion.IsBoxing ||
                 conversion.IsUnboxing)
             {
+                if (expression is CastExpressionSyntax castExpression)
+                {
+                    return IsRepresentationPreservingConversion(
+                        semanticModel,
+                        castExpression.Expression,
+                        destination,
+                        cancellationToken);
+                }
+
                 return true;
             }
 
