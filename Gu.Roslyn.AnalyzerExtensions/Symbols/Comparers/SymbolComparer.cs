@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
         }
 
-        /// <summary> Determines equality by delegating to other comparares. </summary>
+        /// <summary> Determines equality by delegating to other compare. </summary>
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
