@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{26F7F8AB
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Roslyn.Extensions", "Gu.Roslyn.Extensions\Gu.Roslyn.Extensions.csproj", "{8BD4D6BB-9421-405B-8BAF-701BB05E3A06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{2D651617-731A-4453-BE69-883CE6797881}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D651617-731A-4453-BE69-883CE6797881}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D651617-731A-4453-BE69-883CE6797881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BD4D6BB-9421-405B-8BAF-701BB05E3A06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BD4D6BB-9421-405B-8BAF-701BB05E3A06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BD4D6BB-9421-405B-8BAF-701BB05E3A06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BD4D6BB-9421-405B-8BAF-701BB05E3A06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

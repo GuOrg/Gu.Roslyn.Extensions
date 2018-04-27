@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard13</TargetFramework>
+    <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>0.2.1.3-dev</Version>
+    <Authors>Johan Larsson</Authors>
+    <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
+    <PackageTags>roslyn analyzer codefix</PackageTags>
+    <PackageReleaseNotes>Bugfixes EnumerableExt</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" 
+             Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" />
+    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" 
+             Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" />
+  </ItemGroup>
+
+  <Import Project="..\.paket\Paket.Restore.targets" />
+</Project>
