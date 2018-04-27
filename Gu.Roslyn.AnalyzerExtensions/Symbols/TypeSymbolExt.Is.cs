@@ -130,11 +130,35 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (x is ITypeParameterSymbol firstParameter &&
-                y is ITypeParameterSymbol otherParameter)
+            if (x is ITypeParameterSymbol xtp)
             {
-                return firstParameter.MetadataName == otherParameter.MetadataName &&
-                       firstParameter.ContainingSymbol.Equals(otherParameter.ContainingSymbol);
+                if (y is ITypeParameterSymbol ytp)
+                {
+                    return xtp.MetadataName == ytp.MetadataName &&
+                           SymbolComparer.Equals(xtp.ContainingSymbol, ytp.ContainingSymbol);
+                }
+
+                foreach (var constraintType in xtp.ConstraintTypes)
+                {
+                    if (Is(constraintType, y))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            else if (y is ITypeParameterSymbol ytp)
+            {
+                foreach (var constraintType in ytp.ConstraintTypes)
+                {
+                    if (Is(x, constraintType))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             return x is INamedTypeSymbol firstNamed &&
@@ -159,8 +183,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return IsSameType(x.OriginalDefinition, y.OriginalDefinition);
             }
 
-            return x.Equals(y) ||
-                   AreEquivalent(x, y);
+            return NamedTypeSymbolComparer.Equals(x, y);
         }
 
         /// <summary>
@@ -214,37 +237,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
-        }
-
-        private static bool AreEquivalent(this INamedTypeSymbol first, INamedTypeSymbol other)
-        {
-            if (ReferenceEquals(first, other))
-            {
-                return true;
-            }
-
-            if (first == null ||
-                other == null)
-            {
-                return false;
-            }
-
-            if (first.MetadataName != other.MetadataName ||
-                first.ContainingModule.MetadataName != other.ContainingModule.MetadataName ||
-                first.Arity != other.Arity)
-            {
-                return false;
-            }
-
-            for (var i = 0; i < first.Arity; i++)
-            {
-                if (!IsSameType(first.TypeArguments[i], other.TypeArguments[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }
