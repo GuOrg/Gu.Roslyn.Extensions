@@ -196,12 +196,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="IFieldSymbol"/> or null</returns>
         public static IFieldSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, FieldDeclarationSyntax node, CancellationToken cancellationToken)
         {
-            if (node?.Declaration == null)
-            {
-                return null;
-            }
-
-            if (node.Declaration.Variables.TrySingle(out var variable))
+            if (node?.Declaration is VariableDeclarationSyntax variableDeclaration &&
+                variableDeclaration.Variables.TrySingle(out var variable))
             {
                 return (IFieldSymbol)semanticModel.SemanticModelFor(node)
                                                   ?.GetDeclaredSymbol(variable, cancellationToken);
