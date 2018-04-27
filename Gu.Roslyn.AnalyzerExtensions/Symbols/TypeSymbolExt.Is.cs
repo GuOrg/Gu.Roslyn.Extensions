@@ -202,7 +202,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-
             return nullableType is INamedTypeSymbol namedType &&
                    IsNullable(namedType, value, semanticModel, cancellationToken);
         }
