@@ -6,32 +6,32 @@ namespace Gu.Roslyn.CodeFixExtensions
 
     public static class Parse
     {
-        public FieldDeclarationSyntax FieldDeclaration(string code)
+        public static FieldDeclarationSyntax FieldDeclaration(string code)
         {
             return (FieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
         }
 
-        public ConstructorDeclarationSyntax ConstructorDeclaration(string code)
+        public static ConstructorDeclarationSyntax ConstructorDeclaration(string code)
         {
             return (ConstructorDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
         }
 
-        public EventFieldDeclarationSyntax EventFieldDeclaration(string code)
+        public static EventFieldDeclarationSyntax EventFieldDeclaration(string code)
         {
             return (EventFieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
         }
 
-        public EventDeclarationSyntax EventDeclaration(string code)
+        public static EventDeclarationSyntax EventDeclaration(string code)
         {
             return (EventDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
         }
 
-        public PropertyDeclarationSyntax PropertyDeclaration(string code)
+        public static PropertyDeclarationSyntax PropertyDeclaration(string code)
         {
             return (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
         }
 
-        public MethodDeclarationSyntax MethodDeclaration(string code)
+        public static MethodDeclarationSyntax MethodDeclaration(string code)
         {
             return (MethodDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
         }
