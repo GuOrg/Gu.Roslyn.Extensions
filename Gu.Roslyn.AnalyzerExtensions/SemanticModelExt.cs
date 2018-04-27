@@ -85,6 +85,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a boxed instance can be cast.</returns>
         public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax expression, ITypeSymbol destination,  CancellationToken cancellationToken)
         {
+            if (expression == null || destination == null)
+            {
+                return false;
+            }
+
+            switch (expression)
+            {
+                case CastExpressionSyntax cast:
+                    return IsRepresentationPreservingConversion(
+                        semanticModel,
+                        cast.Expression,
+                        destination,
+                        cancellationToken);
+                case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
+                    return IsRepresentationPreservingConversion(
+                        semanticModel,
+                        binary.Left,
+                        destination,
+                        cancellationToken);
+            }
+
             var conversion = semanticModel.SemanticModelFor(expression)
                                           .ClassifyConversion(expression, destination);
             if (!conversion.Exists)
@@ -119,21 +140,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (conversion.IsBoxing ||
                 conversion.IsUnboxing)
             {
-                return true;
-            }
-
-            if (conversion.IsBoxing ||
-                conversion.IsUnboxing)
-            {
-                if (expression is CastExpressionSyntax castExpression)
-                {
-                    return IsRepresentationPreservingConversion(
-                        semanticModel,
-                        castExpression.Expression,
-                        destination,
-                        cancellationToken);
-                }
-
                 return true;
             }
 

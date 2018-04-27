@@ -43,7 +43,9 @@ namespace RoslynSandbox
             }
 
             [TestCase("Cast<int?>(1)")]
+            [TestCase("Cast<int?>((object)1)")]
             [TestCase("Cast<int?>(null)")]
+            [TestCase("Cast<int?>((object)null)")]
             [TestCase("Cast<int?>(arg)")]
             public void TrueWhenNullable(string call)
             {
@@ -71,6 +73,9 @@ namespace RoslynSandbox
             }
 
             [TestCase("Cast<int>(1.0)")]
+            [TestCase("Cast<int>(null)")]
+            [TestCase("Cast<int>((object)null)")]
+            [TestCase("Cast<int>((object)1.0)")]
             [TestCase("Cast<double>(1)")]
             public void FalseWhen(string call)
             {
