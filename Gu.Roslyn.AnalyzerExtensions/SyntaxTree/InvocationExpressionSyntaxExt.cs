@@ -1,7 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Threading;
-    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -116,39 +114,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             return invocation.TryGetMethodName(out var name) &&
                    name == "typeof";
-        }
-
-        /// <summary>
-        /// Try to get the method symbol if it matches <paramref name="expected"/>
-        /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
-        /// <param name="expected">The <see cref="QualifiedMethod"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The <see cref="IMethodSymbol"/></param>
-        /// <returns>True if the invocation is for the expected method.</returns>
-        public static bool TryGetInvokedSymbol(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol result)
-        {
-            result = null;
-            if (invocation == null)
-            {
-                return false;
-            }
-
-            if (invocation.TryGetMethodName(out var name) &&
-                name != expected.Name)
-            {
-                return false;
-            }
-
-            if (semanticModel.GetSymbolSafe(invocation, cancellationToken) is IMethodSymbol candidate &&
-                candidate == expected)
-            {
-                result = candidate;
-                return true;
-            }
-
-            return false;
         }
     }
 }

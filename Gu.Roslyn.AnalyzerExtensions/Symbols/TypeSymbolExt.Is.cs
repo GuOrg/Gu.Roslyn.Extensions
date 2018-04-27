@@ -231,7 +231,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
                 }
 
-                return semanticModel.TryGetTypeInfo(value, cancellationToken, out var type) &&
+                return semanticModel.TryGetType(value, cancellationToken, out var type) &&
                        IsSameType(typeArg, type);
             }
 

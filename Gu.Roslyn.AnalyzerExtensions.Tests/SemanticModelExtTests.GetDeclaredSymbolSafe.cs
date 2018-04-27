@@ -22,7 +22,7 @@ namespace RoslynSandbox
 }");
 
             [Test]
-            public void GetDeclaredSymbolSafeType()
+            public void ClassDeclaration()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -39,11 +39,13 @@ namespace RoslynSandbox
                 var node = syntaxTree.FindClassDeclaration("Foo");
                 var expected = semanticModel.GetDeclaredSymbol(node);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
             [Test]
-            public void GetDeclaredSymbolSafeField()
+            public void FieldDeclaration()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -60,11 +62,13 @@ namespace RoslynSandbox
                 var node = syntaxTree.FindFieldDeclaration("bar");
                 var expected = semanticModel.GetDeclaredSymbol(node.Declaration.Variables[0]);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
             [Test]
-            public void GetDeclaredSymbolSafeConstructor()
+            public void ConstructorDeclaration()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -83,58 +87,42 @@ namespace RoslynSandbox
                 var node = syntaxTree.FindConstructorDeclaration("Foo");
                 var expected = semanticModel.GetDeclaredSymbol(node);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
             [Test]
-            public void GetDeclaredSymbolSafeParameter()
+            public void EventDeclaration()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
 namespace RoslynSandbox
 {
-    internal class Foo
+    using System;
+
+    public class Foo
     {
-        internal Foo(int i, double d)
+        public event EventHandler Bar
         {
+            add { throw new NotImplementedException(); }
+            remove { throw new NotImplementedException(); }
         }
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var otherModel = compilation.GetSemanticModel(OtherTree);
-                var node = syntaxTree.FindParameter("i");
+                var node = syntaxTree.FindEventDeclaration("Bar");
                 var expected = semanticModel.GetDeclaredSymbol(node);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
             [Test]
-            public void GetDeclaredSymbolSafeVariable()
-            {
-                var syntaxTree = CSharpSyntaxTree.ParseText(
-                    @"
-namespace RoslynSandbox
-{
-    internal class Foo
-    {
-        internal Foo()
-        {
-            var i = 1;
-        }
-    }
-}");
-                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
-                var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var otherModel = compilation.GetSemanticModel(OtherTree);
-                var node = syntaxTree.FindVariableDeclaration("i");
-                var expected = semanticModel.GetDeclaredSymbol(node.Variables[0]);
-                Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
-                Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
-            }
-
-            [Test]
-            public void GetDeclaredSymbolSafeEvent()
+            public void EventFieldDeclaration()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -147,17 +135,19 @@ namespace RoslynSandbox
         public event EventHandler Bar;
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var otherModel = compilation.GetSemanticModel(OtherTree);
                 var node = syntaxTree.FindEventFieldDeclaration("Bar");
-                var expected = semanticModel.GetDeclaredSymbol(node);
+                var expected = semanticModel.GetDeclaredSymbol(node.Declaration.Variables[0]);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
             [Test]
-            public void GetDeclaredSymbolSafeProperty()
+            public void PropertyDeclaration()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -175,11 +165,13 @@ namespace RoslynSandbox
                 var expected = semanticModel.GetDeclaredSymbol(node);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe((BasePropertyDeclarationSyntax)node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
             [Test]
-            public void GetDeclaredSymbolSafeIndexer()
+            public void IndexerDeclaration()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -203,7 +195,7 @@ namespace RoslynSandbox
             }
 
             [Test]
-            public void GetDeclaredSymbolSafeMethod()
+            public void MethodDeclaration()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
@@ -222,6 +214,83 @@ namespace RoslynSandbox
                 var node = syntaxTree.FindMethodDeclaration("Bar");
                 var expected = semanticModel.GetDeclaredSymbol(node);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
+            public void Parameter()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo(int i, double d)
+        {
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var otherModel = compilation.GetSemanticModel(OtherTree);
+                var node = syntaxTree.FindParameter("i");
+                var expected = semanticModel.GetDeclaredSymbol(node);
+                Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
+                Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
+            public void VariableDeclaration()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo()
+        {
+            var i = 1;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var otherModel = compilation.GetSemanticModel(OtherTree);
+                var node = syntaxTree.FindVariableDeclaration("i");
+                var expected = semanticModel.GetDeclaredSymbol(node.Variables[0]);
+                Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
+                Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
+            public void VariableDesignation()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo()
+        {
+            int.TryParse(string.Empty, out var i);
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var otherModel = compilation.GetSemanticModel(OtherTree);
+                var node = syntaxTree.Find<VariableDesignationSyntax>("out var i");
+                var expected = semanticModel.GetDeclaredSymbol(node);
+                Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
         }
