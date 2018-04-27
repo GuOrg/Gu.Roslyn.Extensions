@@ -10,5 +10,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var declaration = Parse.FieldDeclaration(code);
             Assert.AreEqual(code, declaration.ToString());
         }
+
+        [TestCase("public Foo(){}")]
+        public void ConstructorDeclaration(string code)
+        {
+            var declaration = Parse.ConstructorDeclaration(code);
+            Assert.AreEqual(code, declaration.ToString());
+        }
     }
 }
