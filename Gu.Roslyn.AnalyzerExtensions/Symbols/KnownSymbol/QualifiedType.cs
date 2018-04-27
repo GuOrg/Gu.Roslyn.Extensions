@@ -189,6 +189,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <summary> System.Object </summary>
             public static readonly QualifiedType Object = new QualifiedType("System.Object", "object");
 
+            /// <summary> System.Nullable`1 </summary>
+            internal static readonly QualifiedType NullableOfT = new QualifiedType("System.Nullable`1");
+
             /// <summary> System.Boolean </summary>
             public static readonly QualifiedType Boolean = new QualifiedType("System.Boolean", "bool");
 

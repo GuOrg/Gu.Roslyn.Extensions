@@ -9,6 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
         public class Is
         {
             [TestCase("int value1, int value2")]
+            [TestCase("int value1, int? value2")]
             [TestCase("int value1, System.IComparable value2")]
             [TestCase("int value1, System.IComparable<int> value2")]
             [TestCase("int value1, object value2")]

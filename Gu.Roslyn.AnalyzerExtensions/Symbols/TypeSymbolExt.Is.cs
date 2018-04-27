@@ -81,6 +81,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
+            if (other == QualifiedType.System.NullableOfT)
+            {
+                return other is INamedTypeSymbol nullable &&
+                       nullable.TypeArguments.TrySingle(out var arg) &&
+                       IsSameType(type, arg);
+            }
+
             if (other.TypeKind == TypeKind.Interface)
             {
                 foreach (var @interface in type.AllInterfaces)
