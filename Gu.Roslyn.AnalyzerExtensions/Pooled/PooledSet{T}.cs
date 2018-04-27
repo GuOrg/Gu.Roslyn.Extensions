@@ -7,6 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
+    using Microsoft.CodeAnalysis;
 
     /// <summary>
     /// A <see cref="HashSet{T}"/> for re-use.
@@ -17,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public sealed class PooledSet<T> : IDisposable, IReadOnlyCollection<T>
     {
         private static readonly ConcurrentQueue<PooledSet<T>> Cache = new ConcurrentQueue<PooledSet<T>>();
-        private readonly HashSet<T> inner = new HashSet<T>();
+        private readonly HashSet<T> inner = new HashSet<T>(GetComparer());
 
         private int refCount;
 
@@ -133,6 +134,66 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 this.inner.Clear();
                 Cache.Enqueue(this);
             }
+        }
+
+        private static IEqualityComparer<T> GetComparer()
+        {
+            if (typeof(T) == typeof(IAssemblySymbol))
+            {
+                return (IEqualityComparer<T>)AssemblySymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(IEventSymbol))
+            {
+                return (IEqualityComparer<T>)EventSymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(IFieldSymbol))
+            {
+                return (IEqualityComparer<T>)FieldSymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(ILocalSymbol))
+            {
+                return (IEqualityComparer<T>)LocalSymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(IMethodSymbol))
+            {
+                return (IEqualityComparer<T>)MethodSymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(INamedTypeSymbol))
+            {
+                return (IEqualityComparer<T>)NamedTypeSymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(INamespaceSymbol))
+            {
+                return (IEqualityComparer<T>)NamespaceSymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(IParameterSymbol))
+            {
+                return (IEqualityComparer<T>)ParameterSymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(IPropertySymbol))
+            {
+                return (IEqualityComparer<T>)PropertySymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(ISymbol))
+            {
+                return (IEqualityComparer<T>)SymbolComparer.Default;
+            }
+
+            if (typeof(T) == typeof(ITypeSymbol))
+            {
+                return (IEqualityComparer<T>)TypeSymbolComparer.Default;
+            }
+
+            return EqualityComparer<T>.Default;
         }
 
         [Conditional("DEBUG")]
