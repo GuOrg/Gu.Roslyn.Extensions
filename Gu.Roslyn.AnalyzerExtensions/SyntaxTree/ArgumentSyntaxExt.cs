@@ -119,7 +119,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/></param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
         /// <returns>True if a matching poarameter was found.</returns>
-        public static bool TryGetMatchingParameter(this ArgumentSyntax argument, BaseMethodDeclarationSyntax method, out ParameterSyntax parameter)
+        public static bool TryFindParameter(this ArgumentSyntax argument, BaseMethodDeclarationSyntax method, out ParameterSyntax parameter)
         {
             return method.TryGetMatchingParameter(argument, out parameter);
         }
@@ -131,7 +131,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="method">The <see cref="IMethodSymbol"/></param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
         /// <returns>True if a matching poarameter was found.</returns>
-        public static bool TryGetMatchingParameter(this ArgumentSyntax argument, IMethodSymbol method, out IParameterSymbol parameter)
+        public static bool TryFindParameter(this ArgumentSyntax argument, IMethodSymbol method, out IParameterSymbol parameter)
         {
             return method.TryFindParameter(argument, out parameter);
         }

@@ -19,10 +19,10 @@ Extensions for analyzers &amp; code fixes.
     - [TryFindMemberRecursive](#tryfindmemberrecursive)
 - [Syntax](#syntax)
   - [ArgumentListSyntaxExt](#argumentlistsyntaxext)
-    - [TryGetMatchingArgument](#trygetmatchingargument)
+    - [TryFind](#tryfind)
   - [ArgumentSyntaxExt](#argumentsyntaxext)
     - [TryGetStringValue](#trygetstringvalue)
-    - [TryGetMatchingParameter](#trygetmatchingparameter)
+    - [TryFindParameter](#tryfindparameter)
   - [BasePropertyDeclarationSyntaxExt](#basepropertydeclarationsyntaxext)
     - [TryGetGetter and TryGetSetter](#trygetgetter-and-trygetsetter)
     - [IsGetOnly](#isgetonly)
@@ -123,7 +123,7 @@ Find members by name or predicate in type or base types.
 
 ## ArgumentListSyntaxExt
 
-### TryGetMatchingArgument
+### TryFind
 
 Find the argument that matches the parameter.
 
@@ -133,7 +133,7 @@ Find the argument that matches the parameter.
 
 Try get the constant string value of the argument.
 
-### TryGetMatchingParameter
+### TryFindParameter
 
 Try get the matching parameter
 
