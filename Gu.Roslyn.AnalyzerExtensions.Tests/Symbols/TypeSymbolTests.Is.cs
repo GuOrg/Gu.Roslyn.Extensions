@@ -13,6 +13,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
             [TestCase("int value1, System.IComparable value2")]
             [TestCase("int value1, System.IComparable<int> value2")]
             [TestCase("int value1, object value2")]
+            [TestCase("System.Collections.Generic.IEnumerable<int> value1, System.Collections.Generic.IEnumerable<int> value2")]
+            [TestCase("System.Collections.Generic.IEnumerable<int> value1, System.Collections.IEnumerable value2")]
             public void WhenTrue(string parameters)
             {
                 var code = @"
@@ -38,6 +40,8 @@ namespace RoslynSandbox
             [TestCase("int value", "System.Int32")]
             [TestCase("int value", "System.IComparable")]
             [TestCase("int value", "System.IComparable`1")]
+            [TestCase("System.Collections.Generic.IEnumerable<int> value", "System.Collections.Generic.IEnumerable`1")]
+            [TestCase("System.Collections.Generic.IEnumerable<int> value", "System.Collections.IEnumerable")]
             public void WhenTrueQualifiedType(string parameters, string typeName)
             {
                 var code = @"
@@ -56,7 +60,8 @@ namespace RoslynSandbox
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
                 var type = ctor.Parameters[0].Type;
-                Assert.AreEqual(true, type.Is(new QualifiedType(typeName)));
+                var qualifiedType = new QualifiedType(typeName);
+                Assert.AreEqual(true, type.Is(qualifiedType));
             }
 
             [Test]

@@ -55,19 +55,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
+            foreach (var @interface in type.AllInterfaces)
+            {
+                if (@interface == qualifiedType)
+                {
+                    return true;
+                }
+            }
+
             while (type != null)
             {
                 if (type == qualifiedType)
                 {
                     return true;
-                }
-
-                foreach (var @interface in type.AllInterfaces)
-                {
-                    if (@interface == qualifiedType)
-                    {
-                        return true;
-                    }
                 }
 
                 type = type.BaseType;
@@ -89,7 +89,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (other == QualifiedType.System.Object)
+            if (other == QualifiedType.System.Object ||
+                IsSameType(type, other))
             {
                 return true;
             }
@@ -101,17 +102,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                        IsSameType(type, arg);
             }
 
-            if (other.TypeKind == TypeKind.Interface)
+            foreach (var @interface in type.AllInterfaces)
             {
-                foreach (var @interface in type.AllInterfaces)
+                if (IsSameType(@interface, other))
                 {
-                    if (IsSameType(@interface, other))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-
-                return false;
             }
 
             while (type?.BaseType != null)
