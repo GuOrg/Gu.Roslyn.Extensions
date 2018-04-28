@@ -71,22 +71,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            switch (expression)
-            {
-                case CastExpressionSyntax cast:
-                    return IsRepresentationPreservingConversion(
-                        semanticModel,
-                        cast.Expression,
-                        destination,
-                        cancellationToken);
-                case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
-                    return IsRepresentationPreservingConversion(
-                        semanticModel,
-                        binary.Left,
-                        destination,
-                        cancellationToken);
-            }
-
             var conversion = semanticModel.SemanticModelFor(expression)
                                           .ClassifyConversion(expression, destination);
             if (!conversion.Exists)
@@ -118,13 +102,29 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            if (conversion.IsBoxing ||
-                conversion.IsUnboxing)
+            if (destination.IsNullable(expression, semanticModel, cancellationToken))
             {
                 return true;
             }
 
-            if (destination.IsNullable(expression, semanticModel, cancellationToken))
+            switch (expression)
+            {
+                case CastExpressionSyntax cast:
+                    return IsRepresentationPreservingConversion(
+                        semanticModel,
+                        cast.Expression,
+                        destination,
+                        cancellationToken);
+                case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
+                    return IsRepresentationPreservingConversion(
+                        semanticModel,
+                        binary.Left,
+                        destination,
+                        cancellationToken);
+            }
+
+            if (conversion.IsBoxing ||
+                conversion.IsUnboxing)
             {
                 return true;
             }

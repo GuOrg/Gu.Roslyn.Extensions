@@ -35,6 +35,30 @@ namespace RoslynSandbox
                 Assert.AreEqual(true, type1.Is(type2));
             }
 
+            [TestCase("int value", "System.Int32")]
+            [TestCase("int value", "System.IComparable")]
+            [TestCase("int value", "System.IComparable`1")]
+            public void WhenTrueQualifiedType(string parameters, string typeName)
+            {
+                var code = @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo(int value)
+        {
+        }
+    }
+}";
+                code = code.AssertReplace("int value", parameters);
+                var syntaxTree = CSharpSyntaxTree.ParseText(code);
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
+                var type = ctor.Parameters[0].Type;
+                Assert.AreEqual(true, type.Is(new QualifiedType(typeName)));
+            }
+
             [Test]
             public void Inheritance()
             {

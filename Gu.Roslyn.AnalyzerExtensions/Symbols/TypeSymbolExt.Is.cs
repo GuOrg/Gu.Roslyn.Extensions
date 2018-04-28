@@ -42,6 +42,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
+            if (type is ITypeParameterSymbol typeParameterSymbol)
+            {
+                foreach (var constraintType in typeParameterSymbol.ConstraintTypes)
+                {
+                    if (Is(constraintType, qualifiedType))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             while (type != null)
             {
                 if (type == qualifiedType)
