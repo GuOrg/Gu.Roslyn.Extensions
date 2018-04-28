@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <inheritdoc />
-    public class ConstructorDeclarationComparer : IComparer<ConstructorDeclarationSyntax>
+    public sealed class ConstructorDeclarationComparer : IComparer<ConstructorDeclarationSyntax>
     {
         /// <summary> The default instance. </summary>
         public static readonly ConstructorDeclarationComparer Default = new ConstructorDeclarationComparer();

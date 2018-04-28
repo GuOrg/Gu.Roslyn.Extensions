@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
-    public class FieldSymbolComparer : IEqualityComparer<IFieldSymbol>
+    public sealed class FieldSymbolComparer : IEqualityComparer<IFieldSymbol>
     {
         /// <summary> The default instance. </summary>
         public static readonly FieldSymbolComparer Default = new FieldSymbolComparer();

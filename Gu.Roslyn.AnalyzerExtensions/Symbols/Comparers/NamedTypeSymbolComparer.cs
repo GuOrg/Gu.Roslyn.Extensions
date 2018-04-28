@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
-    public class NamedTypeSymbolComparer : IEqualityComparer<INamedTypeSymbol>
+    public sealed class NamedTypeSymbolComparer : IEqualityComparer<INamedTypeSymbol>
     {
         /// <summary> The default instance. </summary>
         public static readonly NamedTypeSymbolComparer Default = new NamedTypeSymbolComparer();

@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <inheritdoc />
-    public class FieldDeclarationComparer : IComparer<FieldDeclarationSyntax>
+    public sealed class FieldDeclarationComparer : IComparer<FieldDeclarationSyntax>
     {
         /// <summary> The default instance. </summary>
         public static readonly FieldDeclarationComparer Default = new FieldDeclarationComparer();

@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
-    public class SymbolComparer : IEqualityComparer<ISymbol>
+    public sealed class SymbolComparer : IEqualityComparer<ISymbol>
     {
         /// <summary> The default instance. </summary>
         public static readonly SymbolComparer Default = new SymbolComparer();

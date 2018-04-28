@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
-    public class PropertySymbolComparer : IEqualityComparer<IPropertySymbol>
+    public sealed class PropertySymbolComparer : IEqualityComparer<IPropertySymbol>
     {
         /// <summary> The default instance. </summary>
         public static readonly PropertySymbolComparer Default = new PropertySymbolComparer();

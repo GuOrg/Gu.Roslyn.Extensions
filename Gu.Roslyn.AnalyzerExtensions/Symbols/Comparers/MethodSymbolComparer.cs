@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
-    public class MethodSymbolComparer : IEqualityComparer<IMethodSymbol>
+    public sealed class MethodSymbolComparer : IEqualityComparer<IMethodSymbol>
     {
         /// <summary> The default instance. </summary>
         public static readonly MethodSymbolComparer Default = new MethodSymbolComparer();

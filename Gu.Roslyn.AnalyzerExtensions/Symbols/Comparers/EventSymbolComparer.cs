@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
-    public class EventSymbolComparer : IEqualityComparer<IEventSymbol>
+    public sealed class EventSymbolComparer : IEqualityComparer<IEventSymbol>
     {
         /// <summary> The default instance. </summary>
         public static readonly EventSymbolComparer Default = new EventSymbolComparer();

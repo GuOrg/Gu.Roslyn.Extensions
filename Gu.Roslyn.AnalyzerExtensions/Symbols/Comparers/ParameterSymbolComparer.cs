@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
-    public class ParameterSymbolComparer : IEqualityComparer<IParameterSymbol>
+    public sealed class ParameterSymbolComparer : IEqualityComparer<IParameterSymbol>
     {
         /// <summary> The default instance. </summary>
         public static readonly ParameterSymbolComparer Default = new ParameterSymbolComparer();

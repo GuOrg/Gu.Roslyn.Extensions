@@ -77,7 +77,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <see cref="HashSet{T}.Remove"/>
         /// </summary>
         /// <param name="item">The item</param>
-        /// <returns>True if the item was Removeed.</returns>
+        /// <returns>True if the item was removed.</returns>
         public bool Remove(T item)
         {
             this.ThrowIfDisposed();
@@ -138,62 +138,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         private static IEqualityComparer<T> GetComparer()
         {
-            if (typeof(T) == typeof(IAssemblySymbol))
-            {
-                return (IEqualityComparer<T>)AssemblySymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(IEventSymbol))
-            {
-                return (IEqualityComparer<T>)EventSymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(IFieldSymbol))
-            {
-                return (IEqualityComparer<T>)FieldSymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(ILocalSymbol))
-            {
-                return (IEqualityComparer<T>)LocalSymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(IMethodSymbol))
-            {
-                return (IEqualityComparer<T>)MethodSymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(INamedTypeSymbol))
-            {
-                return (IEqualityComparer<T>)NamedTypeSymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(INamespaceSymbol))
-            {
-                return (IEqualityComparer<T>)NamespaceSymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(IParameterSymbol))
-            {
-                return (IEqualityComparer<T>)ParameterSymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(IPropertySymbol))
-            {
-                return (IEqualityComparer<T>)PropertySymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(ISymbol))
-            {
-                return (IEqualityComparer<T>)SymbolComparer.Default;
-            }
-
-            if (typeof(T) == typeof(ITypeSymbol))
-            {
-                return (IEqualityComparer<T>)TypeSymbolComparer.Default;
-            }
-
-            return EqualityComparer<T>.Default;
+            return PooledSet.SymbolComparers.OfType<IEqualityComparer<T>>().FirstOrDefault() ??
+                   EqualityComparer<T>.Default;
         }
 
         [Conditional("DEBUG")]
