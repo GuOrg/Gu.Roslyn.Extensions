@@ -204,6 +204,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 /// <summary> System.Linq.Expressions.Expression </summary>
                 internal static readonly QualifiedType Expression = new QualifiedType("System.Linq.Expressions.Expression");
             }
+
+            public static class Runtime
+            {
+                public static class CompilerServices
+                {
+                    public static readonly QualifiedType CallerMemberNameAttribute = new QualifiedType("System.Runtime.CompilerServices.CallerMemberNameAttribute");
+                }
+            }
         }
     }
 }
