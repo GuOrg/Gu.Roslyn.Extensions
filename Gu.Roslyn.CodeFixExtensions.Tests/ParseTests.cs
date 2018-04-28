@@ -17,5 +17,19 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var declaration = Parse.ConstructorDeclaration(code);
             Assert.AreEqual(code, declaration.ToString());
         }
+
+        [TestCase("public int Foo { get; }")]
+        public void PropertyDeclaration(string code)
+        {
+            var declaration = Parse.PropertyDeclaration(code);
+            Assert.AreEqual(code, declaration.ToString());
+        }
+
+        [TestCase("public int Foo() => 1;")]
+        public void MethodDeclaration(string code)
+        {
+            var declaration = Parse.MethodDeclaration(code);
+            Assert.AreEqual(code, declaration.ToString());
+        }
     }
 }
