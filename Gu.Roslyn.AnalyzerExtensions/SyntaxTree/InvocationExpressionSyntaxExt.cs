@@ -50,6 +50,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Check if the invocation is potentially is a member or base call in the containing instance.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <returns>True if it possibly is a member call in the containing instance.</returns>
+        public static bool IsPotentialThisOrBase(this InvocationExpressionSyntax invocation)
+        {
+            switch (invocation.Expression)
+            {
+                case IdentifierNameSyntax _:
+                    return true;
+                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is InstanceExpressionSyntax:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Try to get the invoked method's name.
         /// </summary>
         /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
