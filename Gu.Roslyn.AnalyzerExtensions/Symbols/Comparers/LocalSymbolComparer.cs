@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
-    public class LocalSymbolComparer : IEqualityComparer<ILocalSymbol>
+    public sealed class LocalSymbolComparer : IEqualityComparer<ILocalSymbol>
     {
         /// <summary> The default instance. </summary>
         public static readonly LocalSymbolComparer Default = new LocalSymbolComparer();

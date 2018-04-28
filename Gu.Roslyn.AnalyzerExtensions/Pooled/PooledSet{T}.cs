@@ -7,6 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
+    using Microsoft.CodeAnalysis;
 
     /// <summary>
     /// A <see cref="HashSet{T}"/> for re-use.
@@ -17,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public sealed class PooledSet<T> : IDisposable, IReadOnlyCollection<T>
     {
         private static readonly ConcurrentQueue<PooledSet<T>> Cache = new ConcurrentQueue<PooledSet<T>>();
-        private readonly HashSet<T> inner = new HashSet<T>();
+        private readonly HashSet<T> inner = new HashSet<T>(GetComparer());
 
         private int refCount;
 
@@ -76,7 +77,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <see cref="HashSet{T}.Remove"/>
         /// </summary>
         /// <param name="item">The item</param>
-        /// <returns>True if the item was Removeed.</returns>
+        /// <returns>True if the item was removed.</returns>
         public bool Remove(T item)
         {
             this.ThrowIfDisposed();
@@ -133,6 +134,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 this.inner.Clear();
                 Cache.Enqueue(this);
             }
+        }
+
+        private static IEqualityComparer<T> GetComparer()
+        {
+            return PooledSet.SymbolComparers.OfType<IEqualityComparer<T>>().FirstOrDefault() ??
+                   EqualityComparer<T>.Default;
         }
 
         [Conditional("DEBUG")]

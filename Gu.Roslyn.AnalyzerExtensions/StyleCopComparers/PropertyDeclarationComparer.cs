@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <inheritdoc />
-    public class PropertyDeclarationComparer : IComparer<PropertyDeclarationSyntax>
+    public sealed class PropertyDeclarationComparer : IComparer<PropertyDeclarationSyntax>
     {
         /// <summary> The default instance. </summary>
         public static readonly PropertyDeclarationComparer Default = new PropertyDeclarationComparer();
