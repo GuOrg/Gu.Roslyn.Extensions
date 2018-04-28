@@ -30,7 +30,7 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = new QualifiedType("System.ObsoleteAttribute");
             Assert.AreEqual(true, Attribute.TryFind(classDeclaration.AttributeLists, type, semanticModel, CancellationToken.None, out var match));
-            Assert.AreEqual(attribute,$"[{match}]");
+            Assert.AreEqual(attribute, $"[{match}]");
         }
     }
 }
