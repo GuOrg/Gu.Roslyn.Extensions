@@ -16,12 +16,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
         }
 
+        /// <summary>
+        /// Gets the aliases found in the scope.
+        /// </summary>
         public IReadOnlyList<NameEqualsSyntax> Aliases => this.aliases;
 
+        /// <summary>
+        /// Get a walker that has visited <paramref name="node"/>
+        /// </summary>
+        /// <param name="node">The scope</param>
+        /// <returns>A walker that has visited <paramref name="node"/></returns>
         public static AliasWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new AliasWalker());
 
-        public static bool Contains(SyntaxTree tree, string typeName)
+        /// <summary>
+        /// Try to get the type alias for the type name.
+        /// </summary>
+        /// <param name="tree">The <see cref="SyntaxTree"/></param>
+        /// <param name="typeName">The type name.</param>
+        /// <param name="result">The alias if found.</param>
+        /// <returns>True if an alias was found.</returns>
+        public static bool TryGet(SyntaxTree tree, string typeName, out NameEqualsSyntax result)
         {
+            result = null;
             if (tree == null ||
                 typeName == null)
             {
@@ -32,13 +48,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 using (var walker = Borrow(root))
                 {
-                    return walker.Aliases.Any(x => x.Name.Identifier.ValueText == typeName);
+                    foreach (var candidate in walker.aliases)
+                    {
+                        if (candidate.Name.Identifier.ValueText == typeName)
+                        {
+                            result = candidate;
+                            return true;
+                        }
+                    }
                 }
             }
 
             return false;
         }
 
+        /// <inheritdoc />
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
         {
             if (node.Alias != null)
@@ -47,14 +71,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <inheritdoc />
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
         }
 
+        /// <inheritdoc />
         public override void VisitStructDeclaration(StructDeclarationSyntax node)
         {
         }
 
+        /// <inheritdoc />
         protected override void Clear()
         {
             this.aliases.Clear();

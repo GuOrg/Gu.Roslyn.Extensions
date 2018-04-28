@@ -71,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (node.Type is SimpleNameSyntax typeName &&
                 (typeName.Identifier.ValueText == expected.Type ||
-                 AliasWalker.Contains(node.SyntaxTree, typeName.Identifier.ValueText)))
+                 AliasWalker.TryGet(node.SyntaxTree, typeName.Identifier.ValueText, out _)))
             {
                 symbol = semanticModel.GetSymbolSafe(node, cancellationToken);
                 return symbol?.ContainingType == expected;

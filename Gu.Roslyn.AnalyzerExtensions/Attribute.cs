@@ -54,7 +54,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (attribute.Name is SimpleNameSyntax simpleName)
             {
                 if (!IsMatch(simpleName, expected) &&
-                    !AliasWalker.Contains(attribute.SyntaxTree, simpleName.Identifier.ValueText))
+                    !AliasWalker.TryGet(attribute.SyntaxTree, simpleName.Identifier.ValueText, out _))
                 {
                     return false;
                 }
@@ -63,14 +63,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                      qualifiedName.Right is SimpleNameSyntax typeName)
             {
                 if (!IsMatch(typeName, expected) &&
-                    !AliasWalker.Contains(attribute.SyntaxTree, typeName.Identifier.ValueText))
+                    !AliasWalker.TryGet(attribute.SyntaxTree, typeName.Identifier.ValueText, out _))
                 {
                     return false;
                 }
             }
 
-            var attributeType = semanticModel.GetTypeInfoSafe(attribute, cancellationToken).Type;
-            return attributeType == expected;
+            return semanticModel.TryGetType(attribute, cancellationToken, out var attributeType) &&
+                   attributeType == expected;
 
             bool IsMatch(SimpleNameSyntax sn, QualifiedType qt)
             {
