@@ -7,7 +7,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
-    using Microsoft.CodeAnalysis;
 
     /// <summary>
     /// A <see cref="HashSet{T}"/> for re-use.

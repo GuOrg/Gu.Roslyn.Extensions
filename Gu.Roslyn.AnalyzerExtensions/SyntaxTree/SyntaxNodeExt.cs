@@ -28,7 +28,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="kind1">The first kind</param>
         /// <param name="kind2">The other kind</param>
         /// <returns>True if <paramref name="node"/> is either of <paramref name="kind1"/> or <paramref name="kind2"/> </returns>
-        public static bool IsEitherKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2) => node.IsKind(kind1) || node.IsKind(kind2);
+        public static bool IsEither(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2) => node.IsKind(kind1) || node.IsKind(kind2);
 
         /// <summary>
         /// Try getting <see cref="SyntaxNodeExt.FirstAncestor{T}"/>

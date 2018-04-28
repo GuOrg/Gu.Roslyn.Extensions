@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitBinaryExpression(BinaryExpressionSyntax node)
         {
-            if (node.IsEitherKind(SyntaxKind.EqualsExpression, SyntaxKind.NotEqualsExpression) &&
+            if (node.IsEither(SyntaxKind.EqualsExpression, SyntaxKind.NotEqualsExpression) &&
                 (node.Left.IsKind(SyntaxKind.NullLiteralExpression) ||
                  node.Right.IsKind(SyntaxKind.NullLiteralExpression)))
             {
