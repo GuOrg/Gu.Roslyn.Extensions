@@ -133,7 +133,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching poarameter was found.</returns>
         public static bool TryGetMatchingParameter(this ArgumentSyntax argument, IMethodSymbol method, out IParameterSymbol parameter)
         {
-            return method.TryGetMatchingParameter(argument, out parameter);
+            return method.TryFindParameter(argument, out parameter);
         }
     }
 }

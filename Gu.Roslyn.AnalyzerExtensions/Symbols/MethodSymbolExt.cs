@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryGetMatchingParameter(this IMethodSymbol method, ArgumentSyntax argument, out IParameterSymbol parameter)
+        public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, out IParameterSymbol parameter)
         {
             if (argument.NameColon is NameColonSyntax nameColon &&
                 nameColon.Name is IdentifierNameSyntax name)

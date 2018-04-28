@@ -29,7 +29,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 if (argument.NameColon is NameColonSyntax nameColon)
                 {
-                    return parameterList.Parameters.TryFirst(x => x.Identifier.ValueText == nameColon.Name.Identifier.ValueText, out parameter);
+                    return parameterList.TryFind(nameColon.Name.Identifier.ValueText, out parameter);
                 }
 
                 if (argument.Parent is ArgumentListSyntax argumentList)

@@ -15,9 +15,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryGetMatchingArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
-            return TryGetMatchingArgument(invocation?.ArgumentList, parameter, out argument);
+            return TryFind(invocation?.ArgumentList, parameter, out argument);
         }
 
         /// <summary>
@@ -27,9 +27,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryGetMatchingArgument(this ObjectCreationExpressionSyntax objectCreation, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryFindArgument(this ObjectCreationExpressionSyntax objectCreation, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
-            return TryGetMatchingArgument(objectCreation?.ArgumentList, parameter, out argument);
+            return TryFind(objectCreation?.ArgumentList, parameter, out argument);
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryGetMatchingArgument(this ConstructorInitializerSyntax initializer, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryFindArgument(this ConstructorInitializerSyntax initializer, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
-            return TryGetMatchingArgument(initializer?.ArgumentList, parameter, out argument);
+            return TryFind(initializer?.ArgumentList, parameter, out argument);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryGetMatchingArgument(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryFind(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
             argument = null;
             if (argumentList == null ||
@@ -62,7 +62,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (TryGetArgumentByNameColon(argumentList, parameter.Name, out argument))
+            if (TryFindByNameColon(argumentList, parameter.Name, out argument))
             {
                 return true;
             }
@@ -70,8 +70,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return argumentList.Arguments.TryElementAt(parameter.Ordinal, out argument);
         }
 
-        private static bool TryGetArgumentByNameColon(this ArgumentListSyntax argumentList, string name, out ArgumentSyntax argument)
+        /// <summary>
+        /// Get the argument that matches <paramref name="name"/>
+        /// </summary>
+        /// <param name="argumentList">The <see cref="ArgumentListSyntax"/></param>
+        /// <param name="name">The name</param>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindByNameColon(this ArgumentListSyntax argumentList, string name, out ArgumentSyntax argument)
         {
+            argument = null;
+            if (argumentList == null)
+            {
+                return false;
+            }
+
             foreach (var candidate in argumentList.Arguments)
             {
                 if (candidate.NameColon is NameColonSyntax nameColon &&
@@ -82,7 +95,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            argument = null;
             return false;
         }
     }
