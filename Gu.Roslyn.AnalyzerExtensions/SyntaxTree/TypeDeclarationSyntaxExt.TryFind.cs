@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             foreach (var member in type.Members)
             {
                 if (member is FieldDeclarationSyntax declaration &&
-                    declaration.Declaration.Variables.TrySingle(x => x.Identifier.ValueText == name, out _))
+                    declaration.TryFindVariable(name, out _))
                 {
                     match = declaration;
                     return true;

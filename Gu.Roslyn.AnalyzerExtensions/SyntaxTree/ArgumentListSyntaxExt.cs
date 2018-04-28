@@ -62,12 +62,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (argumentList.Arguments.TrySingle(x => x.NameColon?.Name.Identifier.ValueText == parameter.Name, out argument))
+            if (TryGetArgumentByNameColon(argumentList, parameter.Name, out argument))
             {
                 return true;
             }
 
             return argumentList.Arguments.TryElementAt(parameter.Ordinal, out argument);
+        }
+
+        private static bool TryGetArgumentByNameColon(this ArgumentListSyntax argumentList, string name, out ArgumentSyntax argument)
+        {
+            foreach (var candidate in argumentList.Arguments)
+            {
+                if (candidate.NameColon is NameColonSyntax nameColon &&
+                    nameColon.Name.Identifier.ValueText == name)
+                {
+                    argument = candidate;
+                    return true;
+                }
+            }
+
+            argument = null;
+            return false;
         }
     }
 }

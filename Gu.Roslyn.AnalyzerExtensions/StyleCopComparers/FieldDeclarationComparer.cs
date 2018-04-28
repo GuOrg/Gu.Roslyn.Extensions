@@ -83,7 +83,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 {
                     foreach (var identifierName in walker.IdentifierNames)
                     {
-                        if (y.Declaration.Variables.TryFirst(v => v.Identifier.ValueText == identifierName.Identifier.ValueText, out _))
+                        if (y.Declaration.TryFindVariable(identifierName.Identifier.ValueText, out _))
                         {
                             return true;
                         }

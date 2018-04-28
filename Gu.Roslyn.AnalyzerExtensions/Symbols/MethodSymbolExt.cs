@@ -20,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (argument.NameColon is NameColonSyntax nameColon &&
                 nameColon.Name is IdentifierNameSyntax name)
             {
-                return method.Parameters.TrySingle(x => x.Name == name.Identifier.ValueText, out parameter);
+                return method.TryFindParameter(name.Identifier.ValueText, out parameter);
             }
 
             if (argument.Parent is ArgumentListSyntax argumentList)
@@ -29,6 +29,33 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             parameter = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Find the parameter by name.
+        /// </summary>
+        /// <param name="method">The <see cref="IMethodSymbol"/></param>
+        /// <param name="name">The name</param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
+        /// <returns>True if a matching parameter was found.</returns>
+        public static bool TryFindParameter(this IMethodSymbol method, string name, out IParameterSymbol parameter)
+        {
+            parameter = null;
+            if (method == null)
+            {
+                return false;
+            }
+
+            foreach (var candidate in method.Parameters)
+            {
+                if (candidate.Name == name)
+                {
+                    parameter = candidate;
+                    return true;
+                }
+            }
+
             return false;
         }
     }
