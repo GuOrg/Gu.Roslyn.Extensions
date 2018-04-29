@@ -80,7 +80,9 @@ namespace RoslynSandbox
             [TestCase("Cast<int>(null)")]
             [TestCase("Cast<int>((object)null)")]
             [TestCase("Cast<int>((object)1.0)")]
+            [TestCase("Cast<int?>((object)1.0)")]
             [TestCase("Cast<double>(1)")]
+            [TestCase("Cast<double?>(1)")]
             public void FalseWhen(string call)
             {
                 var code = @"

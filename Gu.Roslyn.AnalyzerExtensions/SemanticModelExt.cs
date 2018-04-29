@@ -57,14 +57,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// For example a boxed int cannot be cast to a double.
+        /// Check if (destination)(object)expression will work.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
         /// <param name="expression">The expression containing the value.</param>
         /// <param name="destination">The type to cast to.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if a boxed instance can be cast.</returns>
-        public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax expression, ITypeSymbol destination,  CancellationToken cancellationToken)
+        public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax expression, ITypeSymbol destination, CancellationToken cancellationToken)
         {
             if (expression == null || destination == null)
             {
@@ -72,64 +72,34 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             var conversion = semanticModel.SemanticModelFor(expression)
-                                          .ClassifyConversion(expression, destination);
-            if (!conversion.Exists)
+                                          .ClassifyConversion(expression, destination, isExplicitInSource: true);
+            if (conversion.IsNumeric)
             {
-                return false;
-            }
-
-            if (conversion.IsIdentity)
-            {
-                return true;
-            }
-
-            if (conversion.IsReference &&
-                conversion.IsImplicit)
-            {
-                return true;
+                return conversion.IsIdentity;
             }
 
             if (conversion.IsNullable)
             {
-                if (conversion.IsNullLiteral)
+                return conversion.IsIdentity ||
+                       (destination is INamedTypeSymbol namedType &&
+                        namedType.TypeArguments.TrySingle(out var typeArg) &&
+                        IsRepresentationPreservingConversion(semanticModel, expression, typeArg, cancellationToken));
+            }
+
+            if (conversion.IsUnboxing)
+            {
+                switch (expression)
                 {
-                    return true;
+                    case CastExpressionSyntax cast:
+                        return IsRepresentationPreservingConversion(semanticModel, cast.Expression, destination, cancellationToken);
+                    case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
+                        return IsRepresentationPreservingConversion(semanticModel, binary.Left, destination, cancellationToken);
                 }
 
-                if (TypeSymbolExt.IsNullable(destination, expression, semanticModel, cancellationToken))
-                {
-                    return true;
-                }
+                return false;
             }
 
-            if (destination.IsNullable(expression, semanticModel, cancellationToken))
-            {
-                return true;
-            }
-
-            switch (expression)
-            {
-                case CastExpressionSyntax cast:
-                    return IsRepresentationPreservingConversion(
-                        semanticModel,
-                        cast.Expression,
-                        destination,
-                        cancellationToken);
-                case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
-                    return IsRepresentationPreservingConversion(
-                        semanticModel,
-                        binary.Left,
-                        destination,
-                        cancellationToken);
-            }
-
-            if (conversion.IsBoxing ||
-                conversion.IsUnboxing)
-            {
-                return true;
-            }
-
-            return false;
+            return conversion.IsImplicit;
         }
 
         /// <summary>

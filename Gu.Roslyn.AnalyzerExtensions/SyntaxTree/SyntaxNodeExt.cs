@@ -89,17 +89,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the node is in an expression tree.</returns>
         public static bool IsInExpressionTree(this SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            var lambda = node.FirstAncestor<LambdaExpressionSyntax>();
-            while (lambda != null)
+            while (node.TryFirstAncestor<AnonymousFunctionExpressionSyntax>(out var lambda))
             {
-                var lambdaType = semanticModel.GetTypeInfoSafe(lambda, cancellationToken).ConvertedType;
-                if (lambdaType != null &&
-                    lambdaType.Is(QualifiedType.System.Linq.Expression))
+                if (lambda.IsAssignableTo(QualifiedType.System.Linq.Expression, semanticModel))
                 {
                     return true;
                 }
 
-                lambda = lambda.FirstAncestor<LambdaExpressionSyntax>();
+                node = lambda;
             }
 
             return false;
