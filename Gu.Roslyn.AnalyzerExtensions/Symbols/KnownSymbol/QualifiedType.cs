@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -133,6 +134,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="right">The <see cref="QualifiedType"/></param>
         /// <returns>True if not found equal</returns>
         public static bool operator !=(TypeSyntax left, QualifiedType right) => !(left == right);
+
+        /// <summary>
+        /// Create a <see cref="QualifiedType"/> from a <see cref="Type"/>
+        /// </summary>
+        /// <param name="type">The type to use FullName</param>
+        /// <returns>A <see cref="QualifiedType"/></returns>
+        public static QualifiedType FromType(Type type) => new QualifiedType(type.FullName);
 
         /// <inheritdoc />
         public override bool Equals(object obj)
