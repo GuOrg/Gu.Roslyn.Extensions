@@ -90,7 +90,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if a boxed instance can be cast.</returns>
-        public static bool IsRepresentationPreservingConversion(this ExpressionSyntax expression, ITypeSymbol destination,SemanticModel semanticModel,  CancellationToken cancellationToken)
+        public static bool IsRepresentationPreservingConversion(this ExpressionSyntax expression, ITypeSymbol destination, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             return semanticModel.IsRepresentationPreservingConversion(expression, destination, cancellationToken);
         }

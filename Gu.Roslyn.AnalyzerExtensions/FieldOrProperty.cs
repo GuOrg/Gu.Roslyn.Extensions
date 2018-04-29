@@ -29,14 +29,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public INamedTypeSymbol ContainingType => this.Symbol.ContainingType;
 
-        /// <summary>
-        /// Gets the containing type.
-        /// </summary>
+        /// <summary>Gets a value indicating whether the symbol is static.</summary>
         public bool IsStatic => this.Symbol.IsStatic;
 
-        /// <summary>
-        /// Gets the name.
-        /// </summary>
+        /// <summary> Gets the symbol name. Returns the empty string if unnamed. </summary>
         public string Name => (this.Symbol as IFieldSymbol)?.Name ?? ((IPropertySymbol)this.Symbol).Name;
 
         /// <summary>
