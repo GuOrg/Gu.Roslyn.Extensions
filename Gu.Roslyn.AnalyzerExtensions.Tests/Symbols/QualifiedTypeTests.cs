@@ -20,7 +20,7 @@ namespace RoslynSandbox
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("Bar");
             var typeSymbol = semanticModel.GetDeclaredSymbol(node).ReturnType;
@@ -28,8 +28,10 @@ namespace RoslynSandbox
             Assert.AreEqual(true, typeSymbol == QualifiedType.System.Object);
             Assert.AreEqual(false, typeSymbol == QualifiedType.System.String);
             Assert.AreEqual(false, typeSymbol != new QualifiedType("System.Object"));
-            Assert.AreEqual(true, typeSymbol.Is(QualifiedType.System.Object));
-            Assert.AreEqual(false, typeSymbol.Is(QualifiedType.System.String));
+            Assert.AreEqual(true, typeSymbol.IsAssignableTo(QualifiedType.System.Object, compilation));
+            Assert.AreEqual(true, typeSymbol.IsSameType(QualifiedType.System.Object, compilation));
+            Assert.AreEqual(false, typeSymbol.IsAssignableTo(QualifiedType.System.String, compilation));
+            Assert.AreEqual(false, typeSymbol.IsSameType(QualifiedType.System.String, compilation));
         }
 
         [TestCase("Object")]

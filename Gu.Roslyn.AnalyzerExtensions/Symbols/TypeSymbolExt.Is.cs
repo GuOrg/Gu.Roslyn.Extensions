@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -36,16 +37,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
         /// <param name="compilation">The <see cref="Compilation"/></param>
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
-        public static bool Is(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
+        public static bool IsAssignableTo(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
         {
             if (source == null || destination == null)
             {
                 return false;
             }
 
-            var conversion = compilation.ClassifyConversion(source, destination);
-            return conversion.IsIdentity ||
-                   conversion.IsImplicit;
+            return compilation.ClassifyConversion(source, destination).IsImplicit;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>
+        /// </summary>
+        /// <param name="source">The <see cref="ITypeSymbol"/></param>
+        /// <param name="destination">The <see cref="QualifiedType"/></param>
+        /// <param name="compilation">The <see cref="Compilation"/></param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        public static bool IsAssignableTo(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
+        {
+            return IsAssignableTo(source, compilation.GetTypeByMetadataName(destination.FullName), compilation);
         }
 
         /// <summary>
@@ -62,8 +73,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            var conversion = compilation.ClassifyConversion(source, destination);
-            return conversion.IsIdentity;
+            return compilation.ClassifyConversion(source, destination).IsIdentity;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>
+        /// </summary>
+        /// <param name="source">The <see cref="ITypeSymbol"/></param>
+        /// <param name="destination">The other <see cref="QualifiedType"/></param>
+        /// <param name="compilation">The <see cref="Compilation"/></param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        public static bool IsSameType(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
+        {
+            if (source == null || destination == null)
+            {
+                return false;
+            }
+
+            return IsSameType(source, compilation.GetTypeByMetadataName(destination.FullName), compilation);
         }
 
         /// <summary>
@@ -72,6 +99,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The <see cref="ITypeSymbol"/></param>
         /// <param name="qualifiedType">The <see cref="QualifiedType"/></param>
         /// <returns>True if <paramref name="source"/> is <paramref name="qualifiedType"/> </returns>
+        [Obsolete("Use IsAssignableTo")]
         public static bool Is(this ITypeSymbol source, QualifiedType qualifiedType)
         {
             if (source == null || qualifiedType == null)
@@ -119,6 +147,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The <see cref="ITypeSymbol"/></param>
         /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        [Obsolete("Use IsAssignableTo")]
         public static bool Is(this ITypeSymbol source, ITypeSymbol destination)
         {
             if (source == null || destination == null)
@@ -164,6 +193,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="x">The first type.</param>
         /// <param name="y">The other type.</param>
         /// <returns>True if same type.</returns>
+        [Obsolete("Use IsAssignableTo")]
         public static bool IsSameType(this ITypeSymbol x, ITypeSymbol y)
         {
             if (Equals(x, y))
@@ -216,6 +246,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="x">The first type.</param>
         /// <param name="y">The other type.</param>
         /// <returns>True if same type.</returns>
+        [Obsolete("Use IsAssignableTo")]
         public static bool IsSameType(this INamedTypeSymbol x, INamedTypeSymbol y)
         {
             if (x == null ||
@@ -240,6 +271,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/></returns>
+        [Obsolete("Use IsAssignableTo, candidate for removal")]
         public static bool IsNullable(this ITypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (nullableType == null ||
@@ -260,6 +292,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/></returns>
+        [Obsolete("Use IsAssignableTo, candidate for removal")]
         public static bool IsNullable(this INamedTypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (nullableType == null ||
