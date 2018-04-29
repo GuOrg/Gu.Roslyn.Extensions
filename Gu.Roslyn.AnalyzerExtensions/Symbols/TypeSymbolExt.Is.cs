@@ -30,19 +30,56 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, QualifiedType qualifiedType3) => type == qualifiedType1 || type == qualifiedType2 || type == qualifiedType3;
 
         /// <summary>
-        /// Check if <paramref name="type"/> is <paramref name="qualifiedType"/>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>
         /// </summary>
-        /// <param name="type">The <see cref="ITypeSymbol"/></param>
-        /// <param name="qualifiedType">The <see cref="QualifiedType"/></param>
-        /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType"/> </returns>
-        public static bool Is(this ITypeSymbol type, QualifiedType qualifiedType)
+        /// <param name="source">The <see cref="ITypeSymbol"/></param>
+        /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
+        /// <param name="compilation">The <see cref="Compilation"/></param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        public static bool Is(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
         {
-            if (type == null || qualifiedType == null)
+            if (source == null || destination == null)
             {
                 return false;
             }
 
-            if (type is ITypeParameterSymbol typeParameterSymbol)
+            var conversion = compilation.ClassifyConversion(source, destination);
+            return conversion.IsIdentity ||
+                   conversion.IsImplicit;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>
+        /// </summary>
+        /// <param name="source">The <see cref="ITypeSymbol"/></param>
+        /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
+        /// <param name="compilation">The <see cref="Compilation"/></param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        public static bool IsSameType(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
+        {
+            if (source == null || destination == null)
+            {
+                return false;
+            }
+
+            var conversion = compilation.ClassifyConversion(source, destination);
+            return conversion.IsIdentity;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="source"/> is <paramref name="qualifiedType"/>
+        /// </summary>
+        /// <param name="source">The <see cref="ITypeSymbol"/></param>
+        /// <param name="qualifiedType">The <see cref="QualifiedType"/></param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="qualifiedType"/> </returns>
+        public static bool Is(this ITypeSymbol source, QualifiedType qualifiedType)
+        {
+            if (source == null || qualifiedType == null)
+            {
+                return false;
+            }
+
+            if (source is ITypeParameterSymbol typeParameterSymbol)
             {
                 foreach (var constraintType in typeParameterSymbol.ConstraintTypes)
                 {
@@ -55,7 +92,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            foreach (var @interface in type.AllInterfaces)
+            foreach (var @interface in source.AllInterfaces)
             {
                 if (@interface == qualifiedType)
                 {
@@ -63,61 +100,61 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            while (type != null)
+            while (source != null)
             {
-                if (type == qualifiedType)
+                if (source == qualifiedType)
                 {
                     return true;
                 }
 
-                type = type.BaseType;
+                source = source.BaseType;
             }
 
             return false;
         }
 
         /// <summary>
-        /// Check if <paramref name="type"/> is <paramref name="other"/>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>
         /// </summary>
-        /// <param name="type">The <see cref="ITypeSymbol"/></param>
-        /// <param name="other">The other <see cref="ITypeSymbol"/></param>
-        /// <returns>True if <paramref name="type"/> is <paramref name="other"/> </returns>
-        public static bool Is(this ITypeSymbol type, ITypeSymbol other)
+        /// <param name="source">The <see cref="ITypeSymbol"/></param>
+        /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        public static bool Is(this ITypeSymbol source, ITypeSymbol destination)
         {
-            if (type == null || other == null)
+            if (source == null || destination == null)
             {
                 return false;
             }
 
-            if (other == QualifiedType.System.Object ||
-                IsSameType(type, other))
+            if (destination == QualifiedType.System.Object ||
+                IsSameType(source, destination))
             {
                 return true;
             }
 
-            if (other == QualifiedType.System.NullableOfT)
+            if (destination == QualifiedType.System.NullableOfT)
             {
-                return other is INamedTypeSymbol nullable &&
+                return destination is INamedTypeSymbol nullable &&
                        nullable.TypeArguments.TrySingle(out var arg) &&
-                       IsSameType(type, arg);
+                       IsSameType(source, arg);
             }
 
-            foreach (var @interface in type.AllInterfaces)
+            foreach (var @interface in source.AllInterfaces)
             {
-                if (IsSameType(@interface, other))
+                if (IsSameType(@interface, destination))
                 {
                     return true;
                 }
             }
 
-            while (type?.BaseType != null)
+            while (source?.BaseType != null)
             {
-                if (IsSameType(type, other))
+                if (IsSameType(source, destination))
                 {
                     return true;
                 }
 
-                type = type.BaseType;
+                source = source.BaseType;
             }
 
             return false;

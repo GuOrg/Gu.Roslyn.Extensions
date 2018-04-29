@@ -192,12 +192,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 foreach (var metadataReference in semanticModel.Compilation.References)
                 {
-                    if (metadataReference is CompilationReference compilationReference)
+                    if (metadataReference is CompilationReference compilationReference &&
+                        compilationReference.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
                     {
-                        if (compilationReference.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
-                        {
-                            return compilationReference.Compilation.GetSemanticModel(expression.SyntaxTree);
-                        }
+                        return compilationReference.Compilation.GetSemanticModel(expression.SyntaxTree);
                     }
                 }
 
