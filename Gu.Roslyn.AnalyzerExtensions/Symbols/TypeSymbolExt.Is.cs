@@ -56,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
         public static bool IsAssignableTo(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
         {
-            return IsAssignableTo(source, compilation.GetTypeByMetadataName(destination.FullName), compilation);
+            return IsAssignableTo(source, destination.GetTypeSymbol(compilation), compilation);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            return IsSameType(source, compilation.GetTypeByMetadataName(destination.FullName), compilation);
+            return IsSameType(source, destination.GetTypeSymbol(compilation), compilation);
         }
 
         /// <summary>

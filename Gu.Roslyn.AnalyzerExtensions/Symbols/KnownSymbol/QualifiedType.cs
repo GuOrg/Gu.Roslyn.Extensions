@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// For comparison with roslyn types.
+    /// For comparison with <see cref="ITypeSymbol"/>.
     /// </summary>
     [global::System.Diagnostics.DebuggerDisplay("{this.FullName}")]
     public class QualifiedType
@@ -141,6 +141,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="type">The type to use FullName</param>
         /// <returns>A <see cref="QualifiedType"/></returns>
         public static QualifiedType FromType(Type type) => new QualifiedType(type.FullName);
+
+        /// <summary>
+        /// Calls compilation.GetTypeByMetadataName(this.FullName)
+        /// </summary>
+        /// <param name="compilation">The <see cref="Compilation"/></param>
+        /// <returns>The <see cref="INamedTypeSymbol"/></returns>
+        public INamedTypeSymbol GetTypeSymbol(Compilation compilation) => compilation.GetTypeByMetadataName(this.FullName);
 
         /// <inheritdoc />
         public override bool Equals(object obj)

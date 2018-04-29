@@ -43,7 +43,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            return IsAssignableTo(expression, semanticModel.Compilation.GetTypeByMetadataName(destination.FullName), semanticModel);
+            return IsAssignableTo(expression, destination.GetTypeSymbol(semanticModel.Compilation), semanticModel);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            return IsSameType(expression, semanticModel.Compilation.GetTypeByMetadataName(destination.FullName), semanticModel);
+            return IsSameType(expression, destination.GetTypeSymbol(semanticModel.Compilation), semanticModel);
         }
 
         /// <summary>
