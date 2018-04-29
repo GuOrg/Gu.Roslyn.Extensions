@@ -32,8 +32,10 @@ namespace RoslynSandbox
             Assert.AreEqual(false, typeSymbol.Is(QualifiedType.System.String));
         }
 
-        [Test]
-        public void TypeSyntaxEquality()
+        [TestCase("Object")]
+        [TestCase("System.Object")]
+        [TestCase("object")]
+        public void TypeSyntaxEquality(string type)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -45,7 +47,7 @@ namespace RoslynSandbox
         {
         }
     }
-}");
+}".AssertReplace("object", type));
             var typeSyntax = syntaxTree.FindMethodDeclaration("Bar").ReturnType;
             Assert.AreEqual(true, typeSyntax == new QualifiedType("System.Object", "object"));
             Assert.AreEqual(true, typeSyntax == QualifiedType.System.Object);
