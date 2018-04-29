@@ -114,15 +114,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (left is SimpleNameSyntax simple)
+            switch (left)
             {
-                return NameEquals(simple.Identifier.ValueText, right);
-            }
-
-            if (left is QualifiedNameSyntax qualified)
-            {
-                return NameEquals(qualified.Right.Identifier.ValueText, right) &&
-                       right.Namespace.Matches(qualified.Left);
+                case PredefinedTypeSyntax predefinedType:
+                    return predefinedType.Keyword.ValueText == right.Alias;
+                case SimpleNameSyntax simple:
+                    return NameEquals(simple.Identifier.ValueText, right);
+                case QualifiedNameSyntax qualified:
+                    return NameEquals(qualified.Right.Identifier.ValueText, right) &&
+                           right.Namespace.Matches(qualified.Left);
             }
 
             return false;

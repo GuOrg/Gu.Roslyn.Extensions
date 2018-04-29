@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     public class QualifiedTypeTests
     {
         [Test]
-        public void Equality()
+        public void SymbolEquality()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -30,6 +30,27 @@ namespace RoslynSandbox
             Assert.AreEqual(false, typeSymbol != new QualifiedType("System.Object"));
             Assert.AreEqual(true, typeSymbol.Is(QualifiedType.System.Object));
             Assert.AreEqual(false, typeSymbol.Is(QualifiedType.System.String));
+        }
+
+        [Test]
+        public void TypeSyntaxEquality()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal object Bar()
+        {
+        }
+    }
+}");
+            var typeSyntax = syntaxTree.FindMethodDeclaration("Bar").ReturnType;
+            Assert.AreEqual(true, typeSyntax == new QualifiedType("System.Object", "object"));
+            Assert.AreEqual(true, typeSyntax == QualifiedType.System.Object);
+            Assert.AreEqual(false, typeSyntax == QualifiedType.System.String);
+            Assert.AreEqual(false, typeSyntax != new QualifiedType("System.Object", "object"));
         }
     }
 }
