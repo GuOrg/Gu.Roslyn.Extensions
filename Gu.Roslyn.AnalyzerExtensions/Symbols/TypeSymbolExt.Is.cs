@@ -31,6 +31,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, QualifiedType qualifiedType3) => type == qualifiedType1 || type == qualifiedType2 || type == qualifiedType3;
 
         /// <summary>
+        /// Check if <paramref name="type"/> is assignable to <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>
+        /// </summary>
+        /// <param name="type">The <see cref="ITypeSymbol"/></param>
+        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/></param>
+        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/></param>
+        /// <param name="compilation">The <see cref="Compilation"/></param>
+        /// <returns>True if <paramref name="type"/> is assignable to <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/></returns>
+        public static bool IsAssignableToEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, Compilation compilation)
+        {
+            return type.IsAssignableTo(qualifiedType1, compilation) ||
+                   type.IsAssignableTo(qualifiedType2, compilation);
+        }
+
+        /// <summary>
         /// Check if <paramref name="source"/> is <paramref name="destination"/>
         /// </summary>
         /// <param name="source">The <see cref="ITypeSymbol"/></param>
