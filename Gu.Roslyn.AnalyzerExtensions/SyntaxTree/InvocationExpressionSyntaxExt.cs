@@ -1,5 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Threading;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -132,6 +134,35 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             return invocation.TryGetMethodName(out var name) &&
                    name == "typeof";
+        }
+
+        /// <summary>
+        /// Get the argument that matches <paramref name="parameter"/>
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ArgumentSyntax argument)
+        {
+            argument = null;
+            return invocation?.ArgumentList is ArgumentListSyntax argumentList &&
+                   argumentList.TryFind(parameter, out argument);
+        }
+
+        /// <summary>
+        /// Try getting the declaration of the invoked method.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="declaration">The <see cref="MethodDeclarationSyntax"/></param>
+        /// <returns>True if the declaration was found.</returns>
+        public static bool TryGetMethodDeclaration(this InvocationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out MethodDeclarationSyntax declaration)
+        {
+            declaration = null;
+            return semanticModel.TryGetSymbol(invocation, cancellationToken, out var symbol) &&
+                   symbol.TrySingleDeclaration(cancellationToken, out declaration);
         }
     }
 }

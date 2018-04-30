@@ -11,42 +11,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the argument that matches <paramref name="parameter"/>
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ArgumentSyntax argument)
-        {
-            return TryFind(invocation?.ArgumentList, parameter, out argument);
-        }
-
-        /// <summary>
-        /// Get the argument that matches <paramref name="parameter"/>
-        /// </summary>
-        /// <param name="objectCreation">The <see cref="ObjectCreationExpressionSyntax"/></param>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindArgument(this ObjectCreationExpressionSyntax objectCreation, IParameterSymbol parameter, out ArgumentSyntax argument)
-        {
-            return TryFind(objectCreation?.ArgumentList, parameter, out argument);
-        }
-
-        /// <summary>
-        /// Get the argument that matches <paramref name="parameter"/>
-        /// </summary>
-        /// <param name="initializer">The <see cref="ConstructorInitializerSyntax"/></param>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindArgument(this ConstructorInitializerSyntax initializer, IParameterSymbol parameter, out ArgumentSyntax argument)
-        {
-            return TryFind(initializer?.ArgumentList, parameter, out argument);
-        }
-
-        /// <summary>
-        /// Get the argument that matches <paramref name="parameter"/>
-        /// </summary>
         /// <param name="argumentList">The <see cref="ObjectCreationExpressionSyntax"/></param>
         /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/></param>

@@ -2,7 +2,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
@@ -37,8 +36,8 @@ namespace RoslynSandbox
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var invocation = syntaxTree.FindInvocation("Meh(1, 2, 3)");
-                var method = (IMethodSymbol)semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-                Assert.AreEqual(true, ArgumentListSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
+                var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
+                Assert.AreEqual(true, InvocationExpressionSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
                 Assert.AreEqual(expected, argument.ToString());
 
                 Assert.AreEqual(true, ArgumentListSyntaxExt.TryFind(invocation.ArgumentList, method.Parameters[index], out argument));
@@ -72,8 +71,8 @@ namespace RoslynSandbox
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var invocation = syntaxTree.FindInvocation("Meh(v1: 1, v2: 2, v3: 3)");
-                var method = (IMethodSymbol)semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-                Assert.AreEqual(true, ArgumentListSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
+                var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
+                Assert.AreEqual(true, InvocationExpressionSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
                 Assert.AreEqual(expected, argument.ToString());
 
                 Assert.AreEqual(true, ArgumentListSyntaxExt.TryFind(invocation.ArgumentList, method.Parameters[index], out argument));
@@ -107,8 +106,8 @@ namespace RoslynSandbox
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var invocation = syntaxTree.FindInvocation("Meh(v2: 2, v1: 1, v3: 3)");
-                var method = (IMethodSymbol)semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-                Assert.AreEqual(true, ArgumentListSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
+                var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
+                Assert.AreEqual(true, InvocationExpressionSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
                 Assert.AreEqual(expected, argument.ToString());
 
                 Assert.AreEqual(true, ArgumentListSyntaxExt.TryFind(invocation.ArgumentList, method.Parameters[index], out argument));
