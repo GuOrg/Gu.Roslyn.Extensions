@@ -26,7 +26,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <inheritdoc />
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             Debug.Assert(!Cache.Contains(this), "!Cache.Contains(this)");
             this.Clear();
