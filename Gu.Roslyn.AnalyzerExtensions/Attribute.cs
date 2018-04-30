@@ -220,6 +220,60 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Find argument by name or index.
+        /// </summary>
+        /// <param name="attribute">The <see cref="AttributeSyntax"/></param>
+        /// <param name="argumentIndex">The index.</param>
+        /// <param name="argumentName">The name colon name</param>
+        /// <param name="argument">The match</param>
+        /// <returns>True if a match as found.</returns>
+        public static bool TryFindArgument(AttributeSyntax attribute, int argumentIndex, string argumentName, out AttributeArgumentSyntax argument)
+        {
+            argument = null;
+            if (attribute?.ArgumentList == null)
+            {
+                return false;
+            }
+
+            if (argumentName != null)
+            {
+                foreach (var candidate in attribute.ArgumentList.Arguments)
+                {
+                    if (candidate.NameColon is NameColonSyntax nameColon &&
+                        nameColon.Name.Identifier.ValueText == argumentName)
+                    {
+                        argument = candidate;
+                    }
+                }
+            }
+
+            if (argument != null)
+            {
+                return true;
+            }
+
+            return attribute.ArgumentList.Arguments.TryElementAt(argumentIndex, out argument);
+        }
+
+        /// <summary>
+        /// Find the single argument.
+        /// </summary>
+        /// <param name="attribute">The <see cref="AttributeSyntax"/></param>
+        /// <param name="argument">The match</param>
+        /// <returns>True if a match as found.</returns>
+        public static bool TrySingleArgument(this AttributeSyntax attribute, out AttributeArgumentSyntax argument)
+        {
+            var argumentList = attribute?.ArgumentList;
+            if (argumentList == null)
+            {
+                argument = null;
+                return false;
+            }
+
+            return argumentList.Arguments.TrySingle(out argument);
+        }
+
+        /// <summary>
         /// Check if the attribute is of the expected type.
         /// </summary>
         /// <param name="attribute">The <see cref="AttributeSyntax"/></param>
