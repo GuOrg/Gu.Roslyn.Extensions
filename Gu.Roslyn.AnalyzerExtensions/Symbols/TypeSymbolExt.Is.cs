@@ -207,7 +207,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="x">The first type.</param>
         /// <param name="y">The other type.</param>
         /// <returns>True if same type.</returns>
-        [Obsolete("Use IsAssignableTo")]
+        [Obsolete("Use overload with Compilation")]
         public static bool IsSameType(this ITypeSymbol x, ITypeSymbol y)
         {
             if (Equals(x, y))
@@ -260,7 +260,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="x">The first type.</param>
         /// <param name="y">The other type.</param>
         /// <returns>True if same type.</returns>
-        [Obsolete("Use IsAssignableTo")]
+        [Obsolete("Use overload with Compilation")]
         public static bool IsSameType(this INamedTypeSymbol x, INamedTypeSymbol y)
         {
             if (x == null ||
