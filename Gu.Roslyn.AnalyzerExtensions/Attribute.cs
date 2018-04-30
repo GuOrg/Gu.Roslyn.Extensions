@@ -112,6 +112,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
+        /// <param name="declaration">The <see cref="EventFieldDeclarationSyntax"/></param>
+        /// <param name="expected">The expected type.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="result">The match</param>
+        /// <returns>True if an attribute of the expected type was found.</returns>
+        public static bool TryFind(EventFieldDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        {
+            if (declaration is null)
+            {
+                result = null;
+                return false;
+            }
+
+            return TryFind(declaration.AttributeLists, expected, semanticModel, cancellationToken, out result);
+        }
+
+        /// <summary>
+        /// Try find an attribute of the expected type.
+        /// </summary>
         /// <param name="declaration">The <see cref="BasePropertyDeclarationSyntax"/></param>
         /// <param name="expected">The expected type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>

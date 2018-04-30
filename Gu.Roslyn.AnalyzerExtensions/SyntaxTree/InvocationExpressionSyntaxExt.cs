@@ -158,7 +158,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <param name="declaration">The <see cref="MethodDeclarationSyntax"/></param>
         /// <returns>True if the declaration was found.</returns>
-        public static bool TryGetMethodDeclaration(this InvocationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out MethodDeclarationSyntax declaration)
+        public static bool TryGetTargetDeclaration(this InvocationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out MethodDeclarationSyntax declaration)
         {
             declaration = null;
             return semanticModel.TryGetSymbol(invocation, cancellationToken, out var symbol) &&

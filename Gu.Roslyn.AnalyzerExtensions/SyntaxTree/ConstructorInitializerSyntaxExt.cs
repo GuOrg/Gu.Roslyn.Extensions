@@ -31,7 +31,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <param name="declaration">The <see cref="ConstructorDeclarationSyntax"/></param>
         /// <returns>True if the declaration was found.</returns>
-        public static bool TryGetConstructorDeclaration(this ConstructorInitializerSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out ConstructorDeclarationSyntax declaration)
+        public static bool TryGetTargetDeclaration(this ConstructorInitializerSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out ConstructorDeclarationSyntax declaration)
         {
             declaration = null;
             return semanticModel.TryGetSymbol(invocation, cancellationToken, out var symbol) &&
