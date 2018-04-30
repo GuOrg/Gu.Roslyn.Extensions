@@ -14,7 +14,7 @@ Extensions for analyzers &amp; code fixes.
   - [SymbolExt](#symbolext)
     - [TrySingleDeclaration](#trysingledeclaration)
   - [TypeSymbolExt](#typesymbolext)
-    - [Is](#is)
+    - [IsAssignableTo](#isassignableto)
     - [TryFindMember](#tryfindmember)
     - [TryFindMemberRecursive](#tryfindmemberrecursive)
 - [Syntax](#syntax)
@@ -107,7 +107,7 @@ Get the declaration if it exists. If the symbol is from a binary reference the d
 
 Extension methods for `ItypeSymbol`.
 
-### Is
+### IsAssignableTo
 
 For checking if `foo is Type`
 
