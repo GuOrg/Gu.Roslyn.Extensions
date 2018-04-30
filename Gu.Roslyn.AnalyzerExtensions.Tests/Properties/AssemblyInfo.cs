@@ -22,6 +22,7 @@ using Gu.Roslyn.Asserts;
 [assembly: TransitiveMetadataReferences(typeof(Microsoft.CodeAnalysis.CSharp.CSharpCompilation))]
 [assembly: MetadataReferences(
     typeof(System.Linq.Enumerable),
+    typeof(System.Linq.Expressions.Expression),
     typeof(System.Collections.Generic.IEnumerable<>),
     typeof(System.Net.WebClient),
     typeof(System.Data.Common.DbConnection),
