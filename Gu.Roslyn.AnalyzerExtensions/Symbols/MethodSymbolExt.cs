@@ -36,7 +36,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Find the parameter by name.
         /// </summary>
         /// <param name="method">The <see cref="IMethodSymbol"/></param>
-        /// <param name="name">The name</param>
+        /// <param name="name">The name of the parameter.</param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, string name, out IParameterSymbol parameter)
@@ -50,6 +50,33 @@ namespace Gu.Roslyn.AnalyzerExtensions
             foreach (var candidate in method.Parameters)
             {
                 if (candidate.Name == name)
+                {
+                    parameter = candidate;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Find the parameter by type.
+        /// </summary>
+        /// <param name="method">The <see cref="IMethodSymbol"/></param>
+        /// <param name="type">The type fo the parameter.</param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
+        /// <returns>True if a matching parameter was found.</returns>
+        public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, out IParameterSymbol parameter)
+        {
+            parameter = null;
+            if (method == null)
+            {
+                return false;
+            }
+
+            foreach (var candidate in method.Parameters)
+            {
+                if (candidate.Type == type)
                 {
                     parameter = candidate;
                     return true;
