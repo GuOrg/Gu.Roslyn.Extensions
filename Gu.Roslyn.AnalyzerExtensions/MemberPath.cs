@@ -105,6 +105,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <summary>
+        /// Checks that the path is empty, this is true for this. and base. calls
+        /// </summary>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <returns>True if the path is empty, this is true for this. and base. calls.</returns>
         public static bool IsEmpty(ExpressionSyntax expression)
         {
             using (var walker = PathWalker.Borrow(expression))

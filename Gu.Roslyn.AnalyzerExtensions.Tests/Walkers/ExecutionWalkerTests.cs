@@ -222,6 +222,60 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase(Scope.Member, "1, 2")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Recursive, "1, 2")]
+        public void FieldInitializerBeforeCtor(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        private readonly int value = 1;
+
+        public Foo()
+        {
+            this.value = 2;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindClassDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
+        [TestCase(Scope.Member, "1, 2")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Recursive, "1, 2")]
+        public void FieldInitializerBeforeCtorWhenNotDocumentOrder(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            this.value = 2;
+        }
+
+        private readonly int value = 1;
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindClassDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         private class LiteralWalker : ExecutionWalker<LiteralWalker>
         {
             private readonly List<LiteralExpressionSyntax> literals = new List<LiteralExpressionSyntax>();

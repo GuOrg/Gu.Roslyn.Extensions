@@ -4,6 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using System.Threading;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -29,6 +30,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Gets or sets the <see cref="CancellationToken"/>
         /// </summary>
         protected CancellationToken CancellationToken { get; set; }
+
+        /// <inheritdoc />
+        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+        {
+            this.VisitTypeDeclaration(node);
+        }
+
+        /// <inheritdoc />
+        public override void VisitStructDeclaration(StructDeclarationSyntax node)
+        {
+            this.VisitTypeDeclaration(node);
+        }
 
         /// <inheritdoc />
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
@@ -183,6 +196,44 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return walker;
         }
 
+        /// <summary>
+        /// Called by <see cref="VisitClassDeclaration"/> and <see cref="VisitStructDeclaration"/>
+        /// Walks the members in the following order:
+        /// 1. Field and property initializers in document order.
+        /// 2. Nonprivate constructors in document order
+        /// 3. Nonprivate members.
+        /// 4. Nested types if scope is recursive.
+        /// </summary>
+        /// <param name="node">The <see cref="TypeDeclarationSyntax"/></param>
+        protected virtual void VisitTypeDeclaration(TypeDeclarationSyntax node)
+        {
+            using (var walker = TypeDeclarationWalker.Borrow(node))
+            {
+                foreach (var initializer in walker.Initializers)
+                {
+                    this.Visit(initializer);
+                }
+
+                foreach (var ctor in walker.Ctors)
+                {
+                    this.Visit(ctor);
+                }
+
+                foreach (var member in walker.Members)
+                {
+                    this.Visit(member);
+                }
+
+                if (this.Scope == Scope.Recursive)
+                {
+                    foreach (var type in walker.Types)
+                    {
+                        this.Visit(type);
+                    }
+                }
+            }
+        }
+
         /// <inheritdoc />
         protected override void Clear()
         {
@@ -249,6 +300,84 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
+        }
+
+        private class TypeDeclarationWalker : PooledWalker<TypeDeclarationWalker>
+        {
+#pragma warning disable SA1401 // Fields must be private
+            internal readonly List<EqualsValueClauseSyntax> Initializers = new List<EqualsValueClauseSyntax>();
+            internal readonly List<ConstructorDeclarationSyntax> Ctors = new List<ConstructorDeclarationSyntax>();
+            internal readonly List<MemberDeclarationSyntax> Members = new List<MemberDeclarationSyntax>();
+            internal readonly List<TypeDeclarationSyntax> Types = new List<TypeDeclarationSyntax>();
+#pragma warning restore SA1401 // Fields must be private
+
+            public static TypeDeclarationWalker Borrow(TypeDeclarationSyntax typeDeclaration)
+            {
+                var walker = Borrow(() => new TypeDeclarationWalker());
+                foreach (var member in typeDeclaration.Members)
+                {
+                    walker.Visit(member);
+                }
+
+                return walker;
+            }
+
+            public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+            {
+                if (node.Declaration is VariableDeclarationSyntax declaration &&
+                    declaration.Variables.TryLast(out var variable) &&
+                    variable.Initializer is EqualsValueClauseSyntax equalsValueClause)
+                {
+                    this.Initializers.Add(equalsValueClause);
+                }
+            }
+
+            public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+            {
+                if (node.Initializer is EqualsValueClauseSyntax equalsValueClause)
+                {
+                    this.Initializers.Add(equalsValueClause);
+                }
+
+                if (!node.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                {
+                    this.Members.Add(node);
+                }
+            }
+
+            public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+            {
+                if (!node.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                {
+                    this.Ctors.Add(node);
+                }
+            }
+
+            public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                if (!node.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                {
+                    this.Members.Add(node);
+                }
+            }
+
+            public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+            {
+                this.Types.Add(node);
+            }
+
+            public override void VisitStructDeclaration(StructDeclarationSyntax node)
+            {
+                this.Types.Add(node);
+            }
+
+            protected override void Clear()
+            {
+                this.Initializers.Clear();
+                this.Ctors.Clear();
+                this.Members.Clear();
+                this.Types.Clear();
+            }
         }
     }
 }
