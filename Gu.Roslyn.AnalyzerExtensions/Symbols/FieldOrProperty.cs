@@ -22,7 +22,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets the type.
         /// </summary>
-        public ITypeSymbol Type => (this.Symbol as IFieldSymbol)?.Type ?? ((IPropertySymbol)this.Symbol).Type;
+        public ITypeSymbol Type => (this.Symbol as IFieldSymbol)?.Type ??
+                                   ((IPropertySymbol)this.Symbol).Type;
 
         /// <summary>
         /// Gets the containing type.
@@ -43,23 +44,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if created a <see cref="FieldOrProperty"/> from <paramref name="symbol"/></returns>
         public static bool TryCreate(ISymbol symbol, out FieldOrProperty result)
         {
-            if (symbol != null)
+            switch (symbol)
             {
-                if (symbol is IFieldSymbol field)
-                {
+                case IFieldSymbol field:
                     result = new FieldOrProperty(field);
                     return true;
-                }
-
-                if (symbol is IPropertySymbol property)
-                {
+                case IPropertySymbol property:
                     result = new FieldOrProperty(property);
                     return true;
-                }
+                default:
+                    result = default(FieldOrProperty);
+                    return false;
             }
-
-            result = default(FieldOrProperty);
-            return false;
         }
     }
 }
