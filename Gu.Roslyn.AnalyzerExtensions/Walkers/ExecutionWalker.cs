@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using Microsoft.CodeAnalysis;
@@ -18,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets or sets if the walker should walk declarations of invoked methods etc.
         /// </summary>
-        protected Search Search { get; set; }
+        protected Scope Scope { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="SemanticModel"/>
@@ -52,25 +53,67 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             base.VisitInvocationExpression(node);
-            this.VisitRecursive(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance when IsIntance() &&
+                                         TryGetTarget(out var target):
+                    this.Visit(target);
+                    break;
+                case Scope.Recursive when TryGetTarget(out var target):
+                    this.Visit(target);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            bool IsIntance()
+            {
+                return node.Expression == null ||
+                       node.Expression is InstanceExpressionSyntax;
+            }
+
+            bool TryGetTarget(out MethodDeclarationSyntax declaration)
+            {
+                declaration = null;
+                return this.visited.Add(node) &&
+                       node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration);
+            }
         }
 
         /// <inheritdoc />
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             base.VisitIdentifierName(node);
-            if (this.Search == Search.Recursive &&
-                this.visited.Add(node) &&
-                TryGetPropertyGet(node, out var getter))
+            switch (this.Scope)
             {
-                this.Visit(getter);
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (this.visited.Add(node) &&
+                        TryGetPropertyGet(node, out var target))
+                    {
+                        this.Visit(target);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             bool TryGetPropertyGet(SyntaxNode candidate, out SyntaxNode result)
             {
                 result = null;
-                if (candidate.Parent is MemberAccessExpressionSyntax)
+                if (candidate.Parent is MemberAccessExpressionSyntax memberAccess)
                 {
+                    if (this.Scope == Scope.Instance &&
+                        !(memberAccess.Expression is InstanceExpressionSyntax))
+                    {
+                        return false;
+                    }
+
                     return TryGetPropertyGet(candidate.Parent, out result);
                 }
 
@@ -90,28 +133,75 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
             base.VisitAssignmentExpression(node);
-            if (this.Search == Search.Recursive &&
-                this.visited.Add(node) &&
-                this.SemanticModel.GetSymbolSafe(node.Left, this.CancellationToken) is IPropertySymbol property &&
-                property.TrySingleDeclaration(this.CancellationToken, out var propertyDeclaration) &&
-                propertyDeclaration.TryGetSetter(out var setter))
+            switch (this.Scope)
             {
-                this.Visit(setter);
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (this.visited.Add(node) &&
+                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
+                    {
+                        this.Visit(declaration);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+
+            //if (this.Scope == this.Scope.Recursive &&
+            //    this.visited.Add(node) &&
+            //    this.SemanticModel.GetSymbolSafe(node.Left, this.CancellationToken) is IPropertySymbol property &&
+            //    property.TrySingleDeclaration(this.CancellationToken, out var propertyDeclaration) &&
+            //    propertyDeclaration.TryGetSetter(out var setter))
+            //{
+            //    this.Visit(setter);
+            //}
         }
 
         /// <inheritdoc />
         public override void VisitConstructorInitializer(ConstructorInitializerSyntax node)
         {
             base.VisitConstructorInitializer(node);
-            this.VisitRecursive(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (this.visited.Add(node) &&
+                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
+                    {
+                        this.Visit(declaration);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             base.VisitObjectCreationExpression(node);
-            this.VisitRecursive(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                case Scope.Instance:
+                    break;
+                case Scope.Recursive:
+                    if (this.visited.Add(node) &&
+                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
+                    {
+                        this.Visit(declaration);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <inheritdoc />
@@ -120,28 +210,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.visited.Clear();
             this.SemanticModel = null;
             this.CancellationToken = CancellationToken.None;
-        }
-
-        /// <summary>
-        /// This is called when for example an invocation is reached. Now we decide if we want to walk the declaration of the invocation.
-        /// </summary>
-        /// <param name="node">The <see cref="SyntaxNode"/></param>
-        protected void VisitRecursive(SyntaxNode node)
-        {
-            if (node == null)
-            {
-                return;
-            }
-
-            if (this.Search == Search.Recursive &&
-                this.visited.Add(node))
-            {
-                if (this.SemanticModel.TryGetSymbol<ISymbol>(node, this.CancellationToken, out var symbol) &&
-                    symbol.TrySingleDeclaration<SyntaxNode>(this.CancellationToken, out var declaration))
-                {
-                    this.Visit(declaration);
-                }
-            }
         }
     }
 }
