@@ -147,14 +147,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
-            base.VisitAssignmentExpression(node);
             switch (this.Scope)
             {
                 case Scope.Member:
                     break;
                 case Scope.Instance:
                 case Scope.Recursive:
-                    if (this.TryGetPropertySet(node, out var target))
+                    if (this.TryGetPropertyGet(node.Right, out var target))
+                    {
+                        this.Visit(target);
+                    }
+
+                    if (this.TryGetPropertySet(node.Left, out target))
                     {
                         this.Visit(target);
                     }
@@ -163,6 +167,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            base.VisitAssignmentExpression(node);
         }
 
         /// <summary>
@@ -201,19 +207,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (candidate.Parent is MemberAccessExpressionSyntax memberAccess)
+            if (this.Scope == Scope.Instance &&
+                candidate is MemberAccessExpressionSyntax memberAccess &&
+                !(memberAccess.Expression is InstanceExpressionSyntax))
             {
-                if (this.Scope == Scope.Instance &&
-                    !(memberAccess.Expression is InstanceExpressionSyntax))
-                {
-                    return false;
-                }
-
-                return this.TryGetPropertyGet(candidate.Parent, out result);
+                return false;
             }
 
             if (candidate.Parent is ArgumentSyntax ||
-                candidate.Parent is EqualsValueClauseSyntax)
+                candidate.Parent is AssignmentExpressionSyntax ||
+                candidate.Parent is ExpressionStatementSyntax)
             {
                 return this.SemanticModel.GetSymbolSafe(candidate, this.CancellationToken) is IPropertySymbol property &&
                        property.GetMethod is IMethodSymbol getMethod &&
@@ -231,21 +234,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (candidate.Parent is MemberAccessExpressionSyntax memberAccess)
+            if (this.Scope == Scope.Instance &&
+                candidate is MemberAccessExpressionSyntax memberAccess &&
+                !(memberAccess.Expression is InstanceExpressionSyntax))
             {
-                if (this.Scope == Scope.Instance &&
-                    !(memberAccess.Expression is InstanceExpressionSyntax))
-                {
-                    return false;
-                }
-
-                return this.TryGetPropertySet(candidate.Parent, out result);
+                return false;
             }
 
-            if (candidate.Parent is ArgumentSyntax ||
-                candidate.Parent is EqualsValueClauseSyntax)
+            if (candidate.Parent is AssignmentExpressionSyntax assignment &&
+                assignment.Left.Contains(candidate))
             {
-                return this.SemanticModel.GetSymbolSafe(candidate, this.CancellationToken) is IPropertySymbol property &&
+                return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property)  &&
                        property.SetMethod is IMethodSymbol setMethod &&
                        setMethod.TrySingleDeclaration(this.CancellationToken, out result);
             }
