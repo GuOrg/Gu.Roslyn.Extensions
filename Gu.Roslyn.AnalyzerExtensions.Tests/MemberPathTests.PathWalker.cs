@@ -59,6 +59,7 @@ namespace RoslynSandbox
             [TestCase("foo.Dispose()", "foo")]
             [TestCase("foo.ToString().ToString()", "foo")]
             [TestCase("foo?.Dispose()", "foo")]
+            [TestCase("Inner?.Dispose()", "Inner")]
             [TestCase("foo.Get<IComparable>(1)", "foo")]
             [TestCase("foo?.Get<IComparable>(1)", "foo")]
             [TestCase("foo.Get<System.IComparable>(1)", "foo")]
@@ -109,8 +110,12 @@ namespace RoslynSandbox
 }";
                 testCode = testCode.AssertReplace("this.foo.Get<int>(1)", code);
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
-                var invocation = syntaxTree.FindExpression(code);
-                using (var walker = MemberPath.PathWalker.Borrow(invocation))
+                using (var walker = MemberPath.PathWalker.Borrow(syntaxTree.FindInvocation(code)))
+                {
+                    Assert.AreEqual(expected, string.Join(".", walker.IdentifierNames.Select(x => x)));
+                }
+
+                using (var walker = MemberPath.PathWalker.Borrow(syntaxTree.FindExpression(code)))
                 {
                     Assert.AreEqual(expected, string.Join(".", walker.IdentifierNames.Select(x => x)));
                 }

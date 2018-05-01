@@ -154,6 +154,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A walker</returns>
             public static PathWalker Borrow(ExpressionSyntax node)
             {
+                if (node.Parent is ConditionalAccessExpressionSyntax conditionalAccess)
+                {
+                    return Borrow(conditionalAccess);
+                }
+
                 var walker = BorrowAndVisit(node, () => new PathWalker());
                 return walker;
             }
