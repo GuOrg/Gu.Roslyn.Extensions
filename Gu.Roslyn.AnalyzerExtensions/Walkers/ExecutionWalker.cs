@@ -4,7 +4,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using System.Threading;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -30,24 +29,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Gets or sets the <see cref="CancellationToken"/>
         /// </summary>
         protected CancellationToken CancellationToken { get; set; }
-
-        /// <inheritdoc />
-        public override void Visit(SyntaxNode node)
-        {
-            if (node is AnonymousFunctionExpressionSyntax)
-            {
-                switch (node.Parent.Kind())
-                {
-                    case SyntaxKind.AddAssignmentExpression:
-                    case SyntaxKind.Argument:
-                        break;
-                    default:
-                        return;
-                }
-            }
-
-            base.Visit(node);
-        }
 
         /// <inheritdoc />
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
@@ -133,22 +114,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
             base.VisitAssignmentExpression(node);
-            switch (this.Scope)
-            {
-                case Scope.Member:
-                    break;
-                case Scope.Instance:
-                case Scope.Recursive:
-                    if (this.visited.Add(node) &&
-                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
-                    {
-                        this.Visit(declaration);
-                    }
+            //switch (this.Scope)
+            //{
+            //    case Scope.Member:
+            //        break;
+            //    case Scope.Instance:
+            //    case Scope.Recursive:
+            //        if (this.visited.Add(node) &&
+            //            node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
+            //        {
+            //            this.Visit(declaration);
+            //        }
 
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            //        break;
+            //    default:
+            //        throw new ArgumentOutOfRangeException();
+            //}
 
             //if (this.Scope == this.Scope.Recursive &&
             //    this.visited.Add(node) &&
@@ -204,10 +185,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <summary>
+        /// Returns a walker that have visited <paramref name="node"/>
+        /// </summary>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="scope">The scope to walk.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="create">The factory for creating a walker if not found in cache.</param>
+        /// <returns>The walker that have visited <paramref name="node"/>.</returns>
+        protected static T BorrowAndVisit(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
+        {
+            var walker = Borrow(create);
+            walker.Scope = scope;
+            walker.SemanticModel = semanticModel;
+            walker.CancellationToken = cancellationToken;
+            walker.Visit(node);
+            return walker;
+        }
+
         /// <inheritdoc />
         protected override void Clear()
         {
             this.visited.Clear();
+            this.Scope = Scope.Member;
             this.SemanticModel = null;
             this.CancellationToken = CancellationToken.None;
         }
