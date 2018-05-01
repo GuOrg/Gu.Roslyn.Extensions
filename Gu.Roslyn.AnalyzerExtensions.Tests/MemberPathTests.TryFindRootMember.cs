@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
 
     internal partial class MemberPathTests
     {
-        internal class TryFindRootMember
+        internal class TryFindRoot
         {
             [TestCase("this.foo", "foo")]
             [TestCase("foo", "foo")]

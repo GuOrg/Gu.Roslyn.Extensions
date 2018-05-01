@@ -78,6 +78,34 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Tries to find Baz in this.foo.Bar.Baz
+        /// </summary>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="member">The leaf member.</param>
+        /// <returns>True if leaf was found.</returns>
+        public static bool TryFindLast(ExpressionSyntax expression, out IdentifierNameSyntax member)
+        {
+            using (var walker = PathWalker.Borrow(expression))
+            {
+                return walker.IdentifierNames.TryLast(out member);
+            }
+        }
+
+        /// <summary>
+        /// Tries to the single member in the path
+        /// </summary>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="member">The single member.</param>
+        /// <returns>True if the path was only one member this.foo or foo for example.</returns>
+        public static bool TrySingle(ExpressionSyntax expression, out IdentifierNameSyntax member)
+        {
+            using (var walker = PathWalker.Borrow(expression))
+            {
+                return walker.IdentifierNames.TrySingle(out member);
+            }
+        }
+
+        /// <summary>
         /// Try get the member name of the expression
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/></param>

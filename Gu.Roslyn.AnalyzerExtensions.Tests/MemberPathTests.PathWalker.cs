@@ -9,12 +9,15 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     {
         internal class PathWalker
         {
-            [TestCase("this.foo", "foo")]
             [TestCase("foo", "foo")]
             [TestCase("foo.Inner", "foo.Inner")]
-            [TestCase("this.foo.Inner", "foo.Inner")]
+            [TestCase("foo?.Inner", "foo.Inner")]
             [TestCase("foo.Inner.foo", "foo.Inner.foo")]
             [TestCase("foo.Inner.foo.Inner", "foo.Inner.foo.Inner")]
+            [TestCase("this.foo", "foo")]
+            [TestCase("this?.foo", "foo")]
+            [TestCase("this.foo.Inner", "foo.Inner")]
+            [TestCase("this.foo?.Inner", "foo.Inner")]
             [TestCase("this.foo.Inner.foo.Inner", "foo.Inner.foo.Inner")]
             [TestCase("this.foo?.Inner.foo.Inner", "foo.Inner.foo.Inner")]
             [TestCase("this.foo?.Inner?.foo.Inner", "foo.Inner.foo.Inner")]
@@ -24,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             [TestCase("this.foo.Inner.foo?.Inner", "foo.Inner.foo.Inner")]
             [TestCase("(meh as Foo)?.Inner", "meh.Inner")]
             [TestCase("((Foo)meh)?.Inner", "meh.Inner")]
-            public void ForPropertyOrField(string code, string expected)
+            public void PropertyOrField(string code, string expected)
             {
                 var testCode = @"
 namespace RoslynSandbox
@@ -53,10 +56,16 @@ namespace RoslynSandbox
                 }
             }
 
+            [TestCase("foo.Dispose()", "foo")]
+            [TestCase("foo?.Dispose()", "foo")]
             [TestCase("foo.Get<IComparable>(1)", "foo")]
+            [TestCase("foo?.Get<IComparable>(1)", "foo")]
             [TestCase("foo.Get<System.IComparable>(1)", "foo")]
             [TestCase("foo.Get<int>(1)", "foo")]
             [TestCase("this.foo.Get<int>(1)", "foo")]
+            [TestCase("this.foo.Dispose()", "foo")]
+            [TestCase("this.foo?.Dispose()", "foo")]
+            [TestCase("this?.foo?.Dispose()", "foo")]
             [TestCase("this.foo.Inner.Get<int>(1)", "foo.Inner")]
             [TestCase("this.foo.Inner.foo.Get<int>(1)", "foo.Inner.foo")]
             [TestCase("this.foo?.Get<int>(1)", "foo")]
@@ -74,7 +83,7 @@ namespace RoslynSandbox
             [TestCase("(this.Inner.meh as Foo).Get<int>(1)", "Inner.meh")]
             [TestCase("(this.Inner.meh as Foo)?.Get<int>(1)", "Inner.meh")]
             [TestCase("(meh as Foo)?.Get<int>(1)", "meh")]
-            public void ForMethodInvocation(string code, string expected)
+            public void Invocation(string code, string expected)
             {
                 var testCode = @"
 namespace RoslynSandbox
