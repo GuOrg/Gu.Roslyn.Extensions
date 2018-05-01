@@ -85,8 +85,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
 
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -104,8 +102,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case Scope.Recursive when TryGetTarget(out var target):
                     this.Visit(target);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             bool TryGetTarget(out MethodDeclarationSyntax declaration)
@@ -139,8 +135,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
 
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -153,19 +147,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     break;
                 case Scope.Instance:
                 case Scope.Recursive:
-                    if (this.TryGetPropertyGet(node.Right, out var target))
+                    if (this.TryGetPropertyGet(node.Right, out var getter))
                     {
-                        this.Visit(target);
+                        this.Visit(getter);
                     }
 
-                    if (this.TryGetPropertySet(node.Left, out target))
+                    if (this.TryGetPropertySet(node.Left, out var setter))
                     {
-                        this.Visit(target);
+                        this.Visit(setter);
                     }
 
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             base.VisitAssignmentExpression(node);
@@ -199,9 +191,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.CancellationToken = CancellationToken.None;
         }
 
-        private bool TryGetPropertyGet(SyntaxNode candidate, out AccessorDeclarationSyntax result)
+        private bool TryGetPropertyGet(SyntaxNode candidate, out SyntaxNode getter)
         {
-            result = null;
+            getter = null;
             if (!this.visited.Add(candidate))
             {
                 return false;
@@ -214,21 +206,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
+            if (candidate.Parent is MemberAccessExpressionSyntax memberAccessParent &&
+                memberAccessParent.Expression is InstanceExpressionSyntax)
+            {
+                return this.TryGetPropertyGet(memberAccessParent, out getter);
+            }
+
             if (candidate.Parent is ArgumentSyntax ||
                 candidate.Parent is AssignmentExpressionSyntax ||
                 candidate.Parent is ExpressionStatementSyntax)
             {
-                return this.SemanticModel.GetSymbolSafe(candidate, this.CancellationToken) is IPropertySymbol property &&
+                return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property) &&
                        property.GetMethod is IMethodSymbol getMethod &&
-                       getMethod.TrySingleDeclaration(this.CancellationToken, out result);
+                       getMethod.TrySingleDeclaration(this.CancellationToken, out getter);
             }
 
             return false;
         }
 
-        private bool TryGetPropertySet(SyntaxNode candidate, out AccessorDeclarationSyntax result)
+        private bool TryGetPropertySet(SyntaxNode candidate, out AccessorDeclarationSyntax setter)
         {
-            result = null;
+            setter = null;
             if (!this.visited.Add(candidate))
             {
                 return false;
@@ -244,9 +242,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (candidate.Parent is AssignmentExpressionSyntax assignment &&
                 assignment.Left.Contains(candidate))
             {
-                return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property)  &&
+                return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property) &&
                        property.SetMethod is IMethodSymbol setMethod &&
-                       setMethod.TrySingleDeclaration(this.CancellationToken, out result);
+                       setMethod.TrySingleDeclaration(this.CancellationToken, out setter);
             }
 
             return false;

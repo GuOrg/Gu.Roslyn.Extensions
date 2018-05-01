@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         internal static bool TryGetDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
         {
             result = null;
-            while (type != null && 
+            while (type != null &&
                    type != QualifiedType.System.Object)
             {
                 foreach (var candidate in type.Constructors)
@@ -33,6 +33,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     return false;
                 }
+
                 type = type.BaseType;
             }
 
