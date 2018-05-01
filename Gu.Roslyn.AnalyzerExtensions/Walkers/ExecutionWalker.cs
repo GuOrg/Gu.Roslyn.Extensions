@@ -31,114 +31,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected CancellationToken CancellationToken { get; set; }
 
         /// <inheritdoc />
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
-            base.VisitInvocationExpression(node);
-            switch (this.Scope)
+            if (this.Scope != Scope.Member &&
+                node.Initializer == null &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
+                ctor.ContainingType is INamedTypeSymbol containingType &&
+                Constructor.TryGetDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
+                defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
             {
-                case Scope.Member:
-                    break;
-                case Scope.Instance when IsIntance() &&
-                                         TryGetTarget(out var target):
-                    this.Visit(target);
-                    break;
-                case Scope.Recursive when TryGetTarget(out var target):
-                    this.Visit(target);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                this.Visit(declaration);
             }
 
-            bool IsIntance()
-            {
-                return node.Expression == null ||
-                       node.Expression is InstanceExpressionSyntax;
-            }
-
-            bool TryGetTarget(out MethodDeclarationSyntax declaration)
-            {
-                declaration = null;
-                return this.visited.Add(node) &&
-                       node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration);
-            }
-        }
-
-        /// <inheritdoc />
-        public override void VisitIdentifierName(IdentifierNameSyntax node)
-        {
-            base.VisitIdentifierName(node);
-            switch (this.Scope)
-            {
-                case Scope.Member:
-                    break;
-                case Scope.Instance:
-                case Scope.Recursive:
-                    if (this.visited.Add(node) &&
-                        TryGetPropertyGet(node, out var target))
-                    {
-                        this.Visit(target);
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            bool TryGetPropertyGet(SyntaxNode candidate, out SyntaxNode result)
-            {
-                result = null;
-                if (candidate.Parent is MemberAccessExpressionSyntax memberAccess)
-                {
-                    if (this.Scope == Scope.Instance &&
-                        !(memberAccess.Expression is InstanceExpressionSyntax))
-                    {
-                        return false;
-                    }
-
-                    return TryGetPropertyGet(candidate.Parent, out result);
-                }
-
-                if (candidate.Parent is ArgumentSyntax ||
-                    candidate.Parent is EqualsValueClauseSyntax)
-                {
-                    return this.SemanticModel.GetSymbolSafe(candidate, this.CancellationToken) is IPropertySymbol property &&
-                           property.GetMethod is IMethodSymbol getMethod &&
-                           getMethod.TrySingleDeclaration(this.CancellationToken, out result);
-                }
-
-                return false;
-            }
-        }
-
-        /// <inheritdoc />
-        public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
-        {
-            base.VisitAssignmentExpression(node);
-            //switch (this.Scope)
-            //{
-            //    case Scope.Member:
-            //        break;
-            //    case Scope.Instance:
-            //    case Scope.Recursive:
-            //        if (this.visited.Add(node) &&
-            //            node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
-            //        {
-            //            this.Visit(declaration);
-            //        }
-
-            //        break;
-            //    default:
-            //        throw new ArgumentOutOfRangeException();
-            //}
-
-            //if (this.Scope == this.Scope.Recursive &&
-            //    this.visited.Add(node) &&
-            //    this.SemanticModel.GetSymbolSafe(node.Left, this.CancellationToken) is IPropertySymbol property &&
-            //    property.TrySingleDeclaration(this.CancellationToken, out var propertyDeclaration) &&
-            //    propertyDeclaration.TryGetSetter(out var setter))
-            //{
-            //    this.Visit(setter);
-            //}
+            base.VisitConstructorDeclaration(node);
         }
 
         /// <inheritdoc />
@@ -185,6 +90,81 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <inheritdoc />
+        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        {
+            base.VisitInvocationExpression(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance when TryGetTarget(out var target):
+                    this.Visit(target);
+                    break;
+                case Scope.Recursive when TryGetTarget(out var target):
+                    this.Visit(target);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            bool TryGetTarget(out MethodDeclarationSyntax declaration)
+            {
+                declaration = null;
+                if (this.Scope == Scope.Instance &&
+                    node.Expression != null &&
+                    !(node.Expression is InstanceExpressionSyntax))
+                {
+                    return false;
+                }
+
+                return this.visited.Add(node) &&
+                       node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            base.VisitIdentifierName(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (this.TryGetPropertyGet(node, out var target))
+                    {
+                        this.Visit(target);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
+        {
+            base.VisitAssignmentExpression(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (this.TryGetPropertySet(node, out var target))
+                    {
+                        this.Visit(target);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         /// <summary>
         /// Returns a walker that have visited <paramref name="node"/>
         /// </summary>
@@ -211,6 +191,66 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.Scope = Scope.Member;
             this.SemanticModel = null;
             this.CancellationToken = CancellationToken.None;
+        }
+
+        private bool TryGetPropertyGet(SyntaxNode candidate, out AccessorDeclarationSyntax result)
+        {
+            result = null;
+            if (!this.visited.Add(candidate))
+            {
+                return false;
+            }
+
+            if (candidate.Parent is MemberAccessExpressionSyntax memberAccess)
+            {
+                if (this.Scope == Scope.Instance &&
+                    !(memberAccess.Expression is InstanceExpressionSyntax))
+                {
+                    return false;
+                }
+
+                return this.TryGetPropertyGet(candidate.Parent, out result);
+            }
+
+            if (candidate.Parent is ArgumentSyntax ||
+                candidate.Parent is EqualsValueClauseSyntax)
+            {
+                return this.SemanticModel.GetSymbolSafe(candidate, this.CancellationToken) is IPropertySymbol property &&
+                       property.GetMethod is IMethodSymbol getMethod &&
+                       getMethod.TrySingleDeclaration(this.CancellationToken, out result);
+            }
+
+            return false;
+        }
+
+        private bool TryGetPropertySet(SyntaxNode candidate, out AccessorDeclarationSyntax result)
+        {
+            result = null;
+            if (!this.visited.Add(candidate))
+            {
+                return false;
+            }
+
+            if (candidate.Parent is MemberAccessExpressionSyntax memberAccess)
+            {
+                if (this.Scope == Scope.Instance &&
+                    !(memberAccess.Expression is InstanceExpressionSyntax))
+                {
+                    return false;
+                }
+
+                return this.TryGetPropertySet(candidate.Parent, out result);
+            }
+
+            if (candidate.Parent is ArgumentSyntax ||
+                candidate.Parent is EqualsValueClauseSyntax)
+            {
+                return this.SemanticModel.GetSymbolSafe(candidate, this.CancellationToken) is IPropertySymbol property &&
+                       property.SetMethod is IMethodSymbol setMethod &&
+                       setMethod.TrySingleDeclaration(this.CancellationToken, out result);
+            }
+
+            return false;
         }
     }
 }

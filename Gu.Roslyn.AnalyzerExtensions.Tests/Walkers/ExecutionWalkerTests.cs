@@ -29,7 +29,8 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            using (var walker = LiteralWalker.Borrow(syntaxTree.FindConstructorDeclaration("Foo"), scope, semanticModel, CancellationToken.None))
+            var node = syntaxTree.FindConstructorDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual("1", walker.Literals.Single().ToString());
             }
@@ -59,7 +60,41 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            using (var walker = LiteralWalker.Borrow(syntaxTree.FindConstructorDeclaration("Foo"), scope, semanticModel, CancellationToken.None))
+            var node = syntaxTree.FindConstructorDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
+        [TestCase(Scope.Member, "2")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Recursive, "1, 2")]
+        public void ImplicitBaseCtor(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class FooBase
+    {
+        public FooBase()
+        {
+            var i = 1;
+        }
+    }
+
+    public class Foo : FooBase
+    {
+        public Foo()
+        {
+            var j = 2;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindConstructorDeclaration("public Foo()");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual(expected, string.Join(", ", walker.Literals));
             }
