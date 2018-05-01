@@ -173,7 +173,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         base.Visit(identifierName);
                         return;
                     case InvocationExpressionSyntax invocation when invocation.Expression is MemberAccessExpressionSyntax memberAccess:
-                        base.Visit(memberAccess);
+                        this.Visit(memberAccess.Expression);
                         return;
                 }
 

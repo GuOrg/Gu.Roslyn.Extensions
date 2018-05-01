@@ -57,6 +57,7 @@ namespace RoslynSandbox
             }
 
             [TestCase("foo.Dispose()", "foo")]
+            [TestCase("foo.ToString().ToString()", "foo")]
             [TestCase("foo?.Dispose()", "foo")]
             [TestCase("foo.Get<IComparable>(1)", "foo")]
             [TestCase("foo?.Get<IComparable>(1)", "foo")]
@@ -64,6 +65,7 @@ namespace RoslynSandbox
             [TestCase("foo.Get<int>(1)", "foo")]
             [TestCase("this.foo.Get<int>(1)", "foo")]
             [TestCase("this.foo.Dispose()", "foo")]
+            [TestCase("this.foo.ToString().ToString()", "foo")]
             [TestCase("this.foo?.Dispose()", "foo")]
             [TestCase("this?.foo?.Dispose()", "foo")]
             [TestCase("this.foo.Inner.Get<int>(1)", "foo.Inner")]
