@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using Microsoft.CodeAnalysis;
@@ -18,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets or sets if the walker should walk declarations of invoked methods etc.
         /// </summary>
-        protected Search Search { get; set; }
+        protected Scope Scope { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="SemanticModel"/>
@@ -31,116 +32,351 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected CancellationToken CancellationToken { get; set; }
 
         /// <inheritdoc />
-        public override void Visit(SyntaxNode node)
+        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
-            if (node is AnonymousFunctionExpressionSyntax)
-            {
-                switch (node.Parent.Kind())
-                {
-                    case SyntaxKind.AddAssignmentExpression:
-                    case SyntaxKind.Argument:
-                        break;
-                    default:
-                        return;
-                }
-            }
-
-            base.Visit(node);
+            this.VisitTypeDeclaration(node);
         }
 
         /// <inheritdoc />
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        public override void VisitStructDeclaration(StructDeclarationSyntax node)
         {
-            base.VisitInvocationExpression(node);
-            this.VisitRecursive(node);
+            this.VisitTypeDeclaration(node);
         }
 
         /// <inheritdoc />
-        public override void VisitIdentifierName(IdentifierNameSyntax node)
+        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
-            base.VisitIdentifierName(node);
-            if (this.Search == Search.Recursive &&
-                this.visited.Add(node) &&
-                TryGetPropertyGet(node, out var getter))
+            if (this.Scope != Scope.Member &&
+                node.Initializer == null &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
+                ctor.ContainingType is INamedTypeSymbol containingType &&
+                Constructor.TryGetDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
+                defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
             {
-                this.Visit(getter);
+                this.Visit(declaration);
             }
 
-            bool TryGetPropertyGet(SyntaxNode candidate, out SyntaxNode result)
-            {
-                result = null;
-                if (candidate.Parent is MemberAccessExpressionSyntax)
-                {
-                    return TryGetPropertyGet(candidate.Parent, out result);
-                }
-
-                if (candidate.Parent is ArgumentSyntax ||
-                    candidate.Parent is EqualsValueClauseSyntax)
-                {
-                    return this.SemanticModel.GetSymbolSafe(candidate, this.CancellationToken) is IPropertySymbol property &&
-                           property.GetMethod is IMethodSymbol getMethod &&
-                           getMethod.TrySingleDeclaration(this.CancellationToken, out result);
-                }
-
-                return false;
-            }
-        }
-
-        /// <inheritdoc />
-        public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
-        {
-            base.VisitAssignmentExpression(node);
-            if (this.Search == Search.Recursive &&
-                this.visited.Add(node) &&
-                this.SemanticModel.GetSymbolSafe(node.Left, this.CancellationToken) is IPropertySymbol property &&
-                property.TrySingleDeclaration(this.CancellationToken, out var propertyDeclaration) &&
-                propertyDeclaration.TryGetSetter(out var setter))
-            {
-                this.Visit(setter);
-            }
+            base.VisitConstructorDeclaration(node);
         }
 
         /// <inheritdoc />
         public override void VisitConstructorInitializer(ConstructorInitializerSyntax node)
         {
             base.VisitConstructorInitializer(node);
-            this.VisitRecursive(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (this.visited.Add(node) &&
+                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
+                    {
+                        this.Visit(declaration);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             base.VisitObjectCreationExpression(node);
-            this.VisitRecursive(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                case Scope.Instance:
+                    break;
+                case Scope.Recursive:
+                    if (this.visited.Add(node) &&
+                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
+                    {
+                        this.Visit(declaration);
+                    }
+
+                    break;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        {
+            base.VisitInvocationExpression(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (TryGetTarget(out var target))
+                    {
+                        this.Visit(target);
+                    }
+
+                    break;
+            }
+
+            bool TryGetTarget(out MethodDeclarationSyntax declaration)
+            {
+                declaration = null;
+                if (this.Scope == Scope.Instance &&
+                    !MemberPath.IsEmpty(node))
+                {
+                    return false;
+                }
+
+                return this.visited.Add(node) &&
+                       node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            base.VisitIdentifierName(node);
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (this.TryGetPropertyGet(node, out var target))
+                    {
+                        this.Visit(target);
+                    }
+
+                    break;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
+        {
+            switch (this.Scope)
+            {
+                case Scope.Member:
+                    break;
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (this.TryGetPropertyGet(node.Right, out var getter))
+                    {
+                        this.Visit(getter);
+                    }
+
+                    if (this.TryGetPropertySet(node.Left, out var setter))
+                    {
+                        this.Visit(setter);
+                    }
+
+                    break;
+            }
+
+            base.VisitAssignmentExpression(node);
+        }
+
+        /// <summary>
+        /// Returns a walker that have visited <paramref name="node"/>
+        /// </summary>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="scope">The scope to walk.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="create">The factory for creating a walker if not found in cache.</param>
+        /// <returns>The walker that have visited <paramref name="node"/>.</returns>
+        protected static T BorrowAndVisit(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
+        {
+            var walker = Borrow(create);
+            walker.Scope = scope;
+            walker.SemanticModel = semanticModel;
+            walker.CancellationToken = cancellationToken;
+            walker.Visit(node);
+            return walker;
+        }
+
+        /// <summary>
+        /// Called by <see cref="VisitClassDeclaration"/> and <see cref="VisitStructDeclaration"/>
+        /// Walks the members in the following order:
+        /// 1. Field and property initializers in document order.
+        /// 2. Nonprivate constructors in document order
+        /// 3. Nonprivate members.
+        /// 4. Nested types if scope is recursive.
+        /// </summary>
+        /// <param name="node">The <see cref="TypeDeclarationSyntax"/></param>
+        protected virtual void VisitTypeDeclaration(TypeDeclarationSyntax node)
+        {
+            using (var walker = TypeDeclarationWalker.Borrow(node))
+            {
+                foreach (var initializer in walker.Initializers)
+                {
+                    this.Visit(initializer);
+                }
+
+                foreach (var ctor in walker.Ctors)
+                {
+                    this.Visit(ctor);
+                }
+
+                foreach (var member in walker.Members)
+                {
+                    this.Visit(member);
+                }
+
+                if (this.Scope == Scope.Recursive)
+                {
+                    foreach (var type in walker.Types)
+                    {
+                        this.Visit(type);
+                    }
+                }
+            }
         }
 
         /// <inheritdoc />
         protected override void Clear()
         {
             this.visited.Clear();
+            this.Scope = Scope.Member;
             this.SemanticModel = null;
             this.CancellationToken = CancellationToken.None;
         }
 
-        /// <summary>
-        /// This is called when for example an invocation is reached. Now we decide if we want to walk the declaration of the invocation.
-        /// </summary>
-        /// <param name="node">The <see cref="SyntaxNode"/></param>
-        protected void VisitRecursive(SyntaxNode node)
+        private bool TryGetPropertyGet(SyntaxNode candidate, out SyntaxNode getter)
         {
-            if (node == null)
+            getter = null;
+            if (!this.visited.Add(candidate))
             {
-                return;
+                return false;
             }
 
-            if (this.Search == Search.Recursive &&
-                this.visited.Add(node))
+            if (this.Scope == Scope.Instance &&
+                candidate is MemberAccessExpressionSyntax memberAccess &&
+                !(memberAccess.Expression is InstanceExpressionSyntax))
             {
-                if (this.SemanticModel.TryGetSymbol<ISymbol>(node, this.CancellationToken, out var symbol) &&
-                    symbol.TrySingleDeclaration<SyntaxNode>(this.CancellationToken, out var declaration))
+                return false;
+            }
+
+            if (candidate.Parent is MemberAccessExpressionSyntax memberAccessParent &&
+                memberAccessParent.Expression is InstanceExpressionSyntax)
+            {
+                return this.TryGetPropertyGet(memberAccessParent, out getter);
+            }
+
+            if (candidate.Parent is ArgumentSyntax ||
+                candidate.Parent is AssignmentExpressionSyntax ||
+                candidate.Parent is ExpressionStatementSyntax)
+            {
+                return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property) &&
+                       property.GetMethod is IMethodSymbol getMethod &&
+                       getMethod.TrySingleDeclaration(this.CancellationToken, out getter);
+            }
+
+            return false;
+        }
+
+        private bool TryGetPropertySet(SyntaxNode candidate, out AccessorDeclarationSyntax setter)
+        {
+            setter = null;
+            if (!this.visited.Add(candidate))
+            {
+                return false;
+            }
+
+            if (this.Scope == Scope.Instance &&
+                candidate is MemberAccessExpressionSyntax memberAccess &&
+                !(memberAccess.Expression is InstanceExpressionSyntax))
+            {
+                return false;
+            }
+
+            if (candidate.Parent is AssignmentExpressionSyntax assignment &&
+                assignment.Left.Contains(candidate))
+            {
+                return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property) &&
+                       property.SetMethod is IMethodSymbol setMethod &&
+                       setMethod.TrySingleDeclaration(this.CancellationToken, out setter);
+            }
+
+            return false;
+        }
+
+        private class TypeDeclarationWalker : PooledWalker<TypeDeclarationWalker>
+        {
+#pragma warning disable SA1401 // Fields must be private
+            internal readonly List<EqualsValueClauseSyntax> Initializers = new List<EqualsValueClauseSyntax>();
+            internal readonly List<ConstructorDeclarationSyntax> Ctors = new List<ConstructorDeclarationSyntax>();
+            internal readonly List<MemberDeclarationSyntax> Members = new List<MemberDeclarationSyntax>();
+            internal readonly List<TypeDeclarationSyntax> Types = new List<TypeDeclarationSyntax>();
+#pragma warning restore SA1401 // Fields must be private
+
+            public static TypeDeclarationWalker Borrow(TypeDeclarationSyntax typeDeclaration)
+            {
+                var walker = Borrow(() => new TypeDeclarationWalker());
+                foreach (var member in typeDeclaration.Members)
                 {
-                    this.Visit(declaration);
+                    walker.Visit(member);
                 }
+
+                return walker;
+            }
+
+            public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+            {
+                if (node.Declaration is VariableDeclarationSyntax declaration &&
+                    declaration.Variables.TryLast(out var variable) &&
+                    variable.Initializer is EqualsValueClauseSyntax equalsValueClause)
+                {
+                    this.Initializers.Add(equalsValueClause);
+                }
+            }
+
+            public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+            {
+                if (node.Initializer is EqualsValueClauseSyntax equalsValueClause)
+                {
+                    this.Initializers.Add(equalsValueClause);
+                }
+
+                if (!node.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                {
+                    this.Members.Add(node);
+                }
+            }
+
+            public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+            {
+                if (!node.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                {
+                    this.Ctors.Add(node);
+                }
+            }
+
+            public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                if (!node.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                {
+                    this.Members.Add(node);
+                }
+            }
+
+            public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+            {
+                this.Types.Add(node);
+            }
+
+            public override void VisitStructDeclaration(StructDeclarationSyntax node)
+            {
+                this.Types.Add(node);
+            }
+
+            protected override void Clear()
+            {
+                this.Initializers.Clear();
+                this.Ctors.Clear();
+                this.Members.Clear();
+                this.Types.Clear();
             }
         }
     }
