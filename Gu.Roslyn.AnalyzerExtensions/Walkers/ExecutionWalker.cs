@@ -96,11 +96,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 case Scope.Member:
                     break;
-                case Scope.Instance when TryGetTarget(out var target):
-                    this.Visit(target);
-                    break;
-                case Scope.Recursive when TryGetTarget(out var target):
-                    this.Visit(target);
+                case Scope.Instance:
+                case Scope.Recursive:
+                    if (TryGetTarget(out var target))
+                    {
+                        this.Visit(target);
+                    }
+
                     break;
             }
 
@@ -108,8 +110,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 declaration = null;
                 if (this.Scope == Scope.Instance &&
-                    node.Expression != null &&
-                    !(node.Expression is InstanceExpressionSyntax))
+                    !MemberPath.IsEmpty(node))
                 {
                     return false;
                 }

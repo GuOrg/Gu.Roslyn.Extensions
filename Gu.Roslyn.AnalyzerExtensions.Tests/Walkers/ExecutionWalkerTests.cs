@@ -194,6 +194,34 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase(Scope.Member, "2, 3")]
+        [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Recursive, "1, 2, 3")]
+        public void InvocationAsArgument(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            Equals(this.Value(), 2);
+            int j = 3;
+        }
+
+        public int Value() => 1;
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindConstructorDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         private class LiteralWalker : ExecutionWalker<LiteralWalker>
         {
             private readonly List<LiteralExpressionSyntax> literals = new List<LiteralExpressionSyntax>();

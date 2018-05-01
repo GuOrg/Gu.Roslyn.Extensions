@@ -48,7 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
             }
 
-            return false;
+            return MemberPath.IsEmpty(invocation);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
             }
 
-            return false;
+            return MemberPath.IsEmpty(invocation);
         }
 
         /// <summary>

@@ -105,6 +105,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        public static bool IsEmpty(ExpressionSyntax expression)
+        {
+            using (var walker = PathWalker.Borrow(expression))
+            {
+                return walker.IdentifierNames.Count == 0;
+            }
+        }
+
         /// <summary>
         /// Try get the member name of the expression
         /// </summary>
