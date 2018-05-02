@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for constructors
     /// </summary>
-    internal static class Constructor
+    public static class Constructor
     {
         /// <summary>
         /// Find the first parameterless constructor
@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="search">Specifiec if the search is recursive</param>
         /// <param name="result">The first parameterless ctor found.</param>
         /// <returns>True if a parameterless ctor was found.</returns>
-        internal static bool TryGetDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
+        public static bool TryGetDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
         {
             result = null;
             while (type != null &&
