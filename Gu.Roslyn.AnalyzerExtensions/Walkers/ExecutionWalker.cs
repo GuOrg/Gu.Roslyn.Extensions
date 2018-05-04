@@ -238,7 +238,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected override void Clear()
         {
             this.visited.Clear();
-            this.Scope = Scope.Member;
             this.SemanticModel = null;
             this.CancellationToken = CancellationToken.None;
         }
