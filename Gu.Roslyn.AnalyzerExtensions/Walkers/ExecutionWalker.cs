@@ -266,7 +266,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (candidate.Parent is ArgumentSyntax ||
                 candidate.Parent is AssignmentExpressionSyntax ||
-                candidate.Parent is ExpressionStatementSyntax)
+                candidate.Parent is ExpressionStatementSyntax ||
+                candidate.Parent is EqualsValueClauseSyntax)
             {
                 return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property) &&
                        property.GetMethod is IMethodSymbol getMethod &&
