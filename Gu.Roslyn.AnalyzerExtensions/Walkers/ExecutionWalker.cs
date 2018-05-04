@@ -264,10 +264,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return this.TryGetPropertyGet(memberAccessParent, out getter);
             }
 
-            if (candidate.Parent is ArgumentSyntax ||
-                candidate.Parent is AssignmentExpressionSyntax ||
+            if (candidate.TryFirstAncestor<ArgumentSyntax>(out _) ||
+                (candidate.TryFirstAncestor<AssignmentExpressionSyntax>(out var assignment) &&
+                 assignment.Right.Contains(candidate)) ||
                 candidate.Parent is ExpressionStatementSyntax ||
-                candidate.Parent is EqualsValueClauseSyntax)
+                candidate.TryFirstAncestor<EqualsValueClauseSyntax>(out _) ||
+                candidate.TryFirstAncestor<ArrowExpressionClauseSyntax>(out _))
             {
                 return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property) &&
                        property.GetMethod is IMethodSymbol getMethod &&

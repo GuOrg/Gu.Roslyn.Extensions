@@ -225,7 +225,7 @@ namespace RoslynSandbox
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void LocalDeclaration(Scope scope, string expected)
+        public void LocalDeclarationWithExpressionBody(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -235,6 +235,34 @@ namespace RoslynSandbox
         public Foo()
         {
             var value = this.Value;
+            value = 2;
+        }
+
+        public int Value => 1;
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindConstructorDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
+        [TestCase(Scope.Member, "2")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Recursive, "1, 2")]
+        public void LocalDeclarationWithCastExpressionBody(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            var value = (double)this.Value;
             value = 2;
         }
 
