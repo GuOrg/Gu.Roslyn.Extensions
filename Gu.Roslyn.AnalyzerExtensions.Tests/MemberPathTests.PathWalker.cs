@@ -56,6 +56,9 @@ namespace RoslynSandbox
                 }
             }
 
+            [TestCase("Equals(1, 1)", "")]
+            [TestCase("ToString()", "")]
+            [TestCase("this.ToString()", "")]
             [TestCase("foo.Dispose()", "foo")]
             [TestCase("foo.ToString().ToString()", "foo")]
             [TestCase("foo?.Dispose()", "foo")]

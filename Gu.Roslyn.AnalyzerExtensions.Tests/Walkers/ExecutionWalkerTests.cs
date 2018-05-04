@@ -222,6 +222,43 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase(Scope.Member, "1, 3")]
+        [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Recursive, "1, 2, 3")]
+        public void InvocationVirtual(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    using System;
+
+    public class Foo : IDisposable
+    {
+        public void Dispose()
+        {
+            var i = 1;
+            Dispose(true);
+            i = 3;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                var j = 2;
+            }
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindMethodDeclaration("public void Dispose()");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
@@ -345,7 +382,11 @@ namespace RoslynSandbox
 
             public override void VisitLiteralExpression(LiteralExpressionSyntax node)
             {
-                this.literals.Add(node);
+                if (node.IsKind(SyntaxKind.NumericLiteralExpression))
+                {
+                    this.literals.Add(node);
+                }
+
                 base.VisitLiteralExpression(node);
             }
 

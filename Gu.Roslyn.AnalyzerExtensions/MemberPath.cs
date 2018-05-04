@@ -187,8 +187,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     case CastExpressionSyntax cast:
                         base.Visit(cast.Expression);
                         return;
-                    case InvocationExpressionSyntax invocation when invocation.Expression is IdentifierNameSyntax identifierName:
-                        base.Visit(identifierName);
+                    case InvocationExpressionSyntax invocation when invocation.Expression is IdentifierNameSyntax:
                         return;
                     case InvocationExpressionSyntax invocation when invocation.Expression is MemberAccessExpressionSyntax memberAccess:
                         this.Visit(memberAccess.Expression);
