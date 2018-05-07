@@ -4,6 +4,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper methods for working with <see cref="ILocalSymbol"/>
+    /// </summary>
     public static class LocalSymbolExt
     {
         /// <summary>
