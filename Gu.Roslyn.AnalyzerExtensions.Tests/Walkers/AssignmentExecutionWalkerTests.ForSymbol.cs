@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
 {
+    using System.Linq;
     using System.Threading;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.Asserts;
@@ -10,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
 
     public partial class AssignmentExecutionWalkerTests
     {
-        internal class Symbol
+        internal class ForSymbol
         {
             [TestCase(Scope.Member)]
             [TestCase(Scope.Instance)]
@@ -40,6 +41,10 @@ namespace RoslynSandbox
                 Assert.AreEqual("this.value = arg", result.ToString());
                 Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.value = arg", result.ToString());
+                using (var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None))
+                {
+                    Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
+                }
             }
 
             [TestCase(Scope.Member)]
@@ -72,23 +77,27 @@ namespace RoslynSandbox
                 var ctor = syntaxTree.FindConstructorDeclaration("Foo()");
                 AssignmentExpressionSyntax result;
                 var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
-                if (scope == Scope.Recursive)
+                if (scope != Scope.Member)
                 {
-                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, Scope.Recursive, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                     Assert.AreEqual("this.value = arg", result.ToString());
-                    Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, Scope.Recursive, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                     Assert.AreEqual("this.value = arg", result.ToString());
+                    using (var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None))
+                    {
+                        Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
+                    }
                 }
                 else
                 {
-                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, Scope.Member, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 }
             }
 
             [TestCase(Scope.Member)]
             [TestCase(Scope.Instance)]
             [TestCase(Scope.Recursive)]
-            public void FieldWithCtorArgViaProperty(Scope search)
+            public void FieldWithCtorArgViaProperty(Scope scope)
             {
                 var testCode = @"
 namespace RoslynSandbox
@@ -116,23 +125,27 @@ namespace RoslynSandbox
                 var ctor = syntaxTree.FindConstructorDeclaration("Foo(int arg)");
                 AssignmentExpressionSyntax result;
                 var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
-                if (search == Scope.Recursive)
+                if (scope != Scope.Member)
                 {
-                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, Scope.Recursive, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                     Assert.AreEqual("this.number = value", result.ToString());
-                    Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, Scope.Recursive, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                     Assert.AreEqual("this.number = value", result.ToString());
+                    using (var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None))
+                    {
+                        Assert.AreEqual("this.number = value", walker.Assignments.Single().ToString());
+                    }
                 }
                 else
                 {
-                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, Scope.Member, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 }
             }
 
             [TestCase(Scope.Member)]
             [TestCase(Scope.Instance)]
             [TestCase(Scope.Recursive)]
-            public void FieldInPropertyExpressionBody(Scope search)
+            public void FieldInPropertyExpressionBody(Scope scope)
             {
                 var testCode = @"
 namespace RoslynSandbox
@@ -156,14 +169,20 @@ namespace RoslynSandbox
                 var ctor = syntaxTree.FindConstructorDeclaration("Foo()");
                 AssignmentExpressionSyntax result;
                 var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
-                if (search == Scope.Recursive)
+                if (scope != Scope.Member)
                 {
-                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, Scope.Recursive, semanticModel, CancellationToken.None, out result));
-                    Assert.AreEqual("this.number = 3", result?.ToString());
+                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual("this.number = 3", result.ToString());
+                    Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual("this.number = 3", result.ToString());
+                    using (var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None))
+                    {
+                        Assert.AreEqual("this.number = 3", walker.Assignments.Single().ToString());
+                    }
                 }
                 else
                 {
-                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, Scope.Member, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 }
             }
         }
