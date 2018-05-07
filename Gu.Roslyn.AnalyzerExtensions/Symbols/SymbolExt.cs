@@ -1,8 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Threading;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
     /// Helper methods for working with <see cref="ISymbol"/>
@@ -37,34 +35,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where T3 : ISymbol
         {
             return symbol is T1 || symbol is T2 || symbol is T3;
-        }
-
-        /// <summary>
-        /// Try to get the scope where <paramref name="local"/> is visible
-        /// </summary>
-        /// <param name="local">The <see cref="ILocalSymbol"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="scope">The scope</param>
-        /// <returns>True if a scope could be determined.</returns>
-        public static bool TryGetScope(this ILocalSymbol local, CancellationToken cancellationToken, out SyntaxNode scope)
-        {
-            if (local.TrySingleDeclaration(cancellationToken, out var declaration))
-            {
-                if (declaration.FirstAncestor<AnonymousFunctionExpressionSyntax>() is SyntaxNode lambda)
-                {
-                    scope = lambda;
-                    return true;
-                }
-
-                if (declaration.FirstAncestor<MemberDeclarationSyntax>() is SyntaxNode member)
-                {
-                    scope = member;
-                    return true;
-                }
-            }
-
-            scope = null;
-            return false;
         }
     }
 }
