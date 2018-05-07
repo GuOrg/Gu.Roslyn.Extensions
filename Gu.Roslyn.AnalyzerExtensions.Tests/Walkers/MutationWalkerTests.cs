@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class MutationWalkerTests
+    public partial class MutationWalkerTests
     {
         [TestCase("this.value = 1")]
         [TestCase("this.value++")]

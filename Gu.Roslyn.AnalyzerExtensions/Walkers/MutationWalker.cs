@@ -2,6 +2,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -29,6 +30,90 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The scope</param>
         /// <returns>A walker that has visited <paramref name="node"/></returns>
         public static MutationWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new MutationWalker());
+
+        /// <summary>
+        /// Get a walker with all mutations for <paramref name="property"/>
+        /// </summary>
+        /// <param name="property">The <see cref="IPropertySymbol"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>A walker with all mutations for <paramref name="property"/></returns>
+        public static MutationWalker For(IPropertySymbol property, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (property.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
+            {
+                var walker = Borrow(typeDeclaration);
+                walker.mutations.RemoveAll(NotForProperty);
+                return walker;
+            }
+
+            return Borrow(() => new MutationWalker());
+
+            bool NotForProperty(SyntaxNode mutation)
+            {
+                switch (mutation)
+                {
+                    case AssignmentExpressionSyntax assignment:
+                        return !IsProperty(assignment.Left);
+                    case PrefixUnaryExpressionSyntax unary:
+                        return !IsProperty(unary.Operand);
+                    case PostfixUnaryExpressionSyntax unary:
+                        return !IsProperty(unary.Operand);
+                    case ArgumentSyntax _:
+                        return true;
+                    default:
+                        return true;
+                }
+            }
+
+            bool IsProperty(ExpressionSyntax expression)
+            {
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) &&
+                       Equals(symbol, property);
+            }
+        }
+
+        /// <summary>
+        /// Get a walker with all mutations for <paramref name="field"/>
+        /// </summary>
+        /// <param name="field">The <see cref="IFieldSymbol"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>A walker with all mutations for <paramref name="field"/></returns>
+        public static MutationWalker For(IFieldSymbol field, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (field.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
+            {
+                var walker = Borrow(typeDeclaration);
+                walker.mutations.RemoveAll(NotForField);
+                return walker;
+            }
+
+            return Borrow(() => new MutationWalker());
+
+            bool NotForField(SyntaxNode mutation)
+            {
+                switch (mutation)
+                {
+                    case AssignmentExpressionSyntax assignment:
+                        return !IsField(assignment.Left);
+                    case PrefixUnaryExpressionSyntax unary:
+                        return !IsField(unary.Operand);
+                    case PostfixUnaryExpressionSyntax unary:
+                        return !IsField(unary.Operand);
+                    case ArgumentSyntax argument:
+                        return !IsField(argument.Expression);
+                    default:
+                        return true;
+                }
+            }
+
+            bool IsField(ExpressionSyntax expression)
+            {
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) && 
+                       Equals(symbol, field);
+            }
+        }
 
         /// <inheritdoc />
         public IEnumerator<SyntaxNode> GetEnumerator() => this.mutations.GetEnumerator();
