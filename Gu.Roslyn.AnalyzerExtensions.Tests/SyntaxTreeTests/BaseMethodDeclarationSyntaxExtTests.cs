@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 
     public class BaseMethodDeclarationSyntaxExtTests
     {
-        public class TryGetMatchingParameter
+        public class TryFindParameter
         {
             [TestCase(0, "int v1")]
             [TestCase(1, "int v2")]
@@ -36,7 +36,7 @@ namespace RoslynSandbox
                                          .ArgumentList.Arguments[index];
                 var method = syntaxTree.FindMethodDeclaration("internal void Meh(int v1, int v2, int v3)");
 
-                Assert.AreEqual(true, BaseMethodDeclarationSyntaxExt.TryGetMatchingParameter(method, argument, out var parameter));
+                Assert.AreEqual(true, BaseMethodDeclarationSyntaxExt.TryFindParameter(method, argument, out var parameter));
                 Assert.AreEqual(expected, parameter.ToString());
             }
 
@@ -68,7 +68,7 @@ namespace RoslynSandbox
                                          .ArgumentList.Arguments[index];
                 var method = syntaxTree.FindMethodDeclaration("internal void Meh(int v1, int v2, int v3)");
 
-                Assert.AreEqual(true, BaseMethodDeclarationSyntaxExt.TryGetMatchingParameter(method, argument, out var parameter));
+                Assert.AreEqual(true, BaseMethodDeclarationSyntaxExt.TryFindParameter(method, argument, out var parameter));
                 Assert.AreEqual(expected, parameter.ToString());
             }
 
@@ -100,7 +100,7 @@ namespace RoslynSandbox
                                          .ArgumentList.Arguments[index];
                 var method = syntaxTree.FindMethodDeclaration("internal void Meh(int v1, int v2, int v3)");
 
-                Assert.AreEqual(true, BaseMethodDeclarationSyntaxExt.TryGetMatchingParameter(method, argument, out var parameter));
+                Assert.AreEqual(true, BaseMethodDeclarationSyntaxExt.TryFindParameter(method, argument, out var parameter));
                 Assert.AreEqual(expected, parameter.ToString());
             }
 
@@ -134,7 +134,7 @@ namespace RoslynSandbox
 
                 Assert.AreEqual(
                     true,
-                    BaseMethodDeclarationSyntaxExt.TryGetMatchingParameter(
+                    BaseMethodDeclarationSyntaxExt.TryFindParameter(
                         method,
                         argument,
                         out var parameter));

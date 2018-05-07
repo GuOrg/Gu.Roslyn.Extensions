@@ -121,7 +121,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching poarameter was found.</returns>
         public static bool TryFindParameter(this ArgumentSyntax argument, BaseMethodDeclarationSyntax method, out ParameterSyntax parameter)
         {
-            return method.TryGetMatchingParameter(argument, out parameter);
+            return method.TryFindParameter(argument, out parameter);
         }
 
         /// <summary>
