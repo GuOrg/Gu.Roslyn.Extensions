@@ -21,27 +21,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public IReadOnlyList<AssignmentExpressionSyntax> Assignments => this.assignments;
 
-        /// <inheritdoc />
-        public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
-        {
-            this.assignments.Add(node);
-            base.VisitAssignmentExpression(node);
-        }
-
-        /// <inheritdoc />
-        public override void VisitArgument(ArgumentSyntax node)
-        {
-            this.arguments.Add(node);
-            base.VisitArgument(node);
-        }
-
-        /// <inheritdoc />
-        public override void VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
-        {
-            this.localDeclarations.Add(node);
-            base.VisitLocalDeclarationStatement(node);
-        }
-
         /// <summary>
         /// Get a walker that has visited <paramref name="node"/>
         /// </summary>
@@ -53,6 +32,32 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static AssignmentExecutionWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new AssignmentExecutionWalker());
+        }
+
+        /// <summary>
+        /// Get all <see cref="AssignmentExpressionSyntax"/> for <paramref name="symbol"/>
+        /// </summary>
+        /// <param name="symbol">The symbol to find assignments for.</param>
+        /// <param name="node">The node to walk.</param>
+        /// <param name="scope">The scope</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="assignment">The first assignment if any.</param>
+        /// <returns>True if an assignment was found for the symbol.</returns>
+        public static AssignmentExecutionWalker For(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
+        {
+            assignment = null;
+            if (symbol == null ||
+                node == null)
+            {
+                return Borrow(() => new AssignmentExecutionWalker());
+            }
+
+            using (var walker = Borrow(node, scope, semanticModel, cancellationToken))
+            {
+                walker.assignments.RemoveAll(x => !IsMatch(symbol, x.Left, semanticModel, cancellationToken));
+                return walker;
+            }
         }
 
         /// <summary>
@@ -131,7 +136,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get the only <see cref="AssignmentExpressionSyntax"/> for <paramref name="symbol"/>
+        /// Get the first <see cref="AssignmentExpressionSyntax"/> with <paramref name="symbol"/>
         /// </summary>
         /// <param name="symbol">The symbol to find assignments for.</param>
         /// <param name="node">The node to walk.</param>
@@ -142,7 +147,92 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a single assignment was found for the symbol.</returns>
         public static bool FirstWith(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
         {
-            return FirstWith(symbol, node, scope, semanticModel, cancellationToken, out assignment, null);
+            assignment = null;
+            if (symbol == null ||
+                node == null)
+            {
+                return false;
+            }
+
+            return FirstWith(symbol, node, out assignment);
+
+            bool FirstWith(ISymbol currentSymbol, SyntaxNode currentNode, out AssignmentExpressionSyntax result, PooledSet<ISymbol> visited = null)
+            {
+                using (var walker = Borrow(currentNode, Scope.Member, semanticModel, cancellationToken))
+                {
+                    foreach (var candidate in walker.Assignments)
+                    {
+                        if (IsMatch(currentSymbol, candidate.Right, semanticModel, cancellationToken))
+                        {
+                            result = candidate;
+                            return true;
+                        }
+                    }
+
+                    foreach (var declaration in walker.localDeclarations)
+                    {
+                        if (declaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
+                            variableDeclaration.Variables.TryFirst(x => x.Initializer != null, out var variable) &&
+                            IsMatch(currentSymbol, variable.Initializer.Value, semanticModel, cancellationToken) &&
+                            semanticModel.GetDeclaredSymbolSafe(variable, cancellationToken) is ILocalSymbol local)
+                        {
+                            if (FirstWith(local, currentNode, out result))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+
+                    if (scope != Scope.Member)
+                    {
+                        foreach (var argument in walker.arguments)
+                        {
+                            if (argument.Expression is IdentifierNameSyntax identifierName &&
+                                identifierName.Identifier.ValueText == currentSymbol.Name &&
+                                semanticModel.GetSymbolSafe(argument.Parent?.Parent, cancellationToken) is IMethodSymbol
+                                    method &&
+                                method.TrySingleDeclaration(
+                                    cancellationToken,
+                                    out BaseMethodDeclarationSyntax methodDeclaration) &&
+                                method.TryFindParameter(argument, out var parameter))
+                            {
+                                using (var currentVisited = visited.IncrementUsage())
+                                {
+                                    if (currentVisited.Add(parameter) &&
+                                        FirstWith(parameter, methodDeclaration, out result, currentVisited))
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                result = null;
+                return false;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
+        {
+            this.assignments.Add(node);
+            base.VisitAssignmentExpression(node);
+        }
+
+        /// <inheritdoc />
+        public override void VisitArgument(ArgumentSyntax node)
+        {
+            this.arguments.Add(node);
+            base.VisitArgument(node);
+        }
+
+        /// <inheritdoc />
+        public override void VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
+        {
+            this.localDeclarations.Add(node);
+            base.VisitLocalDeclarationStatement(node);
         }
 
         /// <inheritdoc />
@@ -153,70 +243,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.SemanticModel = null;
             this.CancellationToken = CancellationToken.None;
             base.Clear();
-        }
-
-        private static bool FirstWith(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment, PooledSet<ISymbol> visited = null)
-        {
-            assignment = null;
-            if (symbol == null ||
-                node == null)
-            {
-                return false;
-            }
-
-            using (var walker = Borrow(node, scope, semanticModel, cancellationToken))
-            {
-                foreach (var candidate in walker.assignments)
-                {
-                    if (IsMatch(symbol, candidate.Right, semanticModel, cancellationToken))
-                    {
-                        assignment = candidate;
-                        return true;
-                    }
-                }
-
-                foreach (var declaration in walker.localDeclarations)
-                {
-                    if (declaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
-                        variableDeclaration.Variables.TryFirst(x => x.Initializer != null, out var variable) &&
-                        IsMatch(symbol, variable.Initializer.Value, semanticModel, cancellationToken) &&
-                        semanticModel.GetDeclaredSymbolSafe(variable, cancellationToken) is ILocalSymbol local)
-                    {
-                        using (var current = visited.IncrementUsage())
-                        {
-                            if (current.Add(local) &&
-                                FirstWith(local, node, scope, semanticModel, cancellationToken, out assignment, current))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-                if (scope != Scope.Member)
-                {
-                    foreach (var argument in walker.arguments)
-                    {
-                        if (argument.Expression is IdentifierNameSyntax identifierName &&
-                            identifierName.Identifier.ValueText == symbol.Name &&
-                            semanticModel.GetSymbolSafe(argument.Parent?.Parent, cancellationToken) is IMethodSymbol method &&
-                            method.TrySingleDeclaration(cancellationToken, out BaseMethodDeclarationSyntax methodDeclaration) &&
-                            method.TryFindParameter(argument, out var parameter))
-                        {
-                            using (var current = visited.IncrementUsage())
-                            {
-                                if (current.Add(parameter) &&
-                                    FirstWith(parameter, methodDeclaration, scope, semanticModel, cancellationToken, out assignment, current))
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
         }
 
         private static bool IsMatch(ISymbol symbol, ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken)
