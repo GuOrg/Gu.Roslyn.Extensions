@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System;
     using Microsoft.CodeAnalysis;
 
     /// <summary>

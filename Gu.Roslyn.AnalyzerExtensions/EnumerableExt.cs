@@ -82,8 +82,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     {
                         return true;
                     }
-
-                    return false;
                 }
 
                 result = default(T);
