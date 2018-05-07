@@ -38,6 +38,29 @@ namespace RoslynSandbox
                     Assert.AreEqual(mutation, walker.Single().ToString());
                 }
             }
+
+            [Test]
+            public void ObjectInitializer()
+            {
+                var testCode = @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Value { get; private set; }
+
+        public static Foo Create() => new Foo { Value = 1 };
+    }
+}";
+                var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
+                using (var walker = MutationWalker.For(property, semanticModel, CancellationToken.None))
+                {
+                    Assert.AreEqual("Value = 1", walker.Single().ToString());
+                }
+            }
         }
     }
 }

@@ -110,7 +110,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             bool IsField(ExpressionSyntax expression)
             {
-                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) && 
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) &&
                        Equals(symbol, field);
             }
         }
