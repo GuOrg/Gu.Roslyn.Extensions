@@ -136,7 +136,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             [Test]
             public void TrySingleWhenMoreThanOne()
             {
-                Assert.AreEqual(false, Enumerable.Range(0, 3).TrySingle(out var result));
+                Assert.AreEqual(false, Enumerable.Range(1, 4).TrySingle(out var result));
                 Assert.AreEqual(0, result);
             }
 
