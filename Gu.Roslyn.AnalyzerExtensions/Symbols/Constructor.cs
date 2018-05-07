@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -14,6 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="search">Specifies if the search is recursive</param>
         /// <param name="result">The first parameterless ctor found.</param>
         /// <returns>True if a parameterless ctor was found.</returns>
+        [Obsolete("Use type.Constructors.TryFirst(x => x.Parameters.Length == 0, out var ctor)")]
         public static bool TryFindDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
         {
             result = null;
