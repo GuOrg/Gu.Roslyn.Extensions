@@ -27,7 +27,7 @@ namespace RoslynSandbox
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
             Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
-            Assert.AreEqual("public Foo()\r\n        {\r\n            var i = 0;\r\n        }", scope.ToString());
+            CodeAssert.AreEqual("public Foo()\r\n        {\r\n            var i = 0;\r\n        }", scope.ToString());
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace RoslynSandbox
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
             Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
-            Assert.AreEqual("public void Bar()\r\n        {\r\n            var i = 0;\r\n        }", scope.ToString());
+            CodeAssert.AreEqual("public void Bar()\r\n        {\r\n            var i = 0;\r\n        }", scope.ToString());
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace RoslynSandbox
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
             Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
-            Assert.AreEqual("void BarCore()\r\n            {\r\n                var i = 0;\r\n            }", scope.ToString());
+            CodeAssert.AreEqual("void BarCore()\r\n            {\r\n                var i = 0;\r\n            }", scope.ToString());
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace RoslynSandbox
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
             Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
-            Assert.AreEqual("(sender, args) =>\r\n            {\r\n                var i = 0;\r\n            }", scope.ToString());
+            CodeAssert.AreEqual("(sender, args) =>\r\n            {\r\n                var i = 0;\r\n            }", scope.ToString());
         }
     }
 }
