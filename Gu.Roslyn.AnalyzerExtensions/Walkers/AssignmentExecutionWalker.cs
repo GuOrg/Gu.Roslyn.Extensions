@@ -97,8 +97,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
-                if (scope != Scope.Member &&
-                    walker.arguments.Count > 0)
+                if (scope != Scope.Member)
                 {
                     using (var currentVisited = visited.IncrementUsage())
                     {
@@ -118,10 +117,39 @@ namespace Gu.Roslyn.AnalyzerExtensions
                                 }
                             }
                         }
+
+                        while (TryWalkBackingField(currentVisited, out var assignment, out var setterWalker))
+                        {
+                            walker.assignments.Remove(assignment);
+                            walker.assignments.AddRange(setterWalker.assignments);
+                        }
                     }
                 }
 
                 return walker;
+
+                bool TryWalkBackingField(PooledSet<ISymbol> currentVisited, out AssignmentExpressionSyntax propertyAssignment, out AssignmentExecutionWalker setterWalker)
+                {
+                    propertyAssignment = null;
+                    setterWalker = null;
+
+                    foreach (var candidate in walker.assignments)
+                    {
+                        if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out IPropertySymbol property) &&
+                            property.SetMethod is IMethodSymbol setMethod &&
+                            setMethod.Parameters.TrySingle(out var parameter) &&
+                            setMethod.TrySingleDeclaration(cancellationToken, out AccessorDeclarationSyntax setter) &&
+                            (setter.Body != null || setter.ExpressionBody != null) &&
+                            currentVisited.Add(parameter))
+                        {
+                            propertyAssignment = candidate;
+                            setterWalker = With(parameter, setter, currentVisited);
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
             }
         }
 

@@ -188,12 +188,24 @@ namespace RoslynSandbox
                 var value = syntaxTree.FindParameter("arg");
                 var ctor = syntaxTree.FindConstructorDeclaration("Foo(int arg)");
                 var symbol = semanticModel.GetDeclaredSymbolSafe(value, CancellationToken.None);
-                Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
-                Assert.AreEqual("this.Number = arg", result.ToString());
-                //using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-                //{
-                //    Assert.AreEqual("this.Number = arg, this.number = value", string.Join(", ", walker.Assignments));
-                //}
+                if (scope == Scope.Member)
+                {
+                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
+                    Assert.AreEqual("this.Number = arg", result.ToString());
+                    using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
+                    {
+                        Assert.AreEqual("this.Number = arg", string.Join(", ", walker.Assignments));
+                    }
+                }
+                else
+                {
+                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
+                    Assert.AreEqual("this.number = value", result.ToString());
+                    using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
+                    {
+                        Assert.AreEqual("this.number = value", string.Join(", ", walker.Assignments));
+                    }
+                }
             }
         }
     }
