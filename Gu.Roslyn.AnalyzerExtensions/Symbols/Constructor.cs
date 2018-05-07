@@ -11,10 +11,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Find the first parameterless constructor
         /// </summary>
         /// <param name="type">The <see cref="INamedTypeSymbol"/></param>
-        /// <param name="search">Specifiec if the search is recursive</param>
+        /// <param name="search">Specifies if the search is recursive</param>
         /// <param name="result">The first parameterless ctor found.</param>
         /// <returns>True if a parameterless ctor was found.</returns>
-        public static bool TryGetDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
+        public static bool TryFindDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
         {
             result = null;
             while (type != null &&
@@ -22,7 +22,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 foreach (var candidate in type.Constructors)
                 {
-                    if (candidate.Parameters.Length == 0)
+                    if (candidate.Parameters.Length == 0 &&
+                        candidate.ContainingType == type)
                     {
                         result = candidate;
                         return true;

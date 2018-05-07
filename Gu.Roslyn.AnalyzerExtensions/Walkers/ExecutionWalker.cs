@@ -50,7 +50,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 node.Initializer == null &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
                 ctor.ContainingType is INamedTypeSymbol containingType &&
-                Constructor.TryGetDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
+                Constructor.TryFindDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
                 defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
             {
                 this.Visit(declaration);
