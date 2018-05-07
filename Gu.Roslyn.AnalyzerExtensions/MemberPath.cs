@@ -146,6 +146,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return name != null;
         }
 
+        /// <summary>
+        /// Get a <see cref="PathWalker"/> for <paramref name="expression"/>
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>A <see cref="PathWalker"/> for <paramref name="expression"/></returns>
+        public static PathWalker Get(ExpressionSyntax expression) => PathWalker.Borrow(expression);
+
         /// <inheritdoc />
         public sealed class PathWalker : PooledWalker<PathWalker>
         {
@@ -210,6 +217,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
             public override void VisitIdentifierName(IdentifierNameSyntax node)
             {
                 this.identifierNames.Add(node);
+            }
+
+            /// <summary>
+            /// Check if this path starts with the other or is equal.
+            /// </summary>
+            /// <param name="other">The other path.</param>
+            /// <returns>True if this path starts with the other or is equal.</returns>
+            public bool StartsWith(PathWalker other)
+            {
+                if (other.identifierNames.Count == 0 ||
+                    other.identifierNames.Count > this.identifierNames.Count)
+                {
+                    return false;
+                }
+
+                for (var i = 0; i < other.identifierNames.Count; i++)
+                {
+                    if (this.identifierNames[i].Identifier.ValueText != other.identifierNames[i].Identifier.ValueText)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
 
             /// <inheritdoc />
