@@ -115,5 +115,44 @@ namespace RoslynSandbox
             Assert.AreEqual(expected != null, Constructor.TryFindDefault(type, search, out var ctor));
             Assert.AreEqual(expected, ctor?.ToString());
         }
+
+        [TestCase(Search.TopLevel, null)]
+        [TestCase(Search.Recursive, "RoslynSandbox.FooBaseBase.FooBaseBase()")]
+        public void TryFindDefaultWithBaseWithGap(Search search, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace RoslynSandbox
+{
+    class FooBaseBase
+    {
+        public FooBaseBase()
+        {
+        }
+    }
+
+    class FooBase : FooBaseBase
+    {
+    }
+
+    internal class Foo : FooBase
+    {
+        internal Foo(int intValue)
+            : this()
+        {
+        }
+
+        internal Foo(string textValue)
+            : this(1)
+        {
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class Foo : FooBase"));
+            Assert.AreEqual(expected != null, Constructor.TryFindDefault(type, search, out var ctor));
+            Assert.AreEqual(expected, ctor?.ToString());
+        }
     }
 }
