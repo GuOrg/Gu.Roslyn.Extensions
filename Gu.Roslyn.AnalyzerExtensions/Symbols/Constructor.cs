@@ -9,13 +9,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class Constructor
     {
         /// <summary>
-        /// Find the first parameterless constructor
+        /// Find the first parameterless constructor with a declaration
         /// </summary>
         /// <param name="type">The <see cref="INamedTypeSymbol"/></param>
         /// <param name="search">Specifies if the search is recursive</param>
         /// <param name="result">The first parameterless ctor found.</param>
         /// <returns>True if a parameterless ctor was found.</returns>
-        [Obsolete("Use type.Constructors.TryFirst(x => x.Parameters.Length == 0, out var ctor)")]
         public static bool TryFindDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
         {
             result = null;
@@ -25,7 +24,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 foreach (var candidate in type.Constructors)
                 {
                     if (candidate.Parameters.Length == 0 &&
-                        candidate.ContainingType == type)
+                        candidate.ContainingType == type &&
+                        candidate.DeclaringSyntaxReferences.Length == 1)
                     {
                         result = candidate;
                         return true;
