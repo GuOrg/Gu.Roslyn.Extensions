@@ -26,7 +26,19 @@ namespace RoslynSandbox
 
         object IFoo.PublicGet => this.PublicGet;
 
-        public int PublicExpressionBody => this.PublicGet;
+        public int PublicExpressionBody1 => this.PublicGet;
+
+        public int PublicStatementBody1
+        {
+            get { return this.PublicGet; }
+        }
+
+        public int PublicExpressionBody2 => this.PublicGet;
+
+        public int PublicStatementBody2
+        {
+            get { return this.PublicGet; }
+        }
 
         public int PublicGetPrivateSet1 { get; private set; }
 
@@ -39,7 +51,7 @@ namespace RoslynSandbox
         object IFoo.PublicGetSet
         {
             get { return this.PublicGetSet; }
-            set { this.PublicGetSet = (int) value; }
+            set { this.PublicGetSet = (int)value; }
         }
 
         internal int InternalGet { get; }
