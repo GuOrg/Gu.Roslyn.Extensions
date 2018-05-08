@@ -56,7 +56,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return Microsoft.CodeAnalysis.Accessibility.Internal;
         }
 
-
         /// <summary>
         /// Tries to get the get accessor.
         /// </summary>
