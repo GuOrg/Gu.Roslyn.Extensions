@@ -60,17 +60,14 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 return compare;
             }
 
-            if (x.TryGetGetter(out _) ||
-                x.ExpressionBody != null)
+            if (x.IsGetOnly())
             {
-                if (!y.TryGetGetter(out _) &&
-                    y.ExpressionBody == null)
+                if (!y.IsGetOnly())
                 {
                     return -1;
                 }
             }
-            else if (y.TryGetGetter(out _) ||
-                     y.ExpressionBody != null)
+            else if(y.IsGetOnly())
             {
                 return 1;
             }

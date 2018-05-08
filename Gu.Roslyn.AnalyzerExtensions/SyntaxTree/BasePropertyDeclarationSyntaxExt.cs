@@ -87,14 +87,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="property"/> is an auto property.</returns>
         public static bool IsGetOnly(this BasePropertyDeclarationSyntax property)
         {
-            if (property.TryGetGetter(out var getter) &&
-                getter.Body == null &&
-                getter.ExpressionBody == null)
-            {
-                return !property.TryGetSetter(out _);
-            }
-
-            return false;
+            return property.TryGetGetter(out var getter) &&
+                   getter.Body == null &&
+                   getter.ExpressionBody == null &&
+                   !property.TryGetSetter(out _);
         }
 
         /// <summary>

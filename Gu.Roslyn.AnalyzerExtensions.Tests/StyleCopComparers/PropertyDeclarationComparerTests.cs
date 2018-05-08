@@ -97,6 +97,17 @@ namespace RoslynSandbox
             Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
         }
 
+        [TestCase("public int Value { get; }", "public int Value => 1;")]
+        [TestCase("public int Value => 1;", "public int Value { get; set; }")]
+        [TestCase("public int Value { get; private set; }", "public int Value { get; set; }")]
+        public void NoSpan(string code1, string code2)
+        {
+            var x = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code1).Members.Single();
+            var y = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code2).Members.Single();
+            Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
+        }
+
         [Test]
         public void InitializedWithOther()
         {
