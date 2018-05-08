@@ -1,5 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -7,6 +9,47 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public static class FieldDeclarationSyntaxExt
     {
+        /// <summary>
+        /// Get the <see cref="Microsoft.CodeAnalysis.Accessibility"/> from the modifiers.
+        /// </summary>
+        /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/></param>
+        /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/></returns>
+        public static Accessibility Accessibility(this FieldDeclarationSyntax declaration)
+        {
+            if (declaration == null)
+            {
+                return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.PrivateKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Private;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.PublicKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Public;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.ProtectedKeyword) &&
+                declaration.Modifiers.Any(SyntaxKind.InternalKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.ProtectedAndInternal;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.InternalKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Internal;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Protected;
+            }
+
+            return Microsoft.CodeAnalysis.Accessibility.Private;
+        }
+
         /// <summary>
         /// Try getting the name of the field.
         /// </summary>

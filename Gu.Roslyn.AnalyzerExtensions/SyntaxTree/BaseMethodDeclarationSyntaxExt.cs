@@ -10,6 +10,54 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class BaseMethodDeclarationSyntaxExt
     {
         /// <summary>
+        /// Get the <see cref="Accessibility"/> from the modifiers.
+        /// </summary>
+        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/></param>
+        /// <returns>The <see cref="Accessibility"/></returns>
+        public static Accessibility Accessibility(this BaseMethodDeclarationSyntax declaration)
+        {
+            if (declaration == null)
+            {
+                return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.PrivateKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Private;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.PublicKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Public;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.ProtectedKeyword) &&
+                declaration.Modifiers.Any(SyntaxKind.InternalKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.ProtectedAndInternal;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.InternalKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Internal;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Protected;
+            }
+
+            if (declaration is MethodDeclarationSyntax methodDeclaration &&
+                methodDeclaration.ExplicitInterfaceSpecifier != null)
+            {
+                // This will not always be right.
+                return Microsoft.CodeAnalysis.Accessibility.Public;
+            }
+
+            return Microsoft.CodeAnalysis.Accessibility.Internal;
+        }
+
+        /// <summary>
         /// Find the matching parameter for the argument.
         /// </summary>
         /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/></param>

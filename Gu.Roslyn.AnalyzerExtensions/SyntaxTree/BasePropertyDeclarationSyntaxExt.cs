@@ -10,6 +10,54 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class BasePropertyDeclarationSyntaxExt
     {
         /// <summary>
+        /// Get the <see cref="Microsoft.CodeAnalysis.Accessibility"/> from the modifiers.
+        /// </summary>
+        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/></param>
+        /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/></returns>
+        public static Accessibility Accessibility(this BasePropertyDeclarationSyntax declaration)
+        {
+            if (declaration == null)
+            {
+                return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.PrivateKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Private;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.PublicKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Public;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.ProtectedKeyword) &&
+                declaration.Modifiers.Any(SyntaxKind.InternalKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.ProtectedAndInternal;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.InternalKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Internal;
+            }
+
+            if (declaration.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+            {
+                return Microsoft.CodeAnalysis.Accessibility.Protected;
+            }
+
+            if (declaration.ExplicitInterfaceSpecifier != null)
+            {
+                // This will not always be right.
+                return Microsoft.CodeAnalysis.Accessibility.Public;
+            }
+
+            return Microsoft.CodeAnalysis.Accessibility.Internal;
+        }
+
+
+        /// <summary>
         /// Tries to get the get accessor.
         /// </summary>
         /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/></param>
