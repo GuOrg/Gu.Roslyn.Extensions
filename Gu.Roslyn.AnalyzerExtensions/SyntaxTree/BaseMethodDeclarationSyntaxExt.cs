@@ -105,7 +105,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        
         /// <summary>
         /// Find the matching parameter for the argument.
         /// </summary>
@@ -124,11 +123,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (method.ParameterList is ParameterListSyntax parameterList)
             {
-                foreach (var parameterSyntax in parameterList.Parameters)
+                foreach (var candidate in parameterList.Parameters)
                 {
-                    if (parameterSyntax.Identifier.ValueText == name)
+                    if (candidate.Identifier.ValueText == name)
                     {
-
+                        parameter = candidate;
+                        return true;
                     }
                 }
             }
