@@ -4,7 +4,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class PropertyExtTests
+    // ReSharper disable once InconsistentNaming
+    public class IPropertySymbolExtTests
     {
         [TestCase("GetOnly", true)]
         [TestCase("AutoGetSet", true)]

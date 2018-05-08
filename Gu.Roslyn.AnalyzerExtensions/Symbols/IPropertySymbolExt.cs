@@ -1,3 +1,4 @@
+// ReSharper disable InconsistentNaming
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Threading;
@@ -7,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for working with <see cref="IPropertySymbol"/>
     /// </summary>
-    public static class PropertyExt
+    public static class IPropertySymbolExt
     {
         /// <summary>
         /// Get the declaration of the GetMethod if any.

@@ -5,7 +5,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for working with <see cref="IParameterSymbol"/>
     /// </summary>
-    public static class ParameterSymbolExt
+    // ReSharper disable once InconsistentNaming
+    public static class IParameterSymbolExt
     {
         /// <summary>
         /// Check if the parameter has [CallerMemberName]

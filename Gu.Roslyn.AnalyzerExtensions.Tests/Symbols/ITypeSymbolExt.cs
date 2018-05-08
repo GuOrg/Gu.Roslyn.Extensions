@@ -1,10 +1,11 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class TypeSymbolExt
+    // ReSharper disable once InconsistentNaming
+    public partial class ITypeSymbolExtTests
     {
         [Test]
         public void TryFindField()

@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for working with <see cref="ITypeSymbol"/>
     /// </summary>
-    public static partial class TypeSymbolExt
+    public static partial class ITypeSymbolExt
     {
         /// <summary>
         /// Check if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>

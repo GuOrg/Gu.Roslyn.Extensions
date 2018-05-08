@@ -5,7 +5,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helper methods for working with <see cref="ISymbol"/>
     /// </summary>
-    public static partial class SymbolExt
+    // ReSharper disable once InconsistentNaming
+    public static partial class ISymbolExt
     {
         /// <summary>
         /// Check if <paramref name="symbol"/> is either <typeparamref name="T1"/> or <typeparamref name="T2"/>

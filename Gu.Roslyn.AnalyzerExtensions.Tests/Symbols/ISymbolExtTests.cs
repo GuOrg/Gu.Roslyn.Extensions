@@ -7,7 +7,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class SymbolExtTests
+    // ReSharper disable once InconsistentNaming
+    public class ISymbolExtTests
     {
         public class TrySingleDeclaration
         {

@@ -6,7 +6,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class TypeSymbolTests
+    // ReSharper disable once InconsistentNaming
+    public partial class ITypeSymbolExtTests
     {
         public class IsAssignableTo
         {

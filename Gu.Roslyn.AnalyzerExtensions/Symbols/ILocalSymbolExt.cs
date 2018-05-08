@@ -7,7 +7,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helper methods for working with <see cref="ILocalSymbol"/>
     /// </summary>
-    public static class LocalSymbolExt
+    // ReSharper disable once InconsistentNaming
+    public static class ILocalSymbolExt
     {
         /// <summary>
         /// Try to get the scope where <paramref name="local"/> is visible

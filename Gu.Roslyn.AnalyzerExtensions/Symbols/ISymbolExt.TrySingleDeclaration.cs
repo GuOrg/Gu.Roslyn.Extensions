@@ -7,7 +7,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helper methods for finding the declaration.
     /// </summary>
-    public static partial class SymbolExt
+    // ReSharper disable once InconsistentNaming
+    public static partial class ISymbolExt
     {
         /// <summary>
         /// Try to get the single declaration of a property.

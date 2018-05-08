@@ -5,7 +5,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class LocalSymbolExtTests
+    // ReSharper disable once InconsistentNaming
+    public class ILocalSymbolExtTests
     {
         [Test]
         public void LocalInCtor()

@@ -6,7 +6,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for working with <see cref="IMethodSymbol"/>
     /// </summary>
-    public static class MethodSymbolExt
+    // ReSharper disable once InconsistentNaming
+    public static class IMethodSymbolExt
     {
         /// <summary>
         /// Find the matching parameter for the argument.

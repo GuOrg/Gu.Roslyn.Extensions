@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for finding members of <see cref="ITypeSymbol"/> or base types.
     /// </summary>
-    public static partial class TypeSymbolExt
+    public static partial class ITypeSymbolExt
     {
         /// <summary>
         /// Try finding the <see cref="IFieldSymbol"/> by name.
