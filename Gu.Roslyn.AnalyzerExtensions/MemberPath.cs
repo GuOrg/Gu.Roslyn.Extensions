@@ -29,22 +29,29 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             using (var xWalker = PathWalker.Borrow(x))
-            using (var yWalker = PathWalker.Borrow(y))
             {
-                var xPath = xWalker.IdentifierNames;
-                var yPath = yWalker.IdentifierNames;
-                if (xPath.Count == 0 ||
-                    xPath.Count != yPath.Count)
+                using (var yWalker = PathWalker.Borrow(y))
+                {
+                    return Equals(xWalker, yWalker);
+                }
+            }
+        }
+
+        private static bool Equals(PathWalker x, PathWalker y)
+        {
+            var xs = x.IdentifierNames;
+            var ys = y.IdentifierNames;
+            if (xs.Count == 0 ||
+                xs.Count != ys.Count)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < xs.Count; i++)
+            {
+                if (xs[i].Identifier.ValueText != ys[i].Identifier.ValueText)
                 {
                     return false;
-                }
-
-                for (var i = 0; i < xPath.Count; i++)
-                {
-                    if (xPath[i].Identifier.ValueText != yPath[i].Identifier.ValueText)
-                    {
-                        return false;
-                    }
                 }
             }
 
@@ -241,6 +248,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 return true;
+            }
+
+            /// <summary>
+            /// Check if this path starts with the other or is equal.
+            /// </summary>
+            /// <param name="other">The other path.</param>
+            /// <returns>True if this path starts with the other or is equal.</returns>
+            public bool StartsWith(ExpressionSyntax other)
+            {
+                using (var walker = Borrow(other))
+                {
+                    return StartsWith(walker);
+                }
             }
 
             /// <inheritdoc />
