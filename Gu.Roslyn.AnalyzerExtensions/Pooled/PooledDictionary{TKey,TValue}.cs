@@ -64,6 +64,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => this.inner.GetEnumerator();
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         /// <inheritdoc />
@@ -92,7 +93,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         /// <inheritdoc />
         public bool TryGetValue(TKey key, out TValue value) => this.inner.TryGetValue(key, out value);
-
 
         private static IEqualityComparer<TKey> GetComparer()
         {
