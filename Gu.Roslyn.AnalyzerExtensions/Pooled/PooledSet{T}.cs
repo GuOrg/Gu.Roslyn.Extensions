@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// A <see cref="HashSet{T}"/> for re-use.
     /// </summary>
-    /// <typeparam name="T">The type of items in the use.</typeparam>
+    /// <typeparam name="T">The type of items in the set.</typeparam>
     [DebuggerTypeProxy(typeof(PooledSetDebugView<>))]
     [DebuggerDisplay("Count = {this.Count}, refCount = {this.refCount}")]
     public sealed class PooledSet<T> : IDisposable, IReadOnlyCollection<T>
@@ -129,7 +129,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         /// <inheritdoc />
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             if (Interlocked.Decrement(ref this.refCount) == 0)
             {
