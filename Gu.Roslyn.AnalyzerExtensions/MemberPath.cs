@@ -37,7 +37,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
-        private static bool Equals(PathWalker x, PathWalker y)
+        /// <summary> Compares equality by path. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        public static bool Equals(PathWalker x, PathWalker y)
         {
             var xs = x.IdentifierNames;
             var ys = y.IdentifierNames;
@@ -259,7 +263,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 using (var walker = Borrow(other))
                 {
-                    return StartsWith(walker);
+                    return this.StartsWith(walker);
                 }
             }
 
