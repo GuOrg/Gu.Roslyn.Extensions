@@ -20,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, out SyntaxNode declaration)
         {
             declaration = null;
-            return property.GetMethod is IMethodSymbol getMethod &&
+            return property?.GetMethod is IMethodSymbol getMethod &&
                    getMethod.TrySingleDeclaration(cancellationToken, out declaration);
         }
 
@@ -34,7 +34,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, out AccessorDeclarationSyntax getter)
         {
             getter = null;
-            return property.GetMethod != null &&
+            return property?.GetMethod != null &&
                    property.TrySingleDeclaration(cancellationToken, out var declaration) &&
                    declaration.TryGetGetter(out getter);
         }
@@ -49,7 +49,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, out AccessorDeclarationSyntax setter)
         {
             setter = null;
-            return property.SetMethod != null &&
+            return property?.SetMethod != null &&
                    property.TrySingleDeclaration(cancellationToken, out var declaration) &&
                    declaration.TryGetSetter(out setter);
         }
@@ -62,6 +62,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the property is an auto property with get only.</returns>
         public static bool IsGetOnly(this IPropertySymbol property)
         {
+            if (property == null)
+            {
+                return false;
+            }
+
             return property.SetMethod == null &&
                    property.IsAutoProperty();
         }
@@ -74,17 +79,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the property is an auto property.</returns>
         public static bool IsAutoProperty(this IPropertySymbol property)
         {
-            if (property == null)
+            if (property?.ContainingType is INamedTypeSymbol containingType)
             {
-                return false;
-            }
-
-            foreach (var member in property.ContainingType.GetMembers())
-            {
-                if (member is IFieldSymbol field &&
-                    field.AssociatedSymbol.Equals(property))
+                foreach (var member in containingType.GetMembers())
                 {
-                    return true;
+                    if (member is IFieldSymbol field &&
+                        field.AssociatedSymbol is ISymbol associatedSymbol &&
+                        associatedSymbol.Equals(property))
+                    {
+                        return true;
+                    }
                 }
             }
 
