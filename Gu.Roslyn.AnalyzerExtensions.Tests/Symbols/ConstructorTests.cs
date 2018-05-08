@@ -4,7 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    internal class ConstructorTests
+    public class ConstructorTests
     {
         [TestCase(Search.TopLevel)]
         [TestCase(Search.Recursive)]
