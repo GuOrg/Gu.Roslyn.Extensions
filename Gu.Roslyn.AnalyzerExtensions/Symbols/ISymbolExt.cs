@@ -49,6 +49,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns></returns>
         public static bool IsEquivalentTo(this ISymbol x, ISymbol y)
         {
+            if (x == null ||
+                y == null)
+            {
+                return false;
+            }
+
             if (x.Equals(y))
             {
                 return true;
