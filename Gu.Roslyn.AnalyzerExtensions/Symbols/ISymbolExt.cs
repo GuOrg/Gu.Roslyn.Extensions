@@ -60,10 +60,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return IsEquivalentTo(x, y.OriginalDefinition);
             }
 
-            if (y is IPropertySymbol property &&
-                property.OverriddenProperty is IPropertySymbol overridden)
+            switch (y)
             {
-                return IsEquivalentTo(x, overridden);
+                case IPropertySymbol property when property.OverriddenProperty is IPropertySymbol overridden:
+                    return IsEquivalentTo(x, overridden);
+                case IEventSymbol eventSymbol when eventSymbol.OverriddenEvent is IEventSymbol overridden:
+                    return IsEquivalentTo(x, overridden);
+                case IMethodSymbol methodSymbol when methodSymbol.OverriddenMethod is IMethodSymbol overridden:
+                    return IsEquivalentTo(x, overridden);
             }
 
             return false;
