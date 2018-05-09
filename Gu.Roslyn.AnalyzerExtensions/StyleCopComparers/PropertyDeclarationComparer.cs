@@ -67,7 +67,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                     return -1;
                 }
             }
-            else if(y.IsGetOnly())
+            else if (y.IsGetOnly())
             {
                 return 1;
             }

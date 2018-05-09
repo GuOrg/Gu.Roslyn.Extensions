@@ -37,5 +37,36 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             return symbol is T1 || symbol is T2 || symbol is T3;
         }
+
+        /// <summary>
+        /// Check if the symbols are
+        /// - equal
+        /// - x is equal to the definition of y
+        /// - x is equal to an overridden y if property.
+        /// </summary>
+        /// <param name="x">The first symbol</param>
+        /// <param name="y">The second symbol</param>
+        /// <returns></returns>
+        public static bool IsEquivalentTo(this ISymbol x, ISymbol y)
+        {
+            if (x.Equals(y))
+            {
+                return true;
+            }
+
+            if (x.IsDefinition &&
+                !y.Equals(y.OriginalDefinition))
+            {
+                return IsEquivalentTo(x, y.OriginalDefinition);
+            }
+
+            if (y is IPropertySymbol property &&
+                property.OverriddenProperty is IPropertySymbol overridden)
+            {
+                return IsEquivalentTo(x, overridden);
+            }
+
+            return false;
+        }
     }
 }
