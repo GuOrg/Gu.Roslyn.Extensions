@@ -46,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="x">The first symbol</param>
         /// <param name="y">The second symbol</param>
-        /// <returns></returns>
+        /// <returns>True if the symbols are found equivalent.</returns>
         public static bool IsEquivalentTo(this ISymbol x, ISymbol y)
         {
             if (x == null ||
