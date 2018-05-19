@@ -88,11 +88,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
             switch (this.Scope)
             {
                 case Scope.Member:
+                    break;
                 case Scope.Instance:
+                    if (this.visited.Add(node) &&
+                        this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
+                        node.TryFirstAncestor<TypeDeclarationSyntax>(out var containingTypeDeclaration) &&
+                        this.SemanticModel.TryGetSymbol(containingTypeDeclaration, this.CancellationToken, out var containingType) &&
+                        containingType.Equals(ctor.ContainingType) &&
+                        ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
+                    {
+                        this.Visit(declaration);
+                    }
+
                     break;
                 case Scope.Recursive:
                     if (this.visited.Add(node) &&
-                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
+                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration))
                     {
                         this.Visit(declaration);
                     }
@@ -189,7 +200,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected static T BorrowAndVisit(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
         {
             var walker = Borrow(create);
-            walker.Scope = scope;
+            // Not pretty below here, throwing is perhaps nicer, dunno.
+            walker.Scope = scope == Scope.Member &&
+                           node is TypeDeclarationSyntax ? Scope.Instance : scope;;
             walker.SemanticModel = semanticModel;
             walker.CancellationToken = cancellationToken;
             walker.Visit(node);

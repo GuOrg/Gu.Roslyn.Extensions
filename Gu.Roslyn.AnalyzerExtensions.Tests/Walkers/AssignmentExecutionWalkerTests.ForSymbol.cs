@@ -111,32 +111,20 @@ namespace RoslynSandbox
         {
             this.value = 1;
         }
-
-        public void Bar()
-        {
-        }
     }
 }";
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                AssignmentExpressionSyntax result;
                 var field = semanticModel.GetDeclaredSymbolSafe(syntaxTree.FindFieldDeclaration("private readonly int value"), CancellationToken.None);
-                var bar = syntaxTree.FindMethodDeclaration("Bar()");
-                if (scope != Scope.Member)
+                var bar = syntaxTree.FindTypeDeclaration("Foo");
+                Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, bar, scope, semanticModel, CancellationToken.None, out var result));
+                Assert.AreEqual("this.value = 1", result.ToString());
+                Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, bar, scope, semanticModel, CancellationToken.None, out result));
+                Assert.AreEqual("this.value = 1", result.ToString());
+                using (var walker = AssignmentExecutionWalker.For(field, bar, scope, semanticModel, CancellationToken.None))
                 {
-                    Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, bar, scope, semanticModel, CancellationToken.None, out result));
-                    Assert.AreEqual("this.value = 1", result.ToString());
-                    Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, bar, scope, semanticModel, CancellationToken.None, out result));
-                    Assert.AreEqual("this.value = 1", result.ToString());
-                    using (var walker = AssignmentExecutionWalker.For(field, bar, scope, semanticModel, CancellationToken.None))
-                    {
-                        Assert.AreEqual("this.value = 1", walker.Assignments.Single().ToString());
-                    }
-                }
-                else
-                {
-                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, bar, scope, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual("this.value = 1", walker.Assignments.Single().ToString());
                 }
             }
 
