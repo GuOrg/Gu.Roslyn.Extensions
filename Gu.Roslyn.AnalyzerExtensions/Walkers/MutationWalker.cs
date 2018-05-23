@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Threading;
@@ -44,14 +43,36 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker with all mutations for <paramref name="fieldOrProperty"/></returns>
         public static MutationWalker For(FieldOrProperty fieldOrProperty, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            switch (fieldOrProperty.Symbol)
+            if (fieldOrProperty.Symbol.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
             {
-                case IFieldSymbol field:
-                    return For(field, semanticModel, cancellationToken);
-                case IPropertySymbol property:
-                    return For(property, semanticModel, cancellationToken);
-                default:
-                    throw new InvalidOperationException("Never getting here.");
+                var walker = Borrow(typeDeclaration, Scope.Instance, semanticModel, cancellationToken);
+                walker.mutations.RemoveAll(NotForFieldOrProperty);
+                return walker;
+            }
+
+            return Borrow(() => new MutationWalker());
+
+            bool NotForFieldOrProperty(SyntaxNode mutation)
+            {
+                switch (mutation)
+                {
+                    case AssignmentExpressionSyntax assignment:
+                        return !IsFieldOrProperty(assignment.Left);
+                    case PrefixUnaryExpressionSyntax unary:
+                        return !IsFieldOrProperty(unary.Operand);
+                    case PostfixUnaryExpressionSyntax unary:
+                        return !IsFieldOrProperty(unary.Operand);
+                    case ArgumentSyntax argument when fieldOrProperty.Symbol is IFieldSymbol field:
+                        return !IsFieldOrProperty(argument.Expression);
+                    default:
+                        return true;
+                }
+            }
+
+            bool IsFieldOrProperty(ExpressionSyntax expression)
+            {
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) &&
+                       symbol.Equals(fieldOrProperty.Symbol);
             }
         }
 
@@ -64,37 +85,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker with all mutations for <paramref name="property"/></returns>
         public static MutationWalker For(IPropertySymbol property, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (property.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
+            if (FieldOrProperty.TryCreate(property, out var fieldOrProperty))
             {
-                var walker = Borrow(typeDeclaration, Scope.Instance, semanticModel, cancellationToken);
-                walker.mutations.RemoveAll(NotForProperty);
-                return walker;
+                return For(fieldOrProperty, semanticModel, cancellationToken);
             }
 
             return Borrow(() => new MutationWalker());
-
-            bool NotForProperty(SyntaxNode mutation)
-            {
-                switch (mutation)
-                {
-                    case AssignmentExpressionSyntax assignment:
-                        return !IsProperty(assignment.Left);
-                    case PrefixUnaryExpressionSyntax unary:
-                        return !IsProperty(unary.Operand);
-                    case PostfixUnaryExpressionSyntax unary:
-                        return !IsProperty(unary.Operand);
-                    case ArgumentSyntax _:
-                        return true;
-                    default:
-                        return true;
-                }
-            }
-
-            bool IsProperty(ExpressionSyntax expression)
-            {
-                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) &&
-                       Equals(symbol, property);
-            }
         }
 
         /// <summary>
@@ -106,37 +102,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker with all mutations for <paramref name="field"/></returns>
         public static MutationWalker For(IFieldSymbol field, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (field.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
+            if (FieldOrProperty.TryCreate(field, out var fieldOrProperty))
             {
-                var walker = Borrow(typeDeclaration, Scope.Instance, semanticModel, cancellationToken);
-                walker.mutations.RemoveAll(NotForField);
-                return walker;
+                return For(fieldOrProperty, semanticModel, cancellationToken);
             }
 
             return Borrow(() => new MutationWalker());
-
-            bool NotForField(SyntaxNode mutation)
-            {
-                switch (mutation)
-                {
-                    case AssignmentExpressionSyntax assignment:
-                        return !IsField(assignment.Left);
-                    case PrefixUnaryExpressionSyntax unary:
-                        return !IsField(unary.Operand);
-                    case PostfixUnaryExpressionSyntax unary:
-                        return !IsField(unary.Operand);
-                    case ArgumentSyntax argument:
-                        return !IsField(argument.Expression);
-                    default:
-                        return true;
-                }
-            }
-
-            bool IsField(ExpressionSyntax expression)
-            {
-                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) &&
-                       Equals(symbol, field);
-            }
         }
 
         /// <inheritdoc />
