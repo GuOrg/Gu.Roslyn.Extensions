@@ -32,6 +32,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static MutationWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new MutationWalker());
 
         /// <summary>
+        /// Get a walker with all mutations for <paramref name="fieldOrProperty"/>
+        /// </summary>
+        /// <param name="fieldOrProperty">The <see cref="FieldOrProperty"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>A walker with all mutations for <paramref name="fieldOrProperty"/></returns>
+        public static MutationWalker For(FieldOrProperty fieldOrProperty, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            switch (fieldOrProperty.Symbol)
+            {
+                case IFieldSymbol field:
+                    return For(field, semanticModel, cancellationToken);
+                case IPropertySymbol property:
+                    return For(property, semanticModel, cancellationToken);
+                default:
+                    throw new InvalidOperationException("Never getting here.");
+            }
+        }
+
+        /// <summary>
         /// Get a walker with all mutations for <paramref name="property"/>
         /// </summary>
         /// <param name="property">The <see cref="IPropertySymbol"/></param>
