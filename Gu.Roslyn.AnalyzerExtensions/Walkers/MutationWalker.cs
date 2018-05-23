@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Threading;
     using Microsoft.CodeAnalysis;
@@ -10,19 +9,36 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Get all mutations in the current scope.
     /// </summary>
-    public sealed class MutationWalker : ExecutionWalker<MutationWalker>, IReadOnlyList<SyntaxNode>
+    public sealed class MutationWalker : ExecutionWalker<MutationWalker>
     {
-        private readonly List<SyntaxNode> mutations = new List<SyntaxNode>();
+        private readonly List<AssignmentExpressionSyntax> assignments = new List<AssignmentExpressionSyntax>();
+        private readonly List<PrefixUnaryExpressionSyntax> prefixUnaries = new List<PrefixUnaryExpressionSyntax>();
+        private readonly List<PostfixUnaryExpressionSyntax> postfixUnaries = new List<PostfixUnaryExpressionSyntax>();
+        private readonly List<ArgumentSyntax> refOrOutArguments = new List<ArgumentSyntax>();
 
         private MutationWalker()
         {
         }
 
-        /// <inheritdoc />
-        public int Count => this.mutations.Count;
+        /// <summary>
+        /// Gets a list with all <see cref="AssignmentExpressionSyntax"/> found in the scope.
+        /// </summary>
+        public IReadOnlyList<AssignmentExpressionSyntax> Assignments => this.assignments;
 
-        /// <inheritdoc />
-        public SyntaxNode this[int index] => this.mutations[index];
+        /// <summary>
+        /// Gets a list with all <see cref="PrefixUnaryExpressionSyntax"/> found in the scope.
+        /// </summary>
+        public IReadOnlyList<PrefixUnaryExpressionSyntax> PrefixUnaries => this.prefixUnaries;
+
+        /// <summary>
+        /// Gets a list with all <see cref="PostfixUnaryExpressionSyntax"/> found in the scope.
+        /// </summary>
+        public IReadOnlyList<PostfixUnaryExpressionSyntax> PostfixUnaries => this.postfixUnaries;
+
+        /// <summary>
+        /// Gets a list with all <see cref="ArgumentSyntax"/> found in the scope.
+        /// </summary>
+        public IReadOnlyList<ArgumentSyntax> RefOrOutArguments => this.refOrOutArguments;
 
         /// <summary>
         /// Get a walker that has visited <paramref name="node"/>
@@ -46,28 +62,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (fieldOrProperty.Symbol.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
             {
                 var walker = Borrow(typeDeclaration, Scope.Instance, semanticModel, cancellationToken);
-                walker.mutations.RemoveAll(NotForFieldOrProperty);
+                walker.assignments.RemoveAll(x => !IsFieldOrProperty(x.Left));
+                walker.prefixUnaries.RemoveAll(x => !IsFieldOrProperty(x.Operand));
+                walker.postfixUnaries.RemoveAll(x => !IsFieldOrProperty(x.Operand));
+                walker.refOrOutArguments.RemoveAll(x => !IsFieldOrProperty(x.Expression));
                 return walker;
             }
 
             return Borrow(() => new MutationWalker());
-
-            bool NotForFieldOrProperty(SyntaxNode mutation)
-            {
-                switch (mutation)
-                {
-                    case AssignmentExpressionSyntax assignment:
-                        return !IsFieldOrProperty(assignment.Left);
-                    case PrefixUnaryExpressionSyntax unary:
-                        return !IsFieldOrProperty(unary.Operand);
-                    case PostfixUnaryExpressionSyntax unary:
-                        return !IsFieldOrProperty(unary.Operand);
-                    case ArgumentSyntax argument when fieldOrProperty.Symbol is IFieldSymbol field:
-                        return !IsFieldOrProperty(argument.Expression);
-                    default:
-                        return true;
-                }
-            }
 
             bool IsFieldOrProperty(ExpressionSyntax expression)
             {
@@ -111,15 +113,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <inheritdoc />
-        public IEnumerator<SyntaxNode> GetEnumerator() => this.mutations.GetEnumerator();
-
-        /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-
-        /// <inheritdoc />
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
-            this.mutations.Add(node);
+            this.assignments.Add(node);
             base.VisitAssignmentExpression(node);
         }
 
@@ -131,7 +127,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case SyntaxKind.LogicalNotExpression:
                     break;
                 default:
-                    this.mutations.Add(node);
+                    this.prefixUnaries.Add(node);
                     break;
             }
 
@@ -141,7 +137,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
         {
-            this.mutations.Add(node);
+            this.postfixUnaries.Add(node);
             base.VisitPostfixUnaryExpression(node);
         }
 
@@ -151,16 +147,93 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (node.RefOrOutKeyword.IsKind(SyntaxKind.RefKeyword) ||
                 node.RefOrOutKeyword.IsKind(SyntaxKind.OutKeyword))
             {
-                this.mutations.Add(node);
+                this.refOrOutArguments.Add(node);
             }
 
             base.VisitArgument(node);
         }
 
+        /// <summary>
+        /// Try getting the single mutation found in the scope.
+        /// </summary>
+        /// <param name="mutation">The mutation.</param>
+        /// <returns>True if exactly one mutation was found.</returns>
+        public bool TrySingle(out SyntaxNode mutation)
+        {
+            if (this.assignments.Count == 1 &&
+                this.prefixUnaries.Count == 0 &&
+                this.postfixUnaries.Count == 0 &&
+                this.refOrOutArguments.Count == 0)
+            {
+                mutation = this.assignments[0];
+                return true;
+            }
+
+            if (this.assignments.Count == 0 &&
+                this.prefixUnaries.Count == 1 &&
+                this.postfixUnaries.Count == 0 &&
+                this.refOrOutArguments.Count == 0)
+            {
+                mutation = this.prefixUnaries[0];
+                return true;
+            }
+
+            if (this.assignments.Count == 0 &&
+                this.prefixUnaries.Count == 0 &&
+                this.postfixUnaries.Count == 1 &&
+                this.refOrOutArguments.Count == 0)
+            {
+                mutation = this.postfixUnaries[0];
+                return true;
+            }
+
+            if (this.assignments.Count == 0 &&
+                this.prefixUnaries.Count == 0 &&
+                this.postfixUnaries.Count == 0 &&
+                this.refOrOutArguments.Count == 1)
+            {
+                mutation = this.refOrOutArguments[0];
+                return true;
+            }
+
+            mutation = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Get all mutations found in the scope.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{SyntaxNode}"/></returns>
+        public IEnumerable<SyntaxNode> All()
+        {
+            foreach (var assignment in this.assignments)
+            {
+                yield return assignment;
+            }
+
+            foreach (var prefixUnary in this.prefixUnaries)
+            {
+                yield return prefixUnary;
+            }
+
+            foreach (var postfixUnary in this.postfixUnaries)
+            {
+                yield return postfixUnary;
+            }
+
+            foreach (var argument in this.refOrOutArguments)
+            {
+                yield return argument;
+            }
+        }
+
         /// <inheritdoc />
         protected override void Clear()
         {
-            this.mutations.Clear();
+            this.assignments.Clear();
+            this.prefixUnaries.Clear();
+            this.postfixUnaries.Clear();
+            this.refOrOutArguments.Clear();
         }
     }
 }
