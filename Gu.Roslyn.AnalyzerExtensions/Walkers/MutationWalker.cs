@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Threading;
@@ -10,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Get all mutations in the current scope.
     /// </summary>
-    public sealed class MutationWalker : PooledWalker<MutationWalker>, IReadOnlyList<SyntaxNode>
+    public sealed class MutationWalker : ExecutionWalker<MutationWalker>, IReadOnlyList<SyntaxNode>
     {
         private readonly List<SyntaxNode> mutations = new List<SyntaxNode>();
 
@@ -28,8 +29,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Get a walker that has visited <paramref name="node"/>
         /// </summary>
         /// <param name="node">The scope</param>
+        /// <param name="scope">The scope to walk.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
         /// <returns>A walker that has visited <paramref name="node"/></returns>
-        public static MutationWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new MutationWalker());
+        public static MutationWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken) => BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new MutationWalker());
 
         /// <summary>
         /// Get a walker with all mutations for <paramref name="fieldOrProperty"/>
@@ -62,7 +66,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (property.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
             {
-                var walker = Borrow(typeDeclaration);
+                var walker = Borrow(typeDeclaration, Scope.Instance, semanticModel, cancellationToken);
                 walker.mutations.RemoveAll(NotForProperty);
                 return walker;
             }
@@ -104,7 +108,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (field.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
             {
-                var walker = Borrow(typeDeclaration);
+                var walker = Borrow(typeDeclaration, Scope.Instance, semanticModel, cancellationToken);
                 walker.mutations.RemoveAll(NotForField);
                 return walker;
             }
