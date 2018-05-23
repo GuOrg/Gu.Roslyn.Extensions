@@ -1,6 +1,8 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Diagnostics;
+    using System.Threading;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -52,6 +54,25 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 default:
                     result = default(LocalOrParameter);
                     return false;
+            }
+        }
+
+        /// <summary>
+        /// Try to get the scope where <see cref="Symbol"/> is visible
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="scope">The scope</param>
+        /// <returns>True if a scope could be determined.</returns>
+        public bool TryGetScope(CancellationToken cancellationToken, out SyntaxNode scope)
+        {
+            switch (this.Symbol)
+            {
+                case ILocalSymbol local:
+                    return local.TryGetScope(cancellationToken, out scope);
+                case IParameterSymbol parameter:
+                    return parameter.ContainingSymbol.TrySingleDeclaration(cancellationToken, out scope);
+                default:
+                    throw new InvalidOperationException("Should never get here.");
             }
         }
     }

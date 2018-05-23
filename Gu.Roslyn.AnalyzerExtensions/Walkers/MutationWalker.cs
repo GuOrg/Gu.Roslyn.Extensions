@@ -112,6 +112,68 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return Borrow(() => new MutationWalker());
         }
 
+        /// <summary>
+        /// Get a walker with all mutations for <paramref name="localOrParameter"/>
+        /// </summary>
+        /// <param name="localOrParameter">The <see cref="FieldOrProperty"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>A walker with all mutations for <paramref name="localOrParameter"/></returns>
+        public static MutationWalker For(LocalOrParameter localOrParameter, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (localOrParameter.TryGetScope(cancellationToken, out var node))
+            {
+                var walker = Borrow(node, Scope.Member, semanticModel, cancellationToken);
+                walker.assignments.RemoveAll(x => !IsMatch(x.Left));
+                walker.prefixUnaries.RemoveAll(x => !IsMatch(x.Operand));
+                walker.postfixUnaries.RemoveAll(x => !IsMatch(x.Operand));
+                walker.refOrOutArguments.RemoveAll(x => !IsMatch(x.Expression));
+                return walker;
+            }
+
+            return Borrow(() => new MutationWalker());
+
+            bool IsMatch(ExpressionSyntax expression)
+            {
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) &&
+                       symbol.Equals(localOrParameter.Symbol);
+            }
+        }
+
+        /// <summary>
+        /// Get a walker with all mutations for <paramref name="local"/>
+        /// </summary>
+        /// <param name="local">The <see cref="IFieldSymbol"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>A walker with all mutations for <paramref name="local"/></returns>
+        public static MutationWalker For(ILocalSymbol local, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (LocalOrParameter.TryCreate(local, out var localOrParameter))
+            {
+                return For(localOrParameter, semanticModel, cancellationToken);
+            }
+
+            return Borrow(() => new MutationWalker());
+        }
+
+        /// <summary>
+        /// Get a walker with all mutations for <paramref name="parameter"/>
+        /// </summary>
+        /// <param name="parameter">The <see cref="IFieldSymbol"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <returns>A walker with all mutations for <paramref name="parameter"/></returns>
+        public static MutationWalker For(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (LocalOrParameter.TryCreate(parameter, out var localOrParameter))
+            {
+                return For(localOrParameter, semanticModel, cancellationToken);
+            }
+
+            return Borrow(() => new MutationWalker());
+        }
+
         /// <inheritdoc />
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
