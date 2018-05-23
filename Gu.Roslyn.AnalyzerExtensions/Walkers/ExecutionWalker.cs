@@ -200,9 +200,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected static T BorrowAndVisit(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
         {
             var walker = Borrow(create);
+
             // Not pretty below here, throwing is perhaps nicer, dunno.
             walker.Scope = scope == Scope.Member &&
-                           node is TypeDeclarationSyntax ? Scope.Instance : scope;;
+                           node is TypeDeclarationSyntax ? Scope.Instance : scope;
             walker.SemanticModel = semanticModel;
             walker.CancellationToken = cancellationToken;
             walker.Visit(node);
