@@ -34,6 +34,8 @@ namespace RoslynSandbox
             using (var walker = MutationWalker.Borrow(classDeclaration, Scope.Instance, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual(mutation, walker.All().Single().ToString());
+                Assert.AreEqual(true, walker.TrySingle(out var single));
+                Assert.AreEqual(mutation, single.ToString());
             }
         }
 
@@ -66,6 +68,8 @@ namespace RoslynSandbox
             var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
             using (var walker = MutationWalker.Borrow(classDeclaration, Scope.Instance, semanticModel, CancellationToken.None))
             {
+                CollectionAssert.IsEmpty(walker.PrefixUnaries);
+                CollectionAssert.IsEmpty(walker.PostfixUnaries);
                 CollectionAssert.AreEqual(new[] { $"{modifier} this.value" }, walker.RefOrOutArguments.Select(x => x.ToString()));
                 CollectionAssert.AreEqual(new[] { "i = 1" }, walker.Assignments.Select(x => x.ToString()));
                 CollectionAssert.AreEqual(new[] { "i = 1", $"{modifier} this.value" }, walker.All().Select(x => x.ToString()));
