@@ -34,6 +34,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
             base.VisitIdentifierName(node);
         }
 
+        /// <summary>
+        /// Try find an <see cref="IdentifierNameSyntax"/> by name
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
+        /// <returns>True if a match was found</returns>
+        public bool TryFind(string name, out IdentifierNameSyntax identifierName)
+        {
+            foreach (var candidate in this.identifierNames)
+            {
+                if (candidate.Identifier.ValueText == name)
+                {
+                    identifierName = candidate;
+                    return true;
+                }
+            }
+
+            identifierName = null;
+            return false;
+        }
+
         /// <inheritdoc />
         protected override void Clear()
         {
