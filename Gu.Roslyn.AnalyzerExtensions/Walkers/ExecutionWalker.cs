@@ -84,48 +84,55 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
-            base.VisitObjectCreationExpression(node);
             switch (this.Scope)
             {
                 case Scope.Member:
                     break;
                 case Scope.Instance:
-                    if (this.visited.Add(node) &&
-                        this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
-                        node.TryFirstAncestor<TypeDeclarationSyntax>(out var containingTypeDeclaration) &&
-                        this.SemanticModel.TryGetSymbol(containingTypeDeclaration, this.CancellationToken, out var containingType) &&
-                        containingType.Equals(ctor.ContainingType) &&
-                        ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
                     {
-                        using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+                        if (this.visited.Add(node) &&
+                            this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
+                            node.TryFirstAncestor(out TypeDeclarationSyntax containingTypeDeclaration) &&
+                            this.SemanticModel.TryGetSymbol(containingTypeDeclaration, this.CancellationToken, out var containingType) &&
+                            containingType.Equals(ctor.ContainingType))
                         {
-                            foreach (var initializer in walker.Initializers)
+                            VisitInitializers(containingTypeDeclaration);
+                            if (ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
                             {
-                                this.Visit(initializer);
+                                this.Visit(declaration);
                             }
                         }
 
-                        this.Visit(declaration);
+                        break;
                     }
-
-                    break;
                 case Scope.Recursive:
-                    if (this.visited.Add(node) &&
-                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration) &&
-                        declaration.TryFirstAncestor(out containingTypeDeclaration))
                     {
-                        using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+                        if (this.visited.Add(node) &&
+                            this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
+                            ctor.ContainingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax containingTypeDeclaration))
                         {
-                            foreach (var initializer in walker.Initializers)
+                            VisitInitializers(containingTypeDeclaration);
+                            if (ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
                             {
-                                this.Visit(initializer);
+                                this.Visit(declaration);
                             }
                         }
 
-                        this.Visit(declaration);
+                        break;
                     }
+            }
 
-                    break;
+            base.VisitObjectCreationExpression(node);
+
+            void VisitInitializers(TypeDeclarationSyntax containingTypeDeclaration)
+            {
+                using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+                {
+                    foreach (var initializer in walker.Initializers)
+                    {
+                        this.Visit(initializer);
+                    }
+                }
             }
         }
 
