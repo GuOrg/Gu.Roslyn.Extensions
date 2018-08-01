@@ -369,6 +369,58 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase(Scope.Member, "1, 2")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Recursive, "1, 2")]
+        public void PropertyInitializerBeforeDefaultCtor(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public sealed class Foo
+    {
+        public static readonly Foo Default = new Foo() { Value2 = 2 };
+
+        public int Value1 { get; set; } = 1;
+
+        public int Value2 { get; set; }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindClassDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
+        [TestCase(Scope.Member, "1, 2")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Recursive, "1, 2")]
+        public void PropertyInitializerBeforeDefaultCtorObjectInitializer(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public sealed class Foo
+    {
+        public static readonly Foo Default = new Foo { Value2 = 2 };
+
+        public int Value1 { get; set; } = 1;
+
+        public int Value2 { get; set; }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindClassDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         private class LiteralWalker : ExecutionWalker<LiteralWalker>
         {
             private readonly List<LiteralExpressionSyntax> literals = new List<LiteralExpressionSyntax>();
