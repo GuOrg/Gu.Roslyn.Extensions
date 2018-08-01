@@ -97,14 +97,31 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         containingType.Equals(ctor.ContainingType) &&
                         ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
                     {
+                        using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+                        {
+                            foreach (var initializer in walker.Initializers)
+                            {
+                                this.Visit(initializer);
+                            }
+                        }
+
                         this.Visit(declaration);
                     }
 
                     break;
                 case Scope.Recursive:
                     if (this.visited.Add(node) &&
-                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration))
+                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration) &&
+                        declaration.TryFirstAncestor(out containingTypeDeclaration))
                     {
+                        using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+                        {
+                            foreach (var initializer in walker.Initializers)
+                            {
+                                this.Visit(initializer);
+                            }
+                        }
+
                         this.Visit(declaration);
                     }
 
