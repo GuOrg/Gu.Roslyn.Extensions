@@ -9,20 +9,6 @@ namespace Gu.Roslyn.CodeFixExtensions
     public static class Trivia
     {
         /// <summary>
-        /// Copy leading and trailing trivia from <paramref name="target"/> to <paramref name="source"/>
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/></typeparam>
-        /// <param name="target">The target to copy trivia to.</param>
-        /// <param name="source">The source to copy trivia from.</param>
-        /// <returns><paramref name="target"/> with trivia from <paramref name="source"/></returns>
-        public static T WithTriviaFrom<T>(this T target, SyntaxNode source)
-            where T : SyntaxNode
-        {
-            return target.WithLeadingTriviaFrom(source)
-                .WithTrailingTriviaFrom(source);
-        }
-
-        /// <summary>
         /// Copy leading trivia from <paramref name="target"/> to <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T">The type of <see cref="SyntaxNode"/></typeparam>
