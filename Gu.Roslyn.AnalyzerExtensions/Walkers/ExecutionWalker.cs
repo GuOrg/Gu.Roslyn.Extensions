@@ -87,6 +87,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             switch (this.Scope)
             {
                 case Scope.Member:
+                    base.VisitObjectCreationExpression(node);
                     break;
                 case Scope.Instance:
                     {
@@ -101,6 +102,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                             {
                                 this.Visit(declaration);
                             }
+
+                            base.VisitObjectCreationExpression(node);
                         }
 
                         break;
@@ -116,13 +119,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                             {
                                 this.Visit(declaration);
                             }
+
+                            base.VisitObjectCreationExpression(node);
                         }
 
                         break;
                     }
             }
 
-            base.VisitObjectCreationExpression(node);
 
             void VisitInitializers(TypeDeclarationSyntax containingTypeDeclaration)
             {
@@ -130,7 +134,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     foreach (var initializer in walker.Initializers)
                     {
-                        this.Visit(initializer);
+                        if (this.visited.Add(initializer))
+                        {
+                            this.Visit(initializer);
+                        }
                     }
                 }
             }

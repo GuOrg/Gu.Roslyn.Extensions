@@ -28,7 +28,7 @@ namespace RoslynSandbox
             var node = syntaxTree.FindExpression("new Foo()");
             using (var walker = IdentifierNameExecutionWalker.Borrow(node, Scope.Recursive, semanticModel, CancellationToken.None))
             {
-                CollectionAssert.AreEqual(new[] { "Foo", "text" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText).ToArray());
+                CollectionAssert.AreEqual(new[] { "text", "Foo" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText).ToArray());
             }
         }
     }
