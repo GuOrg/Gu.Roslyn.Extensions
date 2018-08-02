@@ -3,6 +3,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper methods for <see cref="MemberDeclarationSyntax"/>
+    /// </summary>
     public static class MemberDeclarationSyntaxExtensions
     {
         /// <summary>
