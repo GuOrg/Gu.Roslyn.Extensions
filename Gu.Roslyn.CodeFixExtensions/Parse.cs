@@ -1,6 +1,8 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
+    using System;
     using System.Linq;
+    using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -67,6 +69,23 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static MethodDeclarationSyntax MethodDeclaration(string code)
         {
             return (MethodDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+        }
+
+        /// <summary>
+        /// Parse a <see cref="XmlElementSyntax"/> from a string.
+        /// </summary>
+        /// <param name="code">The element text including start and end tags.</param>
+        /// <returns>The <see cref="XmlElementSyntax"/></returns>
+        public static XmlElementSyntax XmlElementSyntax(string code)
+        {
+            if (SyntaxFactory.ParseLeadingTrivia($"/// {code}").TrySingle(x => x.HasStructure, out var trivia) &&
+                trivia.GetStructure() is DocumentationCommentTriviaSyntax triviaSyntax &&
+                triviaSyntax.Content.TrySingleOfType(out Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax element))
+            {
+                return element;
+            }
+
+            throw new InvalidOperationException($"Failed parsing {code} into an XmlElementSyntax");
         }
     }
 }

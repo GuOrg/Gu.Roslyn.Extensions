@@ -31,5 +31,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var declaration = Parse.MethodDeclaration(code);
             Assert.AreEqual(code, declaration.ToString());
         }
+
+        [TestCase("<summary> Text </summary>")]
+        public void XmlElementSyntax(string code)
+        {
+            var declaration = Parse.XmlElementSyntax(code);
+            Assert.AreEqual(code, declaration.ToString());
+        }
     }
 }

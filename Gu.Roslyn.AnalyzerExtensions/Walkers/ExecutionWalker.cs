@@ -108,6 +108,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                         break;
                     }
+
                 case Scope.Recursive:
                     {
                         if (this.visited.Add(node) &&
