@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
+    using System;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -155,6 +156,7 @@ namespace RoslynSandbox
             AssertAst(expected, updated);
         }
 
+        [Obsolete("Move to Gu.Roslyn.Asserts")]
         private static void AssertAst(DocumentationCommentTriviaSyntax expected, DocumentationCommentTriviaSyntax actual)
         {
             var expectedAst = Dump.Ast(expected);
