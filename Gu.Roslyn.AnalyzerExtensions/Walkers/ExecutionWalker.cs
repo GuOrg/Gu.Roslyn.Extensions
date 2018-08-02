@@ -128,7 +128,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
             }
 
-
             void VisitInitializers(TypeDeclarationSyntax containingTypeDeclaration)
             {
                 using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
