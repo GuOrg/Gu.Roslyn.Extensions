@@ -5,8 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.Diagnostics;
 
     /// <inheritdoc />
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class SemanticModelCacheAnalyzer : DiagnosticAnalyzer
+    public abstract class SemanticModelCacheAnalyzer : DiagnosticAnalyzer
     {
         private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
             id: "SemanticModelCacheAnalyzer",
