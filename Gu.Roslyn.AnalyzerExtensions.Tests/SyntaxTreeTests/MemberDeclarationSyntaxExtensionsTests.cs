@@ -21,7 +21,7 @@ namespace RoslynSandbox
 }");
             var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
             Assert.AreEqual(true, classDeclaration.TryGetDocumentationComment(out var result));
-            Assert.AreEqual("/// <summary>\r\n    /// The Foo\r\n    /// </summary>\r\n", result.ToFullString());
+            CodeAssert.AreEqual("/// <summary>\r\n    /// The Foo\r\n    /// </summary>\r\n", result.ToFullString());
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace RoslynSandbox
 }");
             var ctor = syntaxTree.FindConstructorDeclaration("Foo");
             Assert.AreEqual(true, ctor.TryGetDocumentationComment(out var result));
-            Assert.AreEqual("/// <summary> Initializes a new instance of the <see cref=\"Foo\"/> class. </summary>\r\n", result.ToFullString());
+            CodeAssert.AreEqual("/// <summary> Initializes a new instance of the <see cref=\"Foo\"/> class. </summary>\r\n", result.ToFullString());
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace RoslynSandbox
 }");
             var property = syntaxTree.FindPropertyDeclaration("Value");
             Assert.AreEqual(true, property.TryGetDocumentationComment(out var result));
-            Assert.AreEqual("/// <summary>\r\n        /// Gets or sets the value\r\n        /// </summary>\r\n", result.ToFullString());
+            CodeAssert.AreEqual("/// <summary>\r\n        /// Gets or sets the value\r\n        /// </summary>\r\n", result.ToFullString());
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace RoslynSandbox
 }");
             var method = syntaxTree.FindMethodDeclaration("Id");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var result));
-            Assert.AreEqual("/// <summary>\r\n        /// The identity function.\r\n        /// </summary>\r\n        /// <param name=\"i\">The value to return.</param>\r\n        /// <returns><paramref name=\"i\"/></returns>\r\n", result.ToFullString());
+            CodeAssert.AreEqual("/// <summary>\r\n        /// The identity function.\r\n        /// </summary>\r\n        /// <param name=\"i\">The value to return.</param>\r\n        /// <returns><paramref name=\"i\"/></returns>\r\n", result.ToFullString());
         }
     }
 }
