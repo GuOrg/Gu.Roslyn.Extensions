@@ -87,5 +87,21 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             throw new InvalidOperationException($"Failed parsing {code} into an XmlElementSyntax");
         }
+
+        /// <summary>
+        /// Parse a <see cref="DocumentationCommentTriviaSyntax"/> from a string.
+        /// </summary>
+        /// <param name="code">The element text including start and end tags.</param>
+        /// <returns>The <see cref="DocumentationCommentTriviaSyntax"/></returns>
+        public static DocumentationCommentTriviaSyntax DocumentationCommentTriviaSyntax(string code)
+        {
+            if (SyntaxFactory.ParseLeadingTrivia(code).TrySingle(x => x.HasStructure, out var trivia) &&
+                trivia.GetStructure() is DocumentationCommentTriviaSyntax triviaSyntax)
+            {
+                return triviaSyntax;
+            }
+
+            throw new InvalidOperationException($"Failed parsing {code} into an XmlElementSyntax");
+        }
     }
 }
