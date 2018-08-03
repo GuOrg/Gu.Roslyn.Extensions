@@ -38,7 +38,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return comment.ReplaceNode(old, summary);
             }
 
-            return comment.WithContent(comment.Content.InsertRange(1, new XmlNodeSyntax[] { summary, comment.NewLine() }));
+            if (comment.Content.TryFirstOfType(out XmlElementSyntax existing))
+            {
+                return comment.InsertBefore(existing, summary);
+            }
+
+            return comment.WithContent(comment.Content.Add(summary));
         }
 
         /// <summary>
@@ -73,67 +78,109 @@ namespace Gu.Roslyn.CodeFixExtensions
                     return comment.ReplaceNode(old, param);
                 }
 
-                return comment.WithContent(comment.Content.InsertRange(FindPosition(), new XmlNodeSyntax[] { param, comment.NewLine() }));
+                if (TryGetPositionFromParam(out var before, out var after))
+                {
+                    if (after != null)
+                    {
+                        return comment.InsertBefore(after, param);
+                    }
+
+                    return comment.InsertAfter(before, param);
+                }
+
+                foreach (var node in comment.Content)
+                {
+                    if (node is XmlElementSyntax e &&
+                        (e.HasLocalName("returns") ||
+                         e.HasLocalName("exception")))
+                    {
+                        return comment.InsertBefore(e, param);
+                    }
+                }
+
+                return comment.InsertAfter(comment.Content.OfType<XmlElementSyntax>().Last(), param);
             }
 
             throw new ArgumentException("Element does not have a name attribute.", nameof(param));
 
-            int FindPosition()
+            bool TryGetPositionFromParam(out XmlElementSyntax before, out XmlElementSyntax after)
             {
+                before = null;
+                after = null;
                 if (comment.TryFirstAncestor(out MethodDeclarationSyntax method) &&
-                    method.TryFindParameter(identifierName.Identifier.ValueText, out var parameter))
+                    method.TryFindParameter(identifierName.Identifier.ValueText, out var parameter) &&
+                    method.ParameterList.Parameters.IndexOf(parameter) is var ordinal &&
+                    ordinal >= 0)
                 {
-                    var index = method.ParameterList.Parameters.IndexOf(parameter);
-                    for (var i = 0; i < comment.Content.Count; i++)
+                    foreach (var node in comment.Content)
                     {
-                        if (comment.Content[i] is XmlElementSyntax e)
+                        if (node is XmlElementSyntax e &&
+                            e.HasLocalName("param") &&
+                            e.TryGetNameAttribute(out var nameAttribute) &&
+                            method.TryFindParameter(nameAttribute.Identifier.Identifier.ValueText, out var other))
                         {
-                            if (e.StartTag is XmlElementStartTagSyntax startTag &&
-                                startTag.Name is XmlNameSyntax nameSyntax)
+                            before = e;
+                            if (ordinal < method.ParameterList.Parameters.IndexOf(other))
                             {
-                                if (string.Equals("summary", nameSyntax.LocalName.ValueText, StringComparison.OrdinalIgnoreCase) ||
-                                    string.Equals("typeparam", nameSyntax.LocalName.ValueText, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    continue;
-                                }
-
-                                if (string.Equals("returns", nameSyntax.LocalName.ValueText, StringComparison.OrdinalIgnoreCase) ||
-                                    string.Equals("exception", nameSyntax.LocalName.ValueText, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    return i;
-                                }
-
-                                if (nameSyntax.LocalName.ValueText == "param" &&
-                                    startTag.Attributes.TrySingleOfType(out XmlNameAttributeSyntax nameAttribute) &&
-                                    method.TryFindParameter(nameAttribute.Identifier.Identifier.ValueText, out var other) &&
-                                    method.ParameterList.Parameters.IndexOf(other) < index)
-                                {
-                                    return i - 1;
-                                }
-
+                                after = e;
+                                return true;
                             }
-
-                            return i - 1;
                         }
                     }
-
                 }
 
-                return comment.Content.Count - 1;
+                return before != null;
             }
         }
 
-        private static XmlTextSyntax NewLine(this DocumentationCommentTriviaSyntax comment)
+        /// <summary>
+        /// Add the element and newline and trivia.
+        /// </summary>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="existing">The element already in comment.Content</param>
+        /// <param name="element">The element to add.</param>
+        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="element"/> added</returns>
+        public static DocumentationCommentTriviaSyntax InsertBefore(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax existing, XmlElementSyntax element)
+        {
+            return comment.WithContent(comment.Content.InsertRange(
+                comment.Content.IndexOf(existing),
+                new XmlNodeSyntax[]
+                {
+                    element,
+                    XmlNewLine(comment)
+                }));
+        }
+
+        /// <summary>
+        /// Add the element and newline and trivia.
+        /// </summary>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="existing">The element already in comment.Content</param>
+        /// <param name="element">The element to add.</param>
+        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="element"/> added</returns>
+        public static DocumentationCommentTriviaSyntax InsertAfter(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax existing, XmlElementSyntax element)
+        {
+            return comment.WithContent(comment.Content.InsertRange(
+                comment.Content.IndexOf(existing) + 1,
+                new XmlNodeSyntax[]
+                {
+                    XmlNewLine(comment),
+                    element,
+                }));
+        }
+
+        private static XmlTextSyntax XmlNewLine(DocumentationCommentTriviaSyntax comment)
         {
             return SyntaxFactory.XmlText(
-                                    SyntaxFactory.Token(SyntaxTriviaList.Empty, SyntaxKind.XmlTextLiteralNewLineToken, Environment.NewLine, Environment.NewLine, SyntaxTriviaList.Empty),
-                                    SyntaxFactory.Token(
-                                        leading: SyntaxFactory.TriviaList(SyntaxFactory.SyntaxTrivia(SyntaxKind.DocumentationCommentExteriorTrivia, $"{comment.LeadingWhitespace()}///")),
-                                        kind: SyntaxKind.XmlTextLiteralToken,
-                                        text: " ",
-                                        valueText: " ",
-                                        trailing: SyntaxTriviaList.Empty))
-                                .WithLeadingTrivia(SyntaxTriviaList.Empty);
+                    SyntaxFactory.Token(SyntaxTriviaList.Empty, SyntaxKind.XmlTextLiteralNewLineToken,
+                        Environment.NewLine, Environment.NewLine, SyntaxTriviaList.Empty),
+                    SyntaxFactory.Token(
+                        leading: SyntaxFactory.TriviaList(SyntaxFactory.SyntaxTrivia(SyntaxKind.DocumentationCommentExteriorTrivia, $"{comment.LeadingWhitespace()}///")),
+                        kind: SyntaxKind.XmlTextLiteralToken,
+                        text: " ",
+                        valueText: " ",
+                        trailing: SyntaxTriviaList.Empty))
+                .WithLeadingTrivia(SyntaxTriviaList.Empty);
         }
 
         private static string CreateElementXml(string content, string localName)
