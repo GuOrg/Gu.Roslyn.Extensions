@@ -180,7 +180,7 @@ namespace RoslynSandbox
             }
 
             [Test]
-            public void WhenParamExistsInserAfter()
+            public void WhenParamExistsInsertAfter()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
