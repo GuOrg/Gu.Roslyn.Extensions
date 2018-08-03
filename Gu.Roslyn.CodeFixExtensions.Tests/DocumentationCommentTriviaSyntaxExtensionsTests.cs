@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
+    using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -9,93 +10,108 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     public partial class DocumentationCommentTriviaSyntaxExtensionsTests
     {
         [Test]
-        public void WithSingleLineSummary()
+        public void InsertBeforeFirst()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <remarks></remarks>
-        public void Bar()
-        {
-        }
+        /// <returns>One</returns>
+        public int Bar() => 1;
+    }
+}");
+            var expected = GetExpected(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>Bar</summary>
+        /// <returns>One</returns>
+        public int Bar() => 1;
     }
 }");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-
-            var expected = GetExpected(@"
-namespace RoslynSandbox
-{
-    public class Foo
-    {
-        /// <summary>New text.</summary>
-        /// <remarks></remarks>
-        public void Bar()
-        {
-        }
-    }
-}");
-            AnalyzerAssert.Ast(expected, updated);
-
-            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
-            Assert.AreEqual(true, updated.TryGetSummary(out summary));
+            var element = Parse.XmlElementSyntax("<summary>Bar</summary>", "        ");
+            var updated = comment.InsertBefore(comment.Content.OfType<XmlElementSyntax>().First(), element);
             AnalyzerAssert.Ast(expected, updated);
         }
 
         [Test]
-        public void WithMultiLineSummary()
+        public void InsertBeforeSecond()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <remarks></remarks>
-        public void Bar()
-        {
+        /// <summary>Sum two numbers.</summary>
+        /// <param name=""y"">The y.</param>
+        /// <returns>The sum.</returns>
+        public int Add(int x, int y) => x + y;
+    }
+}");
+            var expected = GetExpected(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>Sum two numbers.</summary>
+        /// <param name=""x"">The x.</param>
+        /// <param name=""y"">The y.</param>
+        /// <returns>The sum.</returns>
+        public int Add(int x, int y) => x + y;
+    }
+}");
+            var method = syntaxTree.FindMethodDeclaration("Add");
+            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+            var element = Parse.XmlElementSyntax("<param name=\"x\">The x.</param>", "        ");
+            var updated = comment.InsertBefore(comment.Content.OfType<XmlElementSyntax>().Skip(1).First(), element);
+            AnalyzerAssert.Ast(expected, updated);
         }
+
+        [Test]
+        public void InsertAfterFirst()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>Bar</summary>
+        public int Bar() => 1;
+    }
+}");
+            var expected = GetExpected(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>Bar</summary>
+        /// <returns>One</returns>
+        public int Bar() => 1;
     }
 }");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("Line 1.\r\nLine 2.");
-            Assert.AreEqual(true, updated.TryGetSummary(out _));
-
-            var expected = GetExpected(@"
-namespace RoslynSandbox
-{
-    public class Foo
-    {
-        /// <summary>
-        /// Line 1.
-        /// Line 2.
-        /// </summary>
-        /// <remarks></remarks>
-        public void Bar()
-        {
-        }
-    }
-}");
+            var element = Parse.XmlElementSyntax("<returns>One</returns>", "        ");
+            var updated = comment.InsertAfter(comment.Content.OfType<XmlElementSyntax>().First(), element);
             AnalyzerAssert.Ast(expected, updated);
         }
 
         [Test]
-        public void WithSingleLineSummaryReplaceOldSingleLine()
+        public void InsertAfterSecond()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <summary>The identity function.</summary>
-        /// <typeparam name=""T"">The type</typeparam>
-        /// <param name=""i"">The value to return.</param>
-        /// <returns><paramref name=""i""/></returns>
-        public T Id<T>(T i) => i;
+        /// <summary>Sum two numbers.</summary>
+        /// <param name=""x"">The x.</param>
+        /// <returns>The sum.</returns>
+        public int Add(int x, int y) => x + y;
     }
 }");
             var expected = GetExpected(@"
@@ -103,36 +119,31 @@ namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <summary>New text.</summary>
-        /// <typeparam name=""T"">The type</typeparam>
-        /// <param name=""i"">The value to return.</param>
-        /// <returns><paramref name=""i""/></returns>
-        public T Id<T>(T i) => i;
+        /// <summary>Sum two numbers.</summary>
+        /// <param name=""x"">The x.</param>
+        /// <param name=""y"">The y.</param>
+        /// <returns>The sum.</returns>
+        public int Add(int x, int y) => x + y;
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("Id");
+            var method = syntaxTree.FindMethodDeclaration("Add");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
+            var element = Parse.XmlElementSyntax("<param name=\"y\">The y.</param>", "        ");
+            var updated = comment.InsertAfter(comment.Content.OfType<XmlElementSyntax>().Skip(1).First(), element);
             AnalyzerAssert.Ast(expected, updated);
         }
 
         [Test]
-        public void WithSingleLineSummaryReplaceOldMultiLine()
+        public void InsertAfterLast()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <summary>
-        /// The identity function.
-        /// </summary>
-        /// <typeparam name=""T"">The type</typeparam>
-        /// <param name=""i"">The value to return.</param>
-        /// <returns><paramref name=""i""/></returns>
-        public T Id<T>(T i) => i;
+        /// <summary>The id function.</summary>
+        /// <param name=""x"">The x.</param>
+        public int Id(int x) => x;
     }
 }");
             var expected = GetExpected(@"
@@ -140,21 +151,17 @@ namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <summary>New text.</summary>
-        /// <typeparam name=""T"">The type</typeparam>
-        /// <param name=""i"">The value to return.</param>
-        /// <returns><paramref name=""i""/></returns>
-        public T Id<T>(T i) => i;
+        /// <summary>The id function.</summary>
+        /// <param name=""x"">The x.</param>
+        /// <returns>The value passed in</returns>
+        public int Id(int x) => x;
     }
 }");
             var method = syntaxTree.FindMethodDeclaration("Id");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
-            AnalyzerAssert.Ast(expected, updated);
-
-            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
+            Assert.AreEqual(true, comment.Content.TrySingleOfType(x => x.HasLocalName("param"), out XmlElementSyntax param));
+            var element = Parse.XmlElementSyntax("<returns>The value passed in</returns>", "        ");
+            var updated = comment.InsertAfter(param, element);
             AnalyzerAssert.Ast(expected, updated);
         }
 
