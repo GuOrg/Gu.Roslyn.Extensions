@@ -6,7 +6,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class DocumentationCommentTriviaSyntaxExtensionsTests
+    public partial class DocumentationCommentTriviaSyntaxExtensionsTests
     {
         [Test]
         public void WithSingleLineSummary()
@@ -32,7 +32,7 @@ namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <summary> New text. </summary>
+        /// <summary>New text.</summary>
         /// <remarks></remarks>
         public void Bar()
         {
@@ -41,7 +41,7 @@ namespace RoslynSandbox
 }");
             AnalyzerAssert.Ast(expected, updated);
 
-            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary> New text. </summary>", "        "));
+            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
             Assert.AreEqual(true, updated.TryGetSummary(out summary));
             AnalyzerAssert.Ast(expected, updated);
         }
@@ -91,7 +91,19 @@ namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <summary> The identity function. </summary>
+        /// <summary>The identity function.</summary>
+        /// <typeparam name=""T"">The type</typeparam>
+        /// <param name=""i"">The value to return.</param>
+        /// <returns><paramref name=""i""/></returns>
+        public T Id<T>(T i) => i;
+    }
+}");
+            var expected = GetExpected(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>New text.</summary>
         /// <typeparam name=""T"">The type</typeparam>
         /// <param name=""i"">The value to return.</param>
         /// <returns><paramref name=""i""/></returns>
@@ -102,20 +114,7 @@ namespace RoslynSandbox
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
             var updated = comment.WithSummaryText("New text.");
             Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary> New text. </summary>", summary.ToFullString());
-
-            var expected = GetExpected(@"
-namespace RoslynSandbox
-{
-    public class Foo
-    {
-        /// <summary> New text. </summary>
-        /// <typeparam name=""T"">The type</typeparam>
-        /// <param name=""i"">The value to return.</param>
-        /// <returns><paramref name=""i""/></returns>
-        public T Id<T>(T i) => i;
-    }
-}");
+            Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
             AnalyzerAssert.Ast(expected, updated);
         }
 
@@ -136,24 +135,26 @@ namespace RoslynSandbox
         public T Id<T>(T i) => i;
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("Id");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary> New text. </summary>", summary.ToFullString());
-
             var expected = GetExpected(@"
 namespace RoslynSandbox
 {
     public class Foo
     {
-        /// <summary> New text. </summary>
+        /// <summary>New text.</summary>
         /// <typeparam name=""T"">The type</typeparam>
         /// <param name=""i"">The value to return.</param>
         /// <returns><paramref name=""i""/></returns>
         public T Id<T>(T i) => i;
     }
 }");
+            var method = syntaxTree.FindMethodDeclaration("Id");
+            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+            var updated = comment.WithSummaryText("New text.");
+            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
+            Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
+            AnalyzerAssert.Ast(expected, updated);
+
+            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
             AnalyzerAssert.Ast(expected, updated);
         }
 
