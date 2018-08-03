@@ -78,18 +78,15 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             throw new ArgumentException("Element does not have a name attribute.", nameof(param));
 
-
             int FindPosition()
             {
                 if (comment.TryFirstAncestor(out MethodDeclarationSyntax method) &&
                     method.TryFindParameter(identifierName.Identifier.ValueText, out var parameter))
                 {
                     var index = method.ParameterList.Parameters.IndexOf(parameter);
-                    return comment.Content.Count(IsBefore) - 1;
-
-                    bool IsBefore(XmlNodeSyntax node)
+                    for (var i = 0; i < comment.Content.Count; i++)
                     {
-                        if (node is XmlElementSyntax e)
+                        if (comment.Content[i] is XmlElementSyntax e)
                         {
                             if (e.StartTag is XmlElementStartTagSyntax startTag &&
                                 startTag.Name is XmlNameSyntax nameSyntax)
@@ -97,29 +94,29 @@ namespace Gu.Roslyn.CodeFixExtensions
                                 if (string.Equals("summary", nameSyntax.LocalName.ValueText, StringComparison.OrdinalIgnoreCase) ||
                                     string.Equals("typeparam", nameSyntax.LocalName.ValueText, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    return true;
+                                    continue;
                                 }
 
                                 if (string.Equals("returns", nameSyntax.LocalName.ValueText, StringComparison.OrdinalIgnoreCase) ||
                                     string.Equals("exception", nameSyntax.LocalName.ValueText, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    return false;
+                                    return i;
                                 }
 
                                 if (nameSyntax.LocalName.ValueText == "param" &&
                                     startTag.Attributes.TrySingleOfType(out XmlNameAttributeSyntax nameAttribute) &&
-                                    method.TryFindParameter(nameAttribute.Identifier.Identifier.ValueText, out var other))
+                                    method.TryFindParameter(nameAttribute.Identifier.Identifier.ValueText, out var other) &&
+                                    method.ParameterList.Parameters.IndexOf(other) < index)
                                 {
-                                    return method.ParameterList.Parameters.IndexOf(other) < index;
+                                    return i - 1;
                                 }
 
                             }
 
-                            return false;
+                            return i - 1;
                         }
-
-                        return true;
                     }
+
                 }
 
                 return comment.Content.Count - 1;
