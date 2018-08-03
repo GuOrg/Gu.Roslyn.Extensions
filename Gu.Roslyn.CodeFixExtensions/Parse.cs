@@ -75,33 +75,67 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Parse a <see cref="XmlElementSyntax"/> from a string.
         /// </summary>
         /// <param name="code">The element text including start and end tags.</param>
+        /// <param name="leadingWhitespace">The whitespace to prepend.</param>
         /// <returns>The <see cref="XmlElementSyntax"/></returns>
-        public static XmlElementSyntax XmlElementSyntax(string code)
+        public static XmlElementSyntax XmlElementSyntax(string code, string leadingWhitespace)
         {
-            if (SyntaxFactory.ParseLeadingTrivia($"/// {code}").TrySingle(x => x.HasStructure, out var trivia) &&
-                trivia.GetStructure() is DocumentationCommentTriviaSyntax triviaSyntax &&
-                triviaSyntax.Content.TrySingleOfType(out Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax element))
+            if (CSharpSyntaxTree.ParseText(ClassCode()) is CSharpSyntaxTree tree &&
+                tree.TryGetRoot(out var root) &&
+                root.ChildNodes().Single() is ClassDeclarationSyntax classDeclaration &&
+                classDeclaration.TryGetDocumentationComment(out var comment) &&
+                comment.Content.TrySingleOfType(out XmlElementSyntax element))
             {
                 return element;
             }
 
             throw new InvalidOperationException($"Failed parsing {code} into an XmlElementSyntax");
+
+            string ClassCode()
+            {
+                leadingWhitespace = leadingWhitespace ?? string.Empty;
+                var builder = StringBuilderPool.Borrow();
+                if (code.IndexOf('\n') < 0)
+                {
+                    builder.AppendLine($"{leadingWhitespace}/// {code}");
+                }
+                else
+                {
+                    foreach (var line in code.Split('\n'))
+                    {
+                        builder.Append($"{leadingWhitespace}/// {line}\n");
+                    }
+                }
+
+                builder.AppendLine($"{leadingWhitespace}public class Foo {{}}");
+                return builder.Return();
+            }
         }
 
         /// <summary>
         /// Parse a <see cref="DocumentationCommentTriviaSyntax"/> from a string.
+        /// Lines are expected to start with ///
         /// </summary>
-        /// <param name="code">The element text including start and end tags.</param>
+        /// <param name="code">
+        /// The element text including start and end tags.
+        /// Lines are expected to start with ///
+        /// </param>
         /// <returns>The <see cref="DocumentationCommentTriviaSyntax"/></returns>
         public static DocumentationCommentTriviaSyntax DocumentationCommentTriviaSyntax(string code)
         {
-            if (SyntaxFactory.ParseLeadingTrivia(code).TrySingle(x => x.HasStructure, out var trivia) &&
-                trivia.GetStructure() is DocumentationCommentTriviaSyntax triviaSyntax)
+            if (CSharpSyntaxTree.ParseText(ClassCode()) is CSharpSyntaxTree tree &&
+                tree.TryGetRoot(out var root) &&
+                root.ChildNodes().Single() is ClassDeclarationSyntax classDeclaration &&
+                classDeclaration.TryGetDocumentationComment(out var comment))
             {
-                return triviaSyntax;
+                return comment;
             }
 
-            throw new InvalidOperationException($"Failed parsing {code} into an XmlElementSyntax");
+            throw new InvalidOperationException($"Failed parsing {code} into a DocumentationCommentTriviaSyntax");
+
+            string ClassCode()
+            {
+                return code + "\r\npublic class Foo { }";
+            }
         }
     }
 }

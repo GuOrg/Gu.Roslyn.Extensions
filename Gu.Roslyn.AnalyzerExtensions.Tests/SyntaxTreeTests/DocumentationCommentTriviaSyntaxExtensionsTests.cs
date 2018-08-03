@@ -26,7 +26,7 @@ namespace RoslynSandbox
             var method = syntaxTree.FindMethodDeclaration("Id");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
             Assert.AreEqual(true, comment.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary>\r\n        /// The identity function.\r\n        /// </summary>", summary.ToFullString());
+            CodeAssert.AreEqual("<summary>\r\n        /// The identity function.\r\n        /// </summary>", summary.ToFullString());
         }
 
         [Test]
