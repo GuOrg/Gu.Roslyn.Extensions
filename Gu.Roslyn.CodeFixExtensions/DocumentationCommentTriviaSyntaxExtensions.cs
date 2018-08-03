@@ -133,6 +133,40 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
+        /// <Returns>
+        /// Add a returns element to <paramref name="comment"/>
+        /// Replace if a returns element exists.
+        /// </Returns>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="text"> The text to add inside the &lt;returns&gt; element.</param>
+        /// <returns><paramref name="comment"/> with  <paramref name="text"/>.</returns>
+        public static DocumentationCommentTriviaSyntax WithReturnsText(this DocumentationCommentTriviaSyntax comment, string text)
+        {
+            return comment.WithReturns(Parse.XmlElementSyntax(CreateElementXml(text, "returns"), comment.LeadingWhitespace()));
+        }
+
+        /// <Returns>
+        /// Add <paramref name="returns"/> element to <paramref name="comment"/>
+        /// Replace if a Returns element exists.
+        /// </Returns>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="returns"> The <see cref="XmlElementSyntax"/>.</param>
+        /// <returns><paramref name="comment"/> with <paramref name="returns"/>.</returns>
+        public static DocumentationCommentTriviaSyntax WithReturns(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax returns)
+        {
+            if (comment.TryGetReturns(out var old))
+            {
+                return comment.ReplaceNode(old, returns);
+            }
+
+            if (comment.Content.TryLastOfType(out XmlElementSyntax existing))
+            {
+                return comment.InsertAfter(existing, returns);
+            }
+
+            return comment.WithContent(comment.Content.Add(returns));
+        }
+
         /// <summary>
         /// Add the element and newline and trivia.
         /// </summary>
