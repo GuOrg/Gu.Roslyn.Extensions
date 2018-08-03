@@ -18,9 +18,23 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
         /// <param name="text"> The text to add inside the summary element.</param>
         /// <returns><paramref name="comment"/> with summary.</returns>
-        public static DocumentationCommentTriviaSyntax WithSummary(this DocumentationCommentTriviaSyntax comment, string text)
+        public static DocumentationCommentTriviaSyntax WithSummaryText(this DocumentationCommentTriviaSyntax comment, string text)
         {
-            return comment.WithSummary(Parse.XmlElementSyntax($"<summary> {text} </summary>"));
+            return comment.WithSummary(Parse.XmlElementSyntax(Xml(), comment.LeadingWhitespace()));
+
+            string Xml()
+            {
+                if (text.IndexOf('\n') < 0)
+                {
+                    return $"<summary> {text} </summary>";
+                }
+
+                return StringBuilderPool.Borrow()
+                                        .AppendLine("<summary>")
+                                        .Append(text)
+                                        .AppendLine()
+                                        .AppendLine("</summary>").Return();
+            }
         }
 
         /// <summary>
@@ -42,18 +56,22 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         private static XmlTextSyntax NewLine(this DocumentationCommentTriviaSyntax comment)
         {
-            var leadingWhiteSpace = comment.ParentTrivia.Token.LeadingTrivia.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var whitespaceTrivia)
-                    ? whitespaceTrivia.ToString()
-                    : "        ";
             return SyntaxFactory.XmlText(
                                     SyntaxFactory.Token(SyntaxTriviaList.Empty, SyntaxKind.XmlTextLiteralNewLineToken, Environment.NewLine, Environment.NewLine, SyntaxTriviaList.Empty),
                                     SyntaxFactory.Token(
-                                        leading: SyntaxFactory.TriviaList(SyntaxFactory.SyntaxTrivia(SyntaxKind.DocumentationCommentExteriorTrivia, $"{leadingWhiteSpace}///")),
+                                        leading: SyntaxFactory.TriviaList(SyntaxFactory.SyntaxTrivia(SyntaxKind.DocumentationCommentExteriorTrivia, $"{comment.LeadingWhitespace()}///")),
                                         kind: SyntaxKind.XmlTextLiteralToken,
                                         text: " ",
                                         valueText: " ",
                                         trailing: SyntaxTriviaList.Empty))
                                 .WithLeadingTrivia(SyntaxTriviaList.Empty);
+        }
+
+        private static string LeadingWhitespace(this DocumentationCommentTriviaSyntax comment)
+        {
+            return comment.ParentTrivia.Token.LeadingTrivia.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var whitespaceTrivia)
+                ? whitespaceTrivia.ToString()
+                : "        ";
         }
     }
 }

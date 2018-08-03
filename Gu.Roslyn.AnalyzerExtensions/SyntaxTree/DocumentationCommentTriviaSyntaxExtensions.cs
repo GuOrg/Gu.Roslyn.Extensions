@@ -77,13 +77,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Example:
         /// element.HasNameAttribute("name") returns true for: &lt;param name="name"&gt;The value to return.&lt;/param&gt;
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="element">Check if the element has name=<paramref name="name"/></param>
+        /// <param name="name">The expected value of the name attribute</param>
+        /// <returns>True if <paramref name="element"/> has a name attribute with value <paramref name="name"/> </returns>
         public static bool HasNameAttribute(this XmlElementSyntax element, string name)
         {
             return element?.StartTag is XmlElementStartTagSyntax startTag &&
-                   startTag.Name is XmlNameSyntax nameSyntax &&
                    startTag.Attributes.TrySingleOfType(out XmlNameAttributeSyntax attribute) &&
                    attribute.Identifier is IdentifierNameSyntax identifier &&
                    identifier.Identifier.ValueText == name;

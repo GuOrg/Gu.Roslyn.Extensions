@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
-    using System;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -25,9 +24,8 @@ namespace RoslynSandbox
 }");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummary("New text.");
+            var updated = comment.WithSummaryText("New text.");
             Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary> New text. </summary>", summary.ToFullString());
 
             var expected = GetExpected(@"
 namespace RoslynSandbox
@@ -41,7 +39,11 @@ namespace RoslynSandbox
         }
     }
 }");
-            AssertAst(expected, updated);
+            AnalyzerAssert.Ast(expected, updated);
+
+            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary> New text. </summary>", "        "));
+            Assert.AreEqual(true, updated.TryGetSummary(out summary));
+            AnalyzerAssert.Ast(expected, updated);
         }
 
         [Test]
@@ -60,9 +62,8 @@ namespace RoslynSandbox
 }");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummary("New\r\ntext.");
-            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary> New\r\n text.\r\n </summary>", summary.ToFullString());
+            var updated = comment.WithSummaryText("Line 1.\r\nLine 2.");
+            Assert.AreEqual(true, updated.TryGetSummary(out _));
 
             var expected = GetExpected(@"
 namespace RoslynSandbox
@@ -70,8 +71,8 @@ namespace RoslynSandbox
     public class Foo
     {
         /// <summary>
-        /// New
-        /// text.
+        /// Line 1.
+        /// Line 2.
         /// </summary>
         /// <remarks></remarks>
         public void Bar()
@@ -79,7 +80,7 @@ namespace RoslynSandbox
         }
     }
 }");
-            AssertAst(expected, updated);
+            AnalyzerAssert.Ast(expected, updated);
         }
 
         [Test]
@@ -99,7 +100,7 @@ namespace RoslynSandbox
 }");
             var method = syntaxTree.FindMethodDeclaration("Id");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummary("New text.");
+            var updated = comment.WithSummaryText("New text.");
             Assert.AreEqual(true, updated.TryGetSummary(out var summary));
             Assert.AreEqual("<summary> New text. </summary>", summary.ToFullString());
 
@@ -115,7 +116,7 @@ namespace RoslynSandbox
         public T Id<T>(T i) => i;
     }
 }");
-            AssertAst(expected, updated);
+            AnalyzerAssert.Ast(expected, updated);
         }
 
         [Test]
@@ -137,7 +138,7 @@ namespace RoslynSandbox
 }");
             var method = syntaxTree.FindMethodDeclaration("Id");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummary("New text.");
+            var updated = comment.WithSummaryText("New text.");
             Assert.AreEqual(true, updated.TryGetSummary(out var summary));
             Assert.AreEqual("<summary> New text. </summary>", summary.ToFullString());
 
@@ -153,15 +154,7 @@ namespace RoslynSandbox
         public T Id<T>(T i) => i;
     }
 }");
-            AssertAst(expected, updated);
-        }
-
-        [Obsolete("Move to Gu.Roslyn.Asserts")]
-        private static void AssertAst(DocumentationCommentTriviaSyntax expected, DocumentationCommentTriviaSyntax actual)
-        {
-            var expectedAst = Dump.Ast(expected);
-            var actualAst = Dump.Ast(actual);
-            CodeAssert.AreEqual(expectedAst, actualAst);
+            AnalyzerAssert.Ast(expected, updated);
         }
 
         private static DocumentationCommentTriviaSyntax GetExpected(string code)
