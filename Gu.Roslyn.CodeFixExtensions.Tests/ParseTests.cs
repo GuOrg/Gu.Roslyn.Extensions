@@ -1,11 +1,5 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
-    using System.Linq;
-    using Gu.Roslyn.AnalyzerExtensions;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public class ParseTests
