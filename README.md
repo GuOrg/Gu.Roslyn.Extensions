@@ -162,6 +162,46 @@ Check if a node is executed before another node.
 
 Helper methods for finding members by name or predicate.
 
+# Doc comments
+
+## MemberDeclarationSyntaxExtensions.TryGetDocumentationComment
+
+```cs
+if(member.TryGetDocumentationComment(out DocumentationCommentTriviaSyntax comment))
+{
+}
+```
+
+## DocumentationCommentTriviaSyntaxExtensions.TryGetX
+
+```cs
+if(comment.TryGetSummary(out XmlElementSyntax comment))
+{
+}
+
+if(comment.TryGetTypeParam("T", out XmlElementSyntax comment))
+{
+}
+
+if(comment.TryGetParam("x", out XmlElementSyntax comment))
+{
+}
+
+if(comment.TryGetReturns(out XmlElementSyntax comment))
+{
+}
+```
+
+## DocumentationCommentTriviaSyntaxExtensions.WithX
+
+```cs
+var updated = comment.WithSummaryText("Lorem ipsum.")
+var updated = comment.WithTypeParamText("T", "Lorem ipsum.")
+var updated = comment.WithParamText("x", "Lorem ipsum.")
+var updated = comment.WithReturnsText("x", "Lorem ipsum.")
+```
+
+
 # Walkers
 
 ## ExecutionWalker<T> : PooledWalker<T>
