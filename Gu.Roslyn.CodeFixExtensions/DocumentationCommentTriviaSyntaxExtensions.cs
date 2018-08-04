@@ -47,6 +47,113 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
+        /// Add a typeparam element to <paramref name="comment"/>
+        /// Replace if a summary element exists.
+        /// If the comment is attached to a method the param element is inserted at the correct position.
+        /// </summary>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="text"> The text to add inside the summary element.</param>
+        /// <returns><paramref name="comment"/> with summary.</returns>
+        public static DocumentationCommentTriviaSyntax WithTypeParamText(this DocumentationCommentTriviaSyntax comment, string parameterName, string text)
+        {
+            return comment.WithTypeParam(Parse.XmlElementSyntax(CreateElementXml(text, "typeparam", parameterName), comment.LeadingWhitespace()));
+        }
+
+        /// <summary>
+        /// Add <paramref name="typeparam"/> element to <paramref name="comment"/>
+        /// Replace if a summary element exists.
+        /// If the comment is attached to a method the param element is inserted at the correct position.
+        /// </summary>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="typeparam"> The <see cref="XmlElementSyntax"/>.</param>
+        /// <returns><paramref name="comment"/> with <paramref name="typeparam"/>.</returns>
+        public static DocumentationCommentTriviaSyntax WithTypeParam(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax typeparam)
+        {
+            if (typeparam.TryGetNameAttribute(out var attribute) &&
+                attribute.Identifier is IdentifierNameSyntax identifierName)
+            {
+                if (comment.TryGetTypeParam(identifierName.Identifier.ValueText, out var old))
+                {
+                    return comment.ReplaceNode(old, typeparam);
+                }
+
+                if (TryGetPositionFromTypeParam(out var before, out var after))
+                {
+                    if (after != null)
+                    {
+                        return comment.InsertBefore(after, typeparam);
+                    }
+
+                    return comment.InsertAfter(before, typeparam);
+                }
+
+                foreach (var node in comment.Content)
+                {
+                    if (node is XmlElementSyntax e &&
+                        (e.HasLocalName("param") ||
+                         e.HasLocalName("returns") ||
+                         e.HasLocalName("exception")))
+                    {
+                        return comment.InsertBefore(e, typeparam);
+                    }
+                }
+
+                return comment.InsertAfter(comment.Content.OfType<XmlElementSyntax>().Last(), typeparam);
+            }
+
+            throw new ArgumentException("Element does not have a name attribute.", nameof(typeparam));
+
+            bool TryGetPositionFromTypeParam(out XmlElementSyntax before, out XmlElementSyntax after)
+            {
+                before = null;
+                after = null;
+                if (comment.TryFirstAncestor(out MemberDeclarationSyntax member) &&
+                    TryGetTypeParameterList(member, out var typeParameterList) &&
+                    typeParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == identifierName.Identifier.ValueText, out var parameter) &&
+                    typeParameterList.Parameters.IndexOf(parameter) is var ordinal &&
+                    ordinal >= 0)
+                {
+                    foreach (var node in comment.Content)
+                    {
+                        if (node is XmlElementSyntax e &&
+                            e.HasLocalName("typeparam") &&
+                            e.TryGetNameAttribute(out var nameAttribute) &&
+                            typeParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == nameAttribute.Identifier.Identifier.ValueText, out var other))
+                        {
+                            before = e;
+                            if (ordinal < typeParameterList.Parameters.IndexOf(other))
+                            {
+                                after = e;
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                return before != null;
+
+                bool TryGetTypeParameterList(MemberDeclarationSyntax source, out TypeParameterListSyntax result)
+                {
+                    switch (source)
+                    {
+                        case MethodDeclarationSyntax methodDeclaration:
+                            result = methodDeclaration.TypeParameterList;
+                            return result != null;
+                        case TypeDeclarationSyntax typeDeclaration:
+                            result = typeDeclaration.TypeParameterList;
+                            return result != null;
+                        default:
+                            result = null;
+                            return false;
+                    }
+                }
+            }
+        }
+
+
+
+        /// <summary>
         /// Add a summary element to <paramref name="comment"/>
         /// Replace if a summary element exists.
         /// If the comment is attached to a method the param element is inserted at the correct position.
@@ -171,16 +278,16 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add the element and newline and trivia.
         /// </summary>
         /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
-        /// <param name="existing">The element already in comment.Content</param>
-        /// <param name="element">The element to add.</param>
-        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="element"/> added</returns>
-        public static DocumentationCommentTriviaSyntax InsertBefore(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax existing, XmlElementSyntax element)
+        /// <param name="node">The element already in comment.Content</param>
+        /// <param name="newElement">The element to add.</param>
+        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="newElement"/> added</returns>
+        public static DocumentationCommentTriviaSyntax InsertBefore(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax node, XmlElementSyntax newElement)
         {
             return comment.WithContent(comment.Content.InsertRange(
-                comment.Content.IndexOf(existing),
+                comment.Content.IndexOf(node),
                 new XmlNodeSyntax[]
                 {
-                    element,
+                    newElement,
                     XmlNewLine(comment)
                 }));
         }
@@ -189,17 +296,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add the element and newline and trivia.
         /// </summary>
         /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
-        /// <param name="existing">The element already in comment.Content</param>
-        /// <param name="element">The element to add.</param>
-        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="element"/> added</returns>
-        public static DocumentationCommentTriviaSyntax InsertAfter(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax existing, XmlElementSyntax element)
+        /// <param name="node">The element already in comment.Content</param>
+        /// <param name="newElement">The element to add.</param>
+        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="newElement"/> added</returns>
+        public static DocumentationCommentTriviaSyntax InsertAfter(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax node, XmlElementSyntax newElement)
         {
             return comment.WithContent(comment.Content.InsertRange(
-                comment.Content.IndexOf(existing) + 1,
+                comment.Content.IndexOf(node) + 1,
                 new XmlNodeSyntax[]
                 {
                     XmlNewLine(comment),
-                    element,
+                    newElement,
                 }));
         }
 
