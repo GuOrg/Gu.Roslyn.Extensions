@@ -15,114 +15,99 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Parse a <see cref="FieldDeclarationSyntax"/> from a string.
         /// </summary>
         /// <param name="code">The code text.</param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns>The <see cref="FieldDeclarationSyntax"/></returns>
-        public static FieldDeclarationSyntax FieldDeclaration(string code)
+        public static FieldDeclarationSyntax FieldDeclaration(string code, string leadingWhitespace = null)
         {
-            return (FieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            return (FieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
         }
 
         /// <summary>
         /// Parse a <see cref="ConstructorDeclarationSyntax"/> from a string.
         /// </summary>
         /// <param name="code">The code text.</param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns>The <see cref="ConstructorDeclarationSyntax"/></returns>
-        public static ConstructorDeclarationSyntax ConstructorDeclaration(string code)
+        public static ConstructorDeclarationSyntax ConstructorDeclaration(string code, string leadingWhitespace = null)
         {
-            return (ConstructorDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            return (ConstructorDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
         }
 
         /// <summary>
         /// Parse a <see cref="EventFieldDeclarationSyntax"/> from a string.
         /// </summary>
         /// <param name="code">The code text.</param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns>The <see cref="EventFieldDeclarationSyntax"/></returns>
-        public static EventFieldDeclarationSyntax EventFieldDeclaration(string code)
+        public static EventFieldDeclarationSyntax EventFieldDeclaration(string code, string leadingWhitespace = null)
         {
-            return (EventFieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            return (EventFieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
         }
 
         /// <summary>
         /// Parse a <see cref="EventDeclarationSyntax"/> from a string.
         /// </summary>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <param name="code">The code text.</param>
         /// <returns>The <see cref="EventDeclarationSyntax"/></returns>
-        public static EventDeclarationSyntax EventDeclaration(string code)
+        public static EventDeclarationSyntax EventDeclaration(string code, string leadingWhitespace = null)
         {
-            return (EventDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            return (EventDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
         }
 
         /// <summary>
         /// Parse a <see cref="PropertyDeclarationSyntax"/> from a string.
         /// </summary>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <param name="code">The code text.</param>
         /// <returns>The <see cref="PropertyDeclarationSyntax"/></returns>
-        public static PropertyDeclarationSyntax PropertyDeclaration(string code)
+        public static PropertyDeclarationSyntax PropertyDeclaration(string code, string leadingWhitespace = null)
         {
-            return (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            return (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
         }
 
         /// <summary>
         /// Parse a <see cref="MethodDeclarationSyntax"/> from a string.
         /// </summary>
         /// <param name="code">The code text.</param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns>The <see cref="MethodDeclarationSyntax"/></returns>
-        public static MethodDeclarationSyntax MethodDeclaration(string code)
+        public static MethodDeclarationSyntax MethodDeclaration(string code, string leadingWhitespace = null)
         {
-            return (MethodDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            return (MethodDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
         }
 
         /// <summary>
         /// Parse a <see cref="XmlElementSyntax"/> from a string.
         /// </summary>
-        /// <param name="code">The element text including start and end tags.</param>
-        /// <param name="leadingWhitespace">The whitespace to prepend.</param>
+        /// <param name="text">The element text including start and end tags.</param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns>The <see cref="XmlElementSyntax"/></returns>
-        public static XmlElementSyntax XmlElementSyntax(string code, string leadingWhitespace)
+        public static XmlElementSyntax XmlElementSyntax(string text, string leadingWhitespace = null)
         {
-            if (CSharpSyntaxTree.ParseText(ClassCode()) is CSharpSyntaxTree tree &&
-                tree.TryGetRoot(out var root) &&
-                root.ChildNodes().Single() is ClassDeclarationSyntax classDeclaration &&
-                classDeclaration.TryGetDocumentationComment(out var comment) &&
+            if (DocumentationCommentTriviaSyntax(text.WithLeadingWhiteSpace("/// "), leadingWhitespace ?? string.Empty) is var comment &&
                 comment.Content.TrySingleOfType(out XmlElementSyntax element))
             {
                 return element;
             }
 
-            throw new InvalidOperationException($"Failed parsing {code} into an XmlElementSyntax");
-
-            string ClassCode()
-            {
-                leadingWhitespace = leadingWhitespace ?? string.Empty;
-                var builder = StringBuilderPool.Borrow();
-                if (code.IndexOf('\n') < 0)
-                {
-                    builder.AppendLine($"{leadingWhitespace}/// {code}");
-                }
-                else
-                {
-                    foreach (var line in code.Split('\n'))
-                    {
-                        builder.Append($"{leadingWhitespace}/// {line}\n");
-                    }
-                }
-
-                builder.AppendLine($"{leadingWhitespace}public class Foo {{}}");
-                return builder.Return();
-            }
+            throw new InvalidOperationException($"Failed parsing {text} into an XmlElementSyntax");
         }
 
         /// <summary>
         /// Parse a <see cref="DocumentationCommentTriviaSyntax"/> from a string.
         /// Lines are expected to start with ///
         /// </summary>
-        /// <param name="code">
+        /// <param name="text">
         /// The element text including start and end tags.
         /// Lines are expected to start with ///
         /// </param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns>The <see cref="DocumentationCommentTriviaSyntax"/></returns>
-        public static DocumentationCommentTriviaSyntax DocumentationCommentTriviaSyntax(string code)
+        public static DocumentationCommentTriviaSyntax DocumentationCommentTriviaSyntax(string text, string leadingWhitespace = null)
         {
-            if (CSharpSyntaxTree.ParseText(ClassCode()) is CSharpSyntaxTree tree &&
+            var code = (text + $"\r\n{leadingWhitespace ?? "    "}public class Foo {{}}").WithLeadingWhiteSpace(leadingWhitespace);
+            if (CSharpSyntaxTree.ParseText(code) is CSharpSyntaxTree tree &&
                 tree.TryGetRoot(out var root) &&
                 root.ChildNodes().Single() is ClassDeclarationSyntax classDeclaration &&
                 classDeclaration.TryGetDocumentationComment(out var comment))
@@ -130,12 +115,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return comment;
             }
 
-            throw new InvalidOperationException($"Failed parsing {code} into a DocumentationCommentTriviaSyntax");
-
-            string ClassCode()
-            {
-                return code + "\r\npublic class Foo { }";
-            }
+            throw new InvalidOperationException($"Failed parsing {text} into a DocumentationCommentTriviaSyntax");
         }
     }
 }
