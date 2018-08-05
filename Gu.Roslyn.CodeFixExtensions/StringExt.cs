@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
+    using System.Diagnostics;
     using Gu.Roslyn.AnalyzerExtensions;
 
     /// <summary>
@@ -9,7 +10,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     public static class StringExt
     {
         /// <summary>
-        /// Prepend each row in <paramref name="text"/> with <paramref name="leadingWhitespace"/>
+        /// Adjust each row in <paramref name="text"/> to start with <paramref name="leadingWhitespace"/>
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="leadingWhitespace">The whitespace to prepend</param>
@@ -26,20 +27,61 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return text;
             }
 
-            var indexOf = text.IndexOf('\n');
-            if (indexOf < 0)
+            var eol = text.IndexOf('\n');
+            if (eol < 0 ||
+                eol == text.Length - 1)
             {
-                return AdjustWhitespace(text, leadingWhitespace);
+                var substring = FindSubstring(0, text.Length);
+                return leadingWhitespace + text.Substring(substring.Start, substring.Length);
             }
 
             var builder = StringBuilderPool.Borrow();
-            var start = 0;
-            foreach (var line in text.Split('\n'))
+            var pos = 0;
+            do
             {
-                builder.Append($"{AdjustWhitespace(line, leadingWhitespace)}\n");
+                var substring = FindSubstring(pos, eol + 1);
+                builder.Append(leadingWhitespace)
+                       .Append(text, substring.Start, substring.Length);
+                pos = eol + 1;
+            } while ((eol = text.IndexOf('\n', pos)) > 0);
+
+            if (pos < text.Length - 1)
+            {
+                var substring = FindSubstring(pos, text.Length);
+                builder.Append(leadingWhitespace)
+                       .Append(text, substring.Start, substring.Length);
             }
 
             return builder.Return();
+
+            Substring FindSubstring(int start, int end)
+            {
+                if (text[start] != ' ')
+                {
+                    return new Substring(start, end);
+                }
+
+                var indexOf = text.IndexOf(leadingWhitespace, StringComparison.Ordinal);
+                if (indexOf == 0)
+                {
+                    var offset = start;
+                    while (text.StartsWith(offset + 1, leadingWhitespace))
+                    {
+                        offset++;
+                    }
+
+                    return new Substring(offset + leadingWhitespace.Length, end);
+                }
+
+                if (indexOf > 0)
+                {
+                    return IsWhitespaceTo(text, start, indexOf)
+                        ? new Substring(indexOf, end)
+                        : new Substring(start, end);
+                }
+
+                return new Substring(text.CountWhile(x => x == ' ', start, end), end);
+            }
         }
 
         /// <summary>
@@ -78,38 +120,9 @@ namespace Gu.Roslyn.CodeFixExtensions
             return new string(chars);
         }
 
-        private static string AdjustWhitespace(string line, string leadingWhitespace)
+        private static bool IsWhitespaceTo(this string line, int start, int position)
         {
-            if (line[0] != ' ')
-            {
-                return leadingWhitespace + line;
-            }
-
-            var indexOf = line.IndexOf(leadingWhitespace, StringComparison.Ordinal);
-            if (indexOf == 0)
-            {
-                var offset = 0;
-                while (line.StartsWith(offset + 1, leadingWhitespace))
-                {
-                    offset++;
-                }
-
-                return line.Substring(offset);
-            }
-
-            if (indexOf > 0)
-            {
-                return IsWhitespaceTo(line, indexOf)
-                    ? line.Substring(indexOf)
-                    : leadingWhitespace + line;
-            }
-
-            return leadingWhitespace + line.TrimStart(' ');
-        }
-
-        private static bool IsWhitespaceTo(this string line, int position)
-        {
-            for (int i = 0; i < position; i++)
+            for (var i = start; i < position; i++)
             {
                 if (line[i] != ' ')
                 {
@@ -136,6 +149,36 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             return false;
+        }
+
+        private static int CountWhile(this string text, Func<char, bool> predicate, int start, int end)
+        {
+            var count = 0;
+            for (var i = start; i < end; i++)
+            {
+                var c = text[i];
+                if (predicate(c))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        [DebuggerDisplay("Start: {Start}, End: {End}, Length: {Length}")]
+        private struct Substring
+        {
+            public Substring(int start, int end)
+            {
+                this.Start = start;
+                this.End = end;
+            }
+
+            public int Start { get; }
+
+            public int End { get; }
+            public int Length => this.End - this.Start;
         }
     }
 }
