@@ -3,6 +3,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using System;
     using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -106,16 +107,51 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentationCommentTriviaSyntax"/></returns>
         public static DocumentationCommentTriviaSyntax DocumentationCommentTriviaSyntax(string text, string leadingWhitespace = null)
         {
-            var code = (text + $"\r\n{leadingWhitespace ?? "    "}public class Foo {{}}").WithLeadingWhiteSpace(leadingWhitespace);
-            if (CSharpSyntaxTree.ParseText(code) is CSharpSyntaxTree tree &&
-                tree.TryGetRoot(out var root) &&
-                root.ChildNodes().Single() is ClassDeclarationSyntax classDeclaration &&
-                classDeclaration.TryGetDocumentationComment(out var comment))
+            if (LeadingTrivia(text, leadingWhitespace) is var triviaList &&
+                triviaList.TrySingle(x=>x.HasStructure, out var withStructure) &&
+                withStructure.GetStructure() is DocumentationCommentTriviaSyntax comment)
             {
                 return comment;
             }
 
             throw new InvalidOperationException($"Failed parsing {text} into a DocumentationCommentTriviaSyntax");
+        }
+
+        /// <summary>
+        /// Parse a <see cref="SyntaxTriviaList"/> from a string.
+        /// Lines are expected to start with ///
+        /// </summary>
+        /// <param name="text">
+        /// The element text including start and end tags.
+        /// Lines are expected to start with ///
+        /// </param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
+        /// <returns>The <see cref="SyntaxTriviaList"/></returns>
+        public static SyntaxTriviaList LeadingTrivia(string text, string leadingWhitespace = null)
+        {
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            var code = (text + $"\r\n{WhiteSpace()}public class Foo {{}}").WithLeadingWhiteSpace(leadingWhitespace);
+            return SyntaxFactory.ParseLeadingTrivia(code);
+
+            string WhiteSpace()
+            {
+                if (leadingWhitespace == null)
+                {
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        if (text[i] != ' ')
+                        {
+                            return new string(' ', i);
+                        }
+                    }
+                }
+
+                return leadingWhitespace;
+            }
         }
     }
 }
