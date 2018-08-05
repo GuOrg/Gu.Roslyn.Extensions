@@ -13,7 +13,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Adjust each row in <paramref name="text"/> to start with <paramref name="leadingWhitespace"/>
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <param name="leadingWhitespace">The whitespace to prepend</param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns></returns>
         public static string WithLeadingWhiteSpace(this string text, string leadingWhitespace)
         {
@@ -59,6 +59,11 @@ namespace Gu.Roslyn.CodeFixExtensions
                 if (text[start] != ' ')
                 {
                     return new Substring(start, end);
+                }
+
+                if (leadingWhitespace == string.Empty)
+                {
+                    return new Substring(text.CountWhile(x => x == ' ', start, end), end);
                 }
 
                 var indexOf = text.IndexOf(leadingWhitespace, StringComparison.Ordinal);

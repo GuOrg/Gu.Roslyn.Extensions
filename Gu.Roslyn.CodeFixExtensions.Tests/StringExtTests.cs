@@ -5,6 +5,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     public class StringExtTests
     {
         [TestCase("abc", null, "abc")]
+        [TestCase("  abc", "", "abc")]
         [TestCase("abc\r\n", "    ", "    abc\r\n")]
         [TestCase("    abc", "    ", "    abc")]
         [TestCase("  abc", "    ", "    abc")]
