@@ -57,9 +57,65 @@ namespace RoslynSandbox
     }
 }");
             var method = syntaxTree.FindMethodDeclaration("Bar");
-            var docs = "/// <summary>New summary.</summary>\r\n" +
+            var text = "/// <summary>New summary.</summary>\r\n" +
                        "/// <returns>New returns.</returns>";
-            var updated = method.WithDocumentationText(docs, adjustLeadingWhitespace: true);
+            var updated = method.WithDocumentationText(text, adjustLeadingWhitespace: true);
+            AnalyzerAssert.Ast(expected, updated);
+        }
+
+        [Test]
+        public void AddAdjustWhiteSpaceDefaultHandleMissingNewLine()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Bar() => 1;
+    }
+}");
+            var expected = GetExpected(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>New summary.</summary>
+        /// <returns>New returns.</returns>
+        public int Bar() => 1;
+    }
+}");
+            var method = syntaxTree.FindMethodDeclaration("Bar");
+            var text = "/// <summary>New summary.</summary>\r\n" +
+                       "/// <returns>New returns.</returns>";
+            var updated = method.WithDocumentationText(text);
+            AnalyzerAssert.Ast(expected, updated);
+        }
+
+        [Test]
+        public void AddAdjustWhiteSpaceDefault()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Bar() => 1;
+    }
+}");
+            var expected = GetExpected(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>New summary.</summary>
+        /// <returns>New returns.</returns>
+        public int Bar() => 1;
+    }
+}");
+            var method = syntaxTree.FindMethodDeclaration("Bar");
+            var text = "/// <summary>New summary.</summary>\r\n" +
+                       "/// <returns>New returns.</returns>\r\n";
+            var updated = method.WithDocumentationText(text);
             AnalyzerAssert.Ast(expected, updated);
         }
 

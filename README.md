@@ -3,7 +3,6 @@ Extensions for analyzers &amp; code fixes.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ipk8pqx4n4m7y8u8/branch/master?svg=true)](https://ci.appveyor.com/project/JohanLarsson/gu-roslyn-extensions/branch/master)
 
-- [Gu.Roslyn.Extensions](#guroslynextensions)
 - [Pooled](#pooled)
   - [PooledSet<T>](#pooledset-t)
   - [StringBuilderPool](#stringbuilderpool)
@@ -31,6 +30,11 @@ Extensions for analyzers &amp; code fixes.
     - [IsExecutedBefore](#isexecutedbefore)
   - [TypeSyntaxExt](#typesyntaxext)
     - [TryFindMember](#tryfindmember)
+- [Doc comments](#doc-comments)
+  - [MemberDeclarationSyntaxExtensions.TryGetDocumentationComment](#memberdeclarationsyntaxextensionstrygetdocumentationcomment)
+  - [DocumentationCommentTriviaSyntaxExtensions.TryGetX](#documentationcommenttriviasyntaxextensionstrygetx)
+  - [DocumentationCommentTriviaSyntaxExtensions.WithX](#documentationcommenttriviasyntaxextensionswithx)
+  - [DocumentationCommentTriviaSyntaxExtensions.WithX](#documentationcommenttriviasyntaxextensionswithx)
 - [Walkers](#walkers)
   - [ExecutionWalker<T> : PooledWalker<T>](#executionwalker-t--pooledwalker-t)
     - [PooledWalker<T>](#pooledwalker-t)
@@ -199,6 +203,15 @@ var updated = comment.WithSummaryText("Lorem ipsum.")
 var updated = comment.WithTypeParamText("T", "Lorem ipsum.")
 var updated = comment.WithParamText("x", "Lorem ipsum.")
 var updated = comment.WithReturnsText("x", "Lorem ipsum.")
+```
+
+## MemberDeclarationSyntax.WithDocumentationText
+
+```cs
+var method = syntaxTree.FindMethodDeclaration("Bar");
+var text = "/// <summary>New summary.</summary>\r\n" +
+           "/// <returns>New returns.</returns>";
+var updated = method.WithDocumentationText(text);
 ```
 
 
