@@ -8,11 +8,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     public class ExpressionSyntaxExtTests
     {
         [TestCase("1", typeof(int))]
-        //[TestCase("1", typeof(int?))]
         [TestCase("1", typeof(double))]
         [TestCase("1", typeof(object))]
         [TestCase("1", typeof(IComparable))]
-        //[TestCase("1", typeof(IComparable<int>))]
         public void IsAssignableTo(string text, Type type)
         {
             var code = @"

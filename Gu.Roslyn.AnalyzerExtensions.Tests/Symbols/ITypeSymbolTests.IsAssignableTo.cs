@@ -42,14 +42,10 @@ namespace RoslynSandbox
             }
 
             [TestCase("int", typeof(int))]
-            //[TestCase("int", typeof(int?))]
             [TestCase("int", typeof(double))]
             [TestCase("int", typeof(IComparable))]
-            //[TestCase("int", typeof(IComparable<int>))]
             [TestCase("int", typeof(object))]
             [TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.IEnumerable))]
-            //[TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.Generic.IEnumerable<int>))]
-            //[TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.Generic.IEnumerable<>))]
             public void QualifiedTypeFromType(string typeString, Type destination)
             {
                 var code = @"
@@ -71,9 +67,7 @@ namespace RoslynSandbox
 
             [TestCase("int value", "System.Int32")]
             [TestCase("int value", "System.IComparable")]
-            //[TestCase("int value", "System.IComparable`1[System.Int32]")]
             [TestCase("System.Collections.Generic.IEnumerable<int> value", "System.Collections.IEnumerable")]
-            //[TestCase("System.Collections.Generic.IEnumerable<int> value", "System.Collections.Generic.IEnumerable<int>")]
             public void WhenTrueIsAssignableToQualifiedType(string parameters, string typeName)
             {
                 var code = @"
