@@ -5,6 +5,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// A walker that finds all touched <see cref="IdentifierNameSyntax"/>
+    /// </summary>
     public sealed class IdentifierNameExecutionWalker : ExecutionWalker<IdentifierNameExecutionWalker>
     {
         private readonly List<IdentifierNameSyntax> identifierNames = new List<IdentifierNameSyntax>();

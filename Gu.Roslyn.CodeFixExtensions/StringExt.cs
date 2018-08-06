@@ -9,12 +9,10 @@ namespace Gu.Roslyn.CodeFixExtensions
     /// </summary>
     public static class StringExt
     {
-        /// <summary>
-        /// Adjust each row in <paramref name="text"/> to start with <paramref name="leadingWhitespace"/>
-        /// </summary>
+        /// <summary>Adjust each row in <paramref name="text"/> to start with <paramref name="leadingWhitespace"/>.</summary>
         /// <param name="text">The text.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns></returns>
+        /// <returns><paramref name="text"/> with each line adjusted to start with <paramref name="leadingWhitespace"/>.</returns>
         public static string WithLeadingWhiteSpace(this string text, string leadingWhitespace)
         {
             if (text == null)
@@ -43,7 +41,8 @@ namespace Gu.Roslyn.CodeFixExtensions
                 builder.Append(leadingWhitespace)
                        .Append(text, substring.Start, substring.Length);
                 pos = eol + 1;
-            } while ((eol = text.IndexOf('\n', pos)) > 0);
+            }
+            while ((eol = text.IndexOf('\n', pos)) > 0);
 
             if (pos < text.Length - 1)
             {
@@ -183,6 +182,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             public int Start { get; }
 
             public int End { get; }
+
             public int Length => this.End - this.Start;
         }
     }

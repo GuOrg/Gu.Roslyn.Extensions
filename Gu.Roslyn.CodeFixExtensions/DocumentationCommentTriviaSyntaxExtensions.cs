@@ -239,10 +239,10 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        /// <Returns>
+        /// <summary>
         /// Add a returns element to <paramref name="comment"/>
         /// Replace if a returns element exists.
-        /// </Returns>
+        /// </summary>
         /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
         /// <param name="text"> The text to add inside the &lt;returns&gt; element.</param>
         /// <returns><paramref name="comment"/> with  <paramref name="text"/>.</returns>
@@ -251,10 +251,10 @@ namespace Gu.Roslyn.CodeFixExtensions
             return comment.WithReturns(Parse.XmlElementSyntax(CreateElementXml(text, "returns"), comment.LeadingWhitespace()));
         }
 
-        /// <Returns>
+        /// <summary>
         /// Add <paramref name="returns"/> element to <paramref name="comment"/>
         /// Replace if a Returns element exists.
-        /// </Returns>
+        /// </summary>
         /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
         /// <param name="returns"> The <see cref="XmlElementSyntax"/>.</param>
         /// <returns><paramref name="comment"/> with <paramref name="returns"/>.</returns>
@@ -284,11 +284,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             return comment.WithContent(comment.Content.InsertRange(
                 comment.Content.IndexOf(node),
-                new XmlNodeSyntax[]
-                {
-                    newElement,
-                    XmlNewLine(comment)
-                }));
+                new XmlNodeSyntax[] { newElement, XmlNewLine(comment) }));
         }
 
         /// <summary>
@@ -302,18 +298,18 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             return comment.WithContent(comment.Content.InsertRange(
                 comment.Content.IndexOf(node) + 1,
-                new XmlNodeSyntax[]
-                {
-                    XmlNewLine(comment),
-                    newElement,
-                }));
+                new XmlNodeSyntax[] { XmlNewLine(comment), newElement }));
         }
 
         private static XmlTextSyntax XmlNewLine(DocumentationCommentTriviaSyntax comment)
         {
             return SyntaxFactory.XmlText(
-                    SyntaxFactory.Token(SyntaxTriviaList.Empty, SyntaxKind.XmlTextLiteralNewLineToken,
-                        Environment.NewLine, Environment.NewLine, SyntaxTriviaList.Empty),
+                    SyntaxFactory.Token(
+                        SyntaxTriviaList.Empty,
+                        SyntaxKind.XmlTextLiteralNewLineToken,
+                        Environment.NewLine,
+                        Environment.NewLine,
+                        SyntaxTriviaList.Empty),
                     SyntaxFactory.Token(
                         leading: SyntaxFactory.TriviaList(SyntaxFactory.SyntaxTrivia(SyntaxKind.DocumentationCommentExteriorTrivia, $"{comment.LeadingWhitespace()}///")),
                         kind: SyntaxKind.XmlTextLiteralToken,

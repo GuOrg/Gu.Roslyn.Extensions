@@ -42,7 +42,7 @@ namespace RoslynSandbox
                 var sln = CodeFactory.CreateSolution(testCode);
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
                 var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
-                var containingType = SyntaxNodeExt.FindClassDeclaration(editor.OriginalRoot.SyntaxTree, "Foo");
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
                 editor.AddEvent(containingType, eventDeclaration);
                 var expected = @"
 namespace RoslynSandbox
@@ -101,7 +101,7 @@ namespace RoslynSandbox
                 var sln = CodeFactory.CreateSolution(testCode);
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
                 var eventDeclaration = (EventDeclarationSyntax)editor.Generator.CustomEventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
-                var containingType = SyntaxNodeExt.FindClassDeclaration(editor.OriginalRoot.SyntaxTree, "Foo");
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
                 editor.AddEvent(containingType, eventDeclaration);
                 var expected = @"
 namespace RoslynSandbox

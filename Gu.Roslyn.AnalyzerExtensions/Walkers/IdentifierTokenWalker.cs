@@ -28,6 +28,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="node"/></returns>
         public static IdentifierTokenWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new IdentifierTokenWalker());
 
+        /// <inheritdoc />
         public override void VisitToken(SyntaxToken token)
         {
             if (token.IsKind(SyntaxKind.IdentifierToken))

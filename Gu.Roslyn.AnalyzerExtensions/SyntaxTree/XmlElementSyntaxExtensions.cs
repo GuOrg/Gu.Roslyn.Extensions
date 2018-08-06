@@ -30,8 +30,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Example:
         /// element.IsNamed("summary") returns true for: <summary>  Gets or sets the value </summary>
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="localName"></param>
+        /// <param name="element">The <see cref="XmlElementSyntax"/></param>
+        /// <param name="localName">The name of the element.</param>
         /// <returns>True if the elements local name matches <paramref name="localName"/></returns>
         public static bool HasLocalName(this XmlElementSyntax element, string localName)
         {

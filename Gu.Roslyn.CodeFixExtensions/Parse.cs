@@ -48,8 +48,8 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Parse a <see cref="EventDeclarationSyntax"/> from a string.
         /// </summary>
-        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <param name="code">The code text.</param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns>The <see cref="EventDeclarationSyntax"/></returns>
         public static EventDeclarationSyntax EventDeclaration(string code, string leadingWhitespace = null)
         {
@@ -59,8 +59,8 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Parse a <see cref="PropertyDeclarationSyntax"/> from a string.
         /// </summary>
-        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <param name="code">The code text.</param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns>The <see cref="PropertyDeclarationSyntax"/></returns>
         public static PropertyDeclarationSyntax PropertyDeclaration(string code, string leadingWhitespace = null)
         {

@@ -41,8 +41,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetParam(this DocumentationCommentTriviaSyntax comment, string parameterName, out XmlElementSyntax element)
         {
             element = null;
-            return comment?.Content.TrySingleOfType(x => x.HasLocalName("param") && 
-                                                         x.HasNameAttribute(parameterName), out element) == true;
+            return comment?.Content.TrySingleOfType(x => x.HasLocalName("param") && x.HasNameAttribute(parameterName), out element) == true;
         }
 
         /// <summary>
@@ -55,8 +54,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetTypeParam(this DocumentationCommentTriviaSyntax comment, string parameterName, out XmlElementSyntax element)
         {
             element = null;
-            return comment?.Content.TrySingleOfType(x => x.HasLocalName("typeparam") && 
-                                                         x.HasNameAttribute(parameterName), out element) == true;
+            return comment?.Content.TrySingleOfType(x => x.HasLocalName("typeparam") && x.HasNameAttribute(parameterName), out element) == true;
         }
     }
 }
