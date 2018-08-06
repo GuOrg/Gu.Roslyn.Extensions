@@ -1,5 +1,8 @@
 type project
 include-pdbs true
 
+releasenotes
+  FEATURE: helpers for working with doc comments.
+
 excludedgroups
   Analyzers
