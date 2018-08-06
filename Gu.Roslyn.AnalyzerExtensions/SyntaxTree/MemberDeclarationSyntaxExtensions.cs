@@ -39,7 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (member.HasLeadingTrivia &&
                 member.GetLeadingTrivia() is var triviaList &&
-                triviaList.TryFirst(x=>x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
+                triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
             {
                 return trivia.ToString();
             }
