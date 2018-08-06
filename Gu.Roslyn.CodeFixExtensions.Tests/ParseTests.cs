@@ -80,5 +80,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var node = Parse.DocumentationCommentTriviaSyntax(code);
             Assert.AreEqual(code + "\r\n", node.ToFullString());
         }
+
+        [TestCase("/// <summary> Text </summary>")]
+        public void LeadingTrivia(string code)
+        {
+            var node = Parse.LeadingTrivia(code);
+            Assert.AreEqual(code + "\r\n", node.ToFullString());
+        }
     }
 }

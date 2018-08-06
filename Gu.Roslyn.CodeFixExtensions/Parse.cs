@@ -108,7 +108,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static DocumentationCommentTriviaSyntax DocumentationCommentTriviaSyntax(string text, string leadingWhitespace = null)
         {
             if (LeadingTrivia(text, leadingWhitespace) is var triviaList &&
-                triviaList.TrySingle(x=>x.HasStructure, out var withStructure) &&
+                triviaList.TrySingle(x => x.HasStructure, out var withStructure) &&
                 withStructure.GetStructure() is DocumentationCommentTriviaSyntax comment)
             {
                 return comment;
@@ -134,24 +134,13 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(text));
             }
 
-            var code = (text + $"\r\n{WhiteSpace()}public class Foo {{}}").WithLeadingWhiteSpace(leadingWhitespace);
-            return SyntaxFactory.ParseLeadingTrivia(code);
-
-            string WhiteSpace()
+            if (!text.EndsWith("\n"))
             {
-                if (leadingWhitespace == null)
-                {
-                    for (int i = 0; i < text.Length; i++)
-                    {
-                        if (text[i] != ' ')
-                        {
-                            return new string(' ', i);
-                        }
-                    }
-                }
-
-                return leadingWhitespace;
+                text += Environment.NewLine;
             }
+
+            var code = text.WithLeadingWhiteSpace(leadingWhitespace);
+            return SyntaxFactory.ParseLeadingTrivia(code);
         }
     }
 }

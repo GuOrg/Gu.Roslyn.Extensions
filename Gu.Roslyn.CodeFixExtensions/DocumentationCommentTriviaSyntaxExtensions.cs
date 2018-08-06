@@ -151,8 +151,6 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-
-
         /// <summary>
         /// Add a summary element to <paramref name="comment"/>
         /// Replace if a summary element exists.
@@ -214,7 +212,8 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 before = null;
                 after = null;
-                if (comment.TryFirstAncestor(out MethodDeclarationSyntax method) &&
+                if (comment.ParentTrivia is var parentTrivia &&
+                    parentTrivia.Token.Parent is MethodDeclarationSyntax method &&
                     method.TryFindParameter(identifierName.Identifier.ValueText, out var parameter) &&
                     method.ParameterList.Parameters.IndexOf(parameter) is var ordinal &&
                     ordinal >= 0)

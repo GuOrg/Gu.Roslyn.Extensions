@@ -2,6 +2,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper methods for working with <see cref="XmlElementSyntax"/>
+    /// </summary>
     public static class XmlElementSyntaxExtensions
     {
         /// <summary>

@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -27,6 +28,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             comment = null;
             return false;
+        }
+
+        /// <summary>
+        /// Get the leading whitespace for the member.
+        /// </summary>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/></param>
+        /// <returns>The string with the leading whitespace.</returns>
+        public static string LeadingWhitespace(this MemberDeclarationSyntax member)
+        {
+            if (member.HasLeadingTrivia &&
+                member.GetLeadingTrivia() is var triviaList &&
+                triviaList.TryFirst(x=>x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
+            {
+                return trivia.ToString();
+            }
+
+            return null;
         }
     }
 }

@@ -165,6 +165,38 @@ namespace RoslynSandbox
             AnalyzerAssert.Ast(expected, updated);
         }
 
+        [Test]
+        public void WithSummaryTextParamAndReturns()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>Sum two numbers.</summary>
+        public int Add(int x, int y) => x + y;
+    }
+}");
+            var expected = GetExpected(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        /// <summary>Sum two numbers.</summary>
+        /// <param name=""x"">The first term.</param>
+        /// <param name=""y"">The other term.</param>
+        /// <returns>The sum.</returns>
+        public int Add(int x, int y) => x + y;
+    }
+}");
+            var method = syntaxTree.FindMethodDeclaration("Add");
+            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+            var updated = comment.WithParamText("x", "The first term.")
+                                 .WithParamText("y", "The other term.")
+                                 .WithReturnsText("The sum.");
+            AnalyzerAssert.Ast(expected, updated);
+        }
+
         private static DocumentationCommentTriviaSyntax GetExpected(string code)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
