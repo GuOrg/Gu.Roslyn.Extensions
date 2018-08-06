@@ -50,8 +50,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     return member.WithLeadingTrivia(triviaList.Replace(trivia, SyntaxFactory.Trivia(docs)));
                 }
 
-                if (triviaList.TryFirst(out var first) &&
-                    first.IsKind(SyntaxKind.WhitespaceTrivia))
+                if (triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var first))
                 {
                     return member.WithLeadingTrivia(triviaList.AddRange(new[] { SyntaxFactory.Trivia(docs), first }));
                 }

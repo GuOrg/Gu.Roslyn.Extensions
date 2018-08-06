@@ -2,7 +2,6 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public class MemberDeclarationSyntaxExtensionsTests
@@ -18,7 +17,7 @@ namespace RoslynSandbox
         public int Bar() => 1;
     }
 }");
-            var expected = GetExpected(@"
+            var expected = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
@@ -27,11 +26,43 @@ namespace RoslynSandbox
         /// <returns>New returns.</returns>
         public int Bar() => 1;
     }
-}");
+}").FindMethodDeclaration("Bar");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             var docs = "        /// <summary>New summary.</summary>\r\n" +
                        "        /// <returns>New returns.</returns>";
             var updated = method.WithDocumentationText(docs, adjustLeadingWhitespace: false);
+            AnalyzerAssert.Ast(expected, updated);
+        }
+
+        [Test]
+        public void AddToSecondMember()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Bar1() => 1;
+
+        public int Bar2() => 2;
+    }
+}");
+            var expected = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Bar1() => 1;
+
+        /// <summary>New summary.</summary>
+        /// <returns>New returns.</returns>
+        public int Bar2() => 2;
+    }
+}").FindMethodDeclaration("Bar2");
+            var method = syntaxTree.FindMethodDeclaration("Bar2");
+            var docs = "/// <summary>New summary.</summary>\r\n" +
+                       "/// <returns>New returns.</returns>";
+            var updated = method.WithDocumentationText(docs);
             AnalyzerAssert.Ast(expected, updated);
         }
 
@@ -46,7 +77,7 @@ namespace RoslynSandbox
         public int Bar() => 1;
     }
 }");
-            var expected = GetExpected(@"
+            var expected = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
@@ -55,7 +86,7 @@ namespace RoslynSandbox
         /// <returns>New returns.</returns>
         public int Bar() => 1;
     }
-}");
+}").FindMethodDeclaration("Bar");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             var text = "/// <summary>New summary.</summary>\r\n" +
                        "/// <returns>New returns.</returns>";
@@ -74,7 +105,7 @@ namespace RoslynSandbox
         public int Bar() => 1;
     }
 }");
-            var expected = GetExpected(@"
+            var expected = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
@@ -83,7 +114,7 @@ namespace RoslynSandbox
         /// <returns>New returns.</returns>
         public int Bar() => 1;
     }
-}");
+}").FindMethodDeclaration("Bar");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             var text = "/// <summary>New summary.</summary>\r\n" +
                        "/// <returns>New returns.</returns>";
@@ -102,7 +133,7 @@ namespace RoslynSandbox
         public int Bar() => 1;
     }
 }");
-            var expected = GetExpected(@"
+            var expected = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
@@ -111,7 +142,7 @@ namespace RoslynSandbox
         /// <returns>New returns.</returns>
         public int Bar() => 1;
     }
-}");
+}").FindMethodDeclaration("Bar");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             var text = "/// <summary>New summary.</summary>\r\n" +
                        "/// <returns>New returns.</returns>\r\n";
@@ -132,7 +163,7 @@ namespace RoslynSandbox
         public int Bar() => 1;
     }
 }");
-            var expected = GetExpected(@"
+            var expected = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     public class Foo
@@ -141,7 +172,7 @@ namespace RoslynSandbox
         /// <returns>New returns.</returns>
         public int Bar() => 1;
     }
-}");
+}").FindMethodDeclaration("Bar");
             var method = syntaxTree.FindMethodDeclaration("Bar");
             var docs = "        /// <summary>New summary.</summary>\r\n" +
                        "        /// <returns>New returns.</returns>";
@@ -149,10 +180,38 @@ namespace RoslynSandbox
             AnalyzerAssert.Ast(expected, updated);
         }
 
-        private static MethodDeclarationSyntax GetExpected(string code)
+        [Test]
+        public void ReplaceExistingSecondMember()
         {
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            return syntaxTree.FindMethodDeclaration("(");
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Bar1() => 1;
+
+        /// <summary>Old summary.</summary>
+        /// <returns>Old returns.</returns>
+        public int Bar2() => 2;
+    }
+}");
+            var expected = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Bar1() => 1;
+
+        /// <summary>New summary.</summary>
+        /// <returns>New returns.</returns>
+        public int Bar2() => 2;
+    }
+}").FindMethodDeclaration("Bar2");
+            var method = syntaxTree.FindMethodDeclaration("Bar2");
+            var docs = "/// <summary>New summary.</summary>\r\n" +
+                       "/// <returns>New returns.</returns>";
+            var updated = method.WithDocumentationText(docs);
+            AnalyzerAssert.Ast(expected, updated);
         }
     }
 }
