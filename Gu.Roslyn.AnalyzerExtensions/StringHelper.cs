@@ -78,7 +78,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return text.StartsWith(start, stringComparison) &&
-                   text.IndexOf(middle, start.Length, stringComparison) == start.Length &&
+                   text.StartsWith(middle, start.Length, stringComparison) &&
                    text.EndsWith(end, stringComparison);
         }
 
@@ -125,9 +125,71 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return text.StartsWith(part1, stringComparison) &&
-                   text.IndexOf(part2, part1.Length, stringComparison) == part1.Length &&
-                   text.IndexOf(part3, part1.Length + part2.Length, stringComparison) == part1.Length + part2.Length &&
+                   text.StartsWith(part2, part1.Length, stringComparison) &&
+                   text.StartsWith(part3, part1.Length + part2.Length, stringComparison) &&
                    text.EndsWith(part4, stringComparison);
+        }
+
+
+
+        /// <summary>
+        /// Check if <paramref name="text"/> is start + middle + end
+        /// </summary>
+        /// <param name="text">The text</param>
+        /// <param name="part1">Part 1</param>
+        /// <param name="part2">Part 2</param>
+        /// <param name="part3">Part 3</param>
+        /// <param name="part4">Part 4</param>
+        /// <param name="part5">Part 5</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/></param>
+        /// <returns>True if <paramref name="text"/> is start + end</returns>
+        public static bool IsParts(this string text, string part1, string part2, string part3, string part4, string part5, StringComparison stringComparison = StringComparison.Ordinal)
+        {
+            if (text == null)
+            {
+                return part1 == null && part2 == null && part3 == null && part4 == null && part5 == null;
+            }
+
+            if (string.IsNullOrEmpty(part1))
+            {
+                return text.IsParts(part2, part3, part4, part5, stringComparison);
+            }
+
+            if (string.IsNullOrEmpty(part2))
+            {
+                return text.IsParts(part1, part3, part4, part5, stringComparison);
+            }
+
+            if (string.IsNullOrEmpty(part3))
+            {
+                return text.IsParts(part1, part2, part4, part5, stringComparison);
+            }
+
+            if (string.IsNullOrEmpty(part4))
+            {
+                return text.IsParts(part1, part2, part3, part5, stringComparison);
+            }
+
+            if (string.IsNullOrEmpty(part5))
+            {
+                return text.IsParts(part1, part2, part3, part4, stringComparison);
+            }
+
+            if (text.Length != part1.Length + part2.Length + part3.Length + part4.Length + part5.Length)
+            {
+                return false;
+            }
+
+            return text.StartsWith(part1, stringComparison) &&
+                   text.StartsWith(part2, part1.Length, stringComparison) &&
+                   text.StartsWith(part3, part1.Length + part2.Length, stringComparison) &&
+                   text.StartsWith(part4, part1.Length + part2.Length + part3.Length, stringComparison) &&
+                   text.EndsWith(part5, stringComparison);
+        }
+
+        private static bool StartsWith(this string text, string value, int index, StringComparison stringComparison)
+        {
+            return text.IndexOf(value, index, stringComparison) == index;
         }
     }
 }

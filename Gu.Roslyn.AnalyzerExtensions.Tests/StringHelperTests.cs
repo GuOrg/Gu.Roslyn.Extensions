@@ -36,5 +36,16 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         {
             Assert.AreEqual(expected, text.IsParts(part1, part2, part3, part4));
         }
+
+        [TestCase("abcd", "a", "b", "c", "d", null, true)]
+        [TestCase("abcd", "a", "b", "c", null, "d", true)]
+        [TestCase("abcd", "a", "b", null, "c", "d", true)]
+        [TestCase("abcd", "a", null, "b", "c", "d", true)]
+        [TestCase("abcd", null, "a", "b", "c", "d", true)]
+        [TestCase("abcde", "a", "b", "c", "d", "e", true)]
+        public void IsFiveParts(string text, string part1, string part2, string part3, string part4, string part5, bool expected)
+        {
+            Assert.AreEqual(expected, text.IsParts(part1, part2, part3, part4, part5));
+        }
     }
 }
