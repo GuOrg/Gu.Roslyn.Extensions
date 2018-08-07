@@ -8,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class StringHelper
     {
         /// <summary>
-        /// Check if <paramref name="text"/> is start + end
+        /// Check if <paramref name="text"/> == <paramref name="start"/> + <paramref name="end"/>
         /// </summary>
         /// <param name="text">The text</param>
         /// <param name="start">The start</param>
@@ -42,7 +42,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="text"/> is start + middle + end
+        /// Check if <paramref name="text"/> == <paramref name="start"/> + <paramref name="middle"/> + <paramref name="end"/>
         /// </summary>
         /// <param name="text">The text</param>
         /// <param name="start">The start</param>
@@ -83,7 +83,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="text"/> is start + middle + end
+        /// Check if <paramref name="text"/> == <paramref name="part1"/> + <paramref name="part2"/> + <paramref name="part3"/> + <paramref name="part4"/>
         /// </summary>
         /// <param name="text">The text</param>
         /// <param name="part1">Part 1</param>
@@ -130,10 +130,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    text.EndsWith(part4, stringComparison);
         }
 
-
-
         /// <summary>
-        /// Check if <paramref name="text"/> is start + middle + end
+        /// Check if <paramref name="text"/> == <paramref name="part1"/> + <paramref name="part2"/> + <paramref name="part3"/> + <paramref name="part4"/> + <paramref name="part5"/>
         /// </summary>
         /// <param name="text">The text</param>
         /// <param name="part1">Part 1</param>
