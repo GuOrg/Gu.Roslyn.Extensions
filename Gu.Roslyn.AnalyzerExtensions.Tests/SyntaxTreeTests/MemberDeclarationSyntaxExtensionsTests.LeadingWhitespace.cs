@@ -23,6 +23,24 @@ namespace RoslynSandbox
             }
 
             [Test]
+            public void ClassWithPragmaAndDocs()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+#pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
+    /// <summary>
+    /// The Foo
+    /// </summary>
+    public class Foo
+    {
+    }
+}");
+                var node = syntaxTree.FindClassDeclaration("Foo");
+                CodeAssert.AreEqual("    ", node.LeadingWhitespace());
+            }
+
+            [Test]
             public void ClassWithDocs()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
