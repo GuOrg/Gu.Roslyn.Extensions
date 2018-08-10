@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (member.HasLeadingTrivia &&
                 member.GetLeadingTrivia() is SyntaxTriviaList triviaList &&
-                triviaList.TrySingle(x => x.HasStructure, out var commentTrivia) &&
+                triviaList.TrySingle(x => x.HasStructure && x.GetStructure() is DocumentationCommentTriviaSyntax, out var commentTrivia) &&
                 commentTrivia.GetStructure() is DocumentationCommentTriviaSyntax triviaSyntax)
             {
                 comment = triviaSyntax;

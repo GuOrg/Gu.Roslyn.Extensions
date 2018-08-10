@@ -94,6 +94,26 @@ namespace RoslynSandbox
                                "        /// <returns><paramref name=\"i\"/></returns>\r\n";
                 CodeAssert.AreEqual(expected, result.ToFullString());
             }
+
+            [Test]
+            public void ClassWithPragma()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+#pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
+    /// <summary>
+    /// The Foo
+    /// </summary>
+    public class Foo
+    {
+    }
+}");
+                var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
+                Assert.AreEqual(true, classDeclaration.TryGetDocumentationComment(out var result));
+                var expected = "/// <summary>\r\n    /// The Foo\r\n    /// </summary>\r\n";
+                CodeAssert.AreEqual(expected, result.ToFullString());
+            }
         }
     }
 }
