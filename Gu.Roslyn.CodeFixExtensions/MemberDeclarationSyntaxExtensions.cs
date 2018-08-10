@@ -23,7 +23,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             var leadingTrivia = Parse.LeadingTrivia(text, adjustLeadingWhitespace ? member.LeadingWhitespace() : null);
             if (member.HasLeadingTrivia &&
-                leadingTrivia.TrySingle(x => x.HasStructure, out var withStructure) &&
+                leadingTrivia.TrySingle(x => x.HasStructure && x.GetStructure() is DocumentationCommentTriviaSyntax, out var withStructure) &&
                 withStructure.GetStructure() is DocumentationCommentTriviaSyntax docs)
             {
                 return member.WithDocs(docs);
