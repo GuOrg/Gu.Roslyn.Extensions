@@ -135,6 +135,29 @@ namespace RoslynSandbox
                 Assert.AreEqual(false, a.IsAssignableTo(b, compilation));
                 Assert.AreEqual(true, b.IsAssignableTo(a, compilation));
             }
+
+            [TestCase("int value", false)]
+            [TestCase("System.Threading.Tasks.Task value", true)]
+            public void IsAwaitable(string parameter, bool expected)
+            {
+                var code = @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo(int value)
+        {
+        }
+    }
+}";
+                code = code.AssertReplace("int value", parameter);
+                var syntaxTree = CSharpSyntaxTree.ParseText(code);
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
+                var type = ctor.Parameters[0].Type;
+                Assert.AreEqual(expected, type.IsAwaitable());
+            }
         }
     }
 }

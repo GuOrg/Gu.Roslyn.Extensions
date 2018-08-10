@@ -45,6 +45,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Check if <paramref name="type"/> is awaitable. Does not check for extension methods.
+        /// </summary>
+        /// <param name="type">The <see cref="ITypeSymbol"/></param>
+        /// <returns>True if the type is awaitable.</returns>
+        public static bool IsAwaitable(this ITypeSymbol type)
+        {
+            return type.TryFindFirstMethod("GetAwaiter", x => x.Parameters.Length == 0, out var method) &&
+                   method.ReturnType is ITypeSymbol returnType &&
+                   returnType.TryFindFirstMethod("GetResult", x => x.Parameters.Length == 0, out _) &&
+                   returnType.TryFindProperty("IsCompleted", out _);
+        }
+
+        /// <summary>
         /// Check if <paramref name="source"/> is <paramref name="destination"/>
         /// </summary>
         /// <param name="source">The <see cref="ITypeSymbol"/></param>
