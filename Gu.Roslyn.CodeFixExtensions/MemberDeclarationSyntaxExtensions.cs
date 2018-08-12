@@ -45,7 +45,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             if (member.HasLeadingTrivia &&
                 member.GetLeadingTrivia() is var triviaList)
             {
-                if (triviaList.TrySingle(x => x.HasStructure, out var trivia))
+                if (triviaList.TrySingle(x => x.HasStructure && x.GetStructure() is DocumentationCommentTriviaSyntax, out var trivia))
                 {
                     return member.WithLeadingTrivia(triviaList.Replace(trivia, SyntaxFactory.Trivia(docs)));
                 }
