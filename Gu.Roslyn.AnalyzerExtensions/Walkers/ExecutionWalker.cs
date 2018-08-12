@@ -68,6 +68,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case Scope.Member:
                     break;
                 case Scope.Instance:
+                case Scope.Type:
                 case Scope.Recursive:
                     if (this.visited.Add(node) &&
                         node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
@@ -90,6 +91,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     base.VisitObjectCreationExpression(node);
                     break;
                 case Scope.Instance:
+                case Scope.Type:
                     {
                         if (this.visited.Add(node) &&
                             this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
@@ -152,6 +154,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case Scope.Member:
                     break;
                 case Scope.Instance:
+                case Scope.Type:
                 case Scope.Recursive:
                     if (TryGetTarget(out var target))
                     {
@@ -184,6 +187,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case Scope.Member:
                     break;
                 case Scope.Instance:
+                case Scope.Type:
                 case Scope.Recursive:
                     if (this.TryGetPropertyGet(node, out var target))
                     {
