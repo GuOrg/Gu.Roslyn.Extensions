@@ -4,7 +4,7 @@ include-pdbs true
 projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
 
 releasenotes
-  FEATURE: helpers for working with doc comments.
+  BUGFIX: Handle trivia when pragma.
 
 excludedgroups
   Analyzers
