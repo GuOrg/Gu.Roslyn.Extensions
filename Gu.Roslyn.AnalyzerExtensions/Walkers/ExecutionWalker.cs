@@ -146,7 +146,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
             base.VisitIdentifierName(node);
             if (this.TryGetTargetSymbol(node, out IPropertySymbol property))
             {
-                if (this.IsPropertySet(node))
+                if (this.IsPropertyGetAndSet(node))
+                {
+                    if (property.GetMethod.TrySingleAccessorDeclaration(this.CancellationToken, out var getter))
+                    {
+                        this.Visit(getter);
+                    }
+
+                    if (property.SetMethod.TrySingleAccessorDeclaration(this.CancellationToken, out var setter))
+                    {
+                        this.Visit(setter);
+                    }
+                }
+                else if (this.IsPropertySet(node))
                 {
                     if (property.SetMethod.TrySingleAccessorDeclaration(this.CancellationToken, out var setter))
                     {
@@ -257,6 +269,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             return node.TryFirstAncestor(out AssignmentExpressionSyntax assignment) &&
                    assignment.Left.Contains(node);
+        }
+
+        /// <summary>
+        /// Check if the current context is a property set.
+        /// </summary>
+        /// <param name="node">The current context.</param>
+        /// <returns>True if <paramref name="node"/> is found to be a property set</returns>
+        protected virtual bool IsPropertyGetAndSet(IdentifierNameSyntax node)
+        {
+            return node.TryFirstAncestor(out PrefixUnaryExpressionSyntax _) ||
+                   node.TryFirstAncestor(out PostfixUnaryExpressionSyntax _);
         }
 
         /// <summary>
