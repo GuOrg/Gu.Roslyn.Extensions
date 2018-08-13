@@ -130,32 +130,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             base.VisitInvocationExpression(node);
-            switch (this.Scope)
+            if (this.TryGetTargetSymbol(node, out IMethodSymbol target) &&
+                target.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax declaration))
             {
-                case Scope.Member:
-                    break;
-                case Scope.Instance:
-                case Scope.Type:
-                case Scope.Recursive:
-                    if (TryGetTarget(out var target))
-                    {
-                        this.Visit(target);
-                    }
-
-                    break;
-            }
-
-            bool TryGetTarget(out MethodDeclarationSyntax declaration)
-            {
-                declaration = null;
-                if (this.Scope == Scope.Instance &&
-                    !MemberPath.IsEmpty(node))
-                {
-                    return false;
-                }
-
-                return this.visited.Add(node) &&
-                       node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration);
+                this.Visit(declaration);
             }
         }
 
@@ -177,6 +155,42 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                     break;
             }
+        }
+
+        /// <summary>
+        /// Try getting the target symbol for the node. Check if visited and that the symbol matches <see cref="Scope"/>
+        /// </summary>
+        /// <typeparam name="TSymbol">The expected type.</typeparam>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="symbol">The symbol if a match</param>
+        /// <returns>True if a symbol was found.</returns>
+        protected bool TryGetTargetSymbol<TSymbol>(SyntaxNode node, out TSymbol symbol)
+            where TSymbol : class, ISymbol
+        {
+            symbol = null;
+            if (this.Scope == Scope.Member)
+            {
+                return false;
+            }
+
+            if (this.visited.Add(node) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out symbol))
+            {
+                if (this.Scope == Scope.Instance && symbol.IsStatic)
+                {
+                    return false;
+                }
+
+                if (this.Scope.IsEither(Scope.Instance, Scope.Type) &&
+                    !symbol.ContainingType.IsAssignableTo(this.ContainingType, this.SemanticModel.Compilation))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <inheritdoc />

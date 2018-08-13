@@ -66,7 +66,7 @@ namespace RoslynSandbox
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
-            using (var walker = MutationWalker.Borrow(classDeclaration, Scope.Instance, semanticModel, CancellationToken.None))
+            using (var walker = MutationWalker.Borrow(classDeclaration, Scope.Type, semanticModel, CancellationToken.None))
             {
                 CollectionAssert.IsEmpty(walker.PrefixUnaries);
                 CollectionAssert.IsEmpty(walker.PostfixUnaries);
