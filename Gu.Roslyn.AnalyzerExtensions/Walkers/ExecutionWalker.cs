@@ -103,18 +103,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return;
                 }
 
-                VisitInitializers(target.ContainingType);
-                if (target.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
-                {
-                    this.Visit(declaration);
-                }
-
-                base.VisitObjectCreationExpression(node);
-            }
-
-            void VisitInitializers(ITypeSymbol containingType)
-            {
-                if (containingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax containingTypeDeclaration))
+                if (target.ContainingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax containingTypeDeclaration))
                 {
                     using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
                     {
@@ -127,6 +116,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         }
                     }
                 }
+
+                if (target.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
+                {
+                    this.Visit(declaration);
+                }
+
+                base.VisitObjectCreationExpression(node);
             }
         }
 
