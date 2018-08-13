@@ -13,6 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     {
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
+        [TestCase(Scope.Type)]
         [TestCase(Scope.Recursive)]
         public void SimpleCtor(Scope scope)
         {
@@ -36,8 +37,40 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase(Scope.Member, "1, 2")]
+        [TestCase(Scope.Instance, "2")]
+        [TestCase(Scope.Type, "1, 2")]
+        [TestCase(Scope.Recursive, "1, 2")]
+        public void StaticCtorBeforeInstance(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            var i = 2;
+        }
+
+        static Foo()
+        {
+            var i = 1;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindTypeDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         [TestCase(Scope.Member, "1, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
         public void ChainedCtor(Scope scope, string expected)
         {
@@ -69,6 +102,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void ImplicitBaseCtor(Scope scope, string expected)
         {
@@ -102,6 +136,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void AssignmentSetterWithGetter(Scope scope, string expected)
         {
@@ -135,6 +170,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void AssignmentSetterWithGetterThis(Scope scope, string expected)
         {
@@ -166,8 +202,67 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase("Value1 > Value2", Scope.Member, "")]
+        [TestCase("Value1 > Value2", Scope.Instance, "1, 2")]
+        [TestCase("Value1 > Value2", Scope.Type, "1, 2")]
+        [TestCase("Value1 > Value2", Scope.Recursive, "1, 2")]
+        public void BinaryCompare(string expression, Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Value1 => 1;
+
+        public int Value2 => 2;
+
+        public bool Bar() => Value1 > Value2;
+    }
+}".AssertReplace("Value1 > Value2", expression));
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindMethodDeclaration("Bar");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
+        [TestCase("Value1 ?? Value2", Scope.Member, "")]
+        [TestCase("Value1 ?? Value2", Scope.Instance, "1, 2")]
+        [TestCase("Value1 ?? Value2", Scope.Type, "1, 2")]
+        [TestCase("Value1 ?? Value2", Scope.Recursive, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", Scope.Member, "")]
+        [TestCase("(int)Value1 > (int)Value2", Scope.Instance, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", Scope.Type, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", Scope.Recursive, "1, 2")]
+        public void Binary(string expression, Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public object Value1 => 1;
+
+        public object Value2 => 2;
+
+        public object Bar() => Value1 ?? Value2;
+    }
+}".AssertReplace("Value1 ?? Value2", expression));
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindMethodDeclaration("Bar");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         [TestCase(Scope.Member, "2, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
         public void ExpressionBodyAsArgument(Scope scope, string expected)
         {
@@ -196,6 +291,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
         public void InvocationAsArgument(Scope scope, string expected)
         {
@@ -224,6 +320,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "1, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
         public void InvocationVirtual(Scope scope, string expected)
         {
@@ -259,8 +356,43 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase(Scope.Member, "3")]
+        [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
+        [TestCase(Scope.Recursive, "1, 2, 3")]
+        public void ArgumentBeforeInvocation(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            var value = this.Meh(this.Value());
+            value = 3;
+        }
+
+        public int Value() => 1;
+
+        private int Meh(int i)
+        {
+            return 2 * i;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindConstructorDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void LocalDeclarationWithExpressionBody(Scope scope, string expected)
         {
@@ -289,6 +421,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void LocalDeclarationWithCastExpressionBody(Scope scope, string expected)
         {
@@ -317,6 +450,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "1, 2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void FieldInitializerBeforeCtor(Scope scope, string expected)
         {
@@ -344,6 +478,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "1, 2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void FieldInitializerBeforeCtorWhenNotDocumentOrder(Scope scope, string expected)
         {
@@ -371,6 +506,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void PropertyInitializerBeforeParameterlessCtor(Scope scope, string expected)
         {
@@ -401,6 +537,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void PropertyInitializerBeforeDefaultCtor(Scope scope, string expected)
         {
@@ -427,6 +564,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void PropertyInitializerBeforeDefaultCtorObjectInitializer(Scope scope, string expected)
         {

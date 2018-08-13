@@ -16,6 +16,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         Instance,
 
         /// <summary>
+        /// Walks the current type, follows this. and base. and static calls.
+        /// </summary>
+        Type,
+
+        /// <summary>
         /// Follows all calls recursively.
         /// </summary>
         Recursive,

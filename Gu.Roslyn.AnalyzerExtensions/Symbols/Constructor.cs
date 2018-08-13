@@ -12,8 +12,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="type">The <see cref="INamedTypeSymbol"/></param>
         /// <param name="search">Specifies if the search is recursive</param>
-        /// <param name="result">The first parameterless ctor found.</param>
-        /// <returns>True if a parameterless ctor was found.</returns>
+        /// <param name="result">The first parameterless constructor found.</param>
+        /// <returns>True if a parameterless constructor was found.</returns>
         public static bool TryFindDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
         {
             result = null;

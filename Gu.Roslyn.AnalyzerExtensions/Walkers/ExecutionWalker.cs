@@ -27,6 +27,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected SemanticModel SemanticModel { get; set; }
 
         /// <summary>
+        /// Gets or sets the containing <see cref="ITypeSymbol"/> of the current context.
+        /// </summary>
+        protected ITypeSymbol ContainingType { get; set; }
+
+        /// <summary>
         /// Gets or sets the <see cref="CancellationToken"/>
         /// </summary>
         protected CancellationToken CancellationToken { get; set; }
@@ -51,9 +56,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
                 ctor.ContainingType is INamedTypeSymbol containingType &&
                 Constructor.TryFindDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
-                defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
+                defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax defaultCtorDeclaration))
             {
-                this.Visit(declaration);
+                this.Visit(defaultCtorDeclaration);
             }
 
             base.VisitConstructorDeclaration(node);
@@ -68,6 +73,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case Scope.Member:
                     break;
                 case Scope.Instance:
+                case Scope.Type:
                 case Scope.Recursive:
                     if (this.visited.Add(node) &&
                         node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
@@ -84,62 +90,42 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
-            switch (this.Scope)
+            if (this.Scope == Scope.Member)
             {
-                case Scope.Member:
-                    base.VisitObjectCreationExpression(node);
-                    break;
-                case Scope.Instance:
-                    {
-                        if (this.visited.Add(node) &&
-                            this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
-                            node.TryFirstAncestor(out TypeDeclarationSyntax containingTypeDeclaration) &&
-                            this.SemanticModel.TryGetSymbol(containingTypeDeclaration, this.CancellationToken, out var containingType) &&
-                            containingType.Equals(ctor.ContainingType))
-                        {
-                            VisitInitializers(containingTypeDeclaration);
-                            if (ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
-                            {
-                                this.Visit(declaration);
-                            }
-
-                            base.VisitObjectCreationExpression(node);
-                        }
-
-                        break;
-                    }
-
-                case Scope.Recursive:
-                    {
-                        if (this.visited.Add(node) &&
-                            this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
-                            ctor.ContainingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax containingTypeDeclaration))
-                        {
-                            VisitInitializers(containingTypeDeclaration);
-                            if (ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
-                            {
-                                this.Visit(declaration);
-                            }
-
-                            base.VisitObjectCreationExpression(node);
-                        }
-
-                        break;
-                    }
+                base.VisitObjectCreationExpression(node);
+                return;
             }
 
-            void VisitInitializers(TypeDeclarationSyntax containingTypeDeclaration)
+            if (this.visited.Add(node) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var target))
             {
-                using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+                if (this.Scope.IsEither(Scope.Instance, Scope.Type) &&
+                    !target.ContainingType.Equals(this.ContainingType))
                 {
-                    foreach (var initializer in walker.Initializers)
+                    base.VisitObjectCreationExpression(node);
+                    return;
+                }
+
+                if (target.ContainingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax containingTypeDeclaration))
+                {
+                    using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
                     {
-                        if (this.visited.Add(initializer))
+                        foreach (var initializer in walker.Initializers)
                         {
-                            this.Visit(initializer);
+                            if (this.visited.Add(initializer))
+                            {
+                                this.Visit(initializer);
+                            }
                         }
                     }
                 }
+
+                if (target.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
+                {
+                    this.Visit(declaration);
+                }
+
+                base.VisitObjectCreationExpression(node);
             }
         }
 
@@ -147,31 +133,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             base.VisitInvocationExpression(node);
-            switch (this.Scope)
+            if (this.TryGetTargetSymbol(node, out IMethodSymbol target) &&
+                target.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax declaration))
             {
-                case Scope.Member:
-                    break;
-                case Scope.Instance:
-                case Scope.Recursive:
-                    if (TryGetTarget(out var target))
-                    {
-                        this.Visit(target);
-                    }
-
-                    break;
-            }
-
-            bool TryGetTarget(out MethodDeclarationSyntax declaration)
-            {
-                declaration = null;
-                if (this.Scope == Scope.Instance &&
-                    !MemberPath.IsEmpty(node))
-                {
-                    return false;
-                }
-
-                return this.visited.Add(node) &&
-                       node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out declaration);
+                this.Visit(declaration);
             }
         }
 
@@ -179,44 +144,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             base.VisitIdentifierName(node);
-            switch (this.Scope)
+            if (this.TryGetTargetSymbol(node, out IPropertySymbol property))
             {
-                case Scope.Member:
-                    break;
-                case Scope.Instance:
-                case Scope.Recursive:
-                    if (this.TryGetPropertyGet(node, out var target))
+                if (this.IsPropertySet(node))
+                {
+                    if (property.SetMethod.TrySingleAccessorDeclaration(this.CancellationToken, out var setter))
                     {
-                        this.Visit(target);
+                        this.Visit(setter);
                     }
-
-                    break;
+                }
+                else if (property.GetMethod.TrySingleDeclaration(this.CancellationToken, out SyntaxNode getter))
+                {
+                    this.Visit(getter);
+                }
             }
         }
 
         /// <inheritdoc />
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
-            switch (this.Scope)
-            {
-                case Scope.Member:
-                    break;
-                case Scope.Instance:
-                case Scope.Recursive:
-                    if (this.TryGetPropertyGet(node.Right, out var getter))
-                    {
-                        this.Visit(getter);
-                    }
-
-                    if (this.TryGetPropertySet(node.Left, out var setter))
-                    {
-                        this.Visit(setter);
-                    }
-
-                    break;
-            }
-
-            base.VisitAssignmentExpression(node);
+            this.Visit(node.Right);
+            this.Visit(node.Left);
         }
 
         /// <summary>
@@ -234,10 +182,25 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             // Not pretty below here, throwing is perhaps nicer, dunno.
             walker.Scope = scope == Scope.Member &&
-                           node is TypeDeclarationSyntax ? Scope.Instance : scope;
+                           node is TypeDeclarationSyntax ? Scope.Type : scope;
+            if (walker.Scope != Scope.Member)
+            {
+                if (node is TypeDeclarationSyntax typeDeclaration &&
+                    semanticModel.TryGetSymbol(typeDeclaration, cancellationToken, out var containingType))
+                {
+                    walker.ContainingType = containingType;
+                }
+                else if (node.TryFirstAncestor(out TypeDeclarationSyntax containingTypeDeclaration) &&
+                         semanticModel.TryGetSymbol(containingTypeDeclaration, cancellationToken, out containingType))
+                {
+                    walker.ContainingType = containingType;
+                }
+            }
+
             walker.SemanticModel = semanticModel;
             walker.CancellationToken = cancellationToken;
             walker.Visit(node);
+            walker.Scope = scope;
             return walker;
         }
 
@@ -261,6 +224,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 foreach (var ctor in walker.Ctors)
                 {
+                    if (this.Scope == Scope.Instance &&
+                        ctor.Modifiers.Any(SyntaxKind.StaticKeyword))
+                    {
+                        continue;
+                    }
+
                     this.Visit(ctor);
                 }
 
@@ -279,74 +248,60 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <summary>
+        /// Check if the current context is a property set.
+        /// </summary>
+        /// <param name="node">The current context.</param>
+        /// <returns>True if <paramref name="node"/> is found to be a property set</returns>
+        protected virtual bool IsPropertySet(IdentifierNameSyntax node)
+        {
+            return node.TryFirstAncestor(out AssignmentExpressionSyntax assignment) &&
+                   assignment.Left.Contains(node);
+        }
+
+        /// <summary>
+        /// Try getting the target symbol for the node. Check if visited and that the symbol matches <see cref="Scope"/>
+        /// </summary>
+        /// <typeparam name="TSymbol">The expected type.</typeparam>
+        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="symbol">The symbol if a match</param>
+        /// <returns>True if a symbol was found.</returns>
+        protected virtual bool TryGetTargetSymbol<TSymbol>(SyntaxNode node, out TSymbol symbol)
+            where TSymbol : class, ISymbol
+        {
+            symbol = null;
+            if (this.Scope == Scope.Member)
+            {
+                return false;
+            }
+
+            if (this.visited.Add(node) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out symbol))
+            {
+                if (this.Scope == Scope.Instance && symbol.IsStatic)
+                {
+                    return false;
+                }
+
+                if (this.Scope.IsEither(Scope.Instance, Scope.Type) &&
+                    !symbol.ContainingType.IsAssignableTo(this.ContainingType, this.SemanticModel.Compilation))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         /// <inheritdoc />
         protected override void Clear()
         {
             this.visited.Clear();
             this.SemanticModel = null;
+            this.ContainingType = null;
             this.CancellationToken = CancellationToken.None;
-        }
-
-        private bool TryGetPropertyGet(SyntaxNode candidate, out SyntaxNode getter)
-        {
-            getter = null;
-            if (!this.visited.Add(candidate))
-            {
-                return false;
-            }
-
-            if (this.Scope == Scope.Instance &&
-                candidate is MemberAccessExpressionSyntax memberAccess &&
-                !(memberAccess.Expression is InstanceExpressionSyntax))
-            {
-                return false;
-            }
-
-            if (candidate.Parent is MemberAccessExpressionSyntax memberAccessParent &&
-                memberAccessParent.Expression is InstanceExpressionSyntax)
-            {
-                return this.TryGetPropertyGet(memberAccessParent, out getter);
-            }
-
-            if (candidate.TryFirstAncestor<ArgumentSyntax>(out _) ||
-                (candidate.TryFirstAncestor<AssignmentExpressionSyntax>(out var assignment) &&
-                 assignment.Right.Contains(candidate)) ||
-                candidate.Parent is ExpressionStatementSyntax ||
-                candidate.TryFirstAncestor<EqualsValueClauseSyntax>(out _) ||
-                candidate.TryFirstAncestor<ArrowExpressionClauseSyntax>(out _))
-            {
-                return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property) &&
-                       property.GetMethod is IMethodSymbol getMethod &&
-                       getMethod.TrySingleDeclaration(this.CancellationToken, out getter);
-            }
-
-            return false;
-        }
-
-        private bool TryGetPropertySet(SyntaxNode candidate, out AccessorDeclarationSyntax setter)
-        {
-            setter = null;
-            if (!this.visited.Add(candidate))
-            {
-                return false;
-            }
-
-            if (this.Scope == Scope.Instance &&
-                candidate is MemberAccessExpressionSyntax memberAccess &&
-                !(memberAccess.Expression is InstanceExpressionSyntax))
-            {
-                return false;
-            }
-
-            if (candidate.Parent is AssignmentExpressionSyntax assignment &&
-                assignment.Left.Contains(candidate))
-            {
-                return this.SemanticModel.TryGetSymbol(candidate, this.CancellationToken, out IPropertySymbol property) &&
-                       property.SetMethod is IMethodSymbol setMethod &&
-                       setMethod.TrySingleDeclaration(this.CancellationToken, out setter);
-            }
-
-            return false;
         }
 
         private class TypeDeclarationWalker : PooledWalker<TypeDeclarationWalker>
@@ -396,7 +351,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 if (!node.Modifiers.Any(SyntaxKind.PrivateKeyword))
                 {
-                    this.Ctors.Add(node);
+                    if (this.Ctors.Count > 0 &&
+                        node.Modifiers.Any(SyntaxKind.StaticKeyword))
+                    {
+                        this.Ctors.Insert(0, node);
+                    }
+                    else
+                    {
+                        this.Ctors.Add(node);
+                    }
                 }
             }
 
