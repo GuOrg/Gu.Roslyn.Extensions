@@ -171,6 +171,64 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase("Value1 > Value2", Scope.Member, "")]
+        [TestCase("Value1 > Value2", Scope.Instance, "1, 2")]
+        [TestCase("Value1 > Value2", Scope.Type, "1, 2")]
+        [TestCase("Value1 > Value2", Scope.Recursive, "1, 2")]
+        public void BinaryCompare(string expression, Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public int Value1 => 1;
+
+        public int Value2 => 2;
+
+        public bool Bar() => Value1 > Value2;
+    }
+}".AssertReplace("Value1 > Value2", expression));
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindMethodDeclaration("Bar");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
+        [TestCase("Value1 ?? Value2", Scope.Member, "")]
+        [TestCase("Value1 ?? Value2", Scope.Instance, "1, 2")]
+        [TestCase("Value1 ?? Value2", Scope.Type, "1, 2")]
+        [TestCase("Value1 ?? Value2", Scope.Recursive, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", Scope.Member, "")]
+        [TestCase("(int)Value1 > (int)Value2", Scope.Instance, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", Scope.Type, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", Scope.Recursive, "1, 2")]
+        public void Binary(string expression, Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public object Value1 => 1;
+
+        public object Value2 => 2;
+
+        public object Bar() => Value1 ?? Value2;
+    }
+}".AssertReplace("Value1 ?? Value2", expression));
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindMethodDeclaration("Bar");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         [TestCase(Scope.Member, "2, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
