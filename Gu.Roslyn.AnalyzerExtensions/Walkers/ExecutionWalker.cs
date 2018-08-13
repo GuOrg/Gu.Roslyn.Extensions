@@ -307,7 +307,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (this.Scope == Scope.Instance &&
                 node.Parent is MemberAccessExpressionSyntax memberAccess &&
-                memberAccess.Expression.IsEither(SyntaxKind.IdentifierName, SyntaxKind.SimpleMemberAccessExpression))
+                memberAccess.Expression?.IsEither(SyntaxKind.IdentifierName, SyntaxKind.SimpleMemberAccessExpression) == true)
             {
                 return false;
             }
