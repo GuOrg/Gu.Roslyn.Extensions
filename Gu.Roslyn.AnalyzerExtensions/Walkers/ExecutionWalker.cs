@@ -298,6 +298,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
+            if (node.TryFirstAncestor(out InvocationExpressionSyntax invocation) &&
+                invocation.TryGetMethodName(out var name) &&
+                name == "nameof")
+            {
+                return false;
+            }
+
             if (this.visited.Add(node) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out symbol))
             {

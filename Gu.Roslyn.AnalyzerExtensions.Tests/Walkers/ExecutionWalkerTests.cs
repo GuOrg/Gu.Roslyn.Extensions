@@ -424,6 +424,40 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase(Scope.Member, "3")]
+        [TestCase(Scope.Instance, "1, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
+        [TestCase(Scope.Recursive, "1, 2, 3")]
+        public void ArgumentBeforeInvocationStaticAndInstance(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            var value = Meh(this.Value());
+            value = 3;
+        }
+
+        public int Value() => 1;
+
+        private static int Meh(int i)
+        {
+            return 2 * i;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindConstructorDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
@@ -620,6 +654,62 @@ namespace RoslynSandbox
             using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
+        [TestCase(Scope.Member)]
+        [TestCase(Scope.Instance)]
+        [TestCase(Scope.Type)]
+        [TestCase(Scope.Recursive)]
+        public void IgnoreNameOfProperty(Scope scope)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            var text = nameof(this.Value);
+        }
+
+        public int Value => 1;
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindConstructorDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual("", string.Join(", ", walker.Literals));
+            }
+        }
+
+        [TestCase(Scope.Member)]
+        [TestCase(Scope.Instance)]
+        [TestCase(Scope.Type)]
+        [TestCase(Scope.Recursive)]
+        public void IgnoreNameOfMethod(Scope scope)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            var text = nameof(this.Value());
+        }
+
+        public int Value() => 1;
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindConstructorDeclaration("Foo");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual("", string.Join(", ", walker.Literals));
             }
         }
 
