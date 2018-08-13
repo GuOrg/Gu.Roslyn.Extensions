@@ -305,6 +305,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
+            if (this.Scope == Scope.Instance &&
+                node.Parent is MemberAccessExpressionSyntax memberAccess &&
+                memberAccess.Expression.IsEither(SyntaxKind.IdentifierName, SyntaxKind.SimpleMemberAccessExpression))
+            {
+                return false;
+            }
+
             if (this.visited.Add(node) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out symbol))
             {
