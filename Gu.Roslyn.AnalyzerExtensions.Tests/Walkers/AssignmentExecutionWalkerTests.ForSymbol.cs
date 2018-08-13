@@ -178,6 +178,7 @@ namespace RoslynSandbox
 
             [TestCase(Scope.Member)]
             [TestCase(Scope.Instance)]
+            [TestCase(Scope.Type)]
             [TestCase(Scope.Recursive)]
             public void FieldInPropertyExpressionBody(Scope scope)
             {

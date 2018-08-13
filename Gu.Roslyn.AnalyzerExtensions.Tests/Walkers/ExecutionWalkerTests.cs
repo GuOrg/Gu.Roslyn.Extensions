@@ -37,7 +37,7 @@ namespace RoslynSandbox
             }
         }
 
-        [TestCase(Scope.Member,"1, 2")]
+        [TestCase(Scope.Member, "1, 2")]
         [TestCase(Scope.Instance, "2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
