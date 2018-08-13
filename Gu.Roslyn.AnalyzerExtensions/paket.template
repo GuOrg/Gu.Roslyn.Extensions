@@ -4,7 +4,7 @@ include-pdbs true
 projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
 
 releasenotes
-  BUGFIX: Handle trivia when pragma.
+  BUGFIX: Walk overridden.
 
 excludedgroups
   Analyzers

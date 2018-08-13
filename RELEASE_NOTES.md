@@ -1,3 +1,6 @@
+#### 0.3.1.4
+* BUGFIX: Walk overridden.
+
 #### 0.3.1
 * BUGFIX: Handle trivia when pragma.
 
