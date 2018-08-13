@@ -206,6 +206,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case Scope.Member:
                     break;
                 case Scope.Instance:
+                case Scope.Type:
                 case Scope.Recursive:
                     if (this.TryGetPropertyGet(node.Right, out var getter))
                     {

@@ -13,6 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     {
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
+        [TestCase(Scope.Type)]
         [TestCase(Scope.Recursive)]
         public void SimpleCtor(Scope scope)
         {
@@ -38,6 +39,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "1, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
         public void ChainedCtor(Scope scope, string expected)
         {
@@ -69,6 +71,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void ImplicitBaseCtor(Scope scope, string expected)
         {
@@ -102,6 +105,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void AssignmentSetterWithGetter(Scope scope, string expected)
         {
@@ -135,6 +139,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void AssignmentSetterWithGetterThis(Scope scope, string expected)
         {
@@ -168,6 +173,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
         public void ExpressionBodyAsArgument(Scope scope, string expected)
         {
@@ -196,6 +202,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
         public void InvocationAsArgument(Scope scope, string expected)
         {
@@ -224,6 +231,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "1, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
+        [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
         public void InvocationVirtual(Scope scope, string expected)
         {
@@ -261,6 +269,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void LocalDeclarationWithExpressionBody(Scope scope, string expected)
         {
@@ -289,6 +298,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void LocalDeclarationWithCastExpressionBody(Scope scope, string expected)
         {
@@ -317,6 +327,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "1, 2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void FieldInitializerBeforeCtor(Scope scope, string expected)
         {
@@ -344,6 +355,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "1, 2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void FieldInitializerBeforeCtorWhenNotDocumentOrder(Scope scope, string expected)
         {
@@ -371,6 +383,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void PropertyInitializerBeforeParameterlessCtor(Scope scope, string expected)
         {
@@ -401,6 +414,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void PropertyInitializerBeforeDefaultCtor(Scope scope, string expected)
         {
@@ -427,6 +441,7 @@ namespace RoslynSandbox
 
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public void PropertyInitializerBeforeDefaultCtorObjectInitializer(Scope scope, string expected)
         {
