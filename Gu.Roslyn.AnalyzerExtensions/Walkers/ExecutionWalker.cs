@@ -220,7 +220,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             // Not pretty below here, throwing is perhaps nicer, dunno.
             walker.Scope = scope == Scope.Member &&
-                           node is TypeDeclarationSyntax ? Scope.Instance : scope;
+                           node is TypeDeclarationSyntax ? Scope.Type : scope;
             if (walker.Scope != Scope.Member)
             {
                 if (node is TypeDeclarationSyntax typeDeclaration &&
@@ -262,6 +262,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 foreach (var ctor in walker.Ctors)
                 {
+                    if (this.Scope == Scope.Instance &&
+                        ctor.Modifiers.Any(SyntaxKind.StaticKeyword))
+                    {
+                        continue;
+                    }
+
                     this.Visit(ctor);
                 }
 
@@ -398,7 +404,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 if (!node.Modifiers.Any(SyntaxKind.PrivateKeyword))
                 {
-                    this.Ctors.Add(node);
+                    if (this.Ctors.Count > 0 &&
+                        node.Modifiers.Any(SyntaxKind.StaticKeyword))
+                    {
+                        this.Ctors.Insert(0, node);
+                    }
+                    else
+                    {
+                        this.Ctors.Add(node);
+                    }
                 }
             }
 
