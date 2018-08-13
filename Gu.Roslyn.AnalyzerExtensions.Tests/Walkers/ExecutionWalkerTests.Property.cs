@@ -71,6 +71,38 @@ namespace RoslynSandbox
             }
 
             [TestCase(Scope.Member, "2, 3")]
+            [TestCase(Scope.Instance, "2, 3")]
+            [TestCase(Scope.Type, "2, 3")]
+            [TestCase(Scope.Recursive, "1, 2, 3")]
+            public void StaticOtherType(Scope scope, string expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public static class Bar
+    {
+        public static int Value => 1;
+    }
+
+    public class Foo
+    {
+        public Foo()
+        {
+            Equals(Bar.Value, 2);
+            int j = 3;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = syntaxTree.FindConstructorDeclaration("Foo");
+                using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+                {
+                    Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+                }
+            }
+
+            [TestCase(Scope.Member, "2, 3")]
             [TestCase(Scope.Instance, "1, 2, 3")]
             [TestCase(Scope.Type, "1, 2, 3")]
             [TestCase(Scope.Recursive, "1, 2, 3")]
