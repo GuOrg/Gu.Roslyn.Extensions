@@ -657,6 +657,34 @@ namespace RoslynSandbox
             }
         }
 
+        [TestCase(Scope.Member, "1")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
+        [TestCase(Scope.Recursive, "1, 2")]
+        public void WalkOverridden(Scope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class FooBase
+    {
+        protected virtual int Bar() => 2;
+    }
+
+    public sealed class Foo : FooBase
+    {
+        protected override int Bar() => 1 * base.Bar();
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindMethodDeclaration("protected override int Bar()");
+            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+            }
+        }
+
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Type)]

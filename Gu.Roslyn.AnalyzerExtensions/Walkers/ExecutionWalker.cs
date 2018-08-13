@@ -321,7 +321,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 if (this.Scope.IsEither(Scope.Instance, Scope.Type) &&
-                    !symbol.ContainingType.IsAssignableTo(this.ContainingType, this.SemanticModel.Compilation))
+                    this.ContainingType?.IsAssignableTo(symbol.ContainingType, this.SemanticModel.Compilation) != true)
                 {
                     return false;
                 }
