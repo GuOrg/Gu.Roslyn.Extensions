@@ -359,7 +359,6 @@ namespace RoslynSandbox
             }
         }
 
-
         [TestCase(Scope.Member, "2")]
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
