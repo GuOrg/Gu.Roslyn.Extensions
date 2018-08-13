@@ -26,6 +26,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         protected SemanticModel SemanticModel { get; set; }
 
+        protected ITypeSymbol ContainingType { get; set; }
+
         /// <summary>
         /// Gets or sets the <see cref="CancellationToken"/>
         /// </summary>
@@ -51,9 +53,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
                 ctor.ContainingType is INamedTypeSymbol containingType &&
                 Constructor.TryFindDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
-                defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
+                defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax defaultCtorDeclaration))
             {
-                this.Visit(declaration);
+                this.Visit(defaultCtorDeclaration);
             }
 
             base.VisitConstructorDeclaration(node);
@@ -85,60 +87,43 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
-            switch (this.Scope)
+            if (this.Scope == Scope.Member)
             {
-                case Scope.Member:
-                    base.VisitObjectCreationExpression(node);
-                    break;
-                case Scope.Instance:
-                case Scope.Type:
-                    {
-                        if (this.visited.Add(node) &&
-                            this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
-                            node.TryFirstAncestor(out TypeDeclarationSyntax containingTypeDeclaration) &&
-                            this.SemanticModel.TryGetSymbol(containingTypeDeclaration, this.CancellationToken, out var containingType) &&
-                            containingType.Equals(ctor.ContainingType))
-                        {
-                            VisitInitializers(containingTypeDeclaration);
-                            if (ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
-                            {
-                                this.Visit(declaration);
-                            }
-
-                            base.VisitObjectCreationExpression(node);
-                        }
-
-                        break;
-                    }
-
-                case Scope.Recursive:
-                    {
-                        if (this.visited.Add(node) &&
-                            this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
-                            ctor.ContainingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax containingTypeDeclaration))
-                        {
-                            VisitInitializers(containingTypeDeclaration);
-                            if (ctor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
-                            {
-                                this.Visit(declaration);
-                            }
-
-                            base.VisitObjectCreationExpression(node);
-                        }
-
-                        break;
-                    }
+                base.VisitObjectCreationExpression(node);
+                return;
             }
 
-            void VisitInitializers(TypeDeclarationSyntax containingTypeDeclaration)
+            if (this.visited.Add(node) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var target))
             {
-                using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+                if (this.Scope.IsEither(Scope.Instance, Scope.Type) &&
+                    !target.ContainingType.Equals(this.ContainingType))
                 {
-                    foreach (var initializer in walker.Initializers)
+                    base.VisitObjectCreationExpression(node);
+                    return;
+                }
+
+                VisitInitializers(target.ContainingType);
+                if (target.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
+                {
+                    this.Visit(declaration);
+                }
+
+                base.VisitObjectCreationExpression(node);
+            }
+
+            void VisitInitializers(ITypeSymbol containingType)
+            {
+                if (containingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax containingTypeDeclaration))
+                {
+                    using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
                     {
-                        if (this.visited.Add(initializer))
+                        foreach (var initializer in walker.Initializers)
                         {
-                            this.Visit(initializer);
+                            if (this.visited.Add(initializer))
+                            {
+                                this.Visit(initializer);
+                            }
                         }
                     }
                 }
@@ -240,9 +225,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
             // Not pretty below here, throwing is perhaps nicer, dunno.
             walker.Scope = scope == Scope.Member &&
                            node is TypeDeclarationSyntax ? Scope.Instance : scope;
+            if (walker.Scope != Scope.Member)
+            {
+                if (node is TypeDeclarationSyntax typeDeclaration &&
+                    semanticModel.TryGetSymbol(typeDeclaration, cancellationToken, out var containingType))
+                {
+                    walker.ContainingType = containingType;
+                }
+                else if (node.TryFirstAncestor(out TypeDeclarationSyntax containingTypeDeclaration) &&
+                         semanticModel.TryGetSymbol(containingTypeDeclaration, cancellationToken, out containingType))
+                {
+                    walker.ContainingType = containingType;
+                }
+            }
+
             walker.SemanticModel = semanticModel;
             walker.CancellationToken = cancellationToken;
             walker.Visit(node);
+            walker.Scope = scope;
             return walker;
         }
 
@@ -289,6 +289,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             this.visited.Clear();
             this.SemanticModel = null;
+            this.ContainingType = null;
             this.CancellationToken = CancellationToken.None;
         }
 
