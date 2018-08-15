@@ -92,7 +92,7 @@ namespace RoslynSandbox
             var node = syntaxTree.FindConstructorDeclaration("Foo");
             using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
             {
-                Assert.AreEqual("", string.Join(", ", walker.Literals));
+                Assert.AreEqual(string.Empty, string.Join(", ", walker.Literals));
             }
         }
 
@@ -120,7 +120,7 @@ namespace RoslynSandbox
             var node = syntaxTree.FindConstructorDeclaration("Foo");
             using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
             {
-                Assert.AreEqual("", string.Join(", ", walker.Literals));
+                Assert.AreEqual(string.Empty, string.Join(", ", walker.Literals));
             }
         }
 
