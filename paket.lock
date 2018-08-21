@@ -564,7 +564,7 @@ NUGET
   remote: http://www.nuget.org/api/v2
     AsyncUsageAnalyzers (1.0.0-alpha003)
     Gu.Analyzers (1.2.18-dev)
-    IDisposableAnalyzers (2.0.3.2)
+    IDisposableAnalyzers (2.0.3.3)
     StyleCop.Analyzers (1.0.2)
 
 GROUP Test
