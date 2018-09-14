@@ -89,11 +89,11 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
             var typeSymbol = semanticModel.GetDeclaredSymbol(typeDeclaration);
-            Assert.AreEqual(true, typeSymbol.TryFindProperty("Bar", out var field));
-            Assert.AreEqual("Bar", field.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindProperty("Bar", out var property));
+            Assert.AreEqual("Bar", property.Name);
 
-            Assert.AreEqual(true, typeSymbol.TryFindPropertyRecursive("Bar", out field));
-            Assert.AreEqual("Bar", field.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindPropertyRecursive("Bar", out property));
+            Assert.AreEqual("Bar", property.Name);
 
             Assert.AreEqual(true, typeSymbol.TryFindFirstMember("Bar", out var member));
             Assert.AreEqual("Bar", member.Name);
@@ -105,6 +105,86 @@ namespace RoslynSandbox
             Assert.AreEqual(false, typeSymbol.TryFindProperty("missing", out _));
             Assert.AreEqual(false, typeSymbol.TryFindFirstMember("missing", out _));
             Assert.AreEqual(false, typeSymbol.TryFindFirstMemberRecursive("missing", out _));
+        }
+
+        [Test]
+        public void TryFindMethodWhenOverridden()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public override string ToString() => ""abc"";
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var type = semanticModel.GetDeclaredSymbol(typeDeclaration);
+            Assert.AreEqual(true, type.TryFindFirstMethod("ToString", out var method));
+            Assert.AreEqual("ToString", method.Name);
+
+            Assert.AreEqual(true, type.TryFindFirstMethodRecursive("ToString", out method));
+            Assert.AreEqual("ToString", method.Name);
+
+            Assert.AreEqual(true, type.TryFindSingleMethod("ToString", out method));
+            Assert.AreEqual("ToString", method.Name);
+
+            Assert.AreEqual(true, type.TryFindSingleMethodRecursive("ToString", out method));
+            Assert.AreEqual("ToString", method.Name);
+
+            Assert.AreEqual(true, type.TryFindFirstMember("ToString", out var member));
+            Assert.AreEqual("ToString", member.Name);
+
+            Assert.AreEqual(true, type.TryFindFirstMemberRecursive("ToString", out member));
+            Assert.AreEqual("ToString", member.Name);
+
+            Assert.AreEqual(false, type.TryFindFirstMethod("missing", out _));
+            Assert.AreEqual(false, type.TryFindFirstMethodRecursive("missing", out _));
+            Assert.AreEqual(false, type.TryFindSingleMethodRecursive("missing", out _));
+            Assert.AreEqual(false, type.TryFindSingleMethodRecursive("missing", out _));
+            Assert.AreEqual(false, type.TryFindFirstMember("missing", out _));
+            Assert.AreEqual(false, type.TryFindFirstMemberRecursive("missing", out _));
+        }
+
+        [Test]
+        public void TryFindMethodInBase()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var type = semanticModel.GetDeclaredSymbol(typeDeclaration);
+            Assert.AreEqual(false, type.TryFindFirstMethod("ToString", out var method));
+
+            Assert.AreEqual(true, type.TryFindFirstMethodRecursive("ToString", out method));
+            Assert.AreEqual("ToString", method.Name);
+
+            Assert.AreEqual(false, type.TryFindSingleMethod("ToString", out method));
+
+            Assert.AreEqual(true, type.TryFindSingleMethodRecursive("ToString", out method));
+            Assert.AreEqual("ToString", method.Name);
+
+            Assert.AreEqual(false, type.TryFindFirstMember("ToString", out var member));
+
+            Assert.AreEqual(true, type.TryFindFirstMemberRecursive("ToString", out member));
+            Assert.AreEqual("ToString", member.Name);
+
+            Assert.AreEqual(false, type.TryFindFirstMethod("missing", out _));
+            Assert.AreEqual(false, type.TryFindFirstMethodRecursive("missing", out _));
+            Assert.AreEqual(false, type.TryFindSingleMethodRecursive("missing", out _));
+            Assert.AreEqual(false, type.TryFindSingleMethodRecursive("missing", out _));
+            Assert.AreEqual(false, type.TryFindFirstMember("missing", out _));
+            Assert.AreEqual(false, type.TryFindFirstMemberRecursive("missing", out _));
         }
     }
 }

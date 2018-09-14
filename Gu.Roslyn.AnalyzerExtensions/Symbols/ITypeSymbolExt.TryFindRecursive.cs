@@ -6,6 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for finding members of <see cref="ITypeSymbol"/> or base types.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public static partial class ITypeSymbolExt
     {
         /// <summary>
@@ -155,8 +156,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            while (type != null &&
-                   type != QualifiedType.System.Object)
+            while (type != null)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -167,6 +167,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
 
                     member = symbol as TMember;
+                }
+
+                if (member?.IsOverride == true)
+                {
+                    return true;
                 }
 
                 type = type.BaseType;
@@ -185,8 +190,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            while (type != null &&
-                   type != QualifiedType.System.Object)
+            while (type != null)
             {
                 foreach (var symbol in type.GetMembers())
                 {
@@ -219,8 +223,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            while (type != null &&
-                   type != QualifiedType.System.Object)
+            while (type != null)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -253,8 +256,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            while (type != null &&
-                   type != QualifiedType.System.Object)
+            while (type != null)
             {
                 foreach (var symbol in type.GetMembers())
                 {
@@ -281,8 +283,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            while (type != null &&
-                   type != QualifiedType.System.Object)
+            while (type != null)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -309,8 +310,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            while (type != null &&
-                   type != QualifiedType.System.Object)
+            while (type != null)
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
