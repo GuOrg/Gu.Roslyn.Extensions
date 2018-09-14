@@ -1,3 +1,6 @@
+#### 0.3.2.0
+* BUGFIX: Walk System.Object in TryFindMemberRecursive.
+
 #### 0.3.1.4
 * BUGFIX: Walk overridden.
 

@@ -1,10 +1,9 @@
 type project
-include-pdbs true
 
 projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
 
 releasenotes
-  BUGFIX: Walk overridden.
+  BUGFIX: Walk System.Object in TryFindMemberRecursive.
 
 excludedgroups
   Analyzers
