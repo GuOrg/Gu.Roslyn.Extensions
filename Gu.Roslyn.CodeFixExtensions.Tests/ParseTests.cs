@@ -87,5 +87,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var node = Parse.LeadingTrivia(code);
             Assert.AreEqual(code + "\r\n", node.ToFullString());
         }
+
+        [TestCase("[TemplatePart(Name = \"PART_Bar\", Type = typeof(Border))]")]
+        public void AttributeList(string code)
+        {
+            var node = Parse.AttributeList(code);
+            Assert.AreEqual(code + "\r\n", node.ToFullString());
+        }
     }
 }

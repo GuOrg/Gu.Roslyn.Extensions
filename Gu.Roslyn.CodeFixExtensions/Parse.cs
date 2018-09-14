@@ -142,5 +142,26 @@ namespace Gu.Roslyn.CodeFixExtensions
             var code = text.WithLeadingWhiteSpace(leadingWhitespace);
             return SyntaxFactory.ParseLeadingTrivia(code);
         }
+
+        /// <summary>
+        /// Parse a <see cref="AttributeListSyntax"/> from a string.
+        /// </summary>
+        /// <param name="text">
+        /// The attribute text including start and end [].
+        /// </param>
+        /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
+        /// <returns>The <see cref="SyntaxTriviaList"/></returns>
+        public static AttributeListSyntax AttributeList(string text, string leadingWhitespace = null)
+        {
+            var code = $"{text.WithLeadingWhiteSpace(leadingWhitespace)}\r\n{leadingWhitespace}public class Foo {{}}";
+            if (SyntaxFactory.ParseCompilationUnit(code) is CompilationUnitSyntax compilationUnit &&
+                compilationUnit.Members.TrySingleOfType(out ClassDeclarationSyntax member) &&
+                member.AttributeLists.TrySingle(out var attributeList))
+            {
+                return attributeList;
+            }
+
+            throw new InvalidOperationException($"Failed parsing {text} into a DocumentationCommentTriviaSyntax");
+        }
     }
 }
