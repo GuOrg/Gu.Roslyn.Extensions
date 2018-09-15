@@ -28,11 +28,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (semanticModel.GetConstantValueSafe(node, cancellationToken) is Optional<object> optional &&
                 optional.HasValue)
             {
-                if (typeof(T).GetTypeInfo().IsValueType)
+                var typeInfo = typeof(T).GetTypeInfo();
+                if (typeInfo.IsValueType)
                 {
                     if (optional.Value is T temp)
                     {
                         value = temp;
+                        return true;
+                    }
+
+                    if (typeInfo.IsEnum)
+                    {
+                        value = (T)optional.Value;
                         return true;
                     }
 
