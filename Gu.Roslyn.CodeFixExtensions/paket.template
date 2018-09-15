@@ -3,7 +3,7 @@ type project
 projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
 
 releasenotes
-  BUGFIX: Walk System.Object in TryFindMemberRecursive.
+  BUGFIX: TryGetConstantValue when null & enum.
 
 excludedgroups
   Analyzers

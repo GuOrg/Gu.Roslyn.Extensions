@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.3.2.0-dev</Version>
+    <Version>0.3.3.0-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -15,7 +15,7 @@
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer codefix</PackageTags>
-    <PackageReleaseNotes>BREAKING: MutationWalker : ExecutionWalker.</PackageReleaseNotes>
+    <PackageReleaseNotes>BUGFIX: TryGetConstantValue when null &amp; enum.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

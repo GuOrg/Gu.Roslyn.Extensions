@@ -1,4 +1,7 @@
-#### 0.3.2.0
+#### 0.3.3
+* BUGFIX: TryGetConstantValue when null & enum.
+
+#### 0.3.2
 * BUGFIX: Walk System.Object in TryFindMemberRecursive.
 
 #### 0.3.1.4
