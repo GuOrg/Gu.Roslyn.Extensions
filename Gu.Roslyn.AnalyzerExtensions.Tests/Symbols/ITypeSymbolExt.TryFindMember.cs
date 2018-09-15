@@ -149,8 +149,9 @@ namespace RoslynSandbox
             Assert.AreEqual(false, type.TryFindFirstMemberRecursive("missing", out _));
         }
 
-        [Test]
-        public void TryFindMethodInBase()
+        [TestCase("ToString")]
+        [TestCase("ReferenceEquals")]
+        public void TryFindMethod(string name)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -164,20 +165,20 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
             var type = semanticModel.GetDeclaredSymbol(typeDeclaration);
-            Assert.AreEqual(false, type.TryFindFirstMethod("ToString", out var method));
+            Assert.AreEqual(false, type.TryFindFirstMethod(name, out var method));
 
-            Assert.AreEqual(true, type.TryFindFirstMethodRecursive("ToString", out method));
-            Assert.AreEqual("ToString", method.Name);
+            Assert.AreEqual(true, type.TryFindFirstMethodRecursive(name, out method));
+            Assert.AreEqual(name, method.Name);
 
-            Assert.AreEqual(false, type.TryFindSingleMethod("ToString", out method));
+            Assert.AreEqual(false, type.TryFindSingleMethod(name, out method));
 
-            Assert.AreEqual(true, type.TryFindSingleMethodRecursive("ToString", out method));
-            Assert.AreEqual("ToString", method.Name);
+            Assert.AreEqual(true, type.TryFindSingleMethodRecursive(name, out method));
+            Assert.AreEqual(name, method.Name);
 
-            Assert.AreEqual(false, type.TryFindFirstMember("ToString", out var member));
+            Assert.AreEqual(false, type.TryFindFirstMember(name, out var member));
 
-            Assert.AreEqual(true, type.TryFindFirstMemberRecursive("ToString", out member));
-            Assert.AreEqual("ToString", member.Name);
+            Assert.AreEqual(true, type.TryFindFirstMemberRecursive(name, out member));
+            Assert.AreEqual(name, member.Name);
 
             Assert.AreEqual(false, type.TryFindFirstMethod("missing", out _));
             Assert.AreEqual(false, type.TryFindFirstMethodRecursive("missing", out _));
