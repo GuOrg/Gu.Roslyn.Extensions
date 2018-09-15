@@ -55,6 +55,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="diagnostic">The subset of <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
         public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, Type equivalenceKey, Diagnostic diagnostic)
         {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey.FullName),
                 diagnostic);
@@ -69,6 +70,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="diagnostic">The subset of <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
         public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, string equivalenceKey, Diagnostic diagnostic)
         {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey),
                 diagnostic);

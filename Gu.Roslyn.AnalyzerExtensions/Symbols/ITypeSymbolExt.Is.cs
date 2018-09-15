@@ -9,6 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helpers for working with <see cref="ITypeSymbol"/>
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public static partial class ITypeSymbolExt
     {
         /// <summary>

@@ -26,7 +26,7 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Bar");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithSummaryText("New text.");
-                Assert.AreEqual(true, updated.TryGetSummary(out var summary));
+                Assert.AreEqual(true, updated.TryGetSummary(out _));
 
                 var expected = GetExpected(@"
 namespace RoslynSandbox
@@ -43,7 +43,7 @@ namespace RoslynSandbox
                 AnalyzerAssert.Ast(expected, updated);
 
                 updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
-                Assert.AreEqual(true, updated.TryGetSummary(out summary));
+                Assert.AreEqual(true, updated.TryGetSummary(out _));
                 AnalyzerAssert.Ast(expected, updated);
             }
 
@@ -65,7 +65,7 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Bar");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithSummaryText("New text.");
-                Assert.AreEqual(true, updated.TryGetSummary(out var summary));
+                Assert.AreEqual(true, updated.TryGetSummary(out _));
 
                 var expected = GetExpected(@"
 namespace RoslynSandbox
@@ -83,7 +83,7 @@ namespace RoslynSandbox
                 AnalyzerAssert.Ast(expected, updated);
 
                 updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
-                Assert.AreEqual(true, updated.TryGetSummary(out summary));
+                Assert.AreEqual(true, updated.TryGetSummary(out _));
                 AnalyzerAssert.Ast(expected, updated);
             }
 

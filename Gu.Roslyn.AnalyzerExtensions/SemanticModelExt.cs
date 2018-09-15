@@ -39,6 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                     if (typeInfo.IsEnum)
                     {
+                        // ReSharper disable once PossibleInvalidCastException
                         value = (T)optional.Value;
                         return true;
                     }

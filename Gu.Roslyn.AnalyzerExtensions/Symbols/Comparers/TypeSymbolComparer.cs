@@ -80,7 +80,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return 1;
             }
 
-            return obj?.MetadataName.GetHashCode() ?? 0;
+            return obj.MetadataName.GetHashCode();
         }
 
         /// <inheritdoc />

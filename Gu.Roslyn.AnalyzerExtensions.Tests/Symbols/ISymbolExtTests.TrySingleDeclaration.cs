@@ -199,7 +199,7 @@ namespace RoslynSandbox
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var node = syntaxTree.Find<VariableDesignationSyntax>(name);
-                var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
+                var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
                 Assert.AreEqual(true, symbol.TrySingleDeclaration(CancellationToken.None, out var match));
                 Assert.AreEqual(node, match);
             }

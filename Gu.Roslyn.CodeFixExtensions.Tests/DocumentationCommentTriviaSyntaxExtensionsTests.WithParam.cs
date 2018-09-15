@@ -106,7 +106,6 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Id");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithParamText("i", "The <see cref=\"int\"/> to return.");
-                var text = updated.ToFullString();
                 AnalyzerAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"i\">The <see cref=\"int\"/> to return.</param>", "        "));
