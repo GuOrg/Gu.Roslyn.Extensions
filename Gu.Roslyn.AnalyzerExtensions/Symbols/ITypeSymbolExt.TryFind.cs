@@ -136,7 +136,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return type.TryFindFirstMember<ISymbol>(name, out result);
         }
 
-        private static bool TryFindSingleMember<TMember>(this ITypeSymbol type, string name, out TMember member)
+        /// <summary>
+        /// Try finding the first member by predicate.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindSingleMember<TMember>(this ITypeSymbol type, string name, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -150,7 +157,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                        .TrySingleOfType(out member);
         }
 
-        private static bool TryFindSingleMember<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
+        /// <summary>
+        /// Try finding the first member by predicate.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindSingleMember<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -178,7 +192,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return member != null;
         }
 
-        private static bool TryFindSingleMember<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
+        /// <summary>
+        /// Try finding the single member by name and predicate.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the member.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindSingleMember<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -206,7 +228,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return member != null;
         }
 
-        private static bool TryFindFirstMember<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
+        /// <summary>
+        /// Try finding the first member by predicate.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindFirstMember<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -228,8 +257,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return false;
         }
-
-        private static bool TryFindFirstMember<TMember>(this ITypeSymbol type, string name, out TMember member)
+    
+        /// <summary>
+        /// Try finding the first member by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the member.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindFirstMember<TMember>(this ITypeSymbol type, string name, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -241,7 +277,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return type.GetMembers(name).TryFirstOfType(out member);
         }
 
-        private static bool TryFindFirstMember<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
+        /// <summary>
+        /// Try finding the first member by predicate.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindFirstMember<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
