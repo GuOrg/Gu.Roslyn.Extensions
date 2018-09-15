@@ -115,6 +115,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Check if <paramref name="invocation"/> is a call to <paramref name="expected"/>.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="expected">The <see cref="QualifiedMethod"/> to match against.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="target">The symbol of the target method.</param>
+        /// <returns>Tru if <paramref name="invocation"/> is a call to <paramref name="expected"/>.</returns>
+        public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol target)
+        {
+            target = null;
+            return invocation.TryGetMethodName(out var name) &&
+                   name == expected.Name &&
+                   semanticModel.TryGetSymbol(invocation, cancellationToken, out target) &&
+                   target == expected;
+        }
+
+        /// <summary>
         /// Check if the invocation is nameof()
         /// </summary>
         /// <param name="invocation">The invocation</param>
