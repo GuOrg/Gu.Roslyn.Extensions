@@ -4,7 +4,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class MemberDeclarationSyntaxExtensionsTests
+    public partial class MemberDeclarationSyntaxExtensionsTests
     {
         public class WithDocumentationText
         {

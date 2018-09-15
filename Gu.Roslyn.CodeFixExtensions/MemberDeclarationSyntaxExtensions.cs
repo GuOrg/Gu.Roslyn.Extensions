@@ -60,5 +60,30 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             return member.WithLeadingTrivia(SyntaxFactory.Trivia(docs));
         }
+
+        /// <summary>
+        /// Add <paramref name="text"/> as attribute list to <paramref name="member"/>.
+        /// </summary>
+        /// <param name="member">The <see cref="MethodDeclarationSyntax"/>.</param>
+        /// <param name="text">
+        /// The attribute text including start and end [].
+        /// </param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/></param>
+        /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
+        public static MethodDeclarationSyntax WithAttributeListText(this MethodDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
+        {
+            return member.WithAttributeList(Parse.AttributeList(text, adjustLeadingWhitespace ? member.LeadingWhitespace() : null));
+        }
+
+        /// <summary>
+        /// Add the attribute list to the <see cref="MethodDeclarationSyntax"/>.
+        /// </summary>
+        /// <param name="member">The <see cref="MethodDeclarationSyntax"/>.</param>
+        /// <param name="attributeList">The <see cref="AttributeListSyntax"/>.</param>
+        /// <returns>The <paramref name="member"/> with <paramref name="attributeList"/> added.</returns>
+        public static MethodDeclarationSyntax WithAttributeList(this MethodDeclarationSyntax member, AttributeListSyntax attributeList)
+        {
+            return member.WithAttributeLists(member.AttributeLists.Add(attributeList));
+        }
     }
 }
