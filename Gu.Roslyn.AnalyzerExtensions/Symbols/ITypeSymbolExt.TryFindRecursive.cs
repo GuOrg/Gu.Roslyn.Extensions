@@ -146,7 +146,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return type.TryFindFirstMemberRecursive<ISymbol>(name, out result);
         }
 
-        private static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
+        /// <summary>
+        /// Try finding the single matching <typeparamref name="TMember"/>.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -180,7 +188,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return member != null;
         }
 
-        private static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
+        /// <summary>
+        /// Try finding the single matching <typeparamref name="TMember"/>.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The func to filter by.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -213,7 +229,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return member != null;
         }
 
-        private static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
+        /// <summary>
+        /// Try finding the single matching <typeparamref name="TMember"/>.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="predicate">The func to filter by.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -246,7 +271,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return member != null;
         }
 
-        private static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
+        /// <summary>
+        /// Try finding the first matching <typeparamref name="TMember"/>.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The func to filter by.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -274,7 +307,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        private static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
+        /// <summary>
+        /// Try finding the first member by name.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
@@ -300,7 +341,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        private static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
+        /// <summary>
+        /// Try finding the first matching <typeparamref name="TMember"/>.
+        /// Look in <paramref name="type"/> and base types.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="predicate">The func to filter by.</param>
+        /// <param name="member">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, out TMember member)
             where TMember : class, ISymbol
         {
             member = null;
