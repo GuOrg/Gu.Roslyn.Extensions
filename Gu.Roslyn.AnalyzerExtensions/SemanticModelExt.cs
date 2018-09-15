@@ -1,10 +1,12 @@
 // ReSharper disable UnusedMember.Global
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Reflection;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using TypeInfo = Microsoft.CodeAnalysis.TypeInfo;
 
     /// <summary>
     /// The safe versions handle situations like partial classes when the node is not in the same syntax tree.
@@ -24,11 +26,31 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetConstantValue<T>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, out T value)
         {
             if (semanticModel.GetConstantValueSafe(node, cancellationToken) is Optional<object> optional &&
-                optional.HasValue &&
-                optional.Value is T temp)
+                optional.HasValue)
             {
-                value = temp;
-                return true;
+                if (typeof(T).GetTypeInfo().IsValueType)
+                {
+                    if (optional.Value is T temp)
+                    {
+                        value = temp;
+                        return true;
+                    }
+
+                    value = default(T);
+                    return false;
+                }
+
+                if (optional.Value == null)
+                {
+                    value = (T)optional.Value;
+                    return true;
+                }
+
+                if (typeof(T) == optional.Value.GetType())
+                {
+                    value = (T)optional.Value;
+                    return true;
+                }
             }
 
             value = default(T);
@@ -123,7 +145,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
         /// <param name="node">The <see cref="SyntaxNode"/></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>An <see cref="TypeInfo"/> or default(TypeInfo)</returns>
+        /// <returns>An <see cref="Microsoft.CodeAnalysis.TypeInfo"/> or default(TypeInfo)</returns>
         public static TypeInfo GetTypeInfoSafe(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
         {
             return semanticModel.SemanticModelFor(node)
