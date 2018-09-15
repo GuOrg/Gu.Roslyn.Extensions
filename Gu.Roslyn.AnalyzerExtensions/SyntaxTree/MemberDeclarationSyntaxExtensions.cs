@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class MemberDeclarationSyntaxExtensions
     {
         /// <summary>
-        /// Get the <see cref="DocumentationCommentTriviaSyntax"/> for the member if it exists.
+        /// Get the <see cref="DocumentationCommentTriviaSyntax"/> for the accessor if it exists.
         /// </summary>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/></param>
         /// <param name="comment">The returned <see cref="DocumentationCommentTriviaSyntax"/>.</param>
@@ -31,7 +31,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get the leading whitespace for the member.
+        /// Get the leading whitespace for the accessor.
         /// </summary>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/></param>
         /// <returns>The string with the leading whitespace.</returns>
@@ -39,6 +39,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (member.HasLeadingTrivia &&
                 member.GetLeadingTrivia() is var triviaList &&
+                triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
+            {
+                return trivia.ToString();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the leading whitespace for the accessor.
+        /// </summary>
+        /// <param name="accessor">The <see cref="MemberDeclarationSyntax"/></param>
+        /// <returns>The string with the leading whitespace.</returns>
+        public static string LeadingWhitespace(this AccessorDeclarationSyntax accessor)
+        {
+            if (accessor.HasLeadingTrivia &&
+                accessor.GetLeadingTrivia() is var triviaList &&
                 triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
             {
                 return trivia.ToString();
