@@ -29,6 +29,33 @@ namespace RoslynSandbox
             Assert.AreEqual(true, semanticModel.TryGetConstantValue<int>(node, CancellationToken.None, out var value));
             Assert.AreEqual(1, value);
             Assert.AreEqual(1, semanticModel.GetConstantValueSafe(node, CancellationToken.None).Value);
+            Assert.AreEqual(false, semanticModel.TryGetConstantValue<string>(node, CancellationToken.None, out _));
+            Assert.AreEqual(false, semanticModel.TryGetConstantValue<double>(node, CancellationToken.None, out _));
+        }
+
+        [Test]
+        public void TryGetConstantValueDouble()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace RoslynSandbox
+{
+    public class Foo
+    {
+        public Foo()
+        {
+            var value = 1.0;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindEqualsValueClause("=").Value;
+            Assert.AreEqual(true, semanticModel.TryGetConstantValue<double>(node, CancellationToken.None, out var value));
+            Assert.AreEqual(1, value);
+            Assert.AreEqual(1, semanticModel.GetConstantValueSafe(node, CancellationToken.None).Value);
+            Assert.AreEqual(false, semanticModel.TryGetConstantValue<string>(node, CancellationToken.None, out _));
+            Assert.AreEqual(false, semanticModel.TryGetConstantValue<int>(node, CancellationToken.None, out _));
         }
 
         [Test]

@@ -1,12 +1,11 @@
 // ReSharper disable UnusedMember.Global
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Reflection;
+    using System;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using TypeInfo = Microsoft.CodeAnalysis.TypeInfo;
 
     /// <summary>
     /// The safe versions handle situations like partial classes when the node is not in the same syntax tree.
@@ -28,34 +27,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (semanticModel.GetConstantValueSafe(node, cancellationToken) is Optional<object> optional &&
                 optional.HasValue)
             {
-                var typeInfo = typeof(T).GetTypeInfo();
-                if (typeInfo.IsValueType)
+                if (optional.Value is T temp)
                 {
-                    if (optional.Value is T temp)
-                    {
-                        value = temp;
-                        return true;
-                    }
-
-                    if (typeInfo.IsEnum)
-                    {
-                        // ReSharper disable once PossibleInvalidCastException
-                        value = (T)optional.Value;
-                        return true;
-                    }
-
-                    value = default(T);
-                    return false;
+                    value = temp;
+                    return true;
                 }
 
                 if (optional.Value == null)
                 {
-                    value = (T)optional.Value;
-                    return true;
+                    value = default(T);
+                    return default(T) == null;
                 }
 
-                if (typeof(T) == optional.Value.GetType())
+                // We can't use GetTypeInfo() here as it brings in System.Reflection.Extensions that does not work in VS.
+                if (default(T) is Enum &&
+                    Enum.GetUnderlyingType(typeof(T)) == optional.Value.GetType())
                 {
+                    // ReSharper disable once PossibleInvalidCastException
                     value = (T)optional.Value;
                     return true;
                 }
