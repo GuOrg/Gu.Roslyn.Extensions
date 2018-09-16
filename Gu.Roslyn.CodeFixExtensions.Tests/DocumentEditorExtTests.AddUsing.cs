@@ -54,7 +54,7 @@ namespace RoslynSandbox
 {
 }";
                 var usingDirective = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System"));
-                editor.AddUsing(usingDirective);
+                _ = editor.AddUsing(usingDirective);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
 

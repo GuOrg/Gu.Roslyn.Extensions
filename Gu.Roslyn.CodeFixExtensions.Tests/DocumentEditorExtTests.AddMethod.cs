@@ -107,7 +107,7 @@ namespace RoslynSandbox
         private int NewMethod() => 1;
     }
 }";
-                editor.AddMethod(containingType, (MethodDeclarationSyntax)method);
+                _ = editor.AddMethod(containingType, (MethodDeclarationSyntax)method);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
 
@@ -204,7 +204,7 @@ namespace RoslynSandbox
         }
     }
 }";
-                editor.AddMethod(containingType, (MethodDeclarationSyntax)method);
+                _ = editor.AddMethod(containingType, (MethodDeclarationSyntax)method);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
         }

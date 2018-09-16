@@ -102,7 +102,7 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
                 var eventDeclaration = (EventDeclarationSyntax)editor.Generator.CustomEventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
                 var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
-                editor.AddEvent(containingType, eventDeclaration);
+                _ = editor.AddEvent(containingType, eventDeclaration);
                 var expected = @"
 namespace RoslynSandbox
 {
