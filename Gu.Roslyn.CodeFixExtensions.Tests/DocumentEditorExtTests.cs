@@ -23,7 +23,7 @@ namespace RoslynSandbox
             var sln = CodeFactory.CreateSolution(testCode);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
-            editor.ReplaceToken(containingType.Modifiers.First(), SyntaxFactory.Token(SyntaxKind.InternalKeyword));
+            _ = editor.ReplaceToken(containingType.Modifiers.First(), SyntaxFactory.Token(SyntaxKind.InternalKeyword));
             var expected = @"
 namespace RoslynSandbox
 {

@@ -104,7 +104,7 @@ namespace RoslynSandbox
                     "disposable",
                     SyntaxFactory.ParseTypeName("bool"),
                     Accessibility.Private);
-                editor.AddField(containingType, newField);
+                _ = editor.AddField(containingType, newField);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
 

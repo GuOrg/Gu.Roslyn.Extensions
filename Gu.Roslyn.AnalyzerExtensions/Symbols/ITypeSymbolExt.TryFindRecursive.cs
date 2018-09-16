@@ -150,6 +150,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try finding the single matching <typeparamref name="TMember"/>.
         /// Look in <paramref name="type"/> and base types.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name of the method.</param>
         /// <param name="member">The match.</param>
@@ -192,6 +193,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try finding the single matching <typeparamref name="TMember"/>.
         /// Look in <paramref name="type"/> and base types.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="predicate">The func to filter by.</param>
         /// <param name="member">The match.</param>
@@ -233,6 +235,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try finding the single matching <typeparamref name="TMember"/>.
         /// Look in <paramref name="type"/> and base types.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name of the method.</param>
         /// <param name="predicate">The func to filter by.</param>
@@ -275,6 +278,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try finding the first matching <typeparamref name="TMember"/>.
         /// Look in <paramref name="type"/> and base types.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="predicate">The func to filter by.</param>
         /// <param name="member">The match.</param>
@@ -311,6 +315,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try finding the first member by name.
         /// Look in <paramref name="type"/> and base types.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name of the method.</param>
         /// <param name="member">The match.</param>
@@ -345,6 +350,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try finding the first matching <typeparamref name="TMember"/>.
         /// Look in <paramref name="type"/> and base types.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name of the method.</param>
         /// <param name="predicate">The func to filter by.</param>

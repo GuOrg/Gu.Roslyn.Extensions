@@ -47,8 +47,8 @@ namespace Gu.Roslyn.CodeFixExtensions
             if (pos < text.Length - 1)
             {
                 var substring = FindSubstring(pos, text.Length);
-                builder.Append(leadingWhitespace)
-                       .Append(text, substring.Start, substring.Length);
+                _ = builder.Append(leadingWhitespace)
+                           .Append(text, substring.Start, substring.Length);
             }
 
             return builder.Return();

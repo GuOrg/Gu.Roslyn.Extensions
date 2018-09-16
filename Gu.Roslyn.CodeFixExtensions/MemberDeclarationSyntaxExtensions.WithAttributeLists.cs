@@ -3,6 +3,9 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper methods for modifying <see cref="MemberDeclarationSyntax"/>
+    /// </summary>
     public static partial class MemberDeclarationSyntaxExtensions
     {
         /// <summary>
@@ -526,6 +529,5 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             return member.WithAttributeLists(member.AttributeLists.Add(attributeList));
         }
-
     }
 }

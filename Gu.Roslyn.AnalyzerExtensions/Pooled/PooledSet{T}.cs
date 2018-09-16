@@ -48,12 +48,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return new PooledSet<T> { refCount = 1 };
         }
 
-        /// <summary>
-        /// The result from this call is meant to be used in a using.
-        /// </summary>
-        /// <param name="set">A previously borrowed set or null.</param>
-        /// <returns>A newly borrowed set or the same instance with incremented ref count.</returns>
+#pragma warning disable IDISP015 // Member should not return created and cached instance.
+                                /// <summary>
+                                /// The result from this call is meant to be used in a using.
+                                /// </summary>
+                                /// <param name="set">A previously borrowed set or null.</param>
+                                /// <returns>A newly borrowed set or the same instance with incremented ref count.</returns>
         public static PooledSet<T> BorrowOrIncrementUsage(PooledSet<T> set)
+#pragma warning restore IDISP015 // Member should not return created and cached instance.
         {
             if (set == null)
             {

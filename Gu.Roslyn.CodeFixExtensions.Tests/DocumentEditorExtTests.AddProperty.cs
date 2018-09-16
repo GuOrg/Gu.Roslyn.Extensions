@@ -43,7 +43,7 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
                 var declaration = (PropertyDeclarationSyntax)editor.Generator.PropertyDeclaration("Property", SyntaxFactory.ParseTypeName("int"), Accessibility.Public);
                 var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
-                editor.AddProperty(containingType, declaration);
+                _ = editor.AddProperty(containingType, declaration);
                 var expected = @"
 namespace RoslynSandbox
 {

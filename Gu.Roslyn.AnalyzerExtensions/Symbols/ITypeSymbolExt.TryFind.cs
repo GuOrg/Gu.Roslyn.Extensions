@@ -139,6 +139,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try finding the first member by predicate.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name of the method.</param>
         /// <param name="member">The match.</param>
@@ -160,6 +161,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try finding the first member by predicate.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="predicate">The filter.</param>
         /// <param name="member">The match.</param>
@@ -195,6 +197,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try finding the single member by name and predicate.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name of the member.</param>
         /// <param name="predicate">The filter.</param>
@@ -231,6 +234,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try finding the first member by predicate.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="predicate">The filter.</param>
         /// <param name="member">The match.</param>
@@ -257,10 +261,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return false;
         }
-    
+
         /// <summary>
         /// Try finding the first member by name.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name of the member.</param>
         /// <param name="member">The match.</param>
@@ -280,6 +285,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try finding the first member by predicate.
         /// </summary>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name of the method.</param>
         /// <param name="predicate">The filter.</param>
