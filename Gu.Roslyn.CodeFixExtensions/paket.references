@@ -2,6 +2,7 @@ Microsoft.CodeAnalysis.CSharp.Workspaces
 
 group Analyzers
   AsyncUsageAnalyzers
-  IDisposableAnalyzers
-  StyleCop.Analyzers
   Gu.Analyzers
+  IDisposableAnalyzers
+  ReflectionAnalyzers
+  StyleCop.Analyzers
