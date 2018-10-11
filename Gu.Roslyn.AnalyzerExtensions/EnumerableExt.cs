@@ -9,22 +9,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static partial class EnumerableExt
     {
         /// <summary>
-        /// Returns <paramref name="before"/> then <paramref name="source"/>
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
-        /// <param name="source">The source collection, can be null.</param>
-        /// <param name="before">The item to retuns before <paramref name="source"/>.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/>.</returns>
-        public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source, T before)
-        {
-            yield return before;
-            foreach (var item in source)
-            {
-                yield return item;
-            }
-        }
-
-        /// <summary>
         /// Try getting the element at <paramref name="index"/>
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
