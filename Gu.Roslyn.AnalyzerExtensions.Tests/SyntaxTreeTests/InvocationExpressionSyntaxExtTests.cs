@@ -57,7 +57,7 @@ namespace RoslynSandbox
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation("GetType");
-            var method = new QualifiedMethod(new QualifiedType(typeof(Assembly).FullName),"GetType");
+            var method = new QualifiedMethod(new QualifiedType(typeof(Assembly).FullName), "GetType");
             Assert.AreEqual(true, invocation.TryGetTarget(method, semanticModel, CancellationToken.None, out var target));
             Assert.AreEqual("System.Reflection.Assembly.GetType(string)", target.ToString());
         }
