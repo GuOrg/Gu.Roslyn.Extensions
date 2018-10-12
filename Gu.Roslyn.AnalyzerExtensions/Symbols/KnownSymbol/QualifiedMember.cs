@@ -39,40 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal</returns>
         public static bool operator ==(T left, QualifiedMember<T> right)
         {
-            if (left == null && right == null)
-            {
-                return true;
-            }
-
-            if (left == null || right == null)
-            {
-                return false;
-            }
-
-            if (left.MetadataName != right.Name)
-            {
-                return false;
-            }
-
-            if (left.ContainingType == right.ContainingType)
-            {
-                return true;
-            }
-
-            if (left.IsStatic)
-            {
-                return false;
-            }
-
-            foreach (var @interface in left.ContainingType.AllInterfaces)
-            {
-                if (@interface == right.ContainingType)
-                {
-                    return true;
-                }
-            }
-
-            return left.Name.IsParts(right.ContainingType.FullName, ".", right.Name);
+           return right.Equals(left) == true;
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
@@ -97,6 +64,39 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool operator !=(ISymbol left, QualifiedMember<T> right)
         {
             return !(left == right);
+        }
+
+        protected virtual bool Equals(T symbol)
+        {
+            if (symbol == null)
+            {
+                return false;
+            }
+
+            if (symbol.MetadataName != this.Name)
+            {
+                return false;
+            }
+
+            if (symbol.ContainingType == this.ContainingType)
+            {
+                return true;
+            }
+
+            if (symbol.IsStatic)
+            {
+                return false;
+            }
+
+            foreach (var @interface in symbol.ContainingType.AllInterfaces)
+            {
+                if (@interface == this.ContainingType)
+                {
+                    return true;
+                }
+            }
+
+            return symbol.Name.IsParts(this.ContainingType.FullName, ".", this.Name);
         }
     }
 }
