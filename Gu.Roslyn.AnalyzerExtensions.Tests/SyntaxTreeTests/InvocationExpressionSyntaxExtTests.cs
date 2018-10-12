@@ -61,5 +61,83 @@ namespace RoslynSandbox
             Assert.AreEqual(true, invocation.TryGetTarget(method, semanticModel, CancellationToken.None, out var target));
             Assert.AreEqual("System.Reflection.Assembly.GetType(string)", target.ToString());
         }
+
+        [Test]
+        public void TryGetTargetAssemblyGetTypeWithParameterByName()
+        {
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using System.Reflection;
+
+    public class Foo
+    {
+        public Foo(Assembly assembly)
+        {
+            assembly.GetType(""System.Int32"");
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var invocation = syntaxTree.FindInvocation("GetType");
+            var method = new QualifiedMethod(new QualifiedType(typeof(Assembly).FullName), "GetType");
+            Assert.AreEqual(true, invocation.TryGetTarget(method, QualifiedParameter.Create("name"), semanticModel, CancellationToken.None, out var target, out var arg));
+            Assert.AreEqual("System.Reflection.Assembly.GetType(string)", target.ToString());
+            Assert.AreEqual("\"System.Int32\"", arg.ToString());
+        }
+
+        [Test]
+        public void TryGetTargetAssemblyGetTypeWithParameterByType()
+        {
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using System.Reflection;
+
+    public class Foo
+    {
+        public Foo(Assembly assembly)
+        {
+            assembly.GetType(""System.Int32"");
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var invocation = syntaxTree.FindInvocation("GetType");
+            var method = new QualifiedMethod(new QualifiedType(typeof(Assembly).FullName), "GetType");
+            Assert.AreEqual(true, invocation.TryGetTarget(method, QualifiedParameter.Create(QualifiedType.FromType(typeof(string))), semanticModel, CancellationToken.None, out var target, out var arg));
+            Assert.AreEqual("System.Reflection.Assembly.GetType(string)", target.ToString());
+            Assert.AreEqual("\"System.Int32\"", arg.ToString());
+        }
+
+        [Test]
+        public void TryGetTargetAssemblyGetTypeWithParameterByNameAndType()
+        {
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using System.Reflection;
+
+    public class Foo
+    {
+        public Foo(Assembly assembly)
+        {
+            assembly.GetType(""System.Int32"");
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var invocation = syntaxTree.FindInvocation("GetType");
+            var method = new QualifiedMethod(new QualifiedType(typeof(Assembly).FullName), "GetType");
+            Assert.AreEqual(true, invocation.TryGetTarget(method, new QualifiedParameter("name", QualifiedType.FromType(typeof(string))), semanticModel, CancellationToken.None, out var target, out var arg));
+            Assert.AreEqual("System.Reflection.Assembly.GetType(string)", target.ToString());
+            Assert.AreEqual("\"System.Int32\"", arg.ToString());
+        }
     }
 }

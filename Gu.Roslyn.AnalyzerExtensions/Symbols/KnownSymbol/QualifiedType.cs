@@ -46,6 +46,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QualifiedType"/> class.
+        /// </summary>
+        /// <param name="fullName">For example 'System.String'</param>
+        /// <param name="namespace">The namespace parts.</param>
+        /// <param name="type">The type metadata name.</param>
+        /// <param name="alias">For example 'string'</param>
         protected QualifiedType(string fullName, NamespaceParts @namespace, string type, string alias = null)
         {
             this.FullName = fullName;

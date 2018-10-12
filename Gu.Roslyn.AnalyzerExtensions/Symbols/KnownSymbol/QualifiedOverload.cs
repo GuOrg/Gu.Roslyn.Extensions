@@ -21,7 +21,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get the parameters.
+        /// Gets the parameters.
         /// </summary>
         public ImmutableArray<QualifiedParameter> Parameters { get; }
 
@@ -38,15 +38,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 for (var i = 0; i < parameters.Length; i++)
                 {
-                    var parameter = parameters[i];
-                    if (this.Parameters[i].Name is string name &&
-                        parameter.Name != name)
-                    {
-                        return false;
-                    }
-
-                    if (this.Parameters[i].Type is QualifiedType type &&
-                        parameter.Type != type)
+                    if (parameters[i] != this.Parameters[i])
                     {
                         return false;
                     }
