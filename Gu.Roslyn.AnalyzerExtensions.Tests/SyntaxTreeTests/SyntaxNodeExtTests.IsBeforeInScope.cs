@@ -8,9 +8,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     {
         internal class IsBeforeInScope
         {
-            [TestCase("var temp = 1;", "temp = 2;", true)]
-            [TestCase("temp = 2;", "var temp = 1;", false)]
-            [TestCase("temp = 1;", "var temp = 1;", false)]
+            [TestCase("var temp = 1;", "temp = 2;",     true)]
+            [TestCase("temp = 2;",     "var temp = 1;", false)]
+            [TestCase("temp = 1;",     "var temp = 1;", false)]
             public void SameBlock(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -27,12 +27,12 @@ internal class Foo
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("var temp = 1;", "temp = 2;", true)]
-            [TestCase("var temp = 1;", "temp = 3;", true)]
-            [TestCase("temp = 2;", "var temp = 1;", false)]
-            [TestCase("temp = 3;", "var temp = 1;", false)]
-            [TestCase("temp = 3;", "temp = 2;", false)]
-            [TestCase("temp = 2;", "temp = 3;", false)]
+            [TestCase("var temp = 1;", "temp = 2;",     true)]
+            [TestCase("var temp = 1;", "temp = 3;",     true)]
+            [TestCase("temp = 2;",     "var temp = 1;", false)]
+            [TestCase("temp = 3;",     "var temp = 1;", false)]
+            [TestCase("temp = 3;",     "temp = 2;",     false)]
+            [TestCase("temp = 2;",     "temp = 3;",     false)]
             public void InsideIfBlock(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -59,12 +59,12 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("var temp = 1;", "temp = 2;", true)]
-            [TestCase("var temp = 1;", "temp = 3;", true)]
-            [TestCase("temp = 2;", "var temp = 1;", false)]
-            [TestCase("temp = 3;", "var temp = 1;", false)]
-            [TestCase("temp = 3;", "temp = 2;", false)]
-            [TestCase("temp = 2;", "temp = 3;", false)]
+            [TestCase("var temp = 1;", "temp = 2;",     true)]
+            [TestCase("var temp = 1;", "temp = 3;",     true)]
+            [TestCase("temp = 2;",     "var temp = 1;", false)]
+            [TestCase("temp = 3;",     "var temp = 1;", false)]
+            [TestCase("temp = 3;",     "temp = 2;",     false)]
+            [TestCase("temp = 2;",     "temp = 3;",     false)]
             public void InsideIfBlockCurlyElse(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -89,15 +89,15 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("var temp = 1;", "temp = 2;", true)]
-            [TestCase("var temp = 1;", "temp = 3;", true)]
-            [TestCase("var temp = 1;", "temp = 4;", true)]
-            [TestCase("temp = 2;", "temp = 4;", true)]
-            [TestCase("temp = 3;", "temp = 4;", true)]
-            [TestCase("temp = 2;", "var temp = 1;", false)]
-            [TestCase("temp = 3;", "var temp = 1;", false)]
-            [TestCase("temp = 3;", "temp = 2;", false)]
-            [TestCase("temp = 2;", "temp = 3;", false)]
+            [TestCase("var temp = 1;", "temp = 2;",     true)]
+            [TestCase("var temp = 1;", "temp = 3;",     true)]
+            [TestCase("var temp = 1;", "temp = 4;",     true)]
+            [TestCase("temp = 2;",     "temp = 4;",     true)]
+            [TestCase("temp = 3;",     "temp = 4;",     true)]
+            [TestCase("temp = 2;",     "var temp = 1;", false)]
+            [TestCase("temp = 3;",     "var temp = 1;", false)]
+            [TestCase("temp = 3;",     "temp = 2;",     false)]
+            [TestCase("temp = 2;",     "temp = 3;",     false)]
             public void InsideIfBlockNoCurlies(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -122,10 +122,10 @@ namespace RoslynSandbox
             }
 
             [TestCase("var temp = 1;", "temp = 4;", true)]
-            [TestCase("temp = 2;", "temp = 4;", true)]
-            [TestCase("temp = 3;", "temp = 4;", true)]
-            [TestCase("temp = 4;", "temp = 2;", false)]
-            [TestCase("temp = 4;", "temp = 3;", false)]
+            [TestCase("temp = 2;",     "temp = 4;", true)]
+            [TestCase("temp = 3;",     "temp = 4;", true)]
+            [TestCase("temp = 4;",     "temp = 2;", false)]
+            [TestCase("temp = 4;",     "temp = 3;", false)]
             public void AfterIfBlock(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -143,6 +143,164 @@ namespace RoslynSandbox
             else
             {
                 temp = 3;
+            }
+
+            temp = 4;
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("var temp = 1;", "temp = 4;", true)]
+            [TestCase("var temp = 1;", "temp = 2;", true)]
+            [TestCase("temp = 2;",     "temp = 4;", false)]
+            [TestCase("var temp = 1;", "temp = 3;", true)]
+            [TestCase("temp = 3;",     "temp = 4;", false)]
+            [TestCase("temp = 4;",     "temp = 2;", false)]
+            [TestCase("temp = 4;",     "temp = 3;", false)]
+            public void AfterIfReturnBlock(string firstStatement, string otherStatement, bool expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal void Bar(bool condition)
+        {
+            var temp = 1;
+            if (condition)
+            {
+                temp = 2;
+                return;
+            }
+            else
+            {
+                temp = 3;
+                return;
+            }
+
+            temp = 4;
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("var temp = 1;", "temp = 4;", true)]
+            [TestCase("var temp = 1;", "temp = 2;", true)]
+            [TestCase("temp = 2;",     "temp = 4;", null)]
+            [TestCase("var temp = 1;", "temp = 3;", true)]
+            [TestCase("temp = 3;",     "temp = 4;", null)]
+            [TestCase("temp = 4;",     "temp = 2;", false)]
+            [TestCase("temp = 4;",     "temp = 3;", false)]
+            public void AfterIfReturnBlockWhenGoto(string firstStatement, string otherStatement, bool? expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal void Bar(bool condition)
+        {
+            var temp = 1;
+            meh:
+            if (condition)
+            {
+                temp = 2;
+                goto meh;
+                return;
+            }
+            else
+            {
+                temp = 3;
+                goto meh;
+                return;
+            }
+
+            temp = 4;
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("var temp = 1;", "temp = 4;", true)]
+            [TestCase("var temp = 1;", "temp = 2;", true)]
+            [TestCase("temp = 2;", "temp = 4;", false)]
+            [TestCase("var temp = 1;", "temp = 3;", true)]
+            [TestCase("temp = 3;", "temp = 4;", false)]
+            [TestCase("temp = 4;", "temp = 2;", false)]
+            [TestCase("temp = 4;", "temp = 3;", false)]
+            public void AfterIfThrowBlock(string firstStatement, string otherStatement, bool expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    using System;
+	
+    internal class Foo
+    {
+        internal void Bar(bool condition)
+        {
+            var temp = 1;
+            if (condition)
+            {
+                temp = 2;
+                throw new Exception();
+            }
+            else
+            {
+                temp = 3;
+                throw new Exception();
+            }
+
+            temp = 4;
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("var temp = 1;", "temp = 4;", true)]
+            [TestCase("var temp = 1;", "temp = 2;", true)]
+            [TestCase("temp = 2;", "temp = 4;", null)]
+            [TestCase("var temp = 1;", "temp = 3;", true)]
+            [TestCase("temp = 3;", "temp = 4;", null)]
+            [TestCase("temp = 4;", "temp = 2;", false)]
+            [TestCase("temp = 4;", "temp = 3;", false)]
+            public void AfterIfThrowBlockWhenGoto(string firstStatement, string otherStatement, bool? expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    using System;
+	
+    internal class Foo
+    {
+        internal void Bar(bool condition)
+        {
+            var temp = 1;
+            meh:
+            if (condition)
+            {
+                temp = 2;
+                goto meh;
+                throw new Exception();
+            }
+            else
+            {
+                temp = 3;
+                goto meh;
+                throw new Exception();
             }
 
             temp = 4;
