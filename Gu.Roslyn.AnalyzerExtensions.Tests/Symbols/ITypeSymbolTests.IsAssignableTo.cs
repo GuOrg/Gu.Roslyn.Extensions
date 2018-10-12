@@ -42,10 +42,13 @@ namespace RoslynSandbox
             }
 
             [TestCase("int", typeof(int))]
+            [TestCase("int", typeof(int?))]
             [TestCase("int", typeof(double))]
             [TestCase("int", typeof(IComparable))]
+            [TestCase("int", typeof(IComparable<int>))]
             [TestCase("int", typeof(object))]
             [TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.IEnumerable))]
+            [TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.Generic.IEnumerable<int>))]
             public void QualifiedTypeFromType(string typeString, Type destination)
             {
                 var code = @"
@@ -55,14 +58,14 @@ namespace RoslynSandbox
     {
         public int Value { get; }
     }
-}";
-                code = code.AssertReplace("int", typeString);
+}".AssertReplace("int", typeString);
                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
                 var source = property.Type;
-                Assert.AreEqual(true, source.IsAssignableTo(QualifiedType.FromType(destination), compilation));
+                var qualifiedType = QualifiedType.FromType(destination);
+                Assert.AreEqual(true, source.IsAssignableTo(qualifiedType, compilation));
             }
 
             [TestCase("int value", "System.Int32")]

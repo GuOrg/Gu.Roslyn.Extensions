@@ -1,6 +1,9 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Linq;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -10,6 +13,29 @@ namespace Gu.Roslyn.AnalyzerExtensions
     [global::System.Diagnostics.DebuggerDisplay("{this.FullName}")]
     public class QualifiedType
     {
+        /// <summary>
+        /// A map type.FullName - alias
+        /// System.Boolean - bool
+        /// </summary>
+        protected static readonly IReadOnlyDictionary<string, string> TypeAliasMap = new Dictionary<string, string>
+        {
+            { typeof(bool).FullName, "bool" },
+            { typeof(byte).FullName, "byte" },
+            { typeof(sbyte).FullName, "sbyte" },
+            { typeof(char).FullName, "char" },
+            { typeof(decimal).FullName, "decimal" },
+            { typeof(double).FullName, "double" },
+            { typeof(float).FullName, "float" },
+            { typeof(int).FullName, "int" },
+            { typeof(uint).FullName, "uint" },
+            { typeof(long).FullName, "long" },
+            { typeof(ulong).FullName, "ulong" },
+            { typeof(object).FullName, "object" },
+            { typeof(short).FullName, "short" },
+            { typeof(ushort).FullName, "ushort" },
+            { typeof(string).FullName, "string" },
+        };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="QualifiedType"/> class.
         /// </summary>
@@ -54,18 +80,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal</returns>
         public static bool operator ==(ITypeSymbol left, QualifiedType right)
         {
-            if (left == null && right == null)
-            {
-                return true;
-            }
-
-            if (left == null || right == null)
-            {
-                return false;
-            }
-
-            return NameEquals(left.MetadataName, right) &&
-                   left.ContainingNamespace == right.Namespace;
+            return right?.Equals(left) == true;
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
@@ -80,17 +95,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal</returns>
         public static bool operator ==(BaseTypeSyntax left, QualifiedType right)
         {
-            if (left == null && right == null)
-            {
-                return true;
-            }
-
-            if (left == null || right == null)
-            {
-                return false;
-            }
-
-            return left.Type == right;
+           return right?.Equals(left?.Type) == true;
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
@@ -105,28 +110,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal</returns>
         public static bool operator ==(TypeSyntax left, QualifiedType right)
         {
-            if (left == null && right == null)
-            {
-                return true;
-            }
-
-            if (left == null || right == null)
-            {
-                return false;
-            }
-
-            switch (left)
-            {
-                case PredefinedTypeSyntax predefinedType:
-                    return predefinedType.Keyword.ValueText == right.Alias;
-                case SimpleNameSyntax simple:
-                    return NameEquals(simple.Identifier.ValueText, right);
-                case QualifiedNameSyntax qualified:
-                    return NameEquals(qualified.Right.Identifier.ValueText, right) &&
-                           right.Namespace.Matches(qualified.Left);
-            }
-
-            return false;
+            return right?.Equals(left) == true;
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
@@ -140,14 +124,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="type">The type to use FullName</param>
         /// <returns>A <see cref="QualifiedType"/></returns>
-        public static QualifiedType FromType(Type type) => new QualifiedType(type.FullName);
+        public static QualifiedType FromType(Type type)
+        {
+            if (type.IsConstructedGenericType)
+            {
+                return new QualifiedGenericType(type.FullName, type.GenericTypeArguments.Select(FromType).ToImmutableArray());
+            }
+
+            return TypeAliasMap.TryGetValue(type.FullName, out var alias)
+                ? new QualifiedType(type.FullName, alias)
+                : new QualifiedType(type.FullName);
+        }
 
         /// <summary>
         /// Calls compilation.GetTypeByMetadataName(this.FullName)
         /// </summary>
         /// <param name="compilation">The <see cref="Compilation"/></param>
         /// <returns>The <see cref="INamedTypeSymbol"/></returns>
-        public INamedTypeSymbol GetTypeSymbol(Compilation compilation) => compilation.GetTypeByMetadataName(this.FullName);
+        public virtual INamedTypeSymbol GetTypeSymbol(Compilation compilation) => compilation.GetTypeByMetadataName(this.FullName);
 
         /// <inheritdoc />
         public override bool Equals(object obj)
@@ -181,9 +175,51 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="other">The other instance.</param>
         /// <returns>True if equal.</returns>
-        protected bool Equals(QualifiedType other)
+        protected virtual bool Equals(QualifiedType other)
         {
             return string.Equals(this.FullName, other.FullName);
+        }
+
+        /// <summary>
+        /// Check if equal.
+        /// </summary>
+        /// <param name="type">The <see cref="ITypeSymbol"/>.</param>
+        /// <returns>True if equal.</returns>
+        protected virtual bool Equals(ITypeSymbol type)
+        {
+            if (type == null)
+            {
+                return false;
+            }
+
+            return NameEquals(type.MetadataName, this) &&
+                   type.ContainingNamespace == this.Namespace;
+        }
+
+        /// <summary>
+        /// Check if equal.
+        /// </summary>
+        /// <param name="type">The <see cref="TypeSyntax"/>.</param>
+        /// <returns>True if equal.</returns>
+        protected virtual bool Equals(TypeSyntax type)
+        {
+            if (type == null)
+            {
+                return false;
+            }
+
+            switch (type)
+            {
+                case PredefinedTypeSyntax predefinedType:
+                    return predefinedType.Keyword.ValueText == this.Alias;
+                case SimpleNameSyntax simple:
+                    return NameEquals(simple.Identifier.ValueText, this);
+                case QualifiedNameSyntax qualified:
+                    return NameEquals(qualified.Right.Identifier.ValueText, this) &&
+                           this.Namespace.Matches(qualified.Left);
+            }
+
+            return false;
         }
 
         private static bool NameEquals(string left, QualifiedType right)
@@ -217,7 +253,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             public static class Linq
             {
                 /// <summary> System.Linq.Expressions.Expression </summary>
-                internal static readonly QualifiedType Expression = new QualifiedType("System.Linq.Expressions.Expression");
+                internal static readonly QualifiedType Expression =
+                    new QualifiedType("System.Linq.Expressions.Expression");
             }
 
             /// <summary> System.Runtime </summary>
@@ -227,7 +264,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 public static class CompilerServices
                 {
                     /// <summary> System.Runtime.CompilerServices.CallerMemberNameAttribute </summary>
-                    public static readonly QualifiedType CallerMemberNameAttribute = new QualifiedType("System.Runtime.CompilerServices.CallerMemberNameAttribute");
+                    public static readonly QualifiedType CallerMemberNameAttribute =
+                        new QualifiedType("System.Runtime.CompilerServices.CallerMemberNameAttribute");
                 }
             }
         }
