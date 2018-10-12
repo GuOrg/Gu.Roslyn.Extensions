@@ -62,6 +62,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return Borrow();
             }
 
+            // ReSharper disable once RedundantAssignment
             var current = Interlocked.Increment(ref set.refCount);
             Debug.Assert(current >= 1, $"{nameof(BorrowOrIncrementUsage)} set.refCount == {current}");
             return set;

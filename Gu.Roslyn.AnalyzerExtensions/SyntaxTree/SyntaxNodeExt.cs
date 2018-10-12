@@ -171,7 +171,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 var block = statement.Parent as BlockSyntax;
                 var otherBlock = otherStatement.Parent as BlockSyntax;
-                if (block == null && otherBlock == null)
+                if (block == null &&
+                    otherBlock == null)
+                {
+                    return false;
+                }
+
+                if (ContainsGoto(block))
+                {
+                    return null;
+                }
+
+                if (otherBlock != null &&
+                    block != null &&
+                    otherBlock.Contains(block) &&
+                    block.Statements.TryLast(out var last) &&
+                    (last is ReturnStatementSyntax || last is ThrowStatementSyntax))
                 {
                     return false;
                 }
@@ -188,6 +203,32 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
 
                     return statement.SpanStart < otherStatement.SpanStart;
+                }
+
+                return false;
+            }
+
+            bool ContainsGoto(BlockSyntax block)
+            {
+                if (block == null)
+                {
+                    return false;
+                }
+
+                foreach (var statement in block.Statements)
+                {
+                    if (statement.IsKind(SyntaxKind.GotoStatement) ||
+                        statement.IsKind(SyntaxKind.LabeledStatement))
+                    {
+                        return true;
+                    }
+
+                    if (statement is IfStatementSyntax ifStatement &&
+                        (ContainsGoto(ifStatement.Statement as BlockSyntax) ||
+                         ContainsGoto(ifStatement.Else?.Statement as BlockSyntax)))
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
