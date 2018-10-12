@@ -3,7 +3,10 @@ type project
 projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
 
 releasenotes
-  BUGFIX: TryGetConstantValue when null & enum.
+  FEATURE: TryFindTarget with parameters.
+  FEATURE: QualifiedOverload
+  FEATURE: QualifiedArrayType
+  FEATURE: QualifiedGenericType
 
 excludedgroups
   Analyzers

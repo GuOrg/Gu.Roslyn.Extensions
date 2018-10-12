@@ -1,3 +1,9 @@
+#### 0.3.4
+* FEATURE: TryFindTarget with parameters.
+* FEATURE: QualifiedOverload
+* FEATURE: QualifiedArrayType
+* FEATURE: QualifiedGenericType
+
 #### 0.3.3
 * BUGFIX: TryGetConstantValue when null & enum.
 
