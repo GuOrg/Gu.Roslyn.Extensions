@@ -23,8 +23,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" />
-    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" />
+    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions"/>
+    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions"/>
   </ItemGroup>
 
   <Import Project="..\.paket\Paket.Restore.targets" />
