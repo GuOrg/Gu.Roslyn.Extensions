@@ -191,13 +191,13 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("var temp = 1;", "temp = 4;", true)]
-            [TestCase("var temp = 1;", "temp = 2;", true)]
+            [TestCase("var temp = 1;", "temp = 4;", null)]
+            [TestCase("var temp = 1;", "temp = 2;", null)]
             [TestCase("temp = 2;",     "temp = 4;", null)]
-            [TestCase("var temp = 1;", "temp = 3;", true)]
+            [TestCase("var temp = 1;", "temp = 3;", null)]
             [TestCase("temp = 3;",     "temp = 4;", null)]
-            [TestCase("temp = 4;",     "temp = 2;", false)]
-            [TestCase("temp = 4;",     "temp = 3;", false)]
+            [TestCase("temp = 4;",     "temp = 2;", null)]
+            [TestCase("temp = 4;",     "temp = 3;", null)]
             public void AfterIfReturnBlockWhenGoto(string firstStatement, string otherStatement, bool? expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -233,11 +233,11 @@ namespace RoslynSandbox
 
             [TestCase("var temp = 1;", "temp = 4;", true)]
             [TestCase("var temp = 1;", "temp = 2;", true)]
-            [TestCase("temp = 2;", "temp = 4;", false)]
+            [TestCase("temp = 2;",     "temp = 4;", false)]
             [TestCase("var temp = 1;", "temp = 3;", true)]
-            [TestCase("temp = 3;", "temp = 4;", false)]
-            [TestCase("temp = 4;", "temp = 2;", false)]
-            [TestCase("temp = 4;", "temp = 3;", false)]
+            [TestCase("temp = 3;",     "temp = 4;", false)]
+            [TestCase("temp = 4;",     "temp = 2;", false)]
+            [TestCase("temp = 4;",     "temp = 3;", false)]
             public void AfterIfThrowBlock(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -270,13 +270,13 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("var temp = 1;", "temp = 4;", true)]
-            [TestCase("var temp = 1;", "temp = 2;", true)]
-            [TestCase("temp = 2;", "temp = 4;", null)]
-            [TestCase("var temp = 1;", "temp = 3;", true)]
-            [TestCase("temp = 3;", "temp = 4;", null)]
-            [TestCase("temp = 4;", "temp = 2;", false)]
-            [TestCase("temp = 4;", "temp = 3;", false)]
+            [TestCase("var temp = 1;", "temp = 4;", null)]
+            [TestCase("var temp = 1;", "temp = 2;", null)]
+            [TestCase("temp = 2;",     "temp = 4;", null)]
+            [TestCase("var temp = 1;", "temp = 3;", null)]
+            [TestCase("temp = 3;",     "temp = 4;", null)]
+            [TestCase("temp = 4;",     "temp = 2;", null)]
+            [TestCase("temp = 4;",     "temp = 3;", null)]
             public void AfterIfThrowBlockWhenGoto(string firstStatement, string otherStatement, bool? expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
