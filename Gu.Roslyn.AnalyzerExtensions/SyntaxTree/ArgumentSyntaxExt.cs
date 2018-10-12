@@ -82,7 +82,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         return false;
                 }
 
-                return false;
+                return semanticModel.TryGetConstantValue(expression, cancellationToken, out text);
             }
         }
 
