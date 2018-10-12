@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.3.4.1-dev</Version>
+    <Version>0.3.4.2-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -23,8 +23,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions"/>
-    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions"/>
+    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions" />
+    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions" />
   </ItemGroup>
 
   <Import Project="..\.paket\Paket.Restore.targets" />
