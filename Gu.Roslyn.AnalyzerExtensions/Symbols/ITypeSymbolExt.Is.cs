@@ -127,7 +127,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The <see cref="ITypeSymbol"/></param>
         /// <param name="qualifiedType">The <see cref="QualifiedType"/></param>
         /// <returns>True if <paramref name="source"/> is <paramref name="qualifiedType"/> </returns>
-        [Obsolete("Use IsAssignableTo")]
         public static bool Is(this ITypeSymbol source, QualifiedType qualifiedType)
         {
             if (source == null || qualifiedType == null)
@@ -175,7 +174,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The <see cref="ITypeSymbol"/></param>
         /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
-        [Obsolete("Use IsAssignableTo")]
         public static bool Is(this ITypeSymbol source, ITypeSymbol destination)
         {
             if (source == null || destination == null)
