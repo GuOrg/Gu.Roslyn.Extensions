@@ -8,9 +8,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     public class ExpressionSyntaxExtTests
     {
         [TestCase("1", typeof(int))]
+        [TestCase("1", typeof(int?))]
         [TestCase("1", typeof(double))]
         [TestCase("1", typeof(object))]
         [TestCase("1", typeof(IComparable))]
+        [TestCase("1", typeof(IComparable<int>))]
         public void IsAssignableTo(string text, Type type)
         {
             var code = @"
@@ -29,7 +31,6 @@ namespace RoslynSandbox
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var expression = syntaxTree.FindExpression(text);
-            Assert.AreEqual(true, expression.IsAssignableTo(new QualifiedType(type.FullName), semanticModel));
             Assert.AreEqual(true, expression.IsAssignableTo(QualifiedType.FromType(type), semanticModel));
         }
 

@@ -7,18 +7,18 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 
     public class ArgumentSyntaxExtTests
     {
-        [TestCase("\"text\"",                  "text")]
-        [TestCase("Const",                     "const text")]
-        [TestCase("string.Empty",              "")]
-        [TestCase("String.Empty",              "")]
-        [TestCase("null",                      null)]
-        [TestCase("nameof(Foo)",               "Foo")]
+        [TestCase("\"text\"", "text")]
+        [TestCase("Const", "const text")]
+        [TestCase("string.Empty", "")]
+        [TestCase("String.Empty", "")]
+        [TestCase("null", null)]
+        [TestCase("nameof(Foo)", "Foo")]
         [TestCase("nameof(RoslynSandbox.Foo)", "Foo")]
-        [TestCase("nameof(Foo<int>)",          "Foo")]
-        [TestCase("nameof(NestedFoo<int>)",    "NestedFoo")]
-        [TestCase("nameof(Bar)",               "Bar")]
-        [TestCase("nameof(this.Bar)",          "Bar")]
-        [TestCase("(string)null",              null)]
+        [TestCase("nameof(Foo<int>)", "Foo")]
+        [TestCase("nameof(NestedFoo<int>)", "NestedFoo")]
+        [TestCase("nameof(Bar)", "Bar")]
+        [TestCase("nameof(this.Bar)", "Bar")]
+        [TestCase("(string)null", null)]
         public void TryGetStringValue(string code, string expected)
         {
             var testCode = @"
@@ -47,8 +47,7 @@ namespace RoslynSandbox
             CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindArgument(code);
-            Assert.AreEqual(true,
-            invocation.TryGetStringValue(semanticModel, CancellationToken.None, out var name));
+            Assert.AreEqual(true, invocation.TryGetStringValue(semanticModel, CancellationToken.None, out var name));
             Assert.AreEqual(expected, name);
         }
 
@@ -77,7 +76,7 @@ namespace RoslynSandbox
             CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindArgument("typeof(int)");
-            Assert.AreEqual(true,  invocation.TryGetTypeofValue(semanticModel, CancellationToken.None, out var type));
+            Assert.AreEqual(true, invocation.TryGetTypeofValue(semanticModel, CancellationToken.None, out var type));
             Assert.AreEqual("int", type.ToString());
         }
     }

@@ -46,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
         }
 
-        private QualifiedType(string fullName, NamespaceParts @namespace, string type, string alias = null)
+        protected QualifiedType(string fullName, NamespaceParts @namespace, string type, string alias = null)
         {
             this.FullName = fullName;
             this.Namespace = @namespace;
@@ -95,7 +95,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal</returns>
         public static bool operator ==(BaseTypeSyntax left, QualifiedType right)
         {
-           return right?.Equals(left?.Type) == true;
+            return right?.Equals(left?.Type) == true;
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
@@ -192,7 +192,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            return NameEquals(type.MetadataName, this) &&
+            return this.NameEquals(type.MetadataName) &&
                    type.ContainingNamespace == this.Namespace;
         }
 
@@ -212,21 +212,33 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 case PredefinedTypeSyntax predefinedType:
                     return predefinedType.Keyword.ValueText == this.Alias;
+                case NullableTypeSyntax nullable:
+                    return this is QualifiedGenericType qualifiedGenericType &&
+                           qualifiedGenericType.TypeArguments.TrySingle(out var typeArg) &&
+                           qualifiedGenericType.Type == "Nullable`1" &&
+                           typeArg.Equals(nullable.ElementType);
+                case GenericNameSyntax genericName:
+                    return this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString());
                 case SimpleNameSyntax simple:
-                    return NameEquals(simple.Identifier.ValueText, this);
+                    return this.NameEquals(simple.Identifier.ValueText);
                 case QualifiedNameSyntax qualified:
-                    return NameEquals(qualified.Right.Identifier.ValueText, this) &&
+                    return this.Equals(qualified.Right) &&
                            this.Namespace.Matches(qualified.Left);
             }
 
             return false;
         }
 
-        private static bool NameEquals(string left, QualifiedType right)
+        /// <summary>
+        /// Check if <paramref name="name"/> matches <see cref="Type"/> or <see cref="Alias"/>
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>True if match.</returns>
+        protected virtual bool NameEquals(string name)
         {
-            return left == right.Type ||
-                   (right.Alias != null &&
-                    left == right.Alias);
+            return name == this.Type ||
+                   (this.Alias != null &&
+                    name == this.Alias);
         }
 
         /// <summary>

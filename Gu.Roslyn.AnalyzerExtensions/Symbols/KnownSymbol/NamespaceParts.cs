@@ -63,13 +63,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool operator !=(INamespaceSymbol left, NamespaceParts right) => !(left == right);
 
         /// <summary>
-        /// Create a new instance from <paramref name="qualifiedName"/>
+        /// Create a new instance from <paramref name="fullName"/>
         /// </summary>
-        /// <param name="qualifiedName">The namespace name ex: 'System.Collections'</param>
+        /// <param name="fullName">The namespace name ex: 'System.Collections'</param>
         /// <returns>The created instance.</returns>
-        public static NamespaceParts Create(string qualifiedName)
+        public static NamespaceParts Create(string fullName)
         {
-            var parts = qualifiedName.Split('.').ToImmutableList();
+            if (fullName.IndexOf('`') is var i &&
+                i > 0)
+            {
+                fullName = fullName.Substring(0, i);
+            }
+
+            var parts = fullName.Split('.').ToImmutableList();
             System.Diagnostics.Debug.Assert(parts.Count != 0, "Parts.Length != 0");
             return new NamespaceParts(parts.RemoveAt(parts.Count - 1));
         }

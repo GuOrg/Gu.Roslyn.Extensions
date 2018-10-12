@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections.Immutable;
     using System.Linq;
     using Microsoft.CodeAnalysis;
@@ -17,12 +18,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="fullName">For example 'System.String'</param>
         /// <param name="typeArguments">The type arguments.</param>
         public QualifiedGenericType(string fullName, ImmutableArray<QualifiedType> typeArguments)
-            : base(fullName, AliasOrNull(fullName, typeArguments))
+            : base(fullName, NamespaceParts.Create(fullName), TypeName(fullName), null)
         {
-            this.metaDataName = fullName?.IndexOf("[") is int i &&
-                                i > 0
-                ? fullName.Substring(0, i)
-                : fullName;
+            if (fullName?.IndexOf("[") is int i &&
+                i > 0)
+            {
+                this.metaDataName = fullName.Substring(0, i);
+            }
+            else
+            {
+                throw new InvalidOperationException("Expected a name like: System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]\r\n" +
+                                                    "The name type.FullName returns.");
+            }
 
             this.TypeArguments = typeArguments;
         }
@@ -38,20 +45,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return compilation.GetTypeByMetadataName(this.metaDataName).Construct(this.TypeArguments.Select(x => x.GetTypeSymbol(compilation)).ToArray());
         }
 
-        private static string AliasOrNull(string fullName, ImmutableArray<QualifiedType> typeArguments)
+        private static string TypeName(string fullName)
         {
-            if (typeArguments.TrySingle(out var arg) &&
-                fullName == "System.Nullable`1")
-            {
-                if (TypeAliasMap.TryGetValue(arg.FullName, out var alias))
-                {
-                    return alias + "?";
-                }
-
-                return arg.FullName + "?";
-            }
-
-            return null;
+            var end = fullName.IndexOf('[');
+            var start = fullName.LastIndexOf('.', end) + 1;
+            return fullName.Substring(start, end - start);
         }
     }
 }
