@@ -5,16 +5,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Extension method for <see cref="ConstructorInitializerSyntax"/>
+    /// Extension method for <see cref="ConstructorInitializerSyntax"/>.
     /// </summary>
     public static class ConstructorInitializerSyntaxExt
     {
         /// <summary>
-        /// Get the argument that matches <paramref name="parameter"/>
+        /// Get the argument that matches <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="initializer">The <see cref="ConstructorInitializerSyntax"/></param>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
+        /// <param name="initializer">The <see cref="ConstructorInitializerSyntax"/>.</param>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
         public static bool TryFindArgument(this ConstructorInitializerSyntax initializer, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
@@ -26,10 +26,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try getting the declaration of the invoked method.
         /// </summary>
-        /// <param name="invocation">The <see cref="ObjectCreationExpressionSyntax"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="declaration">The <see cref="ConstructorDeclarationSyntax"/></param>
+        /// <param name="invocation">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="declaration">The <see cref="ConstructorDeclarationSyntax"/>.</param>
         /// <returns>True if the declaration was found.</returns>
         public static bool TryGetTargetDeclaration(this ConstructorInitializerSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out ConstructorDeclarationSyntax declaration)
         {

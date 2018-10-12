@@ -5,15 +5,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for working with <see cref="BasePropertyDeclarationSyntax"/>
+    /// Helper methods for working with <see cref="BasePropertyDeclarationSyntax"/>.
     /// </summary>
     public static class BasePropertyDeclarationSyntaxExt
     {
         /// <summary>
         /// Get the <see cref="Microsoft.CodeAnalysis.Accessibility"/> from the modifiers.
         /// </summary>
-        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/></param>
-        /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/></returns>
+        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
+        /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/>.</returns>
         public static Accessibility Accessibility(this BasePropertyDeclarationSyntax declaration)
         {
             if (declaration == null)
@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Tries to get the get accessor.
         /// </summary>
-        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/></param>
+        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
         /// <param name="result">The get accessor if found.</param>
         /// <returns>True if <paramref name="property"/> has a get accessor.</returns>
         public static bool TryGetGetter(this BasePropertyDeclarationSyntax property, out AccessorDeclarationSyntax result)
@@ -71,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Tries to get the set accessor.
         /// </summary>
-        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/></param>
+        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
         /// <param name="result">The set accessor if found.</param>
         /// <returns>True if <paramref name="property"/> has a get accessor.</returns>
         public static bool TryGetSetter(this BasePropertyDeclarationSyntax property, out AccessorDeclarationSyntax result)
@@ -83,7 +83,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Returns true if the get accessor exists and odes not have a body nor expression body and set accessor does not exist.
         /// </summary>
-        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/></param>
+        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
         /// <returns>True if <paramref name="property"/> is an auto property.</returns>
         public static bool IsGetOnly(this BasePropertyDeclarationSyntax property)
         {
@@ -96,7 +96,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Returns true if the get and set accessor if it exists has no body nor expression body.
         /// </summary>
-        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/></param>
+        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
         /// <returns>True if <paramref name="property"/> is an auto property.</returns>
         public static bool IsAutoProperty(this BasePropertyDeclarationSyntax property)
         {

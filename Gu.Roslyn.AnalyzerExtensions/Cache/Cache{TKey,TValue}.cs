@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Diagnostics;
     using System.Threading;
 
-    /// <summary> A cache </summary>
+    /// <summary> A cache. </summary>
     /// <typeparam name="TKey">The key type.</typeparam>
     /// <typeparam name="TValue">The value type.</typeparam>
     public static class Cache<TKey, TValue>
@@ -38,7 +38,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Start a cache transaction and end it when disposing.
         /// </summary>
-        /// <returns>A <see cref="Transaction_"/></returns>
+        /// <returns>A <see cref="Transaction_"/>.</returns>
         public static Transaction_ Transaction()
         {
 #pragma warning disable GU0011 // Don't ignore the return value.

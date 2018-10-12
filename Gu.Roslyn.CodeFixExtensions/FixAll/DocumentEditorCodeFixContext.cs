@@ -10,7 +10,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.Text;
 
     /// <summary>
-    /// A CodeFixContext for usage with <see cref="DocumentEditorCodeFixProvider"/>
+    /// A CodeFixContext for usage with <see cref="DocumentEditorCodeFixProvider"/>.
     /// </summary>
     public struct DocumentEditorCodeFixContext
     {
@@ -19,7 +19,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="DocumentEditorCodeFixContext"/> struct.
         /// </summary>
-        /// <param name="context">The <see cref="CodeFixContext"/></param>
+        /// <param name="context">The <see cref="CodeFixContext"/>.</param>
         public DocumentEditorCodeFixContext(CodeFixContext context)
         {
             this.context = context;
@@ -31,7 +31,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public Document Document => this.context.Document;
 
         /// <summary>
-        /// Gets the <see cref="CancellationToken"/>
+        /// Gets the <see cref="CancellationToken"/>.
         /// </summary>
         public CancellationToken CancellationToken => this.context.CancellationToken;
 

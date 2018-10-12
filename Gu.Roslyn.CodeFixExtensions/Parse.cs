@@ -8,7 +8,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helpers for parsing members
+    /// Helpers for parsing members.
     /// </summary>
     public static class Parse
     {
@@ -17,7 +17,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="code">The code text.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="FieldDeclarationSyntax"/></returns>
+        /// <returns>The <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax FieldDeclaration(string code, string leadingWhitespace = null)
         {
             return (FieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
@@ -28,7 +28,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="code">The code text.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="ConstructorDeclarationSyntax"/></returns>
+        /// <returns>The <see cref="ConstructorDeclarationSyntax"/>.</returns>
         public static ConstructorDeclarationSyntax ConstructorDeclaration(string code, string leadingWhitespace = null)
         {
             return (ConstructorDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
@@ -39,7 +39,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="code">The code text.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="EventFieldDeclarationSyntax"/></returns>
+        /// <returns>The <see cref="EventFieldDeclarationSyntax"/>.</returns>
         public static EventFieldDeclarationSyntax EventFieldDeclaration(string code, string leadingWhitespace = null)
         {
             return (EventFieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
@@ -50,7 +50,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="code">The code text.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="EventDeclarationSyntax"/></returns>
+        /// <returns>The <see cref="EventDeclarationSyntax"/>.</returns>
         public static EventDeclarationSyntax EventDeclaration(string code, string leadingWhitespace = null)
         {
             return (EventDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
@@ -61,7 +61,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="code">The code text.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="PropertyDeclarationSyntax"/></returns>
+        /// <returns>The <see cref="PropertyDeclarationSyntax"/>.</returns>
         public static PropertyDeclarationSyntax PropertyDeclaration(string code, string leadingWhitespace = null)
         {
             return (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
@@ -72,7 +72,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="code">The code text.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="MethodDeclarationSyntax"/></returns>
+        /// <returns>The <see cref="MethodDeclarationSyntax"/>.</returns>
         public static MethodDeclarationSyntax MethodDeclaration(string code, string leadingWhitespace = null)
         {
             return (MethodDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
@@ -83,7 +83,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="text">The element text including start and end tags.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="XmlElementSyntax"/></returns>
+        /// <returns>The <see cref="XmlElementSyntax"/>.</returns>
         public static XmlElementSyntax XmlElementSyntax(string text, string leadingWhitespace = null)
         {
             if (DocumentationCommentTriviaSyntax(text.WithLeadingWhiteSpace("/// "), leadingWhitespace ?? string.Empty) is var comment &&
@@ -97,14 +97,14 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         /// <summary>
         /// Parse a <see cref="DocumentationCommentTriviaSyntax"/> from a string.
-        /// Lines are expected to start with ///
+        /// Lines are expected to start with ///.
         /// </summary>
         /// <param name="text">
         /// The element text including start and end tags.
-        /// Lines are expected to start with ///
+        /// Lines are expected to start with ///.
         /// </param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="DocumentationCommentTriviaSyntax"/></returns>
+        /// <returns>The <see cref="DocumentationCommentTriviaSyntax"/>.</returns>
         public static DocumentationCommentTriviaSyntax DocumentationCommentTriviaSyntax(string text, string leadingWhitespace = null)
         {
             if (LeadingTrivia(text, leadingWhitespace) is var triviaList &&
@@ -119,14 +119,14 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         /// <summary>
         /// Parse a <see cref="SyntaxTriviaList"/> from a string.
-        /// Lines are expected to start with ///
+        /// Lines are expected to start with ///.
         /// </summary>
         /// <param name="text">
         /// The element text including start and end tags.
-        /// Lines are expected to start with ///
+        /// Lines are expected to start with ///.
         /// </param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="SyntaxTriviaList"/></returns>
+        /// <returns>The <see cref="SyntaxTriviaList"/>.</returns>
         public static SyntaxTriviaList LeadingTrivia(string text, string leadingWhitespace = null)
         {
             if (text == null)
@@ -150,7 +150,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// The attribute text including start and end [].
         /// </param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
-        /// <returns>The <see cref="SyntaxTriviaList"/></returns>
+        /// <returns>The <see cref="SyntaxTriviaList"/>.</returns>
         public static AttributeListSyntax AttributeList(string text, string leadingWhitespace = null)
         {
             var code = $"{text.WithLeadingWhiteSpace(leadingWhitespace)}\r\n{leadingWhitespace}public class Foo {{}}";

@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// A walker that finds all touched <see cref="IdentifierNameSyntax"/>
+    /// A walker that finds all touched <see cref="IdentifierNameSyntax"/>.
     /// </summary>
     public sealed class IdentifierNameExecutionWalker : ExecutionWalker<IdentifierNameExecutionWalker>
     {
@@ -22,13 +22,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public IReadOnlyList<IdentifierNameSyntax> IdentifierNames => this.identifierNames;
 
         /// <summary>
-        /// Get a walker that has visited <paramref name="node"/>
+        /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
-        /// <param name="node">The node</param>
-        /// <param name="scope">The scope</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker that has visited <paramref name="node"/></returns>
+        /// <param name="node">The node.</param>
+        /// <param name="scope">The scope.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker that has visited <paramref name="node"/>.</returns>
         public static IdentifierNameExecutionWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new IdentifierNameExecutionWalker());
@@ -42,11 +42,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try find an <see cref="IdentifierNameSyntax"/> by name
+        /// Try find an <see cref="IdentifierNameSyntax"/> by name.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
-        /// <returns>True if a match was found</returns>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <returns>True if a match was found.</returns>
         public bool TryFind(string name, out IdentifierNameSyntax identifierName)
         {
             foreach (var candidate in this.identifierNames)

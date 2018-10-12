@@ -6,17 +6,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helpers for working with <see cref="ExpressionSyntax"/>
+    /// Helpers for working with <see cref="ExpressionSyntax"/>.
     /// </summary>
     public static class ExpressionSyntaxExt
     {
         /// <summary>
-        /// Check if <paramref name="expression"/> is <paramref name="destination"/>
+        /// Check if <paramref name="expression"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
-        /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/> </returns>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="destination">The other <see cref="ITypeSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ExpressionSyntax expression, ITypeSymbol destination, SemanticModel semanticModel)
         {
             if (expression == null || destination == null)
@@ -28,12 +28,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="expression"/> is <paramref name="destination"/>
+        /// Check if <paramref name="expression"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
-        /// <param name="destination">The other <see cref="QualifiedType"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/> </returns>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="destination">The other <see cref="QualifiedType"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ExpressionSyntax expression, QualifiedType destination, SemanticModel semanticModel)
         {
             if (expression == null ||
@@ -47,12 +47,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="expression"/> is <paramref name="destination"/>
+        /// Check if <paramref name="expression"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
-        /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/> </returns>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="destination">The other <see cref="ITypeSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ExpressionSyntax expression, ITypeSymbol destination, SemanticModel semanticModel)
         {
             if (expression == null || destination == null)
@@ -64,12 +64,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="expression"/> is <paramref name="destination"/>
+        /// Check if <paramref name="expression"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
-        /// <param name="destination">The other <see cref="QualifiedType"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/> </returns>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="destination">The other <see cref="QualifiedType"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ExpressionSyntax expression, QualifiedType destination, SemanticModel semanticModel)
         {
             if (expression == null ||
@@ -87,8 +87,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="expression">The expression containing the value.</param>
         /// <param name="destination">The type to cast to.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if a boxed instance can be cast.</returns>
         public static bool IsRepresentationPreservingConversion(this ExpressionSyntax expression, ITypeSymbol destination, SemanticModel semanticModel, CancellationToken cancellationToken)
         {

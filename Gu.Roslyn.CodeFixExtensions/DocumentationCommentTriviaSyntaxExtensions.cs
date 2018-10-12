@@ -8,7 +8,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for <see cref="DocumentationCommentTriviaSyntax"/>
+    /// Helper methods for <see cref="DocumentationCommentTriviaSyntax"/>.
     /// </summary>
     public static class DocumentationCommentTriviaSyntaxExtensions
     {
@@ -16,7 +16,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add a summary element to <paramref name="comment"/>
         /// Replace if a summary element exists.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="text"> The text to add inside the summary element.</param>
         /// <returns><paramref name="comment"/> with summary.</returns>
         public static DocumentationCommentTriviaSyntax WithSummaryText(this DocumentationCommentTriviaSyntax comment, string text)
@@ -28,7 +28,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="summary"/> element to <paramref name="comment"/>
         /// Replace if a summary element exists.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="summary"> The <see cref="XmlElementSyntax"/>.</param>
         /// <returns><paramref name="comment"/> with <paramref name="summary"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithSummary(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax summary)
@@ -51,7 +51,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Replace if a summary element exists.
         /// If the comment is attached to a method the param element is inserted at the correct position.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="text"> The text to add inside the summary element.</param>
         /// <returns><paramref name="comment"/> with summary.</returns>
@@ -65,7 +65,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Replace if a summary element exists.
         /// If the comment is attached to a method the param element is inserted at the correct position.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="typeparam"> The <see cref="XmlElementSyntax"/>.</param>
         /// <returns><paramref name="comment"/> with <paramref name="typeparam"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithTypeParam(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax typeparam)
@@ -156,7 +156,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Replace if a summary element exists.
         /// If the comment is attached to a method the param element is inserted at the correct position.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="text"> The text to add inside the summary element.</param>
         /// <returns><paramref name="comment"/> with summary.</returns>
@@ -170,7 +170,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Replace if a summary element exists.
         /// If the comment is attached to a method the param element is inserted at the correct position.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="param"> The <see cref="XmlElementSyntax"/>.</param>
         /// <returns><paramref name="comment"/> with <paramref name="param"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithParam(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax param)
@@ -243,7 +243,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add a returns element to <paramref name="comment"/>
         /// Replace if a returns element exists.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="text"> The text to add inside the &lt;returns&gt; element.</param>
         /// <returns><paramref name="comment"/> with  <paramref name="text"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithReturnsText(this DocumentationCommentTriviaSyntax comment, string text)
@@ -255,7 +255,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="returns"/> element to <paramref name="comment"/>
         /// Replace if a Returns element exists.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="returns"> The <see cref="XmlElementSyntax"/>.</param>
         /// <returns><paramref name="comment"/> with <paramref name="returns"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithReturns(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax returns)
@@ -276,10 +276,10 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add the element and newline and trivia.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
-        /// <param name="node">The element already in comment.Content</param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
+        /// <param name="node">The element already in comment.Content.</param>
         /// <param name="newElement">The element to add.</param>
-        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="newElement"/> added</returns>
+        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="newElement"/> added.</returns>
         public static DocumentationCommentTriviaSyntax InsertBefore(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax node, XmlElementSyntax newElement)
         {
             return comment.WithContent(comment.Content.InsertRange(
@@ -290,10 +290,10 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add the element and newline and trivia.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
-        /// <param name="node">The element already in comment.Content</param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
+        /// <param name="node">The element already in comment.Content.</param>
         /// <param name="newElement">The element to add.</param>
-        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="newElement"/> added</returns>
+        /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="newElement"/> added.</returns>
         public static DocumentationCommentTriviaSyntax InsertAfter(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax node, XmlElementSyntax newElement)
         {
             return comment.WithContent(comment.Content.InsertRange(

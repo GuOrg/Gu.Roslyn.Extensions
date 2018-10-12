@@ -7,38 +7,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helpers for working with <see cref="ITypeSymbol"/>
+    /// Helpers for working with <see cref="ITypeSymbol"/>.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public static partial class ITypeSymbolExt
     {
         /// <summary>
-        /// Check if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>
+        /// Check if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>.
         /// </summary>
-        /// <param name="type">The <see cref="ITypeSymbol"/></param>
-        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/></param>
-        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/></param>
-        /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/></returns>
+        /// <param name="type">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/>.</param>
+        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/>.</param>
+        /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>.</returns>
         public static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2) => type == qualifiedType1 || type == qualifiedType2;
 
         /// <summary>
-        /// Check if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/> or <paramref name="qualifiedType3"/>
+        /// Check if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/> or <paramref name="qualifiedType3"/>.
         /// </summary>
-        /// <param name="type">The <see cref="ITypeSymbol"/></param>
-        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/></param>
-        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/></param>
-        /// <param name="qualifiedType3">The third <see cref="QualifiedType"/></param>
-        /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/> or <paramref name="qualifiedType3"/></returns>
+        /// <param name="type">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/>.</param>
+        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/>.</param>
+        /// <param name="qualifiedType3">The third <see cref="QualifiedType"/>.</param>
+        /// <returns>True if <paramref name="type"/> is <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/> or <paramref name="qualifiedType3"/>.</returns>
         public static bool IsEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, QualifiedType qualifiedType3) => type == qualifiedType1 || type == qualifiedType2 || type == qualifiedType3;
 
         /// <summary>
-        /// Check if <paramref name="type"/> is assignable to <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>
+        /// Check if <paramref name="type"/> is assignable to <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>.
         /// </summary>
-        /// <param name="type">The <see cref="ITypeSymbol"/></param>
-        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/></param>
-        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/></param>
-        /// <param name="compilation">The <see cref="Compilation"/></param>
-        /// <returns>True if <paramref name="type"/> is assignable to <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/></returns>
+        /// <param name="type">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="qualifiedType1">The first <see cref="QualifiedType"/>.</param>
+        /// <param name="qualifiedType2">The second <see cref="QualifiedType"/>.</param>
+        /// <param name="compilation">The <see cref="Compilation"/>.</param>
+        /// <returns>True if <paramref name="type"/> is assignable to <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>.</returns>
         public static bool IsAssignableToEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, Compilation compilation)
         {
             return type.IsAssignableTo(qualifiedType1, compilation) ||
@@ -48,7 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="type"/> is awaitable. Does not check for extension methods.
         /// </summary>
-        /// <param name="type">The <see cref="ITypeSymbol"/></param>
+        /// <param name="type">The <see cref="ITypeSymbol"/>.</param>
         /// <returns>True if the type is awaitable.</returns>
         public static bool IsAwaitable(this ITypeSymbol type)
         {
@@ -59,12 +59,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="source"/> is <paramref name="destination"/>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="source">The <see cref="ITypeSymbol"/></param>
-        /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
-        /// <param name="compilation">The <see cref="Compilation"/></param>
-        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        /// <param name="source">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="destination">The other <see cref="ITypeSymbol"/>.</param>
+        /// <param name="compilation">The <see cref="Compilation"/>.</param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
         {
             if (source == null || destination == null)
@@ -76,24 +76,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="source"/> is <paramref name="destination"/>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="source">The <see cref="ITypeSymbol"/></param>
-        /// <param name="destination">The <see cref="QualifiedType"/></param>
-        /// <param name="compilation">The <see cref="Compilation"/></param>
-        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        /// <param name="source">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="destination">The <see cref="QualifiedType"/>.</param>
+        /// <param name="compilation">The <see cref="Compilation"/>.</param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
         {
             return IsAssignableTo(source, destination.GetTypeSymbol(compilation), compilation);
         }
 
         /// <summary>
-        /// Check if <paramref name="source"/> is <paramref name="destination"/>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="source">The <see cref="ITypeSymbol"/></param>
-        /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
-        /// <param name="compilation">The <see cref="Compilation"/></param>
-        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        /// <param name="source">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="destination">The other <see cref="ITypeSymbol"/>.</param>
+        /// <param name="compilation">The <see cref="Compilation"/>.</param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
         {
             if (source == null || destination == null)
@@ -105,12 +105,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="source"/> is <paramref name="destination"/>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="source">The <see cref="ITypeSymbol"/></param>
-        /// <param name="destination">The other <see cref="QualifiedType"/></param>
-        /// <param name="compilation">The <see cref="Compilation"/></param>
-        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        /// <param name="source">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="destination">The other <see cref="QualifiedType"/>.</param>
+        /// <param name="compilation">The <see cref="Compilation"/>.</param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
         {
             if (source == null || destination == null)
@@ -122,11 +122,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="source"/> is <paramref name="qualifiedType"/>
+        /// Check if <paramref name="source"/> is <paramref name="qualifiedType"/>.
         /// </summary>
-        /// <param name="source">The <see cref="ITypeSymbol"/></param>
-        /// <param name="qualifiedType">The <see cref="QualifiedType"/></param>
-        /// <returns>True if <paramref name="source"/> is <paramref name="qualifiedType"/> </returns>
+        /// <param name="source">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="qualifiedType">The <see cref="QualifiedType"/>.</param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="qualifiedType"/>. </returns>
         public static bool Is(this ITypeSymbol source, QualifiedType qualifiedType)
         {
             if (source == null || qualifiedType == null)
@@ -169,11 +169,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="source"/> is <paramref name="destination"/>
+        /// Check if <paramref name="source"/> is <paramref name="destination"/>.
         /// </summary>
-        /// <param name="source">The <see cref="ITypeSymbol"/></param>
-        /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
-        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        /// <param name="source">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="destination">The other <see cref="ITypeSymbol"/>.</param>
+        /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         [Obsolete("Use IsAssignableTo or conversion.")]
         public static bool Is(this ITypeSymbol source, ITypeSymbol destination)
         {
@@ -216,7 +216,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
-        /// <summary> Check if <paramref name="x"/> is the same type as <paramref name="y"/> </summary>
+        /// <summary> Check if <paramref name="x"/> is the same type as <paramref name="y"/>. </summary>
         /// <param name="x">The first type.</param>
         /// <param name="y">The other type.</param>
         /// <returns>True if same type.</returns>
@@ -269,7 +269,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    IsSameType(firstNamed, otherNamed);
         }
 
-        /// <summary> Check if <paramref name="x"/> is the same type as <paramref name="y"/> </summary>
+        /// <summary> Check if <paramref name="x"/> is the same type as <paramref name="y"/>. </summary>
         /// <param name="x">The first type.</param>
         /// <param name="y">The other type.</param>
         /// <returns>True if same type.</returns>
@@ -291,13 +291,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>
+        /// Check if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>.
         /// </summary>
-        /// <param name="nullableType">The <see cref="ITypeSymbol"/></param>
-        /// <param name="value">The <see cref="ExpressionSyntax"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/></returns>
+        /// <param name="nullableType">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="value">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>.</returns>
         [Obsolete("Use IsAssignableTo, candidate for removal")]
         public static bool IsNullable(this ITypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
@@ -312,13 +312,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>
+        /// Check if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>.
         /// </summary>
-        /// <param name="nullableType">The <see cref="ITypeSymbol"/></param>
-        /// <param name="value">The <see cref="ExpressionSyntax"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/></returns>
+        /// <param name="nullableType">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="value">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>True if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>.</returns>
         [Obsolete("Use IsAssignableTo, candidate for removal")]
         public static bool IsNullable(this INamedTypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {

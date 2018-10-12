@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     {
         /// <summary>
         /// A map type.FullName - alias
-        /// System.Boolean - bool
+        /// System.Boolean - bool.
         /// </summary>
         protected static readonly IReadOnlyDictionary<string, string> TypeAliasMap = new Dictionary<string, string>
         {
@@ -39,8 +39,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="QualifiedType"/> class.
         /// </summary>
-        /// <param name="fullName">For example 'System.String'</param>
-        /// <param name="alias">For example 'string'</param>
+        /// <param name="fullName">For example 'System.String'.</param>
+        /// <param name="alias">For example 'string'.</param>
         public QualifiedType(string fullName, string alias = null)
             : this(fullName, NamespaceParts.Create(fullName), fullName.Substring(fullName.LastIndexOf('.') + 1), alias)
         {
@@ -49,10 +49,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="QualifiedType"/> class.
         /// </summary>
-        /// <param name="fullName">For example 'System.String'</param>
+        /// <param name="fullName">For example 'System.String'.</param>
         /// <param name="namespace">The namespace parts.</param>
         /// <param name="type">The type metadata name.</param>
-        /// <param name="alias">For example 'string'</param>
+        /// <param name="alias">For example 'string'.</param>
         protected QualifiedType(string fullName, NamespaceParts @namespace, string type, string alias = null)
         {
             this.FullName = fullName;
@@ -67,12 +67,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public string FullName { get; }
 
         /// <summary>
-        /// Gets the namespace
+        /// Gets the namespace.
         /// </summary>
         public NamespaceParts Namespace { get; }
 
         /// <summary>
-        /// Gets the type name
+        /// Gets the type name.
         /// </summary>
         public string Type { get; }
 
@@ -81,56 +81,56 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public string Alias { get; }
 
-        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="ITypeSymbol"/></param>
-        /// <param name="right">The <see cref="QualifiedType"/></param>
-        /// <returns>True if found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <returns>True if found equal.</returns>
         public static bool operator ==(ITypeSymbol left, QualifiedType right)
         {
             return right?.Equals(left) == true;
         }
 
-        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="ITypeSymbol"/></param>
-        /// <param name="right">The <see cref="QualifiedType"/></param>
-        /// <returns>True if not found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <returns>True if not found equal.</returns>
         public static bool operator !=(ITypeSymbol left, QualifiedType right) => !(left == right);
 
-        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="BaseTypeSyntax"/></param>
-        /// <param name="right">The <see cref="QualifiedType"/></param>
-        /// <returns>True if found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="BaseTypeSyntax"/>.</param>
+        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <returns>True if found equal.</returns>
         public static bool operator ==(BaseTypeSyntax left, QualifiedType right)
         {
             return right?.Equals(left?.Type) == true;
         }
 
-        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="BaseTypeSyntax"/></param>
-        /// <param name="right">The <see cref="QualifiedType"/></param>
-        /// <returns>True if not found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="BaseTypeSyntax"/>.</param>
+        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <returns>True if not found equal.</returns>
         public static bool operator !=(BaseTypeSyntax left, QualifiedType right) => !(left == right);
 
-        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="TypeSyntax"/></param>
-        /// <param name="right">The <see cref="QualifiedType"/></param>
-        /// <returns>True if found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="TypeSyntax"/>.</param>
+        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <returns>True if found equal.</returns>
         public static bool operator ==(TypeSyntax left, QualifiedType right)
         {
             return right?.Equals(left) == true;
         }
 
-        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="TypeSyntax"/></param>
-        /// <param name="right">The <see cref="QualifiedType"/></param>
-        /// <returns>True if not found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="TypeSyntax"/>.</param>
+        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <returns>True if not found equal.</returns>
         public static bool operator !=(TypeSyntax left, QualifiedType right) => !(left == right);
 
         /// <summary>
-        /// Create a <see cref="QualifiedType"/> from a <see cref="Type"/>
+        /// Create a <see cref="QualifiedType"/> from a <see cref="Type"/>.
         /// </summary>
-        /// <param name="type">The type to use FullName</param>
-        /// <returns>A <see cref="QualifiedType"/></returns>
+        /// <param name="type">The type to use FullName.</param>
+        /// <returns>A <see cref="QualifiedType"/>.</returns>
         public static QualifiedType FromType(Type type)
         {
             if (type.IsArray)
@@ -149,10 +149,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Calls compilation.GetTypeByMetadataName(this.FullName)
+        /// Calls compilation.GetTypeByMetadataName(this.FullName).
         /// </summary>
-        /// <param name="compilation">The <see cref="Compilation"/></param>
-        /// <returns>The <see cref="INamedTypeSymbol"/></returns>
+        /// <param name="compilation">The <see cref="Compilation"/>.</param>
+        /// <returns>The <see cref="INamedTypeSymbol"/>.</returns>
         public virtual ITypeSymbol GetTypeSymbol(Compilation compilation) => compilation.GetTypeByMetadataName(this.FullName);
 
         /// <inheritdoc />
@@ -245,7 +245,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="name"/> matches <see cref="Type"/> or <see cref="Alias"/>
+        /// Check if <paramref name="name"/> matches <see cref="Type"/> or <see cref="Alias"/>.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>True if match.</returns>
@@ -261,36 +261,36 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public static class System
         {
-            /// <summary> System.Void </summary>
+            /// <summary> System.Void. </summary>
             public static readonly QualifiedType Void = new QualifiedType("System.Void", "void");
 
-            /// <summary> System.Object </summary>
+            /// <summary> System.Object. </summary>
             public static readonly QualifiedType Object = new QualifiedType("System.Object", "object");
 
-            /// <summary> System.Nullable`1 </summary>
+            /// <summary> System.Nullable`1. </summary>
             public static readonly QualifiedType NullableOfT = new QualifiedType("System.Nullable`1");
 
-            /// <summary> System.Boolean </summary>
+            /// <summary> System.Boolean. </summary>
             public static readonly QualifiedType Boolean = new QualifiedType("System.Boolean", "bool");
 
-            /// <summary> System.String </summary>
+            /// <summary> System.String. </summary>
             public static readonly QualifiedType String = new QualifiedType("System.String", "string");
 
-            /// <summary> System.Linq </summary>
+            /// <summary> System.Linq. </summary>
             public static class Linq
             {
-                /// <summary> System.Linq.Expressions.Expression </summary>
+                /// <summary> System.Linq.Expressions.Expression. </summary>
                 internal static readonly QualifiedType Expression =
                     new QualifiedType("System.Linq.Expressions.Expression");
             }
 
-            /// <summary> System.Runtime </summary>
+            /// <summary> System.Runtime. </summary>
             public static class Runtime
             {
-                /// <summary> System.Runtime.CompilerServices </summary>
+                /// <summary> System.Runtime.CompilerServices. </summary>
                 public static class CompilerServices
                 {
-                    /// <summary> System.Runtime.CompilerServices.CallerMemberNameAttribute </summary>
+                    /// <summary> System.Runtime.CompilerServices.CallerMemberNameAttribute. </summary>
                     public static readonly QualifiedType CallerMemberNameAttribute =
                         new QualifiedType("System.Runtime.CompilerServices.CallerMemberNameAttribute");
                 }

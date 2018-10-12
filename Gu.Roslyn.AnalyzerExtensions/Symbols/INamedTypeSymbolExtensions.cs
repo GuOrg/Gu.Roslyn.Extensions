@@ -4,7 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <summary>
-    /// Helpers for <see cref="INamedTypeSymbol"/>
+    /// Helpers for <see cref="INamedTypeSymbol"/>.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public static class INamedTypeSymbolExtensions

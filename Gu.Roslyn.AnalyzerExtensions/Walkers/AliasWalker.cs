@@ -21,16 +21,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public IReadOnlyList<NameEqualsSyntax> Aliases => this.aliases;
 
         /// <summary>
-        /// Get a walker that has visited <paramref name="node"/>
+        /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
-        /// <param name="node">The scope</param>
-        /// <returns>A walker that has visited <paramref name="node"/></returns>
+        /// <param name="node">The scope.</param>
+        /// <returns>A walker that has visited <paramref name="node"/>.</returns>
         public static AliasWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new AliasWalker());
 
         /// <summary>
         /// Try to get the type alias for the type name.
         /// </summary>
-        /// <param name="tree">The <see cref="SyntaxTree"/></param>
+        /// <param name="tree">The <see cref="SyntaxTree"/>.</param>
         /// <param name="typeName">The type name.</param>
         /// <param name="result">The alias if found.</param>
         /// <returns>True if an alias was found.</returns>

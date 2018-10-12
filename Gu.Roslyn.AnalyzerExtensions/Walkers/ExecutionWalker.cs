@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected Scope Scope { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="SemanticModel"/>
+        /// Gets or sets the <see cref="SemanticModel"/>.
         /// </summary>
         protected SemanticModel SemanticModel { get; set; }
 
@@ -32,7 +32,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected ITypeSymbol ContainingType { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="CancellationToken"/>
+        /// Gets or sets the <see cref="CancellationToken"/>.
         /// </summary>
         protected CancellationToken CancellationToken { get; set; }
 
@@ -180,12 +180,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Returns a walker that have visited <paramref name="node"/>
+        /// Returns a walker that have visited <paramref name="node"/>.
         /// </summary>
-        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="scope">The scope to walk.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="create">The factory for creating a walker if not found in cache.</param>
         /// <returns>The walker that have visited <paramref name="node"/>.</returns>
         protected static T BorrowAndVisit(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
@@ -224,7 +224,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// 3. Nonprivate members.
         /// 4. Nested types if scope is recursive.
         /// </summary>
-        /// <param name="node">The <see cref="TypeDeclarationSyntax"/></param>
+        /// <param name="node">The <see cref="TypeDeclarationSyntax"/>.</param>
         protected virtual void VisitTypeDeclaration(TypeDeclarationSyntax node)
         {
             using (var walker = TypeDeclarationWalker.Borrow(node))
@@ -264,7 +264,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Check if the current context is a property set.
         /// </summary>
         /// <param name="node">The current context.</param>
-        /// <returns>True if <paramref name="node"/> is found to be a property set</returns>
+        /// <returns>True if <paramref name="node"/> is found to be a property set.</returns>
         protected virtual bool IsPropertySet(IdentifierNameSyntax node)
         {
             return node.TryFirstAncestor(out AssignmentExpressionSyntax assignment) &&
@@ -275,7 +275,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Check if the current context is a property set.
         /// </summary>
         /// <param name="node">The current context.</param>
-        /// <returns>True if <paramref name="node"/> is found to be a property set</returns>
+        /// <returns>True if <paramref name="node"/> is found to be a property set.</returns>
         protected virtual bool IsPropertyGetAndSet(IdentifierNameSyntax node)
         {
             return node.TryFirstAncestor(out PrefixUnaryExpressionSyntax _) ||
@@ -283,11 +283,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try getting the target symbol for the node. Check if visited and that the symbol matches <see cref="Scope"/>
+        /// Try getting the target symbol for the node. Check if visited and that the symbol matches <see cref="Scope"/>.
         /// </summary>
         /// <typeparam name="TSymbol">The expected type.</typeparam>
-        /// <param name="node">The <see cref="SyntaxNode"/></param>
-        /// <param name="symbol">The symbol if a match</param>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="symbol">The symbol if a match.</param>
         /// <returns>True if a symbol was found.</returns>
         protected virtual bool TryGetTargetSymbol<TSymbol>(SyntaxNode node, out TSymbol symbol)
             where TSymbol : class, ISymbol

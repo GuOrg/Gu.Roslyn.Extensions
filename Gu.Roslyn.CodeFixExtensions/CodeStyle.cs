@@ -17,13 +17,13 @@ namespace Gu.Roslyn.CodeFixExtensions
             Unknown,
             Yes,
             No,
-            Maybe
+            Maybe,
         }
 
         /// <summary>
         /// Figuring out if the code uses underscore prefix in field names.
         /// </summary>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool UnderscoreFields(this SemanticModel semanticModel)
         {
@@ -65,7 +65,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Figuring out if the code uses using directives inside namespaces.
         /// </summary>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool UsingDirectivesInsideNamespace(SemanticModel semanticModel)
         {
@@ -107,7 +107,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Figuring out if backing fields are adjacent to their properties.
         /// </summary>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="newLineBetween">If there is a new line between the field and the property.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)

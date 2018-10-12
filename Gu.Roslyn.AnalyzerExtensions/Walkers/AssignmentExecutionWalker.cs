@@ -25,26 +25,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public IReadOnlyList<AssignmentExpressionSyntax> Assignments => this.assignments;
 
         /// <summary>
-        /// Get a walker that has visited <paramref name="node"/>
+        /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
-        /// <param name="node">The node</param>
-        /// <param name="scope">The scope</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker that has visited <paramref name="node"/></returns>
+        /// <param name="node">The node.</param>
+        /// <param name="scope">The scope.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker that has visited <paramref name="node"/>.</returns>
         public static AssignmentExecutionWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new AssignmentExecutionWalker());
         }
 
         /// <summary>
-        /// Get all <see cref="AssignmentExpressionSyntax"/> for <paramref name="symbol"/>
+        /// Get all <see cref="AssignmentExpressionSyntax"/> for <paramref name="symbol"/>.
         /// </summary>
         /// <param name="symbol">The symbol to find assignments for.</param>
         /// <param name="node">The node to walk.</param>
-        /// <param name="scope">The scope</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="scope">The scope.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if an assignment was found for the symbol.</returns>
         public static AssignmentExecutionWalker For(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
@@ -60,13 +60,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get all <see cref="AssignmentExpressionSyntax"/> with <paramref name="symbol"/>
+        /// Get all <see cref="AssignmentExpressionSyntax"/> with <paramref name="symbol"/>.
         /// </summary>
         /// <param name="symbol">The symbol to find assignments for.</param>
         /// <param name="node">The node to walk.</param>
-        /// <param name="scope">The scope</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="scope">The scope.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if an assignment was found for the symbol.</returns>
         public static AssignmentExecutionWalker With(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
@@ -154,13 +154,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get the first <see cref="AssignmentExpressionSyntax"/> for <paramref name="symbol"/>
+        /// Get the first <see cref="AssignmentExpressionSyntax"/> for <paramref name="symbol"/>.
         /// </summary>
         /// <param name="symbol">The symbol to find assignments for.</param>
         /// <param name="node">The node to walk.</param>
-        /// <param name="scope">The scope</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="scope">The scope.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The first assignment if any.</param>
         /// <returns>True if an assignment was found for the symbol.</returns>
         public static bool FirstFor(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
@@ -189,13 +189,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get the only <see cref="AssignmentExpressionSyntax"/> for <paramref name="symbol"/>
+        /// Get the only <see cref="AssignmentExpressionSyntax"/> for <paramref name="symbol"/>.
         /// </summary>
         /// <param name="symbol">The symbol to find assignments for.</param>
         /// <param name="node">The node to walk.</param>
-        /// <param name="scope">The scope</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="scope">The scope.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The single assignment.</param>
         /// <returns>True if a single assignment was found for the symbol.</returns>
         public static bool SingleFor(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
@@ -229,13 +229,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get the first <see cref="AssignmentExpressionSyntax"/> with <paramref name="symbol"/>
+        /// Get the first <see cref="AssignmentExpressionSyntax"/> with <paramref name="symbol"/>.
         /// </summary>
         /// <param name="symbol">The symbol to find assignments for.</param>
         /// <param name="node">The node to walk.</param>
-        /// <param name="scope">The scope</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="scope">The scope.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The single assignment.</param>
         /// <returns>True if a single assignment was found for the symbol.</returns>
         public static bool FirstWith(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)

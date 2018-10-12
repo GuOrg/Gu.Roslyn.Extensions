@@ -4,7 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helpers for working with <see cref="IMethodSymbol"/>
+    /// Helpers for working with <see cref="IMethodSymbol"/>.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public static class IMethodSymbolExt
@@ -12,9 +12,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Find the matching parameter for the argument.
         /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/></param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
-        /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
+        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, out IParameterSymbol parameter)
         {
@@ -36,9 +36,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Find the parameter by name.
         /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/></param>
+        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
         /// <param name="name">The name of the parameter.</param>
-        /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, string name, out IParameterSymbol parameter)
         {
@@ -63,9 +63,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Find the parameter by type.
         /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/></param>
+        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
         /// <param name="type">The type fo the parameter.</param>
-        /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, out IParameterSymbol parameter)
         {

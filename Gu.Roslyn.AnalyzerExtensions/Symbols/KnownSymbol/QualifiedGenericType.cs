@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="QualifiedGenericType"/> class.
         /// </summary>
-        /// <param name="fullName">For example 'System.String'</param>
+        /// <param name="fullName">For example 'System.String'.</param>
         /// <param name="typeArguments">The type arguments.</param>
         public QualifiedGenericType(string fullName, ImmutableArray<QualifiedType> typeArguments)
             : base(fullName, NamespaceParts.Create(fullName), TypeName(fullName), null)

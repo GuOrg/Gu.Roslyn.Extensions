@@ -13,6 +13,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Follow method calls etc, this means the search is more expensive.
         /// </summary>
-        Recursive
+        Recursive,
     }
 }

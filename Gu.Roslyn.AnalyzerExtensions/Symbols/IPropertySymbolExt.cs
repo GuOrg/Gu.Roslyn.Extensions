@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helpers for working with <see cref="IPropertySymbol"/>
+    /// Helpers for working with <see cref="IPropertySymbol"/>.
     /// </summary>
     public static class IPropertySymbolExt
     {
@@ -14,9 +14,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Get the declaration of the GetMethod if any.
         /// Can be the expression body or the get accessor.
         /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="declaration">The declaration</param>
+        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="declaration">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
         public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, out SyntaxNode declaration)
         {
@@ -28,9 +28,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the get accessor if any.
         /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="getter">The declaration</param>
+        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="getter">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
         public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, out AccessorDeclarationSyntax getter)
         {
@@ -43,9 +43,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the set accessor if any.
         /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="setter">The declaration</param>
+        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="setter">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
         public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, out AccessorDeclarationSyntax setter)
         {
@@ -57,9 +57,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         /// <summary>
         /// Check if the property is an auto property with get only.
-        /// public int Value { get; }
+        /// public int Value { get; }.
         /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/></param>
+        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
         /// <returns>True if the property is an auto property with get only.</returns>
         public static bool IsGetOnly(this IPropertySymbol property)
         {
@@ -74,9 +74,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         /// <summary>
         /// Check if the property is an auto property.
-        /// public int Value { get; private set; }
+        /// public int Value { get; private set; }.
         /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/></param>
+        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
         /// <returns>True if the property is an auto property.</returns>
         public static bool IsAutoProperty(this IPropertySymbol property)
         {

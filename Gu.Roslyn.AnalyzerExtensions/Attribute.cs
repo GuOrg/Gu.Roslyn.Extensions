@@ -12,11 +12,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="compilation">The <see cref="CompilationUnitSyntax"/></param>
+        /// <param name="compilation">The <see cref="CompilationUnitSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(CompilationUnitSyntax compilation, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -32,11 +32,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="typeDeclaration">The <see cref="TypeDeclarationSyntax"/></param>
+        /// <param name="typeDeclaration">The <see cref="TypeDeclarationSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(TypeDeclarationSyntax typeDeclaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -52,11 +52,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/></param>
+        /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(FieldDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -72,11 +72,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/></param>
+        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(BaseMethodDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -92,11 +92,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="declaration">The <see cref="EventDeclarationSyntax"/></param>
+        /// <param name="declaration">The <see cref="EventDeclarationSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(EventDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -112,11 +112,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="declaration">The <see cref="EventFieldDeclarationSyntax"/></param>
+        /// <param name="declaration">The <see cref="EventFieldDeclarationSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(EventFieldDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -132,11 +132,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="declaration">The <see cref="BasePropertyDeclarationSyntax"/></param>
+        /// <param name="declaration">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(BasePropertyDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -152,11 +152,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="declaration">The <see cref="ParameterSyntax"/></param>
+        /// <param name="declaration">The <see cref="ParameterSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(ParameterSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -172,11 +172,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="attributeLists">The <see cref="AttributeListSyntax"/></param>
+        /// <param name="attributeLists">The <see cref="AttributeListSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="result">The match</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
         public static bool TryFind(this SyntaxList<AttributeListSyntax> attributeLists, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
         {
@@ -199,10 +199,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if the attribute is of the expected type.
         /// </summary>
-        /// <param name="attribute">The <see cref="AttributeSyntax"/></param>
+        /// <param name="attribute">The <see cref="AttributeSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if the attribute is of the expected type.</returns>
         public static bool IsType(AttributeSyntax attribute, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
@@ -242,10 +242,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Find argument by name or index.
         /// </summary>
-        /// <param name="attribute">The <see cref="AttributeSyntax"/></param>
+        /// <param name="attribute">The <see cref="AttributeSyntax"/>.</param>
         /// <param name="argumentIndex">The index.</param>
-        /// <param name="argumentName">The name colon name</param>
-        /// <param name="argument">The match</param>
+        /// <param name="argumentName">The name colon name.</param>
+        /// <param name="argument">The match.</param>
         /// <returns>True if a match as found.</returns>
         public static bool TryFindArgument(AttributeSyntax attribute, int argumentIndex, string argumentName, out AttributeArgumentSyntax argument)
         {
@@ -278,8 +278,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Find the single argument.
         /// </summary>
-        /// <param name="attribute">The <see cref="AttributeSyntax"/></param>
-        /// <param name="argument">The match</param>
+        /// <param name="attribute">The <see cref="AttributeSyntax"/>.</param>
+        /// <param name="argument">The match.</param>
         /// <returns>True if a match as found.</returns>
         public static bool TrySingleArgument(this AttributeSyntax attribute, out AttributeArgumentSyntax argument)
         {
@@ -296,7 +296,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if the attribute is of the expected type.
         /// </summary>
-        /// <param name="attribute">The <see cref="AttributeSyntax"/></param>
+        /// <param name="attribute">The <see cref="AttributeSyntax"/>.</param>
         /// <param name="name">The type name if found.</param>
         /// <returns>True if the name of the attribute type was found.</returns>
         public static bool TryGetTypeName(AttributeSyntax attribute, out string name)

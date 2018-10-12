@@ -6,17 +6,17 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for modifying <see cref="MemberDeclarationSyntax"/>
+    /// Helper methods for modifying <see cref="MemberDeclarationSyntax"/>.
     /// </summary>
     public static partial class MemberDeclarationSyntaxExtensions
     {
         /// <summary>
-        /// Add <paramref name="text"/> as leading trivia to <paramref name="member"/>
+        /// Add <paramref name="text"/> as leading trivia to <paramref name="member"/>.
         /// </summary>
         /// <typeparam name="TNode">The type of the member to add docs to.</typeparam>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/></param>
-        /// <param name="text">The text to parse into <see cref="SyntaxTriviaList"/></param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/></param>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="text">The text to parse into <see cref="SyntaxTriviaList"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static TNode WithDocumentationText<TNode>(this TNode member, string text, bool adjustLeadingWhitespace = true)
             where TNode : MemberDeclarationSyntax
@@ -33,11 +33,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
-        /// Add docs as leading trivia to <paramref name="member"/>
+        /// Add docs as leading trivia to <paramref name="member"/>.
         /// </summary>
         /// <typeparam name="TNode">The type of the member to add docs to.</typeparam>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/></param>
-        /// <param name="docs">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="docs">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static TNode WithDocs<TNode>(this TNode member, DocumentationCommentTriviaSyntax docs)
             where TNode : MemberDeclarationSyntax

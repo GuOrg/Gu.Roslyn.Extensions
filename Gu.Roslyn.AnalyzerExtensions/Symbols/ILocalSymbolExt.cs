@@ -5,17 +5,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for working with <see cref="ILocalSymbol"/>
+    /// Helper methods for working with <see cref="ILocalSymbol"/>.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public static class ILocalSymbolExt
     {
         /// <summary>
-        /// Try to get the scope where <paramref name="local"/> is visible
+        /// Try to get the scope where <paramref name="local"/> is visible.
         /// </summary>
-        /// <param name="local">The <see cref="ILocalSymbol"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="scope">The scope</param>
+        /// <param name="local">The <see cref="ILocalSymbol"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="scope">The scope.</param>
         /// <returns>True if a scope could be determined.</returns>
         public static bool TryGetScope(this ILocalSymbol local, CancellationToken cancellationToken, out SyntaxNode scope)
         {

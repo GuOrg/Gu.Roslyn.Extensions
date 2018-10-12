@@ -16,7 +16,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Initializes a new instance of the <see cref="DocumentEditorAction"/> class.
         /// </summary>
         /// <param name="title">The text to display to the user in visual studio.</param>
-        /// <param name="document">The <see cref="Document"/></param>
+        /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="action">The action to perform to fix the diagnostic.</param>
         /// <param name="equivalenceKey">The key by which VS determines if actions should be used in the same batch.</param>
         public DocumentEditorAction(string title, Document document, Action<DocumentEditor, CancellationToken> action, string equivalenceKey)

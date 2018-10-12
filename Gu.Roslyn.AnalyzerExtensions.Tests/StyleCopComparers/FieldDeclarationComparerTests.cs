@@ -60,7 +60,7 @@ namespace RoslynSandbox
         [Test]
         public void InitializedWithOther()
         {
-        var syntaxTree = CSharpSyntaxTree.ParseText(@"
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
     class Foo

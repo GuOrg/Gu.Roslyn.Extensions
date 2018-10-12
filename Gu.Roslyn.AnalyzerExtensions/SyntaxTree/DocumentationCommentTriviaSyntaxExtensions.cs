@@ -3,14 +3,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for <see cref="DocumentationCommentTriviaSyntax"/>
+    /// Helper methods for <see cref="DocumentationCommentTriviaSyntax"/>.
     /// </summary>
     public static class DocumentationCommentTriviaSyntaxExtensions
     {
         /// <summary>
         /// Get the summary element if it exists.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="element">The <see cref="XmlElementSyntax"/> for the summary.</param>
         /// <returns>True if a match was found.</returns>
         public static bool TryGetSummary(this DocumentationCommentTriviaSyntax comment, out XmlElementSyntax element)
@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the summary element if it exists.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="element">The <see cref="XmlElementSyntax"/> for the summary.</param>
         /// <returns>True if a match was found.</returns>
         public static bool TryGetReturns(this DocumentationCommentTriviaSyntax comment, out XmlElementSyntax element)
@@ -34,7 +34,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the &lt;param name="parameterName"&gt;The value to return.&lt;/param&gt; element if it exists.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="parameterName">The name of the parameter to search for.</param>
         /// <param name="element">The <see cref="XmlElementSyntax"/> for the parameter.</param>
         /// <returns>True if a match was found.</returns>
@@ -47,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the &lt;param name="parameterName"&gt;The value to return.&lt;/param&gt; element if it exists.
         /// </summary>
-        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/></param>
+        /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="parameterName">The name of the parameter to search for.</param>
         /// <param name="element">The <see cref="XmlElementSyntax"/> for the parameter.</param>
         /// <returns>True if a match was found.</returns>

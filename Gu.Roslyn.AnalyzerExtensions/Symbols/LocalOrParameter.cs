@@ -36,11 +36,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public string Name => (this.Symbol as ILocalSymbol)?.Name ?? ((IParameterSymbol)this.Symbol).Name;
 
         /// <summary>
-        /// Try create a <see cref="LocalOrParameter"/> from <paramref name="symbol"/>
+        /// Try create a <see cref="LocalOrParameter"/> from <paramref name="symbol"/>.
         /// </summary>
-        /// <param name="symbol">The <see cref="ISymbol"/></param>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <param name="result">The <see cref="LocalOrParameter"/> if symbol was a local or a parameter.</param>
-        /// <returns>True if created a <see cref="LocalOrParameter"/> from <paramref name="symbol"/></returns>
+        /// <returns>True if created a <see cref="LocalOrParameter"/> from <paramref name="symbol"/>.</returns>
         public static bool TryCreate(ISymbol symbol, out LocalOrParameter result)
         {
             switch (symbol)
@@ -58,10 +58,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try to get the scope where <see cref="Symbol"/> is visible
+        /// Try to get the scope where <see cref="Symbol"/> is visible.
         /// </summary>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="scope">The scope</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="scope">The scope.</param>
         /// <returns>True if a scope could be determined.</returns>
         public bool TryGetScope(CancellationToken cancellationToken, out SyntaxNode scope)
         {

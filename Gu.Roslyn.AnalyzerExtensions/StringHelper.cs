@@ -8,13 +8,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class StringHelper
     {
         /// <summary>
-        /// Check if <paramref name="text"/> == <paramref name="start"/> + <paramref name="end"/>
+        /// Check if <paramref name="text"/> == <paramref name="start"/> + <paramref name="end"/>.
         /// </summary>
-        /// <param name="text">The text</param>
-        /// <param name="start">The start</param>
-        /// <param name="end">The end</param>
-        /// <param name="stringComparison">The <see cref="StringComparison"/></param>
-        /// <returns>True if <paramref name="text"/> is start + end</returns>
+        /// <param name="text">The text.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/>.</param>
+        /// <returns>True if <paramref name="text"/> is start + end.</returns>
         public static bool IsParts(this string text, string start, string end, StringComparison stringComparison = StringComparison.Ordinal)
         {
             if (text == null)
@@ -42,14 +42,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="text"/> == <paramref name="start"/> + <paramref name="middle"/> + <paramref name="end"/>
+        /// Check if <paramref name="text"/> == <paramref name="start"/> + <paramref name="middle"/> + <paramref name="end"/>.
         /// </summary>
-        /// <param name="text">The text</param>
-        /// <param name="start">The start</param>
-        /// <param name="middle">The middle</param>
-        /// <param name="end">The end</param>
-        /// <param name="stringComparison">The <see cref="StringComparison"/></param>
-        /// <returns>True if <paramref name="text"/> is start + end</returns>
+        /// <param name="text">The text.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="middle">The middle.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/>.</param>
+        /// <returns>True if <paramref name="text"/> is start + end.</returns>
         public static bool IsParts(this string text, string start, string middle, string end, StringComparison stringComparison = StringComparison.Ordinal)
         {
             if (text == null)
@@ -83,15 +83,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="text"/> == <paramref name="part1"/> + <paramref name="part2"/> + <paramref name="part3"/> + <paramref name="part4"/>
+        /// Check if <paramref name="text"/> == <paramref name="part1"/> + <paramref name="part2"/> + <paramref name="part3"/> + <paramref name="part4"/>.
         /// </summary>
-        /// <param name="text">The text</param>
-        /// <param name="part1">Part 1</param>
-        /// <param name="part2">Part 2</param>
-        /// <param name="part3">Part 3</param>
-        /// <param name="part4">Part 4</param>
-        /// <param name="stringComparison">The <see cref="StringComparison"/></param>
-        /// <returns>True if <paramref name="text"/> is start + end</returns>
+        /// <param name="text">The text.</param>
+        /// <param name="part1">Part 1.</param>
+        /// <param name="part2">Part 2.</param>
+        /// <param name="part3">Part 3.</param>
+        /// <param name="part4">Part 4.</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/>.</param>
+        /// <returns>True if <paramref name="text"/> is start + end.</returns>
         public static bool IsParts(this string text, string part1, string part2, string part3, string part4, StringComparison stringComparison = StringComparison.Ordinal)
         {
             if (text == null)
@@ -131,16 +131,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="text"/> == <paramref name="part1"/> + <paramref name="part2"/> + <paramref name="part3"/> + <paramref name="part4"/> + <paramref name="part5"/>
+        /// Check if <paramref name="text"/> == <paramref name="part1"/> + <paramref name="part2"/> + <paramref name="part3"/> + <paramref name="part4"/> + <paramref name="part5"/>.
         /// </summary>
-        /// <param name="text">The text</param>
-        /// <param name="part1">Part 1</param>
-        /// <param name="part2">Part 2</param>
-        /// <param name="part3">Part 3</param>
-        /// <param name="part4">Part 4</param>
-        /// <param name="part5">Part 5</param>
-        /// <param name="stringComparison">The <see cref="StringComparison"/></param>
-        /// <returns>True if <paramref name="text"/> is start + end</returns>
+        /// <param name="text">The text.</param>
+        /// <param name="part1">Part 1.</param>
+        /// <param name="part2">Part 2.</param>
+        /// <param name="part3">Part 3.</param>
+        /// <param name="part4">Part 4.</param>
+        /// <param name="part5">Part 5.</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/>.</param>
+        /// <returns>True if <paramref name="text"/> is start + end.</returns>
         public static bool IsParts(this string text, string part1, string part2, string part3, string part4, string part5, StringComparison stringComparison = StringComparison.Ordinal)
         {
             if (text == null)

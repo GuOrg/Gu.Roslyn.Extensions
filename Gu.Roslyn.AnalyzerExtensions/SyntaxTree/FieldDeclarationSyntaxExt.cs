@@ -5,15 +5,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for working with <see cref="FieldDeclarationSyntax"/>
+    /// Helper methods for working with <see cref="FieldDeclarationSyntax"/>.
     /// </summary>
     public static class FieldDeclarationSyntaxExt
     {
         /// <summary>
         /// Get the <see cref="Microsoft.CodeAnalysis.Accessibility"/> from the modifiers.
         /// </summary>
-        /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/></param>
-        /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/></returns>
+        /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/>.</param>
+        /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/>.</returns>
         public static Accessibility Accessibility(this FieldDeclarationSyntax declaration)
         {
             if (declaration == null)
@@ -53,8 +53,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try getting the name of the field.
         /// </summary>
-        /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/></param>
-        /// <param name="name">The name</param>
+        /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/>.</param>
+        /// <param name="name">The name.</param>
         /// <returns>True if the declaration is for a single variable.</returns>
         public static bool TryGetName(this FieldDeclarationSyntax declaration, out string name)
         {
@@ -76,7 +76,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try to find the variable by name.
         /// </summary>
-        /// <param name="fieldDeclaration">The <see cref="FieldDeclarationSyntax"/></param>
+        /// <param name="fieldDeclaration">The <see cref="FieldDeclarationSyntax"/>.</param>
         /// <param name="name">The name.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if a match as found.</returns>

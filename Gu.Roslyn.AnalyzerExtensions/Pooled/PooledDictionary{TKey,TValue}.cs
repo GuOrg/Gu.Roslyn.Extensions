@@ -43,7 +43,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Borrow a dictionary, dispose returns it.
         /// </summary>
-        /// <returns>A <see cref="PooledDictionary{TKey,TValue}"/></returns>
+        /// <returns>A <see cref="PooledDictionary{TKey,TValue}"/>.</returns>
         public static PooledDictionary<TKey, TValue> Borrow()
         {
             if (Cache.TryDequeue(out var dictionary))

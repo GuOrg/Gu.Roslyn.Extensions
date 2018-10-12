@@ -6,14 +6,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helpers for <see cref="InvocationExpressionSyntax"/>
+    /// Helpers for <see cref="InvocationExpressionSyntax"/>.
     /// </summary>
     public static class InvocationExpressionSyntaxExt
     {
         /// <summary>
         /// Check if the invocation is potentially returning void from the usage.
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <returns>True if it possibly return void.</returns>
         public static bool IsPotentialReturnVoid(this InvocationExpressionSyntax invocation)
         {
@@ -36,7 +36,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if the invocation is potentially is a member call in the containing instance.
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <returns>True if it possibly is a member call in the containing instance.</returns>
         public static bool IsPotentialThis(this InvocationExpressionSyntax invocation)
         {
@@ -54,7 +54,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if the invocation is potentially is a member or base call in the containing instance.
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <returns>True if it possibly is a member call in the containing instance.</returns>
         public static bool IsPotentialThisOrBase(this InvocationExpressionSyntax invocation)
         {
@@ -72,7 +72,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try to get the invoked method's name.
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="name">The name of the invoked method.</param>
         /// <returns>True if the name was found.</returns>
         public static bool TryGetMethodName(this InvocationExpressionSyntax invocation, out string name)
@@ -268,10 +268,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if the invocation is nameof()
+        /// Check if the invocation is nameof().
         /// </summary>
-        /// <param name="invocation">The invocation</param>
-        /// <returns>True if the invocation is nameof()</returns>
+        /// <param name="invocation">The invocation.</param>
+        /// <returns>True if the invocation is nameof().</returns>
         public static bool IsNameOf(this InvocationExpressionSyntax invocation)
         {
             return invocation.TryGetMethodName(out var name) &&
@@ -279,10 +279,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if the invocation is typeof()
+        /// Check if the invocation is typeof().
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
-        /// <returns>True if the invocation is typeof()</returns>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <returns>True if the invocation is typeof().</returns>
         public static bool IsTypeOf(this InvocationExpressionSyntax invocation)
         {
             return invocation.TryGetMethodName(out var name) &&
@@ -290,11 +290,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get the argument that matches <paramref name="parameter"/>
+        /// Get the argument that matches <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
         public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
@@ -306,10 +306,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try getting the declaration of the invoked method.
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="declaration">The <see cref="MethodDeclarationSyntax"/></param>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="declaration">The <see cref="MethodDeclarationSyntax"/>.</param>
         /// <returns>True if the declaration was found.</returns>
         public static bool TryGetTargetDeclaration(this InvocationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out MethodDeclarationSyntax declaration)
         {

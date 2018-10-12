@@ -11,8 +11,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="QualifiedOverload"/> class.
         /// </summary>
-        /// <param name="containingType">The containing type</param>
-        /// <param name="name">The name</param>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="name">The name.</param>
         /// <param name="parameters">The parameters.</param>
         public QualifiedOverload(QualifiedType containingType, string name, ImmutableArray<QualifiedParameter> parameters)
             : base(containingType, name)

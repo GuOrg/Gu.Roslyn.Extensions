@@ -13,9 +13,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         public sealed override Task RegisterCodeFixesAsync(CodeFixContext context) => this.RegisterCodeFixesAsync(new DocumentEditorCodeFixContext(context));
 
         /// <summary>
-        /// The <see cref="DocumentEditorFixAllProvider"/> for the desired scope <see cref="DocumentEditorFixAllProvider.Document"/>
+        /// The <see cref="DocumentEditorFixAllProvider"/> for the desired scope <see cref="DocumentEditorFixAllProvider.Document"/>.
         /// </summary>
-        /// <returns>A <see cref="DocumentEditorFixAllProvider"/> </returns>
+        /// <returns>A <see cref="DocumentEditorFixAllProvider"/>. </returns>
         protected virtual DocumentEditorFixAllProvider FixAllProvider() => DocumentEditorFixAllProvider.Document;
 
         /// <summary>

@@ -5,14 +5,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for <see cref="MemberDeclarationSyntax"/>
+    /// Helper methods for <see cref="MemberDeclarationSyntax"/>.
     /// </summary>
     public static class MemberDeclarationSyntaxExtensions
     {
         /// <summary>
         /// Get the <see cref="DocumentationCommentTriviaSyntax"/> for the accessor if it exists.
         /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/></param>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <param name="comment">The returned <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <returns>True if a single <see cref="DocumentationCommentTriviaSyntax"/> was found.</returns>
         public static bool TryGetDocumentationComment(this MemberDeclarationSyntax member, out DocumentationCommentTriviaSyntax comment)
@@ -33,7 +33,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the leading whitespace for the accessor.
         /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/></param>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <returns>The string with the leading whitespace.</returns>
         public static string LeadingWhitespace(this MemberDeclarationSyntax member)
         {
@@ -50,7 +50,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the leading whitespace for the accessor.
         /// </summary>
-        /// <param name="accessor">The <see cref="MemberDeclarationSyntax"/></param>
+        /// <param name="accessor">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <returns>The string with the leading whitespace.</returns>
         public static string LeadingWhitespace(this AccessorDeclarationSyntax accessor)
         {

@@ -3,16 +3,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <summary>
-    /// Helpers for working with <see cref="IParameterSymbol"/>
+    /// Helpers for working with <see cref="IParameterSymbol"/>.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public static class IParameterSymbolExt
     {
         /// <summary>
-        /// Check if the parameter has [CallerMemberName]
+        /// Check if the parameter has [CallerMemberName].
         /// </summary>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <returns>True if the parameter has [CallerMemberName]</returns>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <returns>True if the parameter has [CallerMemberName].</returns>
         public static bool IsCallerMemberName(this IParameterSymbol parameter)
         {
             if (parameter.HasExplicitDefaultValue &&

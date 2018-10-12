@@ -37,11 +37,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public string Name => (this.Symbol as IFieldSymbol)?.Name ?? ((IPropertySymbol)this.Symbol).Name;
 
         /// <summary>
-        /// Try create a <see cref="FieldOrProperty"/> from <paramref name="symbol"/>
+        /// Try create a <see cref="FieldOrProperty"/> from <paramref name="symbol"/>.
         /// </summary>
-        /// <param name="symbol">The <see cref="ISymbol"/></param>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <param name="result">The <see cref="FieldOrProperty"/> if symbol was a field or a property.</param>
-        /// <returns>True if created a <see cref="FieldOrProperty"/> from <paramref name="symbol"/></returns>
+        /// <returns>True if created a <see cref="FieldOrProperty"/> from <paramref name="symbol"/>.</returns>
         public static bool TryCreate(ISymbol symbol, out FieldOrProperty result)
         {
             switch (symbol)

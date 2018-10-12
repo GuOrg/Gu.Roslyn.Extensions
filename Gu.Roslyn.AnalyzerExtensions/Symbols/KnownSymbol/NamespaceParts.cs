@@ -21,10 +21,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.parts = parts;
         }
 
-        /// <summary> Check if <paramref name="left"/> is the namespace described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="INamespaceSymbol"/></param>
-        /// <param name="right">The <see cref="NamespaceParts"/></param>
-        /// <returns>True if found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is the namespace described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="INamespaceSymbol"/>.</param>
+        /// <param name="right">The <see cref="NamespaceParts"/>.</param>
+        /// <returns>True if found equal.</returns>
         public static bool operator ==(INamespaceSymbol left, NamespaceParts right)
         {
             if (left == null && right == null)
@@ -56,16 +56,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return ns?.IsGlobalNamespace == true;
         }
 
-        /// <summary> Check if <paramref name="left"/> is not the namespace described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="INamespaceSymbol"/></param>
-        /// <param name="right">The <see cref="NamespaceParts"/></param>
-        /// <returns>True if found not equal</returns>
+        /// <summary> Check if <paramref name="left"/> is not the namespace described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="INamespaceSymbol"/>.</param>
+        /// <param name="right">The <see cref="NamespaceParts"/>.</param>
+        /// <returns>True if found not equal.</returns>
         public static bool operator !=(INamespaceSymbol left, NamespaceParts right) => !(left == right);
 
         /// <summary>
-        /// Create a new instance from <paramref name="fullName"/>
+        /// Create a new instance from <paramref name="fullName"/>.
         /// </summary>
-        /// <param name="fullName">The namespace name ex: 'System.Collections'</param>
+        /// <param name="fullName">The namespace name ex: 'System.Collections'.</param>
         /// <returns>The created instance.</returns>
         public static NamespaceParts Create(string fullName)
         {
@@ -102,8 +102,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return this.parts[this.parts.Count - 1].GetHashCode();
         }
 
-        /// <summary> Check if this instance describes the namespace <paramref name="nameSyntax"/> </summary>
-        /// <param name="nameSyntax">The <see cref="NameSyntax"/></param>
+        /// <summary> Check if this instance describes the namespace <paramref name="nameSyntax"/>. </summary>
+        /// <param name="nameSyntax">The <see cref="NameSyntax"/>.</param>
         /// <returns>True if found to be the same namespace.</returns>
         internal bool Matches(NameSyntax nameSyntax)
         {

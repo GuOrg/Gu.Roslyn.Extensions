@@ -35,7 +35,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// The result from this call is meant to be used in a using.
         /// </summary>
-        /// <returns>A <see cref="PooledSet{T}"/></returns>
+        /// <returns>A <see cref="PooledSet{T}"/>.</returns>
         public static PooledSet<T> Borrow()
         {
             if (Cache.TryDequeue(out var set))
@@ -69,9 +69,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// <see cref="HashSet{T}.Add"/>
+        /// <see cref="HashSet{T}.Add"/>.
         /// </summary>
-        /// <param name="item">The item</param>
+        /// <param name="item">The item.</param>
         /// <returns>True if the item was added.</returns>
         public bool Add(T item)
         {
@@ -80,9 +80,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// <see cref="HashSet{T}.Remove"/>
+        /// <see cref="HashSet{T}.Remove"/>.
         /// </summary>
-        /// <param name="item">The item</param>
+        /// <param name="item">The item.</param>
         /// <returns>True if the item was removed.</returns>
         public bool Remove(T item)
         {
@@ -91,9 +91,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// <see cref="HashSet{T}.Contains"/>
+        /// <see cref="HashSet{T}.Contains"/>.
         /// </summary>
-        /// <param name="item">The item</param>
+        /// <param name="item">The item.</param>
         /// <returns>True if the item was added.</returns>
         public bool Contains(T item)
         {
@@ -102,26 +102,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// <see cref="HashSet{T}.SetEquals"/>
+        /// <see cref="HashSet{T}.SetEquals"/>.
         /// </summary>
-        /// <param name="items">The item</param>
+        /// <param name="items">The item.</param>
         /// <returns>True if the item was added.</returns>
         public bool SetEquals(IEnumerable<T> items) => this.inner.SetEquals(items);
 
-        /// <summary> <see cref="HashSet{T}.UnionWith"/> </summary>
+        /// <summary> <see cref="HashSet{T}.UnionWith"/>. </summary>
         /// <param name="other">The items to union with.</param>
         public void UnionWith(IEnumerable<T> other) => this.inner.UnionWith(other);
 
-        /// <summary> <see cref="HashSet{T}.IntersectWith"/> </summary>
+        /// <summary> <see cref="HashSet{T}.IntersectWith"/>. </summary>
         /// <param name="other">The items to union with.</param>
         public void IntersectWith(IEnumerable<T> other) => this.inner.IntersectWith(other);
 
-        /// <summary> <see cref="HashSet{T}.ExceptWith"/> </summary>
+        /// <summary> <see cref="HashSet{T}.ExceptWith"/>. </summary>
         /// <param name="other">The items to union with.</param>
         public void ExceptWith(IEnumerable<T> other) => this.inner.ExceptWith(other);
 
         /// <summary>
-        /// <see cref="HashSet{T}.Clear"/>
+        /// <see cref="HashSet{T}.Clear"/>.
         /// </summary>
         public void Clear() => this.inner.Clear();
 

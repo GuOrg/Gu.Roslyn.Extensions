@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for working with <see cref="TypeDeclarationSyntax"/>
+    /// Helper methods for working with <see cref="TypeDeclarationSyntax"/>.
     /// </summary>
     public static class TypeDeclarationSyntaxExt
     {

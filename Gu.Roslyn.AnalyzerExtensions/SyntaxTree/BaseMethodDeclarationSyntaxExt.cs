@@ -5,15 +5,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for working with <see cref="BaseMethodDeclarationSyntax"/>
+    /// Helper methods for working with <see cref="BaseMethodDeclarationSyntax"/>.
     /// </summary>
     public static class BaseMethodDeclarationSyntaxExt
     {
         /// <summary>
         /// Get the <see cref="Accessibility"/> from the modifiers.
         /// </summary>
-        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/></param>
-        /// <returns>The <see cref="Accessibility"/></returns>
+        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
+        /// <returns>The <see cref="Accessibility"/>.</returns>
         public static Accessibility Accessibility(this BaseMethodDeclarationSyntax declaration)
         {
             if (declaration == null)
@@ -60,9 +60,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Find the matching parameter for the argument.
         /// </summary>
-        /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/></param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/></param>
-        /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
+        /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, ArgumentSyntax argument, out ParameterSyntax parameter)
         {
@@ -108,9 +108,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Find the matching parameter for the argument.
         /// </summary>
-        /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/></param>
-        /// <param name="name">The <see cref="ArgumentSyntax"/></param>
-        /// <param name="parameter">The matching <see cref="ParameterSyntax"/></param>
+        /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
+        /// <param name="name">The <see cref="ArgumentSyntax"/>.</param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, string name, out ParameterSyntax parameter)
         {

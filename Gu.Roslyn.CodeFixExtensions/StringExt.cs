@@ -5,7 +5,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Gu.Roslyn.AnalyzerExtensions;
 
     /// <summary>
-    /// Helpers for working with strings
+    /// Helpers for working with strings.
     /// </summary>
     public static class StringExt
     {

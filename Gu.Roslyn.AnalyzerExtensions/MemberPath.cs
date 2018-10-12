@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper fow working with member paths like foo.Bar?.Baz
+    /// Helper fow working with member paths like foo.Bar?.Baz.
     /// </summary>
     public static class MemberPath
     {
@@ -75,9 +75,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         //// ReSharper restore UnusedParameter.Global
 
         /// <summary>
-        /// Tries to find foo in this.foo.Bar.Baz
+        /// Tries to find foo in this.foo.Bar.Baz.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="member">The root member.</param>
         /// <returns>True if root was found.</returns>
         public static bool TryFindRoot(ExpressionSyntax expression, out IdentifierNameSyntax member)
@@ -89,9 +89,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Tries to find Baz in this.foo.Bar.Baz
+        /// Tries to find Baz in this.foo.Bar.Baz.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="member">The leaf member.</param>
         /// <returns>True if leaf was found.</returns>
         public static bool TryFindLast(ExpressionSyntax expression, out IdentifierNameSyntax member)
@@ -103,9 +103,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Tries to the single member in the path
+        /// Tries to the single member in the path.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="member">The single member.</param>
         /// <returns>True if the path was only one member this.foo or foo for example.</returns>
         public static bool TrySingle(ExpressionSyntax expression, out IdentifierNameSyntax member)
@@ -117,9 +117,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Checks that the path is empty, this is true for this. and base. calls
+        /// Checks that the path is empty, this is true for this. and base. calls.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <returns>True if the path is empty, this is true for this. and base. calls.</returns>
         public static bool IsEmpty(ExpressionSyntax expression)
         {
@@ -130,11 +130,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try get the member name of the expression
+        /// Try get the member name of the expression.
         /// </summary>
-        /// <param name="expression">The <see cref="ExpressionSyntax"/></param>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="name">The name.</param>
-        /// <returns>True if a name was found</returns>
+        /// <returns>True if a name was found.</returns>
         public static bool TryGetMemberName(this ExpressionSyntax expression, out string name)
         {
             name = null;
@@ -158,10 +158,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get a <see cref="PathWalker"/> for <paramref name="expression"/>
+        /// Get a <see cref="PathWalker"/> for <paramref name="expression"/>.
         /// </summary>
         /// <param name="expression">The expression.</param>
-        /// <returns>A <see cref="PathWalker"/> for <paramref name="expression"/></returns>
+        /// <returns>A <see cref="PathWalker"/> for <paramref name="expression"/>.</returns>
         public static PathWalker Get(ExpressionSyntax expression) => PathWalker.Borrow(expression);
 
         /// <inheritdoc />
@@ -179,10 +179,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             public IReadOnlyList<IdentifierNameSyntax> IdentifierNames => this.identifierNames;
 
             /// <summary>
-            /// <see cref="PooledWalker{T}.Borrow"/>
+            /// <see cref="PooledWalker{T}.Borrow"/>.
             /// </summary>
             /// <param name="node">The path to walk.</param>
-            /// <returns>A walker</returns>
+            /// <returns>A walker.</returns>
             public static PathWalker Borrow(ExpressionSyntax node)
             {
                 if (node.Parent is ConditionalAccessExpressionSyntax conditionalAccess)

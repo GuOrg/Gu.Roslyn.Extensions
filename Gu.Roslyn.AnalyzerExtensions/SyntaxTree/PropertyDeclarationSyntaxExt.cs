@@ -3,7 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper methods for working with <see cref="PropertyDeclarationSyntax"/>
+    /// Helper methods for working with <see cref="PropertyDeclarationSyntax"/>.
     /// </summary>
     public static class PropertyDeclarationSyntaxExt
     {
@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// 1. Only one return.
         /// 2. The field can be found in the Parent type declaration so inheritance and partial not handled.
         /// </summary>
-        /// <param name="property">The <see cref="PropertyDeclarationSyntax"/></param>
+        /// <param name="property">The <see cref="PropertyDeclarationSyntax"/>.</param>
         /// <param name="backingField">The backing field if found.</param>
         /// <returns>True if a backing field was found.</returns>
         public static bool TryGetBackingField(this PropertyDeclarationSyntax property, out FieldDeclarationSyntax backingField)
@@ -37,7 +37,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the single returned value from the getter.
         /// </summary>
-        /// <param name="property">The <see cref="PropertyDeclarationSyntax"/></param>
+        /// <param name="property">The <see cref="PropertyDeclarationSyntax"/>.</param>
         /// <param name="result">The returned <see cref="ExpressionSyntax"/>.</param>
         /// <returns>True if a single return was found.</returns>
         public static bool TrySingleReturned(this PropertyDeclarationSyntax property, out ExpressionSyntax result)

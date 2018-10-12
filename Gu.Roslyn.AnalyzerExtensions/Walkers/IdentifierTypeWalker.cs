@@ -26,10 +26,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="identifier"/> is a local or a parameter
+        /// Check if <paramref name="identifier"/> is a local or a parameter.
         /// </summary>
-        /// <param name="identifier">The <see cref="IdentifierNameSyntax"/></param>
-        /// <returns>True  if <paramref name="identifier"/> is a local or a parameter</returns>
+        /// <param name="identifier">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <returns>True  if <paramref name="identifier"/> is a local or a parameter.</returns>
         internal static bool IsLocalOrParameter(IdentifierNameSyntax identifier)
         {
             if (identifier == null)

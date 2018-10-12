@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Text;
 
     /// <summary>
-    /// A pooled <see cref="StringBuilder"/>
+    /// A pooled <see cref="StringBuilder"/>.
     /// </summary>
     public static class StringBuilderPool
     {
@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Borrow an instance.
         /// </summary>
-        /// <returns>A <see cref="PooledStringBuilder"/></returns>
+        /// <returns>A <see cref="PooledStringBuilder"/>.</returns>
         public static PooledStringBuilder Borrow()
         {
             if (Cache.TryDequeue(out var item))
@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Wrapping a <see cref="StringBuilder"/>
+        /// Wrapping a <see cref="StringBuilder"/>.
         /// </summary>
         public class PooledStringBuilder
         {
@@ -82,7 +82,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(byte value)
             {
                 this.inner.Append(value);
@@ -93,7 +93,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The Unicode character to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(char value)
             {
                 this.inner.Append(value);
@@ -107,7 +107,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <exception cref="T:System.ArgumentOutOfRangeException">
             /// <paramref name="repeatCount" /> is less than zero.-or- Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
             /// <exception cref="T:System.OutOfMemoryException">Out of memory.</exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(char value, int repeatCount)
             {
                 this.inner.Append(value, repeatCount);
@@ -118,7 +118,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The array of characters to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(char[] value)
             {
                 this.inner.Append(value);
@@ -134,7 +134,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <paramref name="value" /> is null, and <paramref name="startIndex" /> and <paramref name="charCount" /> are not zero. </exception>
             /// <exception cref="T:System.ArgumentOutOfRangeException">
             /// <paramref name="charCount" /> is less than zero.-or- <paramref name="startIndex" /> is less than zero.-or- <paramref name="startIndex" /> + <paramref name="charCount" /> is greater than the length of <paramref name="value" />.-or- Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(char[] value, int startIndex, int charCount)
             {
                 this.inner.Append(value, startIndex, charCount);
@@ -145,7 +145,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(decimal value)
             {
                 this.inner.Append(value);
@@ -156,7 +156,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(double value)
             {
                 this.inner.Append(value);
@@ -167,7 +167,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(short value)
             {
                 this.inner.Append(value);
@@ -178,7 +178,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(int value)
             {
                 this.inner.Append(value);
@@ -189,7 +189,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(long value)
             {
                 this.inner.Append(value);
@@ -200,7 +200,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The object to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(object value)
             {
                 this.inner.Append(value);
@@ -211,7 +211,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(sbyte value)
             {
                 this.inner.Append(value);
@@ -222,7 +222,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(float value)
             {
                 this.inner.Append(value);
@@ -233,7 +233,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The string to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(string value)
             {
                 this.inner.Append(value);
@@ -249,7 +249,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <paramref name="value" /> is null, and <paramref name="startIndex" /> and <paramref name="count" /> are not zero. </exception>
             /// <exception cref="T:System.ArgumentOutOfRangeException">
             /// <paramref name="count" /> less than zero.-or- <paramref name="startIndex" /> less than zero.-or- <paramref name="startIndex" /> + <paramref name="count" /> is greater than the length of <paramref name="value" />.-or- Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(string value, int startIndex, int count)
             {
                 this.inner.Append(value, startIndex, count);
@@ -260,7 +260,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(ushort value)
             {
                 this.inner.Append(value);
@@ -271,7 +271,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(uint value)
             {
                 this.inner.Append(value);
@@ -282,7 +282,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance after the append operation has completed.</returns>
             /// <param name="value">The value to append. </param>
             /// <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Append(ulong value)
             {
                 this.inner.Append(value);
@@ -350,7 +350,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <exception cref="T:System.FormatException">
             /// <paramref name="format" /> is invalid. -or-The index of a format item is less than 0 (zero), or greater than or equal to the length of the <paramref name="args" /> array.</exception>
             /// <exception cref="T:System.ArgumentOutOfRangeException">The length of the expanded string would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>2</filterpriority>
+            /// <filterpriority>2.</filterpriority>
             public PooledStringBuilder AppendFormat(IFormatProvider provider, string format, params object[] args)
             {
                 this.inner.AppendFormat(provider, format, args);
@@ -366,7 +366,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <exception cref="T:System.FormatException">
             /// <paramref name="format" /> is invalid. -or-The index of a format item is less than 0 (zero), or greater than or equal to 1.</exception>
             /// <exception cref="T:System.ArgumentOutOfRangeException">The length of the expanded string would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>2</filterpriority>
+            /// <filterpriority>2.</filterpriority>
             public PooledStringBuilder AppendFormat(string format, object arg0)
             {
                 this.inner.AppendFormat(format, arg0);
@@ -383,7 +383,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <exception cref="T:System.FormatException">
             /// <paramref name="format" /> is invalid.-or-The index of a format item is less than 0 (zero), or greater than or equal to 2. </exception>
             /// <exception cref="T:System.ArgumentOutOfRangeException">The length of the expanded string would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>2</filterpriority>
+            /// <filterpriority>2.</filterpriority>
             public PooledStringBuilder AppendFormat(string format, object arg0, object arg1)
             {
                 this.inner.AppendFormat(format, arg0, arg1);
@@ -401,7 +401,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <exception cref="T:System.FormatException">
             /// <paramref name="format" /> is invalid.-or-The index of a format item is less than 0 (zero), or greater than or equal to 3.</exception>
             /// <exception cref="T:System.ArgumentOutOfRangeException">The length of the expanded string would exceed <see cref="P:System.Text.StringBuilder.MaxCapacity" />. </exception>
-            /// <filterpriority>2</filterpriority>
+            /// <filterpriority>2.</filterpriority>
             public PooledStringBuilder AppendFormat(string format, object arg0, object arg1, object arg2)
             {
                 this.inner.AppendFormat(format, arg0, arg1, arg2);
@@ -723,7 +723,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A reference to this instance with <paramref name="oldChar" /> replaced by <paramref name="newChar" />.</returns>
             /// <param name="oldChar">The character to replace. </param>
             /// <param name="newChar">The character that replaces <paramref name="oldChar" />. </param>
-            /// <filterpriority>1</filterpriority>
+            /// <filterpriority>1.</filterpriority>
             public PooledStringBuilder Replace(char oldChar, char newChar)
             {
                 this.inner.Replace(oldChar, newChar);

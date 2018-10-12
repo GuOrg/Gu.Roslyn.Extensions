@@ -41,22 +41,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public IReadOnlyList<ArgumentSyntax> RefOrOutArguments => this.refOrOutArguments;
 
         /// <summary>
-        /// Get a walker that has visited <paramref name="node"/>
+        /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
-        /// <param name="node">The scope</param>
+        /// <param name="node">The scope.</param>
         /// <param name="scope">The scope to walk.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker that has visited <paramref name="node"/></returns>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker that has visited <paramref name="node"/>.</returns>
         public static MutationWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken) => BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new MutationWalker());
 
         /// <summary>
-        /// Get a walker with all mutations for <paramref name="fieldOrProperty"/>
+        /// Get a walker with all mutations for <paramref name="fieldOrProperty"/>.
         /// </summary>
-        /// <param name="fieldOrProperty">The <see cref="FieldOrProperty"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker with all mutations for <paramref name="fieldOrProperty"/></returns>
+        /// <param name="fieldOrProperty">The <see cref="FieldOrProperty"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker with all mutations for <paramref name="fieldOrProperty"/>.</returns>
         public static MutationWalker For(FieldOrProperty fieldOrProperty, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (fieldOrProperty.Symbol.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
@@ -79,12 +79,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get a walker with all mutations for <paramref name="property"/>
+        /// Get a walker with all mutations for <paramref name="property"/>.
         /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker with all mutations for <paramref name="property"/></returns>
+        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker with all mutations for <paramref name="property"/>.</returns>
         public static MutationWalker For(IPropertySymbol property, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (FieldOrProperty.TryCreate(property, out var fieldOrProperty))
@@ -96,12 +96,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get a walker with all mutations for <paramref name="field"/>
+        /// Get a walker with all mutations for <paramref name="field"/>.
         /// </summary>
-        /// <param name="field">The <see cref="IFieldSymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker with all mutations for <paramref name="field"/></returns>
+        /// <param name="field">The <see cref="IFieldSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker with all mutations for <paramref name="field"/>.</returns>
         public static MutationWalker For(IFieldSymbol field, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (FieldOrProperty.TryCreate(field, out var fieldOrProperty))
@@ -113,12 +113,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get a walker with all mutations for <paramref name="localOrParameter"/>
+        /// Get a walker with all mutations for <paramref name="localOrParameter"/>.
         /// </summary>
-        /// <param name="localOrParameter">The <see cref="LocalOrParameter"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker with all mutations for <paramref name="localOrParameter"/></returns>
+        /// <param name="localOrParameter">The <see cref="LocalOrParameter"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker with all mutations for <paramref name="localOrParameter"/>.</returns>
         public static MutationWalker For(LocalOrParameter localOrParameter, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (localOrParameter.TryGetScope(cancellationToken, out var node))
@@ -141,12 +141,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get a walker with all mutations for <paramref name="local"/>
+        /// Get a walker with all mutations for <paramref name="local"/>.
         /// </summary>
-        /// <param name="local">The <see cref="ILocalSymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker with all mutations for <paramref name="local"/></returns>
+        /// <param name="local">The <see cref="ILocalSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker with all mutations for <paramref name="local"/>.</returns>
         public static MutationWalker For(ILocalSymbol local, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (LocalOrParameter.TryCreate(local, out var localOrParameter))
@@ -158,12 +158,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get a walker with all mutations for <paramref name="parameter"/>
+        /// Get a walker with all mutations for <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker with all mutations for <paramref name="parameter"/></returns>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker with all mutations for <paramref name="parameter"/>.</returns>
         public static MutationWalker For(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (LocalOrParameter.TryCreate(parameter, out var localOrParameter))
@@ -175,12 +175,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Get a walker with all mutations for <paramref name="symbol"/>
+        /// Get a walker with all mutations for <paramref name="symbol"/>.
         /// </summary>
-        /// <param name="symbol">The <see cref="ISymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <returns>A walker with all mutations for <paramref name="symbol"/></returns>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker with all mutations for <paramref name="symbol"/>.</returns>
         public static MutationWalker For(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (LocalOrParameter.TryCreate(symbol, out var localOrParameter))
@@ -287,7 +287,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get all mutations found in the scope.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{SyntaxNode}"/></returns>
+        /// <returns>An <see cref="IEnumerable{SyntaxNode}"/>.</returns>
         public IEnumerable<SyntaxNode> All()
         {
             foreach (var assignment in this.assignments)

@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
 
     /// <summary>
-    /// Get all <see cref="SyntaxToken"/> in the scope
+    /// Get all <see cref="SyntaxToken"/> in the scope.
     /// </summary>
     public sealed class IdentifierTokenWalker : PooledWalker<IdentifierTokenWalker>
     {
@@ -22,10 +22,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public IReadOnlyList<SyntaxToken> IdentifierTokens => this.identifierTokens;
 
         /// <summary>
-        /// Get a walker that has visited <paramref name="node"/>
+        /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
-        /// <param name="node">The scope</param>
-        /// <returns>A walker that has visited <paramref name="node"/></returns>
+        /// <param name="node">The scope.</param>
+        /// <returns>A walker that has visited <paramref name="node"/>.</returns>
         public static IdentifierTokenWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new IdentifierTokenWalker());
 
         /// <inheritdoc />
@@ -40,11 +40,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try find an <see cref="SyntaxToken"/> by name
+        /// Try find an <see cref="SyntaxToken"/> by name.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="identifierToken">The <see cref="SyntaxToken"/></param>
-        /// <returns>True if a match was found</returns>
+        /// <param name="identifierToken">The <see cref="SyntaxToken"/>.</param>
+        /// <returns>True if a match was found.</returns>
         public bool TryFind(string name, out SyntaxToken identifierToken)
         {
             foreach (var candidate in this.IdentifierTokens)

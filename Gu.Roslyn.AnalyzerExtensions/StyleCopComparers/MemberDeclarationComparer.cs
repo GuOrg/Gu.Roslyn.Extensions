@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// For comparing order according to StyleCop
+    /// For comparing order according to StyleCop.
     /// </summary>
     public sealed class MemberDeclarationComparer
     {
@@ -30,7 +30,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         }
 
         /// <summary>
-        /// Compare const &lt; static &lt; member
+        /// Compare const &lt; static &lt; member.
         /// </summary>
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>
@@ -56,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         }
 
         /// <summary>
-        /// Compare public &lt; internal &lt; protected
+        /// Compare public &lt; internal &lt; protected.
         /// </summary>
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>
@@ -70,7 +70,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         }
 
         /// <summary>
-        /// Compare public &lt; internal &lt; protected
+        /// Compare public &lt; internal &lt; protected.
         /// </summary>
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>

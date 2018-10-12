@@ -4,7 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <summary>
-    /// Helpers for finding members of <see cref="ITypeSymbol"/>
+    /// Helpers for finding members of <see cref="ITypeSymbol"/>.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public static partial class ITypeSymbolExt

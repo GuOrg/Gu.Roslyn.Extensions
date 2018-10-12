@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Linq;
 
     /// <summary>
-    /// Debug view for <see cref="PooledSet{T}"/>
+    /// Debug view for <see cref="PooledSet{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of items in the set.</typeparam>
     internal class PooledSetDebugView<T>

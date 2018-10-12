@@ -10,8 +10,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="QualifiedMethod"/> class.
         /// </summary>
-        /// <param name="containingType">The containing type</param>
-        /// <param name="name">The name</param>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="name">The name.</param>
         public QualifiedMethod(QualifiedType containingType, string name)
             : base(containingType, name)
         {

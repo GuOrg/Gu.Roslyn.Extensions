@@ -34,9 +34,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Returns a walker that have visited <paramref name="node"/>
+        /// Returns a walker that have visited <paramref name="node"/>.
         /// </summary>
-        /// <param name="node">The <see cref="SyntaxNode"/></param>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="create">The factory for creating a walker if not found in cache.</param>
         /// <returns>The walker that have visited <paramref name="node"/>.</returns>
         protected static T BorrowAndVisit(SyntaxNode node, Func<T> create)

@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// <see cref="PooledWalker{T}.Borrow"/>
+        /// <see cref="PooledWalker{T}.Borrow"/>.
         /// </summary>
         /// <param name="scope">The scope to check.</param>
         /// <returns>A walker.</returns>
@@ -70,12 +70,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try get the first null check for <paramref name="parameter"/>
+        /// Try get the first null check for <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
-        /// <param name="check">The null check</param>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="check">The null check.</param>
         /// <returns>True if a null check was found.</returns>
         public bool TryGetFirst(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax check)
         {
@@ -112,11 +112,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Filter null checks to be for <paramref name="parameter"/>
+        /// Filter null checks to be for <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/></param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/></param>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         internal void Filter(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             for (var i = this.binaryExpressions.Count - 1; i >= 0; i--)

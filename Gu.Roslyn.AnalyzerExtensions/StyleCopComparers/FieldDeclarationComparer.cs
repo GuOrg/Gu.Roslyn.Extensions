@@ -139,7 +139,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             /// <summary>
             /// Try get single setter assigning the field.
             /// </summary>
-            /// <param name="field">The <see cref="FieldDeclarationSyntax"/></param>
+            /// <param name="field">The <see cref="FieldDeclarationSyntax"/>.</param>
             /// <param name="setter">The single setter accessor assigning the field.</param>
             /// <returns>True if a single setter was found.</returns>
             internal static bool TryGetSetter(FieldDeclarationSyntax field, out AccessorDeclarationSyntax setter)

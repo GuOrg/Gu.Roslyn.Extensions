@@ -4,7 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
 
     /// <summary>
-    /// For comparison with <see cref="Microsoft.CodeAnalysis.IParameterSymbol"/>
+    /// For comparison with <see cref="Microsoft.CodeAnalysis.IParameterSymbol"/>.
     /// </summary>
     public struct QualifiedParameter : IEquatable<QualifiedParameter>
     {
@@ -29,10 +29,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public QualifiedType Type { get; }
 
-        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="IParameterSymbol"/></param>
-        /// <param name="right">The <see cref="QualifiedParameter"/></param>
-        /// <returns>True if found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="right">The <see cref="QualifiedParameter"/>.</param>
+        /// <returns>True if found equal.</returns>
         public static bool operator ==(IParameterSymbol left, QualifiedParameter right)
         {
             if (left == null)
@@ -55,10 +55,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return true;
         }
 
-        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/> </summary>
-        /// <param name="left">The <see cref="IParameterSymbol"/></param>
-        /// <param name="right">The <see cref="QualifiedParameter"/></param>
-        /// <returns>True if not found equal</returns>
+        /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
+        /// <param name="left">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="right">The <see cref="QualifiedParameter"/>.</param>
+        /// <returns>True if not found equal.</returns>
         public static bool operator !=(IParameterSymbol left, QualifiedParameter right)
         {
             return !(left == right);

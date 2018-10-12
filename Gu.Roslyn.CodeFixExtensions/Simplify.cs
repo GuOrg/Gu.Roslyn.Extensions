@@ -11,10 +11,10 @@ namespace Gu.Roslyn.CodeFixExtensions
     public static class Simplify
     {
         /// <summary>
-        /// Walks the node and adds Simplifier.Annotation to all <see cref="QualifiedNameSyntax"/>
+        /// Walks the node and adds Simplifier.Annotation to all <see cref="QualifiedNameSyntax"/>.
         /// </summary>
         /// <typeparam name="T">The type of the node.</typeparam>
-        /// <param name="node">The node</param>
+        /// <param name="node">The node.</param>
         /// <returns>The node with simplifier annotations.</returns>
         public static T WithSimplifiedNames<T>(this T node)
             where T : SyntaxNode
