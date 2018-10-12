@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 
     internal partial class SyntaxNodeExtTests
     {
-        internal class IsBeforeInScope
+        internal class IsExecutedBefore
         {
             [TestCase("var temp = 1;", "temp = 2;",     true)]
             [TestCase("temp = 2;",     "var temp = 1;", false)]
@@ -98,7 +98,7 @@ namespace RoslynSandbox
             [TestCase("temp = 3;",     "var temp = 1;", false)]
             [TestCase("temp = 3;",     "temp = 2;",     false)]
             [TestCase("temp = 2;",     "temp = 3;",     false)]
-            public void InsideIfBlockNoCurlies(string firstStatement, string otherStatement, bool expected)
+            public void InsideIfSingleStatement(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -154,14 +154,16 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("var temp = 1;", "temp = 4;", true)]
+            [TestCase("var temp = 1;", "temp = 6;", true)]
             [TestCase("var temp = 1;", "temp = 2;", true)]
-            [TestCase("temp = 2;",     "temp = 4;", false)]
-            [TestCase("var temp = 1;", "temp = 3;", true)]
-            [TestCase("temp = 3;",     "temp = 4;", false)]
-            [TestCase("temp = 4;",     "temp = 2;", false)]
-            [TestCase("temp = 4;",     "temp = 3;", false)]
-            public void AfterIfReturnBlock(string firstStatement, string otherStatement, bool expected)
+            [TestCase("temp = 2;",     "temp = 3;", true)]
+            [TestCase("temp = 2;",     "temp = 6;", false)]
+            [TestCase("var temp = 1;", "temp = 5;", true)]
+            [TestCase("temp = 5;",     "temp = 6;", false)]
+            [TestCase("temp = 6;",     "temp = 2;", false)]
+            [TestCase("temp = 4;",     "temp = 5;", true)]
+            [TestCase("temp = 6;",     "temp = 5;", false)]
+            public void IfReturnBlock(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -174,15 +176,17 @@ namespace RoslynSandbox
             if (condition)
             {
                 temp = 2;
+                temp = 3;
                 return;
             }
             else
             {
-                temp = 3;
+                temp = 4;
+                temp = 5;
                 return;
             }
 
-            temp = 4;
+            temp = 6;
         }
     }
 }");
@@ -198,7 +202,7 @@ namespace RoslynSandbox
             [TestCase("temp = 3;",     "temp = 4;", null)]
             [TestCase("temp = 4;",     "temp = 2;", null)]
             [TestCase("temp = 4;",     "temp = 3;", null)]
-            public void AfterIfReturnBlockWhenGoto(string firstStatement, string otherStatement, bool? expected)
+            public void IfReturnBlockWhenGoto(string firstStatement, string otherStatement, bool? expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -238,7 +242,7 @@ namespace RoslynSandbox
             [TestCase("temp = 3;",     "temp = 4;", false)]
             [TestCase("temp = 4;",     "temp = 2;", false)]
             [TestCase("temp = 4;",     "temp = 3;", false)]
-            public void AfterIfThrowBlock(string firstStatement, string otherStatement, bool expected)
+            public void IfThrowBlock(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -277,7 +281,7 @@ namespace RoslynSandbox
             [TestCase("temp = 3;",     "temp = 4;", null)]
             [TestCase("temp = 4;",     "temp = 2;", null)]
             [TestCase("temp = 4;",     "temp = 3;", null)]
-            public void AfterIfThrowBlockWhenGoto(string firstStatement, string otherStatement, bool? expected)
+            public void IfThrowBlockWhenGoto(string firstStatement, string otherStatement, bool? expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox

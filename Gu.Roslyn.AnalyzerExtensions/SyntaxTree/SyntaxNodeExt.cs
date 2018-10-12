@@ -184,6 +184,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 if (otherBlock != null &&
                     block != null &&
+                    !ReferenceEquals(block, otherBlock) &&
                     otherBlock.Contains(block) &&
                     block.Statements.TryLast(out var last) &&
                     (last is ReturnStatementSyntax || last is ThrowStatementSyntax))
