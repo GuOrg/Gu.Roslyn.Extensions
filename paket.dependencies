@@ -15,6 +15,7 @@ group Analyzers
 group Test
   storage: none
   source http://www.nuget.org/api/v2/
-  nuget Microsoft.CodeAnalysis.CSharp.Workspaces ~> 2
-  nuget Gu.Roslyn.Asserts ~> 2
+  nuget Microsoft.CodeAnalysis.CSharp.Workspaces
+  nuget System.Runtime.CompilerServices.Unsafe 4.5.1
+  nuget Gu.Roslyn.Asserts
   nuget NUnit
