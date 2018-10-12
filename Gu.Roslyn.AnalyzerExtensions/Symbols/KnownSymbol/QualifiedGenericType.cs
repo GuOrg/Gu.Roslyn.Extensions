@@ -40,7 +40,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public ImmutableArray<QualifiedType> TypeArguments { get; }
 
         /// <inheritdoc />
-        public override INamedTypeSymbol GetTypeSymbol(Compilation compilation)
+        public override ITypeSymbol GetTypeSymbol(Compilation compilation)
         {
             return compilation.GetTypeByMetadataName(this.metaDataName).Construct(this.TypeArguments.Select(x => x.GetTypeSymbol(compilation)).ToArray());
         }

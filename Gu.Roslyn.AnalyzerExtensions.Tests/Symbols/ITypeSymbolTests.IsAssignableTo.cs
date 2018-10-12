@@ -11,13 +11,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     {
         public class IsAssignableTo
         {
-            [TestCase("int value1, int value2", true)]
-            [TestCase("int value1, int? value2", true)]
-            [TestCase("int value1, double value2", true)]
-            [TestCase("int value1, System.IComparable value2", true)]
-            [TestCase("int value1, System.IComparable<int> value2", true)]
-            [TestCase("int value1, object value2", true)]
-            [TestCase("System.Collections.Generic.IEnumerable<int> value1, System.Collections.IEnumerable value2", true)]
+            [TestCase("int value1, int value2",                                                                                 true)]
+            [TestCase("int value1, int? value2",                                                                                true)]
+            [TestCase("int value1, double value2",                                                                              true)]
+            [TestCase("int value1, System.IComparable value2",                                                                  true)]
+            [TestCase("int value1, System.IComparable<int> value2",                                                             true)]
+            [TestCase("int value1, object value2",                                                                              true)]
+            [TestCase("System.Collections.Generic.IEnumerable<int> value1, System.Collections.IEnumerable value2",              true)]
             [TestCase("System.Collections.Generic.IEnumerable<int> value1, System.Collections.Generic.IEnumerable<int> value2", true)]
             public void TypeSymbols(string parameters, bool expected)
             {
@@ -41,12 +41,13 @@ namespace RoslynSandbox
                 Assert.AreEqual(true, type1.IsAssignableTo(type2, compilation));
             }
 
-            [TestCase("int", typeof(int))]
-            [TestCase("int", typeof(int?))]
-            [TestCase("int", typeof(double))]
-            [TestCase("int", typeof(IComparable))]
-            [TestCase("int", typeof(IComparable<int>))]
-            [TestCase("int", typeof(object))]
+            [TestCase("int",                                         typeof(int))]
+            [TestCase("int",                                         typeof(int?))]
+            [TestCase("int",                                         typeof(double))]
+            [TestCase("int",                                         typeof(IComparable))]
+            [TestCase("int",                                         typeof(IComparable<int>))]
+            [TestCase("int",                                         typeof(object))]
+            [TestCase("int[]",                                       typeof(int[]))]
             [TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.IEnumerable))]
             [TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.Generic.IEnumerable<int>))]
             public void QualifiedTypeFromType(string typeString, Type destination)
@@ -68,8 +69,8 @@ namespace RoslynSandbox
                 Assert.AreEqual(true, source.IsAssignableTo(qualifiedType, compilation));
             }
 
-            [TestCase("int value", "System.Int32")]
-            [TestCase("int value", "System.IComparable")]
+            [TestCase("int value",                                         "System.Int32")]
+            [TestCase("int value",                                         "System.IComparable")]
             [TestCase("System.Collections.Generic.IEnumerable<int> value", "System.Collections.IEnumerable")]
             public void WhenTrueIsAssignableToQualifiedType(string parameters, string typeName)
             {
@@ -85,7 +86,8 @@ namespace RoslynSandbox
 }";
                 code = code.AssertReplace("int value", parameters);
                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var compilation =
+                    CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
                 var type = ctor.Parameters[0].Type;
@@ -108,12 +110,13 @@ namespace RoslynSandbox
     }
 }";
                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var compilation =
+                    CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var a = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("A"));
                 var b = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("B"));
                 Assert.AreEqual(false, a.IsAssignableTo(b, compilation));
-                Assert.AreEqual(true, b.IsAssignableTo(a, compilation));
+                Assert.AreEqual(true,  b.IsAssignableTo(a, compilation));
             }
 
             [Test]
@@ -131,15 +134,16 @@ namespace RoslynSandbox
     }
 }";
                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var compilation =
+                    CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var a = semanticModel.GetTypeInfo(syntaxTree.Find<BaseTypeSyntax>("A<int>").Type).Type;
                 var b = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("B"));
                 Assert.AreEqual(false, a.IsAssignableTo(b, compilation));
-                Assert.AreEqual(true, b.IsAssignableTo(a, compilation));
+                Assert.AreEqual(true,  b.IsAssignableTo(a, compilation));
             }
 
-            [TestCase("int value", false)]
+            [TestCase("int value",                         false)]
             [TestCase("System.Threading.Tasks.Task value", true)]
             public void IsAwaitable(string parameter, bool expected)
             {
@@ -155,7 +159,8 @@ namespace RoslynSandbox
 }";
                 code = code.AssertReplace("int value", parameter);
                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var compilation =
+                    CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
                 var type = ctor.Parameters[0].Type;

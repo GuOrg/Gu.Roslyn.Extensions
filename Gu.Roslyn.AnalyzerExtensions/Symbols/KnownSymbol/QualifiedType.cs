@@ -126,6 +126,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A <see cref="QualifiedType"/></returns>
         public static QualifiedType FromType(Type type)
         {
+            if (type.IsArray)
+            {
+                return new QualifiedArrayType(FromType(type.GetElementType()));
+            }
+
             if (type.IsConstructedGenericType)
             {
                 return new QualifiedGenericType(type.FullName, type.GenericTypeArguments.Select(FromType).ToImmutableArray());
@@ -141,7 +146,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="compilation">The <see cref="Compilation"/></param>
         /// <returns>The <see cref="INamedTypeSymbol"/></returns>
-        public virtual INamedTypeSymbol GetTypeSymbol(Compilation compilation) => compilation.GetTypeByMetadataName(this.FullName);
+        public virtual ITypeSymbol GetTypeSymbol(Compilation compilation) => compilation.GetTypeByMetadataName(this.FullName);
 
         /// <inheritdoc />
         public override bool Equals(object obj)
@@ -212,6 +217,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 case PredefinedTypeSyntax predefinedType:
                     return predefinedType.Keyword.ValueText == this.Alias;
+                case ArrayTypeSyntax array:
+                    return this is QualifiedArrayType arrayType &&
+                           arrayType.ElementType.Equals(array.ElementType);
                 case NullableTypeSyntax nullable:
                     return this is QualifiedGenericType qualifiedGenericType &&
                            qualifiedGenericType.TypeArguments.TrySingle(out var typeArg) &&

@@ -36,12 +36,13 @@ namespace RoslynSandbox
             Assert.AreEqual(false, typeSymbol.IsSameType(QualifiedType.System.String, compilation));
         }
 
-        [TestCase(typeof(object),           "Object",           "String")]
-        [TestCase(typeof(object),           "System.Object",    "System.String")]
-        [TestCase(typeof(object),           "object",           "string")]
-        [TestCase(typeof(int?),             "int?",             "string")]
-        [TestCase(typeof(int?),             "int?",             "double?")]
-        [TestCase(typeof(IComparable<int>), "IComparable<int>", "string")]
+        [TestCase(typeof(object),           "Object",                  "String")]
+        [TestCase(typeof(object),           "System.Object",           "System.String")]
+        [TestCase(typeof(object),           "object",                  "string")]
+        [TestCase(typeof(int?),             "int?",                    "string")]
+        [TestCase(typeof(int?),             "int?",                    "double?")]
+        [TestCase(typeof(int[]),            "int[]",                   "double")]
+        [TestCase(typeof(IComparable<int>), "IComparable<int>",        "string")]
         [TestCase(typeof(IComparable<int>), "System.IComparable<int>", "string")]
         public void TypeSyntaxEquality(Type type, string typeText, string otherTypeText)
         {
