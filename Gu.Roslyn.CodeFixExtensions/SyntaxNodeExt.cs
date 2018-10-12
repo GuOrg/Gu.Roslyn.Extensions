@@ -18,8 +18,20 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static bool TryFindNode<T>(this SyntaxNode syntaxRoot, Diagnostic diagnostic, out T node)
             where T : SyntaxNode
         {
-            node = syntaxRoot.FindNode(diagnostic.Location.SourceSpan) as T;
-            return node != null;
+            var candidate = syntaxRoot.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true);
+            while (candidate.Span == diagnostic.Location.SourceSpan)
+            {
+                if (candidate is T match)
+                {
+                    node = match;
+                    return true;
+                }
+
+                candidate = candidate.Parent;
+            }
+
+            node = null;
+            return false;
         }
 
         /// <summary>
