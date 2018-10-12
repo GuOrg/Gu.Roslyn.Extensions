@@ -39,7 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal</returns>
         public static bool operator ==(T left, QualifiedMember<T> right)
         {
-           return right.Equals(left) == true;
+           return right?.Equals(left) == true;
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/> </summary>

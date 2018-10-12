@@ -1,3 +1,5 @@
+// ReSharper disable AssignNullToNotNullAttribute
+// ReSharper disable CoVariantArrayConversion
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
 {
     using System;

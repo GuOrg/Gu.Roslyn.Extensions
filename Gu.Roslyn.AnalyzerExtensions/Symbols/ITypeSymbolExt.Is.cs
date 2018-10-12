@@ -174,6 +174,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The <see cref="ITypeSymbol"/></param>
         /// <param name="destination">The other <see cref="ITypeSymbol"/></param>
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/> </returns>
+        [Obsolete("Use IsAssignableTo or conversion.")]
         public static bool Is(this ITypeSymbol source, ITypeSymbol destination)
         {
             if (source == null || destination == null)
