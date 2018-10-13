@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using Microsoft.CodeAnalysis;
@@ -148,6 +149,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
             identifierName = null;
             return false;
         }
+
+        /// <summary>
+        /// Filters by <paramref name="match"/>.
+        /// </summary>
+        /// <param name="match">The predicate for finding items to remove.</param>
+        public void RemoveAll(Predicate<IdentifierNameSyntax> match) => this.identifierNames.RemoveAll(match);
 
         /// <inheritdoc />
         protected override void Clear()
