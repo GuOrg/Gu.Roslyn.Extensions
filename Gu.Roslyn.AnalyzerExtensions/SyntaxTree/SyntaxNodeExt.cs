@@ -133,7 +133,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     if (ReferenceEquals(nodeLambda, otherLambda))
                     {
-                        return IsBeforeInScopeCore();
+                        return IsExecutedBefore();
                     }
 
                     return null;
@@ -151,9 +151,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return null;
             }
 
-            return IsBeforeInScopeCore();
+            return IsExecutedBefore();
 
-            bool? IsBeforeInScopeCore()
+            bool? IsExecutedBefore()
             {
                 if (node.Contains(other) &&
                     node.SpanStart < other.SpanStart)

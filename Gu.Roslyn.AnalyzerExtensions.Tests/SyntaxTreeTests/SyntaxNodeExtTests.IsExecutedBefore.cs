@@ -14,12 +14,91 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             public void SameBlock(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-internal class Foo
+namespace RoslynSandbox
 {
-    internal Foo()
+    internal class Foo
     {
-        var temp = 1;
-        temp = 2;
+        internal Foo()
+        {
+            var temp = 1;
+            temp = 2;
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("var temp = 1;", "temp = 2;",     true)]
+            [TestCase("temp = 2;",     "var temp = 1;", false)]
+            [TestCase("temp = 1;",     "var temp = 1;", false)]
+            public void DeclaredInWhileLoop(string firstStatement, string otherStatement, bool expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo()
+        {
+            while (true)
+            {
+                var temp = 1;
+                temp = 2;
+            }
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("var temp = 1;", "temp = 2;",     true)]
+            [TestCase("temp = 2;",     "var temp = 1;", false)]
+            [TestCase("temp = 1;",     "var temp = 1;", false)]
+            public void DeclaredInForeachLoop(string firstStatement, string otherStatement, bool expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo(int[] ints)
+        {
+            foreach (var i in ints)
+            {
+                var temp = 1;
+                temp = 2;
+            }
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("var temp = 1;", "temp = 2;",     true)]
+            [TestCase("temp = 2;",     "var temp = 1;", false)]
+            [TestCase("temp = 1;",     "var temp = 1;", false)]
+            public void DeclaredInForLoop(string firstStatement, string otherStatement, bool expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo(int[] ints)
+        {
+            for (var index = 0; index < ints.Length; index++)
+            {
+                var i = ints[index];
+                var temp = 1;
+                temp = 2;
+            }
+        }
     }
 }");
                 var first = syntaxTree.FindStatement(firstStatement);
