@@ -1,7 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -15,17 +13,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="statement">The <see cref="StatementSyntax"/>.</param>
         /// <param name="other">The other <see cref="StatementSyntax"/>.</param>
         /// <returns>Null if the execution order could not be figured out.</returns>
-        public static bool? IsExecutedBefore(this StatementSyntax statement, StatementSyntax other)
+        public static ExecutedBefore IsExecutedBefore(this StatementSyntax statement, StatementSyntax other)
         {
             if (statement == null ||
                 other == null)
             {
-                return false;
+                return ExecutedBefore.Unknown;
             }
 
             if ((statement.Parent as BlockSyntax)?.ContainsGoto() == true)
             {
-                return null;
+                return ExecutedBefore.Maybe;
             }
 
             if (statement.TryFindSharedAncestorRecursive(other, out DoStatementSyntax _) ||
@@ -33,69 +31,75 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 statement.TryFindSharedAncestorRecursive(other, out ForEachStatementSyntax _) ||
                 statement.TryFindSharedAncestorRecursive(other, out WhileStatementSyntax _))
             {
-                return null;
+                return ExecutedBefore.Maybe;
             }
 
             if (ReferenceEquals(statement, other))
             {
-                return false;
+                return ExecutedBefore.No;
             }
 
             if (ReferenceEquals(statement.Parent, other.Parent))
             {
-                return statement.SpanStart < other.SpanStart;
+                return statement.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
             }
 
             if (!statement.SharesAncestor<MemberDeclarationSyntax>(other, out _))
             {
-                return null;
+                return ExecutedBefore.Unknown;
             }
 
             if (statement.IsInParentBlock(other))
             {
                 if (statement.SpanStart < other.SpanStart)
                 {
-                    return true;
+                    return ExecutedBefore.Yes;
                 }
 
                 if (other.TryFirstAncestor(out AnonymousFunctionExpressionSyntax _))
                 {
-                    return null;
+                    return ExecutedBefore.Maybe;
                 }
 
-                return false;
+                return ExecutedBefore.No;
             }
 
             if (other.IsInParentBlock(statement))
             {
                 if (statement.SpanStart > other.SpanStart)
                 {
-                    return false;
+                    return ExecutedBefore.No;
                 }
 
                 if (statement.TryFirstAncestor(out AnonymousFunctionExpressionSyntax _))
                 {
-                    return null;
+                    return ExecutedBefore.Maybe;
                 }
 
                 if (statement.Parent is BlockSyntax block &&
                     (block.Statements.TryFirstOfType(out ReturnStatementSyntax _) ||
                      block.Statements.TryFirstOfType(out ThrowStatementSyntax _)))
                 {
-                    return false;
+                    return ExecutedBefore.No;
                 }
 
-                return statement.SpanStart < other.SpanStart;
+                return statement.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
             }
 
             if (statement.TryFindSharedAncestorRecursive(other, out IfStatementSyntax ifStatement) &&
                 ((ifStatement.Statement?.Contains(statement) == true && ifStatement.Else?.Statement?.Contains(other) == true) ||
                  (ifStatement.Statement?.Contains(other) == true && ifStatement.Else?.Statement?.Contains(statement) == true)))
             {
-                return false;
+                return ExecutedBefore.No;
             }
 
-            return null;
+            if (statement.TryFirstAncestor(out AnonymousFunctionExpressionSyntax _) &&
+                other.TryFirstAncestor(out AnonymousFunctionExpressionSyntax _))
+            {
+                return ExecutedBefore.Maybe;
+            }
+
+            return ExecutedBefore.Unknown;
         }
 
         /// <summary>

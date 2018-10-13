@@ -101,12 +101,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The first node.</param>
         /// <param name="other">The second node.</param>
         /// <returns>Null if it could not be determined.</returns>
-        public static bool? IsExecutedBefore(this ExpressionSyntax node, ExpressionSyntax other)
+        public static ExecutedBefore IsExecutedBefore(this ExpressionSyntax node, ExpressionSyntax other)
         {
             if (node is null ||
                 other is null)
             {
-                return false;
+                return ExecutedBefore.Unknown;
             }
 
             if (node.TryFirstAncestor(out AnonymousFunctionExpressionSyntax nodeLambda))
@@ -115,33 +115,32 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     if (!ReferenceEquals(nodeLambda, otherLambda))
                     {
-                        return null;
+                        return ExecutedBefore.Maybe;
                     }
 
                     if (!(nodeLambda.Body is BlockSyntax))
                     {
-                        return node.SpanStart < other.SpanStart;
+                        return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
                     }
                 }
                 else
                 {
                     if (node.SpanStart > other.SpanStart)
                     {
-                        return false;
+                        return ExecutedBefore.No;
                     }
 
-                    return null;
+                    return ExecutedBefore.Maybe;
                 }
             }
-
             else if (other.TryFirstAncestor<AnonymousFunctionExpressionSyntax>(out _))
             {
                 if (node.SpanStart < other.SpanStart)
                 {
-                    return true;
+                    return ExecutedBefore.Yes;
                 }
 
-                return null;
+                return ExecutedBefore.Maybe;
             }
 
             if (node.TryFirstAncestor(out StatementSyntax statement) &&
@@ -149,7 +148,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 if (ReferenceEquals(statement, otherStatement))
                 {
-                    return node.SpanStart < other.SpanStart;
+                    return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
                 }
 
                 return statement.IsExecutedBefore(otherStatement);
@@ -157,10 +156,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (node.TryFindSharedAncestorRecursive(other, out BinaryExpressionSyntax _))
             {
-                return node.SpanStart < other.SpanStart;
+                return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
             }
 
-            return null;
+            return ExecutedBefore.Unknown;
         }
     }
 }

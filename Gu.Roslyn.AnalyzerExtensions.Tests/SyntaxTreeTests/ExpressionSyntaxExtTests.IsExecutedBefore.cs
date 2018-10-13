@@ -8,9 +8,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     {
         public class IsExecutedBefore
         {
-            [TestCase("1", "2", true)]
-            [TestCase("2", "1", false)]
-            public void And(string firstInt, string otherInt, bool expected)
+            [TestCase("1", "2", ExecutedBefore.Yes)]
+            [TestCase("2", "1", ExecutedBefore.No)]
+            public void And(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -27,9 +27,9 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", true)]
-            [TestCase("2", "1", false)]
-            public void Or(string firstInt, string otherInt, bool expected)
+            [TestCase("1", "2", ExecutedBefore.Yes)]
+            [TestCase("2", "1", ExecutedBefore.No)]
+            public void Or(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -46,9 +46,9 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", true)]
-            [TestCase("2", "1", false)]
-            public void LambdaLocal(string firstInt, string otherInt, bool expected)
+            [TestCase("1", "2", ExecutedBefore.Yes)]
+            [TestCase("2", "1", ExecutedBefore.No)]
+            public void LambdaLocal(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -74,17 +74,17 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", true)]
-            [TestCase("2", "1", false)]
-            [TestCase("1", "3", true)]
-            [TestCase("3", "1", false)]
-            [TestCase("2", "3", null)]
-            [TestCase("3", "2", null)]
-            [TestCase("4", "5", true)]
-            [TestCase("5", "4", false)]
-            [TestCase("3", "4", null)]
-            [TestCase("4", "3", null)]
-            public void LambdaLocalClosure(string firstInt, string otherInt, bool? expected)
+            [TestCase("1", "2", ExecutedBefore.Yes)]
+            [TestCase("2", "1", ExecutedBefore.No)]
+            [TestCase("1", "3", ExecutedBefore.Yes)]
+            [TestCase("3", "1", ExecutedBefore.No)]
+            [TestCase("2", "3", ExecutedBefore.Maybe)]
+            [TestCase("3", "2", ExecutedBefore.Maybe)]
+            [TestCase("4", "5", ExecutedBefore.Yes)]
+            [TestCase("5", "4", ExecutedBefore.No)]
+            [TestCase("3", "4", ExecutedBefore.Maybe)]
+            [TestCase("4", "3", ExecutedBefore.Maybe)]
+            public void LambdaLocalClosure(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -113,17 +113,17 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", true)]
-            [TestCase("2", "1", false)]
-            [TestCase("1", "3", true)]
-            [TestCase("3", "1", false)]
-            [TestCase("2", "3", null)]
-            [TestCase("3", "2", null)]
-            [TestCase("4", "5", true)]
-            [TestCase("5", "4", false)]
-            [TestCase("3", "4", null)]
-            [TestCase("4", "3", null)]
-            public void LambdaParameterClosure(string firstInt, string otherInt, bool? expected)
+            [TestCase("1", "2", ExecutedBefore.Yes)]
+            [TestCase("2", "1", ExecutedBefore.No)]
+            [TestCase("1", "3", ExecutedBefore.Yes)]
+            [TestCase("3", "1", ExecutedBefore.No)]
+            [TestCase("2", "3", ExecutedBefore.Maybe)]
+            [TestCase("3", "2", ExecutedBefore.Maybe)]
+            [TestCase("4", "5", ExecutedBefore.Yes)]
+            [TestCase("5", "4", ExecutedBefore.No)]
+            [TestCase("3", "4", ExecutedBefore.Maybe)]
+            [TestCase("4", "3", ExecutedBefore.Maybe)]
+            public void LambdaParameterClosure(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox

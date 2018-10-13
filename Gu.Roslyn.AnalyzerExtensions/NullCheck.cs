@@ -51,7 +51,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
                        location.TryFirstAncestorOrSelf(out ExpressionSyntax expression) &&
-                       check.IsExecutedBefore(expression) == true;
+                       check.IsExecutedBefore(expression) == ExecutedBefore.Yes;
             }
         }
 
