@@ -1,5 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -16,8 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool? IsExecutedBefore(this StatementSyntax statement, StatementSyntax other)
         {
             if (statement == null ||
-                other == null ||
-                ReferenceEquals(statement, other))
+                other == null)
             {
                 return false;
             }
@@ -27,14 +28,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return null;
             }
 
-            if (!statement.SharesAncestor<MemberDeclarationSyntax>(other, out _))
+            if (statement.TryFindSharedAncestorRecursive(other, out DoStatementSyntax _) ||
+                statement.TryFindSharedAncestorRecursive(other, out ForStatementSyntax _) ||
+                statement.TryFindSharedAncestorRecursive(other, out ForEachStatementSyntax _) ||
+                statement.TryFindSharedAncestorRecursive(other, out WhileStatementSyntax _))
             {
                 return null;
+            }
+
+            if (ReferenceEquals(statement, other))
+            {
+                return false;
             }
 
             if (ReferenceEquals(statement.Parent, other.Parent))
             {
                 return statement.SpanStart < other.SpanStart;
+            }
+
+            if (!statement.SharesAncestor<MemberDeclarationSyntax>(other, out _))
+            {
+                return null;
             }
 
             if (statement.IsInParentBlock(other))

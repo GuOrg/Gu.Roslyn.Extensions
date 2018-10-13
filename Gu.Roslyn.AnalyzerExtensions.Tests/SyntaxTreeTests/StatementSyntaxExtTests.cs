@@ -30,10 +30,10 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", true)]
-            [TestCase("2", "1", false)]
-            [TestCase("1", "1", false)]
-            public void DeclaredInWhileLoop(string firstStatement, string otherStatement, bool expected)
+            [TestCase("1", "2", null)]
+            [TestCase("2", "1", null)]
+            [TestCase("1", "1", null)]
+            public void DeclaredInWhileLoop(string firstStatement, string otherStatement, bool? expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -55,12 +55,11 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [Explicit("temp")]
             [TestCase("0", "0", false)]
             [TestCase("1", "1", null)]
             [TestCase("0", "1", true)]
             [TestCase("0", "2", true)]
-            [TestCase("1", "2", true)]
+            [TestCase("1", "2", null)]
             [TestCase("2", "1", null)]
             public void DeclaredBeforeWhileLoop(string firstStatement, string otherStatement, bool? expected)
             {
@@ -85,10 +84,10 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", true)]
-            [TestCase("2", "1", false)]
-            [TestCase("1", "1", false)]
-            public void DeclaredInForeachLoop(string firstStatement, string otherStatement, bool expected)
+            [TestCase("1", "2", null)]
+            [TestCase("2", "1", null)]
+            [TestCase("1", "1", null)]
+            public void DeclaredInForeachLoop(string firstStatement, string otherStatement, bool? expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -110,10 +109,10 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", true)]
-            [TestCase("2", "1", false)]
-            [TestCase("1", "1", false)]
-            public void DeclaredInForLoop(string firstStatement, string otherStatement, bool expected)
+            [TestCase("1", "2", null)]
+            [TestCase("2", "1", null)]
+            [TestCase("1", "1", null)]
+            public void DeclaredInForLoop(string firstStatement, string otherStatement, bool? expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
