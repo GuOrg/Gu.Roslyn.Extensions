@@ -1,4 +1,8 @@
 #### 0.3.4
+* BREAKING: Move IsExecutedBefore from syntax node to ExpressionmSyntax & StatementSyntax
+* FEATURE: PooledList<T> for silly zero allocation.
+
+#### 0.3.4
 * FEATURE: TryFindTarget with parameters.
 * FEATURE: QualifiedOverload
 * FEATURE: QualifiedArrayType

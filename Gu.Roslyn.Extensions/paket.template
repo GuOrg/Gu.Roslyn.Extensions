@@ -3,10 +3,8 @@ type project
 projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
 
 releasenotes
-  FEATURE: TryFindTarget with parameters.
-  FEATURE: QualifiedOverload
-  FEATURE: QualifiedArrayType
-  FEATURE: QualifiedGenericType
+  BREAKING: Move IsExecutedBefore from syntax node to ExpressionmSyntax & StatementSyntax
+  FEATURE: PooledList<T> for silly zero allocation.
 
 excludedgroups
   Analyzers
