@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
+    using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -27,6 +28,52 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="node"/>.</returns>
         public static IdentifierNameWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new IdentifierNameWalker());
 
+        /// <summary>
+        /// Try find the first usage of <paramref name="symbol"/>
+        /// </summary>
+        /// <param name="node">The scope</param>
+        /// <param name="symbol">The name.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
+        /// <returns>True if a match was found</returns>
+        public static bool TryFindFirst(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
+        {
+            if (symbol != null)
+            {
+                using (var walker = Borrow(node))
+                {
+                    return walker.TryFindFirst(symbol, semanticModel, cancellationToken, out identifierName);
+                }
+            }
+
+            identifierName = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Try find the last usage of <paramref name="symbol"/>
+        /// </summary>
+        /// <param name="node">The scope</param>
+        /// <param name="symbol">The name.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
+        /// <returns>True if a match was found</returns>
+        public static bool TryFindLast(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
+        {
+            if (symbol != null)
+            {
+                using (var walker = Borrow(node))
+                {
+                    return walker.TryFindLast(symbol, semanticModel, cancellationToken, out identifierName);
+                }
+            }
+
+            identifierName = null;
+            return false;
+        }
+
         /// <inheritdoc />
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
@@ -45,6 +92,53 @@ namespace Gu.Roslyn.AnalyzerExtensions
             foreach (var candidate in this.identifierNames)
             {
                 if (candidate.Identifier.ValueText == name)
+                {
+                    identifierName = candidate;
+                    return true;
+                }
+            }
+
+            identifierName = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Try find the first usage of <paramref name="symbol"/>
+        /// </summary>
+        /// <param name="symbol">The name.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
+        /// <returns>True if a match was found</returns>
+        public bool TryFindFirst(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
+        {
+            foreach (var candidate in this.identifierNames)
+            {
+                if (candidate.IsSymbol(symbol, semanticModel, cancellationToken))
+                {
+                    identifierName = candidate;
+                    return true;
+                }
+            }
+
+            identifierName = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Try find the last usage of <paramref name="symbol"/>
+        /// </summary>
+        /// <param name="symbol">The name.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
+        /// <returns>True if a match was found</returns>
+        public bool TryFindLast(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
+        {
+            for (var i = this.identifierNames.Count - 1; i >= 0; i--)
+            {
+                var candidate = this.identifierNames[i];
+                if (candidate.IsSymbol(symbol, semanticModel, cancellationToken))
                 {
                     identifierName = candidate;
                     return true;

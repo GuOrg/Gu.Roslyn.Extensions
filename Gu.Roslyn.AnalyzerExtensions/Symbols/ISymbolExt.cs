@@ -9,7 +9,26 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static partial class ISymbolExt
     {
         /// <summary>
-        /// Check if <paramref name="symbol"/> is either <typeparamref name="T1"/> or <typeparamref name="T2"/>.
+        /// Check if <paramref name="symbol"/> is either <paramref name="kind1"/> or <paramref name="kind2"/>.
+        /// </summary>
+        /// <param name="symbol">The <see cref="ISymbol"/></param>
+        /// <param name="kind1">The first type to check for.</param>
+        /// <param name="kind2">The second type to check for.</param>
+        /// <returns>True if <paramref name="symbol"/> is either <paramref name="kind1"/> or <paramref name="kind2"/>.</returns>
+        public static bool IsEitherKind(this ISymbol symbol, SymbolKind kind1, SymbolKind kind2) => symbol!= null && (symbol.Kind == kind1 || symbol.Kind == kind2);
+
+        /// <summary>
+        /// Check if <paramref name="symbol"/> is either <paramref name="kind1"/> or <paramref name="kind2"/> or <paramref name="kind3"/>.
+        /// </summary>
+        /// <param name="symbol">The <see cref="ISymbol"/></param>
+        /// <param name="kind1">The first type to check for.</param>
+        /// <param name="kind2">The second type to check for.</param>
+        /// <param name="kind3">The second type to check for.</param>
+        /// <returns>True if <paramref name="symbol"/> is either <paramref name="kind1"/> or <paramref name="kind2"/> or <paramref name="kind3"/>.</returns>
+        public static bool IsEitherKind(this ISymbol symbol, SymbolKind kind1, SymbolKind kind2, SymbolKind kind3) => symbol != null && (symbol.Kind == kind1 || symbol.Kind == kind2 || symbol.Kind == kind3);
+
+
+        /// <summary>
         /// </summary>
         /// <typeparam name="T1">The first type to check for.</typeparam>
         /// <typeparam name="T2">The second type to check for.</typeparam>
