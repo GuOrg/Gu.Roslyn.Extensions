@@ -53,12 +53,12 @@ namespace RoslynSandbox
             var node = syntaxTree.FindTypeDeclaration("Foo");
 
             Assert.AreEqual(true, IdentifierNameWalker.TryFindFirst(node, symbol, semanticModel, CancellationToken.None, out var match));
-            Assert.AreEqual(109, match.Identifier.SpanStart);
+            Assert.AreEqual("i = 1", match.Parent.ToString());
 
             using (var walker = IdentifierNameWalker.Borrow(node))
             {
                 Assert.AreEqual(true, walker.TryFindFirst(symbol, semanticModel, CancellationToken.None, out match));
-                Assert.AreEqual(109, match.Identifier.SpanStart);
+                Assert.AreEqual("i = 1", match.Parent.ToString());
             }
         }
 
@@ -83,12 +83,12 @@ namespace RoslynSandbox
             var node = syntaxTree.FindTypeDeclaration("Foo");
 
             Assert.AreEqual(true, IdentifierNameWalker.TryFindLast(node, symbol, semanticModel, CancellationToken.None, out var match));
-            Assert.AreEqual(129, match.Identifier.SpanStart);
+            Assert.AreEqual("i = 2", match.Parent.ToString());
 
             using (var walker = IdentifierNameWalker.Borrow(node))
             {
                 Assert.AreEqual(true, walker.TryFindLast(symbol, semanticModel, CancellationToken.None, out match));
-                Assert.AreEqual(129, match.Identifier.SpanStart);
+                Assert.AreEqual("i = 2", match.Parent.ToString());
             }
         }
     }
