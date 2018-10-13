@@ -109,141 +109,39 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Tries to determine if <paramref name="node"/> is executed before <paramref name="other"/>.
-        /// </summary>
-        /// <param name="node">The first node.</param>
-        /// <param name="other">The second node.</param>
-        /// <returns>Null if it could not be determined.</returns>
-        public static bool? IsExecutedBefore(this SyntaxNode node, SyntaxNode other)
-        {
-            if (node is null ||
-                other is null)
-            {
-                return false;
-            }
-
-            if (!node.SharesAncestor<MemberDeclarationSyntax>(other))
-            {
-                return null;
-            }
-
-            if (other.FirstAncestor<AnonymousFunctionExpressionSyntax>() is AnonymousFunctionExpressionSyntax otherLambda)
-            {
-                if (node.FirstAncestor<AnonymousFunctionExpressionSyntax>() is AnonymousFunctionExpressionSyntax nodeLambda)
-                {
-                    if (ReferenceEquals(nodeLambda, otherLambda))
-                    {
-                        return IsExecutedBefore();
-                    }
-
-                    return null;
-                }
-
-                return node.SpanStart < otherLambda.SpanStart ? true : (bool?)null;
-            }
-            else if (node.FirstAncestor<AnonymousFunctionExpressionSyntax>() is AnonymousFunctionExpressionSyntax nodeLambda)
-            {
-                if (other.SpanStart < nodeLambda.SpanStart)
-                {
-                    return false;
-                }
-
-                return null;
-            }
-
-            return IsExecutedBefore();
-
-            bool? IsExecutedBefore()
-            {
-                if (node.Contains(other) &&
-                    node.SpanStart < other.SpanStart)
-                {
-                    return true;
-                }
-
-                var statement = node.FirstAncestorOrSelf<StatementSyntax>();
-                var otherStatement = other.FirstAncestorOrSelf<StatementSyntax>();
-                if (statement == null ||
-                    otherStatement == null)
-                {
-                    return null;
-                }
-
-                var block = statement.Parent as BlockSyntax;
-                var otherBlock = otherStatement.Parent as BlockSyntax;
-                if (block == null &&
-                    otherBlock == null)
-                {
-                    return false;
-                }
-
-                if (ContainsGoto(block))
-                {
-                    return null;
-                }
-
-                if (otherBlock != null &&
-                    block != null &&
-                    !ReferenceEquals(block, otherBlock) &&
-                    otherBlock.Contains(block) &&
-                    block.Statements.TryLast(out var last) &&
-                    (last is ReturnStatementSyntax || last is ThrowStatementSyntax))
-                {
-                    return false;
-                }
-
-                if (ReferenceEquals(block, otherBlock) ||
-                    otherBlock?.Contains(node) == true ||
-                    block?.Contains(other) == true)
-                {
-                    var firstAnon = FirstAncestor<AnonymousFunctionExpressionSyntax>(node);
-                    var otherAnon = FirstAncestor<AnonymousFunctionExpressionSyntax>(other);
-                    if (!ReferenceEquals(firstAnon, otherAnon))
-                    {
-                        return true;
-                    }
-
-                    return statement.SpanStart < otherStatement.SpanStart;
-                }
-
-                return false;
-            }
-
-            bool ContainsGoto(BlockSyntax block)
-            {
-                if (block == null)
-                {
-                    return false;
-                }
-
-                foreach (var statement in block.Statements)
-                {
-                    if (statement.IsKind(SyntaxKind.GotoStatement) ||
-                        statement.IsKind(SyntaxKind.LabeledStatement))
-                    {
-                        return true;
-                    }
-
-                    if (statement is IfStatementSyntax ifStatement &&
-                        (ContainsGoto(ifStatement.Statement as BlockSyntax) ||
-                         ContainsGoto(ifStatement.Else?.Statement as BlockSyntax)))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Check if the nodes shares an ancestor of type <typeparamref name="T"/>.
+        /// Check if the first ancestor of type <typeparamref name="T"/> is the same instance.
         /// </summary>
         /// <typeparam name="T">The type of ancestor.</typeparam>
         /// <param name="first">The first node.</param>
         /// <param name="other">The second node.</param>
+        /// <param name="ancestor">The ancestor.</param>
         /// <returns>True if a common ancestor was found.</returns>
-        public static bool SharesAncestor<T>(this SyntaxNode first, SyntaxNode other)
+        public static bool SharesAncestor<T>(this SyntaxNode first, SyntaxNode other, out T ancestor)
+            where T : SyntaxNode
+        {
+            var firstAncestor = FirstAncestor<T>(first);
+            var otherAncestor = FirstAncestor<T>(other);
+            if (firstAncestor == null ||
+                otherAncestor == null ||
+                !ReferenceEquals(firstAncestor, otherAncestor))
+            {
+                ancestor = null;
+                return false;
+            }
+
+            ancestor = firstAncestor;
+            return true;
+        }
+
+        /// <summary>
+        /// Check if the first ancestor of type <typeparamref name="T"/> is the same instance.
+        /// </summary>
+        /// <typeparam name="T">The type of ancestor.</typeparam>
+        /// <param name="first">The first node.</param>
+        /// <param name="other">The second node.</param>
+        /// <param name="ancestor">The ancestor.</param>
+        /// <returns>True if a common ancestor was found.</returns>
+        public static bool TryFindSharedAncestorRecursive<T>(this SyntaxNode first, SyntaxNode other, out T ancestor)
             where T : SyntaxNode
         {
             var firstAncestor = FirstAncestor<T>(first);
@@ -251,10 +149,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (firstAncestor == null ||
                 otherAncestor == null)
             {
+                ancestor = null;
                 return false;
             }
 
-            return firstAncestor == otherAncestor;
+            if (ReferenceEquals(firstAncestor, otherAncestor) ||
+                firstAncestor.Contains(otherAncestor))
+            {
+                ancestor = firstAncestor;
+                return true;
+            }
+
+            if (otherAncestor.Contains(firstAncestor))
+            {
+                ancestor = otherAncestor;
+                return true;
+            }
+
+            return TryFindSharedAncestorRecursive(firstAncestor, otherAncestor, out ancestor);
         }
     }
 }

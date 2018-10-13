@@ -94,5 +94,73 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             return semanticModel.IsRepresentationPreservingConversion(expression, destination, cancellationToken);
         }
+
+        /// <summary>
+        /// Tries to determine if <paramref name="node"/> is executed before <paramref name="other"/>.
+        /// </summary>
+        /// <param name="node">The first node.</param>
+        /// <param name="other">The second node.</param>
+        /// <returns>Null if it could not be determined.</returns>
+        public static bool? IsExecutedBefore(this ExpressionSyntax node, ExpressionSyntax other)
+        {
+            if (node is null ||
+                other is null)
+            {
+                return false;
+            }
+
+            if (node.TryFirstAncestor(out AnonymousFunctionExpressionSyntax nodeLambda))
+            {
+                if (other.TryFirstAncestor(out AnonymousFunctionExpressionSyntax otherLambda))
+                {
+                    if (!ReferenceEquals(nodeLambda, otherLambda))
+                    {
+                        return null;
+                    }
+
+                    if (!(nodeLambda.Body is BlockSyntax))
+                    {
+                        return node.SpanStart < other.SpanStart;
+                    }
+                }
+                else
+                {
+                    if (node.SpanStart > other.SpanStart)
+                    {
+                        return false;
+                    }
+
+                    return null;
+                }
+            }
+
+            else if (other.TryFirstAncestor<AnonymousFunctionExpressionSyntax>(out _))
+            {
+                if (node.SpanStart < other.SpanStart)
+                {
+                    return true;
+                }
+
+                return null;
+            }
+
+            if (node.TryFirstAncestor(out StatementSyntax statement) &&
+                other.TryFirstAncestor(out StatementSyntax otherStatement))
+            {
+                if (ReferenceEquals(statement, otherStatement))
+                {
+                    return node.SpanStart < other.SpanStart;
+                }
+
+                return statement.IsExecutedBefore(otherStatement);
+            }
+
+            if (node.TryFindSharedAncestorRecursive(other, out BinaryExpressionSyntax _))
+            {
+                return node.SpanStart < other.SpanStart;
+            }
+
+            return null;
+        }
     }
 }

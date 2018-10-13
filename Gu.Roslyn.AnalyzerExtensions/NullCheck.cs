@@ -50,7 +50,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             using (var walker = NullCheckWalker.Borrow(location.FirstAncestorOrSelf<MemberDeclarationSyntax>()))
             {
                 return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
-                       check.IsExecutedBefore(location) == true;
+                       location.TryFirstAncestorOrSelf(out ExpressionSyntax expression) &&
+                       check.IsExecutedBefore(expression) == true;
             }
         }
 

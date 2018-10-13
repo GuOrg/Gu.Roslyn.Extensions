@@ -5,9 +5,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    internal partial class MemberPathTests
+    public partial class MemberPathTests
     {
-        internal class TryFindRoot
+        public class TryFindRoot
         {
             [TestCase("this.foo", "foo")]
             [TestCase("foo", "foo")]

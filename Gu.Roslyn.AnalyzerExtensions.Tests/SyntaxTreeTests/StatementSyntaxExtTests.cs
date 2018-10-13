@@ -4,9 +4,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    internal partial class SyntaxNodeExtTests
+    public class StatementSyntaxExtTests
     {
-        internal class IsExecutedBefore
+        public class IsExecutedBefore
         {
             [TestCase("1", "2", true)]
             [TestCase("2", "1", false)]
@@ -55,11 +55,13 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
+            [Explicit("temp")]
+            [TestCase("0", "0", false)]
+            [TestCase("1", "1", null)]
             [TestCase("0", "1", true)]
             [TestCase("0", "2", true)]
+            [TestCase("1", "2", true)]
             [TestCase("2", "1", null)]
-            [TestCase("1", "2", null)]
-            [TestCase("1", "1", null)]
             public void DeclaredBeforeWhileLoop(string firstStatement, string otherStatement, bool? expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -135,12 +137,12 @@ namespace RoslynSandbox
             }
 
             [TestCase("1", "2", true)]
-            [TestCase("1", "3", true)]
             [TestCase("2", "1", false)]
+            [TestCase("1", "3", true)]
             [TestCase("3", "1", false)]
-            [TestCase("3", "2", false)]
             [TestCase("2", "3", false)]
-            public void InsideIfBlock(string firstStatement, string otherStatement, bool expected)
+            [TestCase("3", "2", false)]
+            public void IfElseBlocks(string firstStatement, string otherStatement, bool expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
@@ -158,6 +160,34 @@ namespace RoslynSandbox
             {
                 temp = 3;
             }
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("1", "2", true)]
+            [TestCase("1", "3", true)]
+            [TestCase("2", "1", false)]
+            [TestCase("3", "1", false)]
+            [TestCase("2", "3", false)]
+            [TestCase("3", "2", false)]
+            public void IfElseStatements(string firstStatement, string otherStatement, bool expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo(bool condition)
+        {
+            var temp = 1;
+            if (condition)
+                temp = 2;
+            else
+                temp = 3;
         }
     }
 }");
@@ -446,8 +476,8 @@ namespace RoslynSandbox
         public event EventHandler E;
     }
 }");
-                var first = syntaxTree.FindLiteralExpression(firstInt);
-                var other = syntaxTree.FindLiteralExpression(otherInt);
+                var first = syntaxTree.FindStatement(firstInt);
+                var other = syntaxTree.FindStatement(otherInt);
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
@@ -473,7 +503,10 @@ namespace RoslynSandbox
         public Foo()
         {
             var a = 1;
-            this.E += (_, __) => a = 3;
+            this.E += (_, __) => 
+            {
+                a = 3;
+            };
             this.E += (_, __) =>
             {
                 a = 4;
@@ -485,8 +518,8 @@ namespace RoslynSandbox
         public event EventHandler E;
     }
 }");
-                var first = syntaxTree.FindLiteralExpression(firstInt);
-                var other = syntaxTree.FindLiteralExpression(otherInt);
+                var first = syntaxTree.FindStatement(firstInt);
+                var other = syntaxTree.FindStatement(otherInt);
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
@@ -512,7 +545,10 @@ namespace RoslynSandbox
         public Foo(int a)
         {
             a = 1;
-            this.E += (_, __) => a = 3;
+            this.E += (_, __) => 
+            {
+                a = 3;
+            };
             this.E += (_, __) =>
             {
                 a = 4;
@@ -524,8 +560,8 @@ namespace RoslynSandbox
         public event EventHandler E;
     }
 }");
-                var first = syntaxTree.FindLiteralExpression(firstInt);
-                var other = syntaxTree.FindLiteralExpression(otherInt);
+                var first = syntaxTree.FindStatement(firstInt);
+                var other = syntaxTree.FindStatement(otherInt);
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
         }

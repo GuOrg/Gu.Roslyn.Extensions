@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    internal partial class MemberPathTests
+    public partial class MemberPathTests
     {
         public new class Equals
         {

@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class ExpressionSyntaxExtTests
+    public partial class ExpressionSyntaxExtTests
     {
         [TestCase("1", typeof(int))]
         [TestCase("1", typeof(int?))]

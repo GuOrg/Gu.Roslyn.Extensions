@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    internal partial class SyntaxNodeExtTests
+    public class SyntaxNodeExtTests
     {
         [TestCase("1", true)]
         [TestCase("2", false)]

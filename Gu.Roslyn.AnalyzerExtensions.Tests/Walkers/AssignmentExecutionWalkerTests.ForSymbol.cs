@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
 
     public partial class AssignmentExecutionWalkerTests
     {
-        internal class ForSymbol
+        public class ForSymbol
         {
             [TestCase(Scope.Member)]
             [TestCase(Scope.Instance)]

@@ -3,7 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
 {
     using NUnit.Framework;
 
-    internal class PooledSetTests
+    public class PooledSetTests
     {
         [Test]
         public void UsingBorrow()

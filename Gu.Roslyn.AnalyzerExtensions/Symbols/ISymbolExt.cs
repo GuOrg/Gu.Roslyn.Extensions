@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="symbol"/> is either <paramref name="kind1"/> or <paramref name="kind2"/>.
         /// </summary>
-        /// <param name="symbol">The <see cref="ISymbol"/></param>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <param name="kind1">The first type to check for.</param>
         /// <param name="kind2">The second type to check for.</param>
         /// <returns>True if <paramref name="symbol"/> is either <paramref name="kind1"/> or <paramref name="kind2"/>.</returns>
@@ -20,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="symbol"/> is either <paramref name="kind1"/> or <paramref name="kind2"/> or <paramref name="kind3"/>.
         /// </summary>
-        /// <param name="symbol">The <see cref="ISymbol"/></param>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <param name="kind1">The first type to check for.</param>
         /// <param name="kind2">The second type to check for.</param>
         /// <param name="kind3">The third type to check for.</param>

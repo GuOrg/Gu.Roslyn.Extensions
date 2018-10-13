@@ -30,14 +30,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static IdentifierNameWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new IdentifierNameWalker());
 
         /// <summary>
-        /// Try find the first usage of <paramref name="symbol"/>
+        /// Try find the first usage of <paramref name="symbol"/>.
         /// </summary>
-        /// <param name="node">The scope</param>
+        /// <param name="node">The scope.</param>
         /// <param name="symbol">The name.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
-        /// <returns>True if a match was found</returns>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindFirst(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
         {
             if (symbol != null)
@@ -53,14 +53,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try find the last usage of <paramref name="symbol"/>
+        /// Try find the last usage of <paramref name="symbol"/>.
         /// </summary>
-        /// <param name="node">The scope</param>
+        /// <param name="node">The scope.</param>
         /// <param name="symbol">The name.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
-        /// <returns>True if a match was found</returns>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <returns>True if a match was found.</returns>
         public static bool TryFindLast(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
         {
             if (symbol != null)
@@ -104,13 +104,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try find the first usage of <paramref name="symbol"/>
+        /// Try find the first usage of <paramref name="symbol"/>.
         /// </summary>
         /// <param name="symbol">The name.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
-        /// <returns>True if a match was found</returns>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <returns>True if a match was found.</returns>
         public bool TryFindFirst(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
         {
             foreach (var candidate in this.identifierNames)
@@ -127,13 +127,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try find the last usage of <paramref name="symbol"/>
+        /// Try find the last usage of <paramref name="symbol"/>.
         /// </summary>
         /// <param name="symbol">The name.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/></param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/></param>
-        /// <returns>True if a match was found</returns>
+        /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <returns>True if a match was found.</returns>
         public bool TryFindLast(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
         {
             for (var i = this.identifierNames.Count - 1; i >= 0; i--)
