@@ -41,6 +41,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public IReadOnlyList<ArgumentSyntax> RefOrOutArguments => this.refOrOutArguments;
 
         /// <summary>
+        /// True if there were no mutations in the scope.
+        /// </summary>
+        public bool IsEmpty => this.assignments.Count == 0 &&
+                               this.prefixUnaries.Count == 0 &&
+                               this.postfixUnaries.Count == 0 &&
+                               this.refOrOutArguments.Count == 0;
+
+        /// <summary>
         /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
         /// <param name="node">The scope.</param>
