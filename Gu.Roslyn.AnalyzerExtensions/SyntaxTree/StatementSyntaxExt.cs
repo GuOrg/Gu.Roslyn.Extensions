@@ -21,6 +21,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return ExecutedBefore.Unknown;
             }
 
+            if (SyntaxExecutionContext.IsInLambda(statement, other, out var executedBefore))
+            {
+                return executedBefore;
+            }
+
             if ((statement.Parent as BlockSyntax)?.ContainsGoto() == true)
             {
                 return ExecutedBefore.Maybe;
@@ -56,11 +61,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return ExecutedBefore.Yes;
                 }
 
-                if (other.TryFirstAncestor(out AnonymousFunctionExpressionSyntax _))
-                {
-                    return ExecutedBefore.Maybe;
-                }
-
                 return ExecutedBefore.No;
             }
 
@@ -69,11 +69,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 if (statement.SpanStart > other.SpanStart)
                 {
                     return ExecutedBefore.No;
-                }
-
-                if (statement.TryFirstAncestor(out AnonymousFunctionExpressionSyntax _))
-                {
-                    return ExecutedBefore.Maybe;
                 }
 
                 if (statement.Parent is BlockSyntax block &&
@@ -93,10 +88,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return ExecutedBefore.No;
             }
 
-            if (statement.TryFirstAncestor(out AnonymousFunctionExpressionSyntax _) &&
-                other.TryFirstAncestor(out AnonymousFunctionExpressionSyntax _))
+            return ExecutedBefore.Unknown;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="statement"/> is executed before <paramref name="other"/>.
+        /// </summary>
+        /// <param name="statement">The <see cref="StatementSyntax"/>.</param>
+        /// <param name="other">The <see cref="ExpressionSyntax"/>.</param>
+        /// <returns>Null if the execution order could not be figured out.</returns>
+        public static ExecutedBefore IsExecutedBefore(this StatementSyntax statement, ExpressionSyntax other)
+        {
+            if (SyntaxExecutionContext.IsInLambda(statement, other, out var executedBefore))
             {
-                return ExecutedBefore.Maybe;
+                return executedBefore;
+            }
+
+            if (other.TryFirstAncestor(out StatementSyntax otherStatement))
+            {
+                if (ReferenceEquals(statement, otherStatement))
+                {
+                    return statement.SpanStart < otherStatement.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
+                }
+
+                return statement.IsExecutedBefore(otherStatement);
             }
 
             return ExecutedBefore.Unknown;
@@ -108,7 +123,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="statement">The <see cref="StatementSyntax"/>.</param>
         /// <param name="other">The other <see cref="StatementSyntax"/>.</param>
         /// <returns>True if <paramref name="statement"/> or statement.Parent contains the block <paramref name="other"/> is in.</returns>
-        public static bool IsInParentBlock(this StatementSyntax statement, StatementSyntax other)
+        private static bool IsInParentBlock(this StatementSyntax statement, StatementSyntax other)
         {
             if (statement == null || other == null)
             {

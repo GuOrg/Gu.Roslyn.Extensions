@@ -109,38 +109,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return ExecutedBefore.Unknown;
             }
 
-            if (node.TryFirstAncestor(out AnonymousFunctionExpressionSyntax nodeLambda))
+            if (SyntaxExecutionContext.IsInLambda(node, other, out var executedBefore))
             {
-                if (other.TryFirstAncestor(out AnonymousFunctionExpressionSyntax otherLambda))
-                {
-                    if (!ReferenceEquals(nodeLambda, otherLambda))
-                    {
-                        return ExecutedBefore.Maybe;
-                    }
-
-                    if (!(nodeLambda.Body is BlockSyntax))
-                    {
-                        return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
-                    }
-                }
-                else
-                {
-                    if (node.SpanStart > other.SpanStart)
-                    {
-                        return ExecutedBefore.No;
-                    }
-
-                    return ExecutedBefore.Maybe;
-                }
-            }
-            else if (other.TryFirstAncestor<AnonymousFunctionExpressionSyntax>(out _))
-            {
-                if (node.SpanStart < other.SpanStart)
-                {
-                    return ExecutedBefore.Yes;
-                }
-
-                return ExecutedBefore.Maybe;
+                return executedBefore;
             }
 
             if (node.TryFirstAncestor(out StatementSyntax statement) &&
@@ -157,6 +128,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (node.TryFindSharedAncestorRecursive(other, out BinaryExpressionSyntax _))
             {
                 return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
+            }
+
+            return ExecutedBefore.Unknown;
+        }
+
+        /// <summary>
+        /// Tries to determine if <paramref name="node"/> is executed before <paramref name="other"/>.
+        /// </summary>
+        /// <param name="node">The first node.</param>
+        /// <param name="other">The second node.</param>
+        /// <returns>Null if it could not be determined.</returns>
+        public static ExecutedBefore IsExecutedBefore(this ExpressionSyntax node, StatementSyntax other)
+        {
+            if (node is null ||
+                other is null)
+            {
+                return ExecutedBefore.Unknown;
+            }
+
+            if (SyntaxExecutionContext.IsInLambda(node, other, out var executedBefore))
+            {
+                return executedBefore;
+            }
+
+            if (node.TryFirstAncestor(out StatementSyntax statement))
+            {
+                if (ReferenceEquals(statement, other))
+                {
+                    return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
+                }
+
+                return statement.IsExecutedBefore(other);
             }
 
             return ExecutedBefore.Unknown;

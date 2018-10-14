@@ -70,8 +70,8 @@ namespace RoslynSandbox
     }
 }");
                 var first = syntaxTree.FindLiteralExpression(firstInt);
-                var other = syntaxTree.FindLiteralExpression(otherInt);
-                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+                Assert.AreEqual(expected, first.IsExecutedBefore(syntaxTree.FindLiteralExpression(otherInt)));
+                Assert.AreEqual(expected, first.IsExecutedBefore(syntaxTree.FindStatement(otherInt)));
             }
 
             [TestCase("1", "2", ExecutedBefore.Yes)]

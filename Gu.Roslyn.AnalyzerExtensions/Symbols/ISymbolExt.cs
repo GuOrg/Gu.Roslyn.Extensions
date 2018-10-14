@@ -111,14 +111,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="symbol"/> has [System.CodeDom.Compiler.GeneratedCodeAttribute]
+        /// Check if <paramref name="symbol"/> has [System.CodeDom.Compiler.GeneratedCodeAttribute].
         /// </summary>
         /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <returns>True if the attribute is defined on the symbol.</returns>
         public static bool HasGeneratedCodeAttribute(this ISymbol symbol) => symbol.TryGetAttribute(QualifiedType.System.CodeDom.Compiler.GeneratedCodeAttribute, out _);
 
         /// <summary>
-        /// Check if <paramref name="symbol"/> has [System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+        /// Check if <paramref name="symbol"/> has [System.Runtime.CompilerServices.CompilerGeneratedAttribute].
         /// </summary>
         /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <returns>True if the attribute is defined on the symbol.</returns>
