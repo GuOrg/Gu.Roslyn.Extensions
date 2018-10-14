@@ -1,5 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
+    using System.Collections.Immutable;
+    using System.Linq;
     using System.Threading;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
@@ -192,6 +194,58 @@ namespace RoslynSandbox
                 var expected = semanticModel.GetDeclaredSymbol(node);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
+            public void IndexerWhenArrayElementAccess()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    class C
+    {
+        C(int[] ints)
+        {
+            ints[0] = 1;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = (ElementAccessExpressionSyntax)syntaxTree.FindAssignmentExpression("ints[0] = 1").Left;
+                var expected = (IPropertySymbol)((IArrayTypeSymbol)semanticModel.GetTypeInfo(node.Expression).Type)
+                                                                                .Interfaces.Single(x => x.MetadataName == "IList`1")
+                                                                                .GetMembers().Single(x => x is IPropertySymbol property && property.IsIndexer);
+                Assert.AreEqual(expected, semanticModel.GetSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var indexer));
+                Assert.AreEqual(expected, indexer);
+            }
+
+            [Test]
+            public void IndexerWhenListElementAccess()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    using System.Collections.Generic;
+
+    class C
+    {
+        C(List<int> ints)
+        {
+            ints[0] = 1;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = (ElementAccessExpressionSyntax)syntaxTree.FindAssignmentExpression("ints[0] = 1").Left;
+                var expected = (IPropertySymbol)semanticModel.GetTypeInfo(node.Expression).Type.GetMembers().Single(x => x is IPropertySymbol property && property.IsIndexer);
+                Assert.AreEqual(expected, semanticModel.GetSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var indexer));
+                Assert.AreEqual(expected, indexer);
             }
 
             [Test]

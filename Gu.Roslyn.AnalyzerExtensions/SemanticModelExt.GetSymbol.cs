@@ -67,7 +67,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="symbol">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetSymbol(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, QualifiedType expected,  CancellationToken cancellationToken, out IMethodSymbol symbol)
+        public static bool TryGetSymbol(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, QualifiedType expected, CancellationToken cancellationToken, out IMethodSymbol symbol)
         {
             if (node.Type is SimpleNameSyntax typeName &&
                 (typeName.Identifier.ValueText == expected.Type ||
@@ -98,6 +98,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="symbol">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetSymbol(this SemanticModel semanticModel, InvocationExpressionSyntax node, CancellationToken cancellationToken, out IMethodSymbol symbol)
+        {
+            symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
+            return symbol != null;
+        }
+
+        /// <summary>
+        /// Try getting the <see cref="IPropertySymbol"/> for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="symbol">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetSymbol(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken, out IPropertySymbol symbol)
         {
             symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
             return symbol != null;
@@ -190,6 +205,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Same as SemanticModel.GetDeclaredSymbol but works when <paramref name="node"/> is not in the syntax tree.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="ParameterSyntax"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>An <see cref="IParameterSymbol"/> or null.</returns>
+        public static IPropertySymbol GetSymbolSafe(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken)
+        {
+            return (IPropertySymbol)GetSymbolSafe(semanticModel, (SyntaxNode)node, cancellationToken);
+        }
+
+        /// <summary>
         /// Same as SemanticModel.GetSymbolInfo().Symbol but works when <paramref name="node"/> is not in the syntax tree.
         /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
         /// </summary>
@@ -202,6 +229,25 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (node is AwaitExpressionSyntax awaitExpression)
             {
                 return GetSymbolSafe(semanticModel, awaitExpression, cancellationToken);
+            }
+
+            if (node is ElementAccessExpressionSyntax elementAccess)
+            {
+                if (semanticModel.TryGetType(elementAccess.Expression, cancellationToken, out var type))
+                {
+                    if (type is IArrayTypeSymbol arrayType &&
+                        arrayType.Interfaces.TrySingle(x => x.MetadataName == "IList`1", out type) &&
+                        type.GetMembers().TrySingle(x => x is IPropertySymbol property && property.IsIndexer, out var indexer))
+                    {
+                        return indexer;
+                    }
+                    if (type.GetMembers().TrySingle(x => x is IPropertySymbol property && property.IsIndexer, out indexer))
+                    {
+                        return indexer;
+                    }
+                }
+
+                return null;
             }
 
             return semanticModel.SemanticModelFor(node)
