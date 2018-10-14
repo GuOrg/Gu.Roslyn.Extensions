@@ -276,6 +276,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <summary> System.String. </summary>
             public static readonly QualifiedType String = new QualifiedType("System.String", "string");
 
+            /// <summary> System.CodeDom. </summary>
+            public static class CodeDom
+            {
+                /// <summary> System.CodeDom.Compiler. </summary>
+                public static class Compiler
+                {
+                    /// <summary> System.Runtime.CompilerServices.GeneratedCodeAttribute. </summary>
+                    public static readonly QualifiedType GeneratedCodeAttribute = new QualifiedType("System.CodeDom.Compiler.GeneratedCodeAttribute");
+                }
+            }
+
             /// <summary> System.Linq. </summary>
             public static class Linq
             {
@@ -291,8 +302,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 public static class CompilerServices
                 {
                     /// <summary> System.Runtime.CompilerServices.CallerMemberNameAttribute. </summary>
-                    public static readonly QualifiedType CallerMemberNameAttribute =
-                        new QualifiedType("System.Runtime.CompilerServices.CallerMemberNameAttribute");
+                    public static readonly QualifiedType CallerMemberNameAttribute = new QualifiedType("System.Runtime.CompilerServices.CallerMemberNameAttribute");
+
+                    /// <summary> System.Runtime.CompilerServices.CompilerGeneratedAttribute. </summary>
+                    public static readonly QualifiedType CompilerGeneratedAttribute = new QualifiedType("System.Runtime.CompilerServices.CompilerGeneratedAttribute");
                 }
             }
         }

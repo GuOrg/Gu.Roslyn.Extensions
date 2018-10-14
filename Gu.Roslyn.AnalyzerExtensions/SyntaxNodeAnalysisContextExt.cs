@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Diagnostics;
 
     /// <summary>
@@ -21,8 +22,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            return context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.i.cs") ||
+            return IsGenerated(context.ContainingSymbol) ||
+                   context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.i.cs") ||
                    context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.cs");
+
+            bool IsGenerated(ISymbol symbol)
+            {
+                if (symbol == null)
+                {
+                    return false;
+                }
+
+                foreach (var attribute in symbol.GetAttributes())
+                {
+                    if (attribute.AttributeClass == QualifiedType.System.CodeDom.Compiler.GeneratedCodeAttribute ||
+                        attribute.AttributeClass == QualifiedType.System.Runtime.CompilerServices.CompilerGeneratedAttribute)
+                    {
+                        return true;
+                    }
+
+                    return IsGenerated(symbol.ContainingSymbol);
+                }
+
+                return false;
+            }
         }
     }
 }

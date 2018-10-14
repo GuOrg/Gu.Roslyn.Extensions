@@ -97,5 +97,31 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return false;
         }
+
+        /// <summary>
+        /// Try get the single attribute of type <paramref name="attributeType"/> declared on <paramref name="symbol"/>.
+        /// </summary>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
+        /// <param name="attributeType">The <see cref="QualifiedType"/>.</param>
+        /// <param name="attribute">The attribute if found.</param>
+        /// <returns>True if a single attribute of type <paramref name="attributeType"/> declared on <paramref name="symbol"/>.</returns>
+        public static bool TryGetAttribute(this ISymbol symbol, QualifiedType attributeType, out AttributeData attribute)
+        {
+            return symbol.GetAttributes().TrySingle(x => x.AttributeClass == attributeType, out attribute);
+        }
+
+        /// <summary>
+        /// Check if <paramref name="symbol"/> has [System.CodeDom.Compiler.GeneratedCodeAttribute]
+        /// </summary>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
+        /// <returns>True if the attribute is defined on the symbol.</returns>
+        public static bool HasGeneratedCodeAttribute(this ISymbol symbol) => symbol.TryGetAttribute(QualifiedType.System.CodeDom.Compiler.GeneratedCodeAttribute, out _);
+
+        /// <summary>
+        /// Check if <paramref name="symbol"/> has [System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+        /// </summary>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
+        /// <returns>True if the attribute is defined on the symbol.</returns>
+        public static bool HasCompilerGeneratedAttribute(this ISymbol symbol) => symbol.TryGetAttribute(QualifiedType.System.Runtime.CompilerServices.CompilerGeneratedAttribute, out _);
     }
 }
