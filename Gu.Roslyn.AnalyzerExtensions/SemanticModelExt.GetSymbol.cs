@@ -241,6 +241,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     {
                         return indexer;
                     }
+
                     if (type.GetMembers().TrySingle(x => x is IPropertySymbol property && property.IsIndexer, out indexer))
                     {
                         return indexer;

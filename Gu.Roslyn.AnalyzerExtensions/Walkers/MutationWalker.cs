@@ -41,7 +41,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public IReadOnlyList<ArgumentSyntax> RefOrOutArguments => this.refOrOutArguments;
 
         /// <summary>
-        /// True if there were no mutations in the scope.
+        /// Gets a value indicating whether there were no mutations in the scope.
         /// </summary>
         public bool IsEmpty => this.assignments.Count == 0 &&
                                this.prefixUnaries.Count == 0 &&
