@@ -1,7 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     /// <summary>
-    /// Result from <see cref="StatementSyntaxExt.IsExecutedBefore"/>.
+    /// Result from StatementSyntaxExt.IsExecutedBefore.
     /// </summary>
     public enum ExecutedBefore
     {

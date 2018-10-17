@@ -19,6 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             [TestCase("Cast<System.IComparable>(1)")]
             [TestCase("Cast<System.IComparable<int>>(1)")]
             [TestCase("Cast<object>(1)")]
+            [TestCase("Cast<System.StringComparison>(System.StringComparison.CurrentCulture)")]
             [TestCase("Cast<object>(new object())")]
             [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")")]
             public void TrueWhen(string call)
