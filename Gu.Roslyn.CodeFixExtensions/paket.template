@@ -3,8 +3,7 @@ type project
 projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
 
 releasenotes
-  BREAKING: Move IsExecutedBefore from syntax node to ExpressionmSyntax & StatementSyntax
-  FEATURE: PooledList<T> for silly zero allocation.
+  BREAKING: TryGetSymbol returns array symbol or indexer.
 
 excludedgroups
   Analyzers

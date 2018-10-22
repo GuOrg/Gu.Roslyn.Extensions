@@ -1,3 +1,6 @@
+#### 0.4.2
+* BREAKING: TryGetSymbol returns array symbol or indexer.
+
 #### 0.3.4
 * BREAKING: Move IsExecutedBefore from syntax node to ExpressionmSyntax & StatementSyntax
 * FEATURE: PooledList<T> for silly zero allocation.
