@@ -104,7 +104,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try getting the <see cref="IPropertySymbol"/> for the node.
+        /// Try getting the <see cref="IPropertySymbol"/> or <see cref="IArrayTypeSymbol"/> for the node.
         /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
@@ -112,7 +112,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="symbol">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetSymbol(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken, out IPropertySymbol symbol)
+        public static bool TryGetSymbol(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken, out ISymbol symbol)
         {
             symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
             return symbol != null;
@@ -205,15 +205,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Same as SemanticModel.GetDeclaredSymbol but works when <paramref name="node"/> is not in the syntax tree.
+        /// Same as SemanticModel.GetSymbolInfo().Symbol but works when <paramref name="node"/> is not in the syntax tree.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="node">The <see cref="ParameterSyntax"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <returns>An <see cref="IParameterSymbol"/> or null.</returns>
-        public static IPropertySymbol GetSymbolSafe(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken)
+        /// <returns>A <see cref="IPropertySymbol"/> or an <see cref="IArrayTypeSymbol"/> or null.</returns>
+        public static ISymbol GetSymbolSafe(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken)
         {
-            return (IPropertySymbol)GetSymbolSafe(semanticModel, (SyntaxNode)node, cancellationToken);
+            return GetSymbolSafe(semanticModel, (SyntaxNode)node, cancellationToken);
         }
 
         /// <summary>
@@ -231,24 +231,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return GetSymbolSafe(semanticModel, awaitExpression, cancellationToken);
             }
 
-            if (node is ElementAccessExpressionSyntax elementAccess)
+            if (node is ElementAccessExpressionSyntax elementAccess &&
+                semanticModel.TryGetType(elementAccess.Expression, cancellationToken, out var type) &&
+                type is IArrayTypeSymbol arrayType)
             {
-                if (semanticModel.TryGetType(elementAccess.Expression, cancellationToken, out var type))
-                {
-                    if (type is IArrayTypeSymbol arrayType &&
-                        arrayType.Interfaces.TrySingle(x => x.MetadataName == "IList`1", out type) &&
-                        type.GetMembers().TrySingle(x => x is IPropertySymbol property && property.IsIndexer, out var indexer))
-                    {
-                        return indexer;
-                    }
-
-                    if (type.GetMembers().TrySingle(x => x is IPropertySymbol property && property.IsIndexer, out indexer))
-                    {
-                        return indexer;
-                    }
-                }
-
-                return null;
+                return arrayType;
             }
 
             return semanticModel.SemanticModelFor(node)

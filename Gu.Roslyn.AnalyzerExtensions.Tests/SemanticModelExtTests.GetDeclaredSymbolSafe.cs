@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
-    using System.Collections.Immutable;
     using System.Linq;
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -214,12 +213,34 @@ namespace RoslynSandbox
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var node = (ElementAccessExpressionSyntax)syntaxTree.FindAssignmentExpression("ints[0] = 1").Left;
-                var expected = (IPropertySymbol)((IArrayTypeSymbol)semanticModel.GetTypeInfo(node.Expression).Type)
-                                                                                .Interfaces.Single(x => x.MetadataName == "IList`1")
-                                                                                .GetMembers().Single(x => x is IPropertySymbol property && property.IsIndexer);
+                var expected = (IArrayTypeSymbol)semanticModel.GetTypeInfo(node.Expression).Type;
                 Assert.AreEqual(expected, semanticModel.GetSymbolSafe(node, CancellationToken.None));
-                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var indexer));
-                Assert.AreEqual(expected, indexer);
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var symbol));
+                Assert.AreEqual(expected, symbol);
+            }
+
+            [Test]
+            public void IndexerWhenMultidimensionalArrayElementAccess()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    class C
+    {
+        C(int[,] ints)
+        {
+            ints[0, 0] = 1;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = (ElementAccessExpressionSyntax)syntaxTree.FindAssignmentExpression("ints[0, 0] = 1").Left;
+                var expected = (IArrayTypeSymbol)semanticModel.GetTypeInfo(node.Expression).Type;
+                Assert.AreEqual(expected, semanticModel.GetSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true,     semanticModel.TryGetSymbol(node, CancellationToken.None, out var symbol));
+                Assert.AreEqual(expected, symbol);
             }
 
             [Test]
@@ -245,6 +266,32 @@ namespace RoslynSandbox
                 var expected = (IPropertySymbol)semanticModel.GetTypeInfo(node.Expression).Type.GetMembers().Single(x => x is IPropertySymbol property && property.IsIndexer);
                 Assert.AreEqual(expected, semanticModel.GetSymbolSafe(node, CancellationToken.None));
                 Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var indexer));
+                Assert.AreEqual(expected, indexer);
+            }
+
+            [Test]
+            public void IndexerWhenDictionaryElementAccess()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    using System.Collections.Generic;
+
+     class C
+    {
+        C(Dictionary<int, string> map)
+        {
+            map[0] = ""abc"";
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var node = (ElementAccessExpressionSyntax)syntaxTree.FindAssignmentExpression("map[0] = \"abc\"").Left;
+                var expected = (IPropertySymbol)semanticModel.GetTypeInfo(node.Expression).Type.GetMembers().Single(x => x is IPropertySymbol property && property.IsIndexer);
+                Assert.AreEqual(expected, semanticModel.GetSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true,     semanticModel.TryGetSymbol(node, CancellationToken.None, out var indexer));
                 Assert.AreEqual(expected, indexer);
             }
 
