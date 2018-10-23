@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.4.3.0-dev</Version>
+    <Version>0.4.3.1-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>

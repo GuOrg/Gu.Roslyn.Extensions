@@ -567,6 +567,54 @@ namespace RoslynSandbox
                 var other = syntaxTree.FindStatement(otherInt);
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
+
+            [TestCase("1", "2", ExecutedBefore.Yes)]
+            [TestCase("2", "1", ExecutedBefore.No)]
+            [TestCase("1", "1", ExecutedBefore.No)]
+            [TestCase("2", "3", ExecutedBefore.Yes)]
+            [TestCase("3", "2", ExecutedBefore.No)]
+            [TestCase("3", "4", ExecutedBefore.No)]
+            [TestCase("3", "6", ExecutedBefore.Maybe)]
+            [TestCase("3", "5", ExecutedBefore.Maybe)]
+            [TestCase("2", "4", ExecutedBefore.Yes)]
+            [TestCase("2", "5", ExecutedBefore.Yes)]
+            [TestCase("1", "5", ExecutedBefore.Yes)]
+            [TestCase("5", "6", ExecutedBefore.Yes)]
+            public void TryCatchCatchFinally(string firstStatement, string otherStatement, ExecutedBefore expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo()
+        {
+            int temp = 1;
+            try
+            {
+                temp = 2;
+            }
+            catch (FileNotFoundException e)
+            {
+                temp = 3;
+            }
+            catch (FileFormatException e)
+            {
+                temp = 4;
+            }
+            finally
+            {
+                temp = 5;
+            }
+
+            temp = 6;
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
         }
     }
 }

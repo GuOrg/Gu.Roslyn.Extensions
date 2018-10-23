@@ -78,7 +78,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     return ExecutedBefore.No;
                 }
-
+                
+                if (statement.TryFirstAncestor(out CatchClauseSyntax _))
+                {
+                    return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
+                }
+                
                 return statement.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
             }
 
@@ -87,6 +92,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
                  (ifStatement.Statement?.Contains(other) == true && ifStatement.Else?.Statement?.Contains(statement) == true)))
             {
                 return ExecutedBefore.No;
+            }
+
+            if (statement.TryFirstAncestor(out TryStatementSyntax tryStatement))
+            {
+                if (tryStatement.Block.Contains(statement))
+                {
+                    if (other.TryFirstAncestor(out CatchClauseSyntax catchClause) &&
+                        tryStatement.Catches.TryFirst(x => x == catchClause, out _))
+                    {
+                        return ExecutedBefore.Yes;
+                    }
+
+                    if (tryStatement.Finally?.Contains(other) == true)
+                    {
+                        return ExecutedBefore.Yes;
+                    }
+                }
+                else if (statement.TryFirstAncestor(out CatchClauseSyntax _))
+                {
+                    if (other.TryFirstAncestor(out CatchClauseSyntax _))
+                    {
+                        return ExecutedBefore.No;
+                    }
+
+                    return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
+                }
+                else if(other.TryFirstAncestor(out CatchClauseSyntax _))
+                {
+                    return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
+                }
+
+                return statement.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
             }
 
             return ExecutedBefore.Unknown;
