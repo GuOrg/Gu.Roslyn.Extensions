@@ -117,11 +117,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (node.TryFirstAncestor(out StatementSyntax statement) &&
                 other.TryFirstAncestor(out StatementSyntax otherStatement))
             {
-                if (ReferenceEquals(statement, otherStatement))
-                {
-                    return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
-                }
-
                 return statement.IsExecutedBefore(otherStatement);
             }
 
@@ -154,11 +149,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (node.TryFirstAncestor(out StatementSyntax statement))
             {
-                if (ReferenceEquals(statement, other))
-                {
-                    return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
-                }
-
                 return statement.IsExecutedBefore(other);
             }
 
