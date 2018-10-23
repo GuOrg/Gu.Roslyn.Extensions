@@ -30,7 +30,7 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", ExecutedBefore.Maybe)]
+            [TestCase("1", "2", ExecutedBefore.Yes)]
             [TestCase("2", "1", ExecutedBefore.Maybe)]
             [TestCase("1", "1", ExecutedBefore.Maybe)]
             public void DeclaredInWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
@@ -59,8 +59,10 @@ namespace RoslynSandbox
             [TestCase("1", "1", ExecutedBefore.Maybe)]
             [TestCase("0", "1", ExecutedBefore.Yes)]
             [TestCase("0", "2", ExecutedBefore.Yes)]
-            [TestCase("1", "2", ExecutedBefore.Maybe)]
+            [TestCase("1", "2", ExecutedBefore.Yes)]
             [TestCase("2", "1", ExecutedBefore.Maybe)]
+            [TestCase("1", "3", ExecutedBefore.Yes)]
+            [TestCase("3", "1", ExecutedBefore.No)]
             public void DeclaredBeforeWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -76,6 +78,8 @@ namespace RoslynSandbox
                 temp = 1;
                 temp = 2;
             }
+
+            temp = 3;
         }
     }
 }");
@@ -84,7 +88,7 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", ExecutedBefore.Maybe)]
+            [TestCase("1", "2", ExecutedBefore.Yes)]
             [TestCase("2", "1", ExecutedBefore.Maybe)]
             [TestCase("1", "1", ExecutedBefore.Maybe)]
             public void DeclaredInForeachLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
@@ -109,7 +113,7 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
-            [TestCase("1", "2", ExecutedBefore.Maybe)]
+            [TestCase("1", "2", ExecutedBefore.Yes)]
             [TestCase("2", "1", ExecutedBefore.Maybe)]
             [TestCase("1", "1", ExecutedBefore.Maybe)]
             public void DeclaredInForLoop(string firstStatement, string otherStatement, ExecutedBefore expected)

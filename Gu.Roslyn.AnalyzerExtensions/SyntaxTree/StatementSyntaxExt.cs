@@ -31,10 +31,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return ExecutedBefore.Maybe;
             }
 
-            if (statement.TryFindSharedAncestorRecursive(other, out DoStatementSyntax _) ||
-                statement.TryFindSharedAncestorRecursive(other, out ForStatementSyntax _) ||
-                statement.TryFindSharedAncestorRecursive(other, out ForEachStatementSyntax _) ||
-                statement.TryFindSharedAncestorRecursive(other, out WhileStatementSyntax _))
+            if (statement.SpanStart >= other.SpanStart &&
+                (statement.TryFindSharedAncestorRecursive(other, out DoStatementSyntax _) ||
+                 statement.TryFindSharedAncestorRecursive(other, out ForStatementSyntax _) ||
+                 statement.TryFindSharedAncestorRecursive(other, out ForEachStatementSyntax _) ||
+                 statement.TryFindSharedAncestorRecursive(other, out WhileStatementSyntax _)))
             {
                 return ExecutedBefore.Maybe;
             }
