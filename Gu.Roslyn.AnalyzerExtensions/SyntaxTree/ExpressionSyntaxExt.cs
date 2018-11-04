@@ -109,6 +109,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return ExecutedBefore.Unknown;
             }
 
+            if (ReferenceEquals(node, other))
+            {
+                return ExecutedBefore.No;
+            }
+
+            if (node.Contains(other))
+            {
+                return ExecutedBefore.No;
+            }
+
+            if (other.Contains(node))
+            {
+                return ExecutedBefore.Yes;
+            }
+
             if (SyntaxExecutionContext.IsInLambda(node, other, out var executedBefore))
             {
                 return executedBefore;

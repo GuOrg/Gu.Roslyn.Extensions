@@ -8,6 +8,29 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     {
         public class IsExecutedBefore
         {
+            [Test]
+            public void InnerBeforeOuter()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    using System;
+
+    public class Foo
+    {
+        private readonly int i;
+        public Foo()
+        {
+            i = 1;
+        }
+    }
+}");
+                var outer = syntaxTree.FindAssignmentExpression("i = 1");
+                var inner = syntaxTree.FindLiteralExpression("1");
+                Assert.AreEqual(ExecutedBefore.Yes, inner.IsExecutedBefore(outer));
+                Assert.AreEqual(ExecutedBefore.No, outer.IsExecutedBefore(inner));
+            }
+
             [TestCase("1", "2", ExecutedBefore.Yes)]
             [TestCase("2", "1", ExecutedBefore.No)]
             public void And(string firstInt, string otherInt, ExecutedBefore expected)
