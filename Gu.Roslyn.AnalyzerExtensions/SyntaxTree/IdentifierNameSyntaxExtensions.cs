@@ -11,6 +11,40 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class IdentifierNameSyntaxExtensions
     {
         /// <summary>
+        /// Check if <paramref name="candidate"/> is <paramref name="expected"/>.
+        /// </summary>
+        /// <param name="candidate">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <param name="expected">The <see cref="QualifiedField"/> to match against.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="target">The symbol of the target if match.</param>
+        /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
+        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IFieldSymbol target)
+        {
+            target = null;
+            return candidate?.Identifier.ValueText == expected.Name &&
+                   semanticModel.TryGetSymbol(candidate, cancellationToken, out target) &&
+                   target == expected;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is <paramref name="expected"/>.
+        /// </summary>
+        /// <param name="candidate">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <param name="expected">The <see cref="QualifiedProperty"/> to match against.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="target">The symbol of the target if match.</param>
+        /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
+        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IPropertySymbol target)
+        {
+            target = null;
+            return candidate?.Identifier.ValueText == expected.Name &&
+                   semanticModel.TryGetSymbol(candidate, cancellationToken, out target) &&
+                   target == expected;
+        }
+
+        /// <summary>
         /// Check if <paramref name="candidate"/> is <paramref name="symbol"/>.
         /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
         /// </summary>
