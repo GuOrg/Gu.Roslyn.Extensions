@@ -1,7 +1,10 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Diagnostics;
+    using System.Threading;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
     /// A wrapper for a field or a property.
@@ -55,6 +58,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 default:
                     result = default(FieldOrProperty);
                     return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the initializer or null.
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>The initializer for the member.</returns>
+        public EqualsValueClauseSyntax Initializer(CancellationToken cancellationToken)
+        {
+            switch (this.Symbol.Kind)
+            {
+                case SymbolKind.Field when this.Symbol.TrySingleDeclaration(cancellationToken, out FieldDeclarationSyntax fieldDeclaration) &&
+                                           fieldDeclaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
+                                           variableDeclaration.Variables.TrySingle(out var variable) &&
+                                           variable.Initializer is EqualsValueClauseSyntax initializer:
+                    return initializer;
+                case SymbolKind.Property when this.Symbol.TrySingleDeclaration(cancellationToken, out PropertyDeclarationSyntax propertyDeclaration):
+                    return propertyDeclaration.Initializer;
+                default:
+                    throw new InvalidOperationException("Should never get here.");
             }
         }
     }
