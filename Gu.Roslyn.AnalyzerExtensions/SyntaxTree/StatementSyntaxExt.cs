@@ -83,8 +83,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
                 }
-                
-                return statement.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
+
+                if (statement.SpanStart < other.SpanStart)
+                {
+                    if (statement.TryFirstAncestor<SwitchStatementSyntax>(out _) ||
+                        statement.TryFirstAncestor<IfStatementSyntax>(out _))
+                    {
+                        return ExecutedBefore.Maybe;
+                    }
+
+                    return ExecutedBefore.Yes;
+                }
+
+                return ExecutedBefore.No;
             }
 
             if (statement.TryFindSharedAncestorRecursive(other, out IfStatementSyntax ifStatement) &&
