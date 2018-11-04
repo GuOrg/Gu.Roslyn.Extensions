@@ -139,12 +139,17 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
+            [TestCase("1", "4", ExecutedBefore.Yes)]
             [TestCase("1", "2", ExecutedBefore.Yes)]
             [TestCase("2", "1", ExecutedBefore.No)]
             [TestCase("1", "3", ExecutedBefore.Yes)]
             [TestCase("3", "1", ExecutedBefore.No)]
             [TestCase("2", "3", ExecutedBefore.No)]
             [TestCase("3", "2", ExecutedBefore.No)]
+            [TestCase("2", "4", ExecutedBefore.Yes)]
+            [TestCase("3", "4", ExecutedBefore.Yes)]
+            [TestCase("4", "2", ExecutedBefore.No)]
+            [TestCase("4", "3", ExecutedBefore.No)]
             public void IfElseBlocks(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -163,6 +168,8 @@ namespace RoslynSandbox
             {
                 temp = 3;
             }
+
+            temp = 4;
         }
     }
 }");
@@ -171,12 +178,17 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, first.IsExecutedBefore(other));
             }
 
+            [TestCase("1", "4", ExecutedBefore.Yes)]
             [TestCase("1", "2", ExecutedBefore.Yes)]
-            [TestCase("1", "3", ExecutedBefore.Yes)]
             [TestCase("2", "1", ExecutedBefore.No)]
+            [TestCase("1", "3", ExecutedBefore.Yes)]
             [TestCase("3", "1", ExecutedBefore.No)]
             [TestCase("2", "3", ExecutedBefore.No)]
             [TestCase("3", "2", ExecutedBefore.No)]
+            [TestCase("2", "4", ExecutedBefore.Yes)]
+            [TestCase("3", "4", ExecutedBefore.Yes)]
+            [TestCase("4", "2", ExecutedBefore.No)]
+            [TestCase("4", "3", ExecutedBefore.No)]
             public void IfElseStatements(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -191,6 +203,8 @@ namespace RoslynSandbox
                 temp = 2;
             else
                 temp = 3;
+
+            temp = 4;
         }
     }
 }");
@@ -252,39 +266,6 @@ namespace RoslynSandbox
                 temp = 2;
             else
                 temp = 3;
-            temp = 4;
-        }
-    }
-}");
-                var first = syntaxTree.FindStatement(firstStatement);
-                var other = syntaxTree.FindStatement(otherStatement);
-                Assert.AreEqual(expected, first.IsExecutedBefore(other));
-            }
-
-            [TestCase("1", "4", ExecutedBefore.Yes)]
-            [TestCase("2", "4", ExecutedBefore.Yes)]
-            [TestCase("3", "4", ExecutedBefore.Yes)]
-            [TestCase("4", "2", ExecutedBefore.No)]
-            [TestCase("4", "3", ExecutedBefore.No)]
-            public void AfterIfBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
-            {
-                var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
-{
-    internal class Foo
-    {
-        internal Foo()
-        {
-            var temp = 1;
-            if (true)
-            {
-                temp = 2;
-            }
-            else
-            {
-                temp = 3;
-            }
-
             temp = 4;
         }
     }
@@ -608,6 +589,94 @@ namespace RoslynSandbox
             }
 
             temp = 6;
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("1", "2", ExecutedBefore.Yes)]
+            [TestCase("2", "1", ExecutedBefore.No)]
+            [TestCase("1", "1", ExecutedBefore.No)]
+            [TestCase("2", "3", ExecutedBefore.No)]
+            [TestCase("3", "2", ExecutedBefore.No)]
+            [TestCase("3", "4", ExecutedBefore.No)]
+            [TestCase("4", "3", ExecutedBefore.No)]
+            [TestCase("2", "4", ExecutedBefore.No)]
+            [TestCase("2", "5", ExecutedBefore.Yes)]
+            [TestCase("3", "5", ExecutedBefore.Yes)]
+            [TestCase("4", "5", ExecutedBefore.Yes)]
+            [TestCase("1", "5", ExecutedBefore.Yes)]
+            public void Switch(string firstStatement, string otherStatement, ExecutedBefore expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo(int i)
+        {
+            int temp = 1;
+            switch (i)
+            {
+                case 0:
+                    temp = 2;
+                    break;
+                case 1:
+                    temp = 3;
+                    break;
+                default:
+                    temp = 4;
+                    break;
+            }
+
+            temp = 5;
+        }
+    }
+}");
+                var first = syntaxTree.FindStatement(firstStatement);
+                var other = syntaxTree.FindStatement(otherStatement);
+                Assert.AreEqual(expected, first.IsExecutedBefore(other));
+            }
+
+            [TestCase("1", "2", ExecutedBefore.Yes)]
+            [TestCase("2", "1", ExecutedBefore.No)]
+            [TestCase("1", "1", ExecutedBefore.No)]
+            [TestCase("2", "3", ExecutedBefore.No)]
+            [TestCase("3", "2", ExecutedBefore.No)]
+            [TestCase("3", "4", ExecutedBefore.No)]
+            [TestCase("4", "3", ExecutedBefore.No)]
+            [TestCase("2", "4", ExecutedBefore.No)]
+            [TestCase("2", "5", ExecutedBefore.Yes)]
+            [TestCase("3", "5", ExecutedBefore.Yes)]
+            [TestCase("4", "5", ExecutedBefore.Yes)]
+            [TestCase("1", "5", ExecutedBefore.Yes)]
+            public void SwitchPattern(string firstStatement, string otherStatement, ExecutedBefore expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    internal class Foo
+    {
+        internal Foo(int i)
+        {
+            int temp = 1;
+            switch (i)
+            {
+                case int n when n == 0:
+                    temp = 2;
+                    break;
+                case int n when n == 1:
+                    temp = 3;
+                    break;
+                default:
+                    temp = 4;
+                    break;
+            }
+
+            temp = 5;
         }
     }
 }");

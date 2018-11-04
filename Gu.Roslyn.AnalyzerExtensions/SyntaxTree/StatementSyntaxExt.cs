@@ -126,6 +126,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return statement.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
             }
 
+            if(statement.SharesAncestor(other, out SwitchStatementSyntax switchStatement))
+            {
+                return ExecutedBefore.No;
+            }
             return ExecutedBefore.Unknown;
         }
 
