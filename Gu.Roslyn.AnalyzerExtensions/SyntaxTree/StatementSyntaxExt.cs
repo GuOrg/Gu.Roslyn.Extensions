@@ -78,7 +78,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     return ExecutedBefore.No;
                 }
-                
+
                 if (statement.TryFirstAncestor(out CatchClauseSyntax _))
                 {
                     return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
@@ -129,7 +129,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                     return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
                 }
-                else if(other.TryFirstAncestor(out CatchClauseSyntax _))
+                else if (other.TryFirstAncestor(out CatchClauseSyntax _))
                 {
                     return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
                 }
@@ -137,10 +137,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return statement.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
             }
 
-            if(statement.SharesAncestor(other, out SwitchStatementSyntax switchStatement))
+            if (statement.SharesAncestor<SwitchStatementSyntax>(other, out _))
             {
                 return ExecutedBefore.No;
             }
+
             return ExecutedBefore.Unknown;
         }
 
