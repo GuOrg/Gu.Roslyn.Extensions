@@ -9,7 +9,8 @@ group Analyzers
   nuget AsyncUsageAnalyzers
   nuget Gu.Analyzers
   nuget IDisposableAnalyzers
-  nuget ReflectionAnalyzers
+  nuget DotNetAnalyzers.PublicApiAnalyzer prerelease
+  nuget ReflectionAnalyzers prerelease
   nuget StyleCop.Analyzers prerelease
 
 group Test

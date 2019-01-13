@@ -154,7 +154,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (this.refCount <= 0)
             {
                 Debug.Assert(this.refCount == 0, $"{nameof(this.ThrowIfDisposed)} set.refCount == {this.refCount}");
-                throw new ObjectDisposedException(this.GetType().FullName);
+                throw new ObjectDisposedException(typeof(PooledSet<T>).FullName);
             }
         }
     }

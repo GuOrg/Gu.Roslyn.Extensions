@@ -1,7 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     /// <summary>
-    /// Extension methods for <see cref="ExecutedBefore"/>
+    /// Extension methods for <see cref="ExecutedBefore"/>.
     /// </summary>
     public static class ExecutedBeforeExt
     {
