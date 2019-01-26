@@ -326,6 +326,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.prefixUnaries.Clear();
             this.postfixUnaries.Clear();
             this.refOrOutArguments.Clear();
+            base.Clear();
         }
     }
 }

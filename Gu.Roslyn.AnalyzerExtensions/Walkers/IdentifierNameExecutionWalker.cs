@@ -66,6 +66,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected override void Clear()
         {
             this.identifierNames.Clear();
+            base.Clear();
         }
     }
 }
