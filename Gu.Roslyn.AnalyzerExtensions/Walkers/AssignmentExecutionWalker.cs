@@ -280,8 +280,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.assignments.Clear();
             this.arguments.Clear();
             this.localDeclarations.Clear();
-            this.SemanticModel = null;
-            this.CancellationToken = CancellationToken.None;
             base.Clear();
         }
 
