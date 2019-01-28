@@ -88,7 +88,7 @@ namespace RoslynSandbox
 
         public void M()
         {
-            var p = this.P;
+            var p = this.P.ToString();
         }
     }
 }");
@@ -97,7 +97,7 @@ namespace RoslynSandbox
             var node = syntaxTree.FindMethodDeclaration("M");
             using (var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
             {
-                CollectionAssert.AreEqual(new[] { "var", "P" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
+                CollectionAssert.AreEqual(new[] { "var", "P", "ToString" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
 
                 Assert.AreEqual(true, walker.TryFind("P", out var match));
                 Assert.AreEqual("P", match.Identifier.ValueText);
