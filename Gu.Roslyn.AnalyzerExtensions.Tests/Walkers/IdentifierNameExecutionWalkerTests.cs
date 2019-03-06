@@ -105,5 +105,38 @@ namespace RoslynSandbox
                 Assert.AreEqual(false, walker.TryFind("missing", out _));
             }
         }
+
+        [TestCase(Scope.Member)]
+        [TestCase(Scope.Instance)]
+        [TestCase(Scope.Type)]
+        [TestCase(Scope.Recursive)]
+        public void TryFindWhenProperty2(Scope scope)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class C
+    {
+        public int P { get; }
+
+        public void M()
+        {
+            this.P.ToString();
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindMethodDeclaration("M");
+            using (var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
+            {
+                CollectionAssert.AreEqual(new[] { "P", "ToString" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
+
+                Assert.AreEqual(true, walker.TryFind("P", out var match));
+                Assert.AreEqual("P", match.Identifier.ValueText);
+
+                Assert.AreEqual(false, walker.TryFind("missing", out _));
+            }
+        }
     }
 }
