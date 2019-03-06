@@ -21,11 +21,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
                 var testCode = @"
 namespace RoslynSandbox
 {
-    internal class Foo
+    internal class C
     {
         private readonly int value;
 
-        internal Foo(int arg)
+        internal C(int arg)
         {
             this.value = arg;
         }
@@ -35,7 +35,7 @@ namespace RoslynSandbox
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var value = syntaxTree.FindAssignmentExpression("this.value = arg").Right;
-                var ctor = syntaxTree.FindConstructorDeclaration("Foo(int arg)");
+                var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
                 var symbol = semanticModel.GetSymbolSafe(value, CancellationToken.None);
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
                 Assert.AreEqual("this.value = arg", result.ToString());
@@ -53,11 +53,11 @@ namespace RoslynSandbox
                 var testCode = @"
 namespace RoslynSandbox
 {
-    internal class Foo
+    internal class C
     {
         private readonly int value;
 
-        internal Foo(int arg)
+        internal C(int arg)
         {
             var temp = arg;
             this.value = temp;
@@ -67,7 +67,7 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var ctor = syntaxTree.FindConstructorDeclaration("Foo(int arg)");
+                var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
                 var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindParameter("int arg"), CancellationToken.None);
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
                 Assert.AreEqual("this.value = temp", result.ToString());
@@ -87,11 +87,11 @@ namespace RoslynSandbox
 {
     using System.IO;
 
-    internal class Foo
+    internal class C
     {
         private StreamReader reader;
 
-        internal Foo(Stream stream)
+        internal C(Stream stream)
         {
             this.reader = new StreamReader(stream);
         }
@@ -101,7 +101,7 @@ namespace RoslynSandbox
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var value = syntaxTree.FindParameter("stream");
-                var ctor = syntaxTree.FindConstructorDeclaration("Foo(Stream stream)");
+                var ctor = syntaxTree.FindConstructorDeclaration("C(Stream stream)");
                 var symbol = semanticModel.GetDeclaredSymbol(value, CancellationToken.None);
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
                 Assert.AreEqual("this.reader = new StreamReader(stream)", result.ToString());
@@ -119,16 +119,16 @@ namespace RoslynSandbox
                 var testCode = @"
 namespace RoslynSandbox
 {
-    internal class Foo
+    internal class C
     {
         private readonly int value;
 
-        public Foo(int arg)
+        public C(int arg)
             : this(arg, 1)
         {
         }
 
-        internal Foo(int chainedArg, int _)
+        internal C(int chainedArg, int _)
         {
             this.value = chainedArg;
         }
@@ -137,7 +137,7 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var ctor = syntaxTree.FindConstructorDeclaration("Foo(int arg)");
+                var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
                 var symbol = semanticModel.GetDeclaredSymbolSafe(syntaxTree.FindParameter("arg"), CancellationToken.None);
                 if (scope != Scope.Member)
                 {
@@ -166,11 +166,11 @@ namespace RoslynSandbox
                 var testCode = @"
 namespace RoslynSandbox
 {
-    internal class Foo
+    internal class C
     {
         private int number;
 
-        internal Foo(int arg)
+        internal C(int arg)
         {
             this.Number = arg;
         }
@@ -186,7 +186,7 @@ namespace RoslynSandbox
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var value = syntaxTree.FindParameter("arg");
-                var ctor = syntaxTree.FindConstructorDeclaration("Foo(int arg)");
+                var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
                 var symbol = semanticModel.GetDeclaredSymbolSafe(value, CancellationToken.None);
                 if (scope == Scope.Member)
                 {
