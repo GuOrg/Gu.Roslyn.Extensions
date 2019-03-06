@@ -48,6 +48,38 @@ namespace RoslynSandbox
             [TestCase(Scope.Member)]
             [TestCase(Scope.Instance)]
             [TestCase(Scope.Recursive)]
+            public void GenericFieldCtorArg(Scope scope)
+            {
+                var testCode = @"
+namespace RoslynSandbox
+{
+    internal class C<T>
+    {
+        private readonly T value;
+
+        internal C(T arg)
+        {
+            this.value = arg;
+        }
+    }
+}";
+                var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var value = syntaxTree.FindAssignmentExpression("this.value = arg").Right;
+                var ctor = syntaxTree.FindConstructorDeclaration("C(T arg)");
+                var symbol = semanticModel.GetSymbolSafe(value, CancellationToken.None);
+                Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
+                Assert.AreEqual("this.value = arg", result.ToString());
+                using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
+                {
+                    Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
+                }
+            }
+
+            [TestCase(Scope.Member)]
+            [TestCase(Scope.Instance)]
+            [TestCase(Scope.Recursive)]
             public void FieldCtorArgViaLocal(Scope scope)
             {
                 var testCode = @"
