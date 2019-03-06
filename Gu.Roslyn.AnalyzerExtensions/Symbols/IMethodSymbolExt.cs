@@ -26,7 +26,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (argument.Parent is ArgumentListSyntax argumentList)
             {
-                return method.Parameters.TryElementAt(argumentList.Arguments.IndexOf(argument), out parameter);
+                var index = argumentList.Arguments.IndexOf(argument);
+                if (index >= method.Parameters.Length &&
+                    method.Parameters.TryLast(out var last) &&
+                    last.IsParams)
+                {
+                    parameter = last;
+                    return true;
+                }
+
+                return method.Parameters.TryElementAt(index, out parameter);
             }
 
             parameter = null;
