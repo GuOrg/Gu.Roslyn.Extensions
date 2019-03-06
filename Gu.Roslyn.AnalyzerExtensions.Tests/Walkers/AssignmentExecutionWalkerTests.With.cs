@@ -4,6 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using System.Threading;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.Asserts;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -34,9 +35,9 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var value = syntaxTree.FindAssignmentExpression("this.value = arg").Right;
+                var value = syntaxTree.FindParameter("arg");
                 var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
-                var symbol = semanticModel.GetSymbolSafe(value, CancellationToken.None);
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(value, CancellationToken.None, out var symbol));
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
                 Assert.AreEqual("this.value = arg", result.ToString());
                 using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
@@ -66,9 +67,44 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var value = syntaxTree.FindAssignmentExpression("this.value = arg").Right;
+                var value = syntaxTree.FindParameter("arg");
                 var ctor = syntaxTree.FindConstructorDeclaration("C(T arg)");
-                var symbol = semanticModel.GetSymbolSafe(value, CancellationToken.None);
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(value, CancellationToken.None, out var symbol));
+                Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
+                Assert.AreEqual("this.value = arg", result.ToString());
+                using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
+                {
+                    Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
+                }
+            }
+
+            [TestCase(Scope.Member)]
+            [TestCase(Scope.Instance)]
+            [TestCase(Scope.Recursive)]
+            public void GenericFieldTypedCtorArg(Scope scope)
+            {
+                var testCode = @"
+namespace RoslynSandbox
+{
+    internal class C<T>
+    {
+        private readonly T value;
+
+        internal C(T arg)
+        {
+            this.value = arg;
+        }
+
+         public static C<int> Create(int n) => new C<int>(n);
+    }
+}";
+                var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                ArgumentSyntax argument = syntaxTree.FindArgument("n");
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(argument.Parent.Parent, CancellationToken.None, out IMethodSymbol method));
+                Assert.AreEqual(true, method.TryFindParameter(argument, out var symbol));
+                var ctor = syntaxTree.FindConstructorDeclaration("C(T arg)");
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
                 Assert.AreEqual("this.value = arg", result.ToString());
                 using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))

@@ -55,7 +55,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             var walker = Borrow(node, scope, semanticModel, cancellationToken);
-            walker.assignments.RemoveAll(x => !IsMatch(symbol, x.Left, semanticModel, cancellationToken));
+            walker.assignments.RemoveAll(x => !IsMatch(symbol.OriginalDefinition, x.Left, semanticModel, cancellationToken));
             return walker;
         }
 
@@ -76,7 +76,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return Borrow(() => new AssignmentExecutionWalker());
             }
 
-            return With(symbol, node, null);
+            return With(symbol.OriginalDefinition, node, null);
 
             AssignmentExecutionWalker With(ISymbol currentSymbol, SyntaxNode currentNode, PooledSet<ISymbol> visited = null)
             {
@@ -177,7 +177,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 foreach (var candidate in walker.Assignments)
                 {
                     if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out ISymbol assignedSymbol) &&
-                        SymbolComparer.Equals(symbol, assignedSymbol))
+                        SymbolComparer.Equals(symbol.OriginalDefinition, assignedSymbol))
                     {
                         assignment = candidate;
                         return true;
@@ -212,7 +212,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 foreach (var candidate in walker.Assignments)
                 {
                     if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out ISymbol assignedSymbol) &&
-                        SymbolComparer.Equals(symbol, assignedSymbol))
+                        SymbolComparer.Equals(symbol.OriginalDefinition, assignedSymbol))
                     {
                         if (assignment != null)
                         {
@@ -247,7 +247,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var walker = With(symbol, node, scope, semanticModel, cancellationToken))
+            using (var walker = With(symbol.OriginalDefinition, node, scope, semanticModel, cancellationToken))
             {
                 return walker.assignments.TryFirst(out assignment);
             }
