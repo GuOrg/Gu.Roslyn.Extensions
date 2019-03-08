@@ -11,6 +11,32 @@ namespace Gu.Roslyn.AnalyzerExtensions
     [DebuggerDisplay("{this.Symbol}")]
     public struct LocalOrParameter
     {
+        /// <summary>
+        /// Create a new instance of the <see cref="LocalOrParameter"/> struct.
+        /// </summary>
+        /// <param name="local">The <see cref="ILocalSymbol"/>.</param>
+        public LocalOrParameter(ILocalSymbol local)
+            : this((ISymbol)local)
+        {
+            if (local == null)
+            {
+                throw new ArgumentNullException(nameof(local));
+            }
+        }
+
+        /// <summary>
+        /// Create a new instance of the <see cref="LocalOrParameter"/> struct.
+        /// </summary>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        public LocalOrParameter(IParameterSymbol parameter)
+            : this((ISymbol)parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+        }
+
         private LocalOrParameter(ISymbol symbol)
         {
             this.Symbol = symbol;

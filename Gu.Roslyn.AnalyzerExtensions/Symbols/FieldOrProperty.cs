@@ -12,6 +12,32 @@ namespace Gu.Roslyn.AnalyzerExtensions
     [DebuggerDisplay("{this.Symbol}")]
     public struct FieldOrProperty
     {
+        /// <summary>
+        /// Create a new instance of the <see cref="FieldOrProperty"/> struct.
+        /// </summary>
+        /// <param name="field">The <see cref="IFieldSymbol"/>.</param>
+        public FieldOrProperty(IFieldSymbol field)
+            : this((ISymbol)field)
+        {
+            if (field == null)
+            {
+                throw new ArgumentNullException(nameof(field));
+            }
+        }
+
+        /// <summary>
+        /// Create a new instance of the <see cref="FieldOrProperty"/> struct.
+        /// </summary>
+        /// <param name="property">The <see cref="IPropertySymbol"/></param>
+        public FieldOrProperty(IPropertySymbol property)
+            : this((ISymbol)property)
+        {
+            if (property == null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+        }
+
         private FieldOrProperty(ISymbol symbol)
         {
             this.Symbol = symbol;
