@@ -3,7 +3,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using System.Linq;
     using System.Threading;
     using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
