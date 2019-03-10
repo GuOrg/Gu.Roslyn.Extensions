@@ -3,6 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using System.Linq;
     using System.Threading;
     using Gu.Roslyn.Asserts;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
@@ -28,6 +29,59 @@ namespace RoslynSandbox
                 CollectionAssert.AreEqual(new[] { "i" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
                 Assert.AreEqual(true, walker.TryFind("i", out var match));
                 Assert.AreEqual("i", match.Identifier.ValueText);
+                Assert.AreEqual(false, walker.TryFind("missing", out _));
+            }
+        }
+
+        [Test]
+        public void ForWhenParameter()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class C
+    {
+        public C(int i)
+        {
+            i = 1;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindParameter("i"), CancellationToken.None, out var parameter));
+            using (var walker = IdentifierNameWalker.For(parameter, semanticModel, CancellationToken.None))
+            {
+                CollectionAssert.AreEqual(new[] { "i" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
+                Assert.AreEqual(true,  walker.TryFind("i", out var match));
+                Assert.AreEqual("i",   match.Identifier.ValueText);
+                Assert.AreEqual(false, walker.TryFind("missing", out _));
+            }
+        }
+
+        [Test]
+        public void ForWhenLocal()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    public class C
+    {
+        public C()
+        {
+            var i = 0;
+            i = 1;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindVariableDeclaration("i"), CancellationToken.None, out var local));
+            using (var walker = IdentifierNameWalker.For(local, semanticModel, CancellationToken.None))
+            {
+                CollectionAssert.AreEqual(new[] { "i" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
+                Assert.AreEqual(true,  walker.TryFind("i", out var match));
+                Assert.AreEqual("i",   match.Identifier.ValueText);
                 Assert.AreEqual(false, walker.TryFind("missing", out _));
             }
         }

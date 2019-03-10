@@ -30,6 +30,66 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static IdentifierNameWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new IdentifierNameWalker());
 
         /// <summary>
+        /// Get a walker that has all uses of <paramref name="parameter"/>.
+        /// </summary>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker that has all uses of <paramref name="parameter"/>.</returns>
+        public static IdentifierNameWalker For(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (LocalOrParameter.TryCreate(parameter, out var localOrParameter))
+            {
+                return For(localOrParameter, semanticModel, cancellationToken);
+            }
+
+            return Borrow(() => new IdentifierNameWalker());
+        }
+
+        /// <summary>
+        /// Get a walker that has all uses of <paramref name="local"/>.
+        /// </summary>
+        /// <param name="local">The <see cref="ILocalSymbol"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker that has all uses of <paramref name="local"/>.</returns>
+        public static IdentifierNameWalker For(ILocalSymbol local, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (LocalOrParameter.TryCreate(local, out var localOrParameter))
+            {
+                return For(localOrParameter, semanticModel, cancellationToken);
+            }
+
+            return Borrow(() => new IdentifierNameWalker());
+        }
+
+        /// <summary>
+        /// Get a walker that has all uses of <paramref name="localOrParameter"/>.
+        /// </summary>
+        /// <param name="localOrParameter">The <see cref="LocalOrParameter"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>A walker that has all uses of <paramref name="localOrParameter"/>.</returns>
+        public static IdentifierNameWalker For(LocalOrParameter localOrParameter, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (localOrParameter.TryGetScope(cancellationToken, out var scope))
+            {
+                var walker = BorrowAndVisit(scope, () => new IdentifierNameWalker());
+                walker.RemoveAll(x => !IsMatch(x));
+                return walker;
+            }
+
+            return Borrow(() => new IdentifierNameWalker());
+
+            bool IsMatch(IdentifierNameSyntax candidate)
+            {
+                return candidate.Identifier.Text == localOrParameter.Name &&
+                       semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol symbol) &&
+                       symbol.Equals(localOrParameter.Symbol);
+            }
+        }
+
+        /// <summary>
         /// Try find the first usage of <paramref name="symbol"/>.
         /// </summary>
         /// <param name="node">The scope.</param>
