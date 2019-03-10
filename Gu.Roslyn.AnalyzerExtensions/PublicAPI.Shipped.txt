@@ -44,6 +44,8 @@ Gu.Roslyn.AnalyzerExtensions.FieldDeclarationSyntaxExt
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.ContainingType.get -> Microsoft.CodeAnalysis.INamedTypeSymbol
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.FieldOrProperty() -> void
+Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.FieldOrProperty(Microsoft.CodeAnalysis.IFieldSymbol field) -> void
+Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.FieldOrProperty(Microsoft.CodeAnalysis.IPropertySymbol property) -> void
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.Initializer(System.Threading.CancellationToken cancellationToken) -> Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.IsStatic.get -> bool
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.Name.get -> string
@@ -75,6 +77,8 @@ Gu.Roslyn.AnalyzerExtensions.InvocationExpressionSyntaxExt
 Gu.Roslyn.AnalyzerExtensions.LocalOrParameter
 Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.ContainingSymbol.get -> Microsoft.CodeAnalysis.ISymbol
 Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.LocalOrParameter() -> void
+Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.LocalOrParameter(Microsoft.CodeAnalysis.ILocalSymbol local) -> void
+Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.LocalOrParameter(Microsoft.CodeAnalysis.IParameterSymbol parameter) -> void
 Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.Name.get -> string
 Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.Symbol.get -> Microsoft.CodeAnalysis.ISymbol
 Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.TryGetScope(System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.SyntaxNode scope) -> bool
@@ -598,6 +602,9 @@ static Gu.Roslyn.AnalyzerExtensions.IdentifierNameSyntaxExtensions.IsSymbol(this
 static Gu.Roslyn.AnalyzerExtensions.IdentifierNameSyntaxExtensions.TryGetTarget(this Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax candidate, Gu.Roslyn.AnalyzerExtensions.QualifiedField expected, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.IFieldSymbol target) -> bool
 static Gu.Roslyn.AnalyzerExtensions.IdentifierNameSyntaxExtensions.TryGetTarget(this Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax candidate, Gu.Roslyn.AnalyzerExtensions.QualifiedProperty expected, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.IPropertySymbol target) -> bool
 static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.Borrow(Microsoft.CodeAnalysis.SyntaxNode node) -> Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker
+static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.For(Gu.Roslyn.AnalyzerExtensions.LocalOrParameter localOrParameter, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker
+static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.For(Microsoft.CodeAnalysis.ILocalSymbol local, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker
+static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.For(Microsoft.CodeAnalysis.IParameterSymbol parameter, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker
 static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.TryFindFirst(Microsoft.CodeAnalysis.SyntaxNode node, Microsoft.CodeAnalysis.ISymbol symbol, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax identifierName) -> bool
 static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.TryFindLast(Microsoft.CodeAnalysis.SyntaxNode node, Microsoft.CodeAnalysis.ISymbol symbol, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax identifierName) -> bool
 static Gu.Roslyn.AnalyzerExtensions.IdentifierTokenWalker.Borrow(Microsoft.CodeAnalysis.SyntaxNode node) -> Gu.Roslyn.AnalyzerExtensions.IdentifierTokenWalker

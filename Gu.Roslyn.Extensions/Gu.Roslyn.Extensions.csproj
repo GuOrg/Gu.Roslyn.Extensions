@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.4.4.1-dev</Version>
+    <Version>0.4.5.0-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -20,6 +20,8 @@
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
+    <PackageReleaseNotes>FEATURE: IdentifierNameWalker.For local &amp; parameter.
+BUGFIX: AssignmentExecutionWalker.FirstWith when generic.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

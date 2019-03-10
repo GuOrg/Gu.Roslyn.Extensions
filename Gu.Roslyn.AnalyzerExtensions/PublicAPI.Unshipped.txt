@@ -1,7 +1,1 @@
-﻿Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.FieldOrProperty(Microsoft.CodeAnalysis.IFieldSymbol field) -> void
-Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.FieldOrProperty(Microsoft.CodeAnalysis.IPropertySymbol property) -> void
-Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.LocalOrParameter(Microsoft.CodeAnalysis.ILocalSymbol local) -> void
-Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.LocalOrParameter(Microsoft.CodeAnalysis.IParameterSymbol parameter) -> void
-static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.For(Gu.Roslyn.AnalyzerExtensions.LocalOrParameter localOrParameter, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker
-static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.For(Microsoft.CodeAnalysis.ILocalSymbol local, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker
-static Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.For(Microsoft.CodeAnalysis.IParameterSymbol parameter, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker
+﻿

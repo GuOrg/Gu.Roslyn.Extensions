@@ -15,7 +15,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static AccessorDeclarationSyntax WithAttributeListText(this AccessorDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -40,7 +40,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static ClassDeclarationSyntax WithAttributeListText(this ClassDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -89,7 +89,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static ConstructorDeclarationSyntax WithAttributeListText(this ConstructorDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -114,7 +114,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static ConversionOperatorDeclarationSyntax WithAttributeListText(this ConversionOperatorDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -139,7 +139,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static DelegateDeclarationSyntax WithAttributeListText(this DelegateDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -164,7 +164,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static DestructorDeclarationSyntax WithAttributeListText(this DestructorDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -189,7 +189,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static EnumDeclarationSyntax WithAttributeListText(this EnumDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -214,7 +214,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static EnumMemberDeclarationSyntax WithAttributeListText(this EnumMemberDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -239,7 +239,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static EventDeclarationSyntax WithAttributeListText(this EventDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -264,7 +264,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static EventFieldDeclarationSyntax WithAttributeListText(this EventFieldDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -289,7 +289,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static FieldDeclarationSyntax WithAttributeListText(this FieldDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -314,7 +314,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static IncompleteMemberSyntax WithAttributeListText(this IncompleteMemberSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -339,7 +339,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static IndexerDeclarationSyntax WithAttributeListText(this IndexerDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -364,7 +364,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static InterfaceDeclarationSyntax WithAttributeListText(this InterfaceDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -389,7 +389,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static MethodDeclarationSyntax WithAttributeListText(this MethodDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -414,7 +414,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static OperatorDeclarationSyntax WithAttributeListText(this OperatorDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -463,7 +463,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static PropertyDeclarationSyntax WithAttributeListText(this PropertyDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
@@ -488,7 +488,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">
         /// The attribute text including start and end [].
         /// </param>
-        /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
+        /// <param name="adjustLeadingWhitespace">If true leading whitespace is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static StructDeclarationSyntax WithAttributeListText(this StructDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true)
         {
