@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public sealed class VariableDeclaratorWalker : PooledWalker<VariableDeclaratorWalker>
     {
-        private readonly List<VariableDeclaratorSyntax> identifierNames = new List<VariableDeclaratorSyntax>();
+        private readonly List<VariableDeclaratorSyntax> variableDeclarators = new List<VariableDeclaratorSyntax>();
 
         private VariableDeclaratorWalker()
         {
@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets the <see cref="VariableDeclaratorSyntax"/>s found in the scope.
         /// </summary>
-        public IReadOnlyList<VariableDeclaratorSyntax> VariableDeclarators => this.identifierNames;
+        public IReadOnlyList<VariableDeclaratorSyntax> VariableDeclarators => this.variableDeclarators;
 
         /// <summary>
         /// Get a walker that has visited <paramref name="node"/>.
@@ -31,7 +31,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
         {
-            this.identifierNames.Add(node);
+            this.variableDeclarators.Add(node);
             base.VisitVariableDeclarator(node);
         }
 
@@ -39,12 +39,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Filters by <paramref name="match"/>.
         /// </summary>
         /// <param name="match">The predicate for finding items to remove.</param>
-        public void RemoveAll(Predicate<VariableDeclaratorSyntax> match) => this.identifierNames.RemoveAll(match);
+        public void RemoveAll(Predicate<VariableDeclaratorSyntax> match) => this.variableDeclarators.RemoveAll(match);
 
         /// <inheritdoc />
         protected override void Clear()
         {
-            this.identifierNames.Clear();
+            this.variableDeclarators.Clear();
         }
     }
 }
