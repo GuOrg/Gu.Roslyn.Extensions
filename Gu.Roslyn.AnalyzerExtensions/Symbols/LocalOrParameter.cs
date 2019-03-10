@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public struct LocalOrParameter
     {
         /// <summary>
-        /// Create a new instance of the <see cref="LocalOrParameter"/> struct.
+        /// Initializes a new instance of the <see cref="LocalOrParameter"/> struct.
         /// </summary>
         /// <param name="local">The <see cref="ILocalSymbol"/>.</param>
         public LocalOrParameter(ILocalSymbol local)
@@ -25,7 +25,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Create a new instance of the <see cref="LocalOrParameter"/> struct.
+        /// Initializes a new instance of the <see cref="LocalOrParameter"/> struct.
         /// </summary>
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         public LocalOrParameter(IParameterSymbol parameter)

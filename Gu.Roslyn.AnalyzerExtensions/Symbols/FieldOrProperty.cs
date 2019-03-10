@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public struct FieldOrProperty
     {
         /// <summary>
-        /// Create a new instance of the <see cref="FieldOrProperty"/> struct.
+        /// Initializes a new instance of the <see cref="FieldOrProperty"/> struct.
         /// </summary>
         /// <param name="field">The <see cref="IFieldSymbol"/>.</param>
         public FieldOrProperty(IFieldSymbol field)
@@ -26,9 +26,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Create a new instance of the <see cref="FieldOrProperty"/> struct.
+        /// Initializes a new instance of the <see cref="FieldOrProperty"/> struct.
         /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/></param>
+        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
         public FieldOrProperty(IPropertySymbol property)
             : this((ISymbol)property)
         {
