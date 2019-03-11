@@ -175,6 +175,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Try getting the <see cref="ILocalSymbol"/> for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="symbol">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetSymbol(this SemanticModel semanticModel, ExpressionSyntax node, CancellationToken cancellationToken, out ISymbol symbol)
+        {
+            symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken) ?? 
+                     GetSymbolSafe(semanticModel, node, cancellationToken);
+            return symbol != null;
+        }
+
+        /// <summary>
         /// Same as SemanticModel.GetDeclaredSymbol but works when <paramref name="node"/> is not in the syntax tree.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>

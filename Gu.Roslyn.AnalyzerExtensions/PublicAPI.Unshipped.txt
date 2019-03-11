@@ -1,1 +1,1 @@
-﻿
+﻿static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.TryGetSymbol(this Microsoft.CodeAnalysis.SemanticModel semanticModel, Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax node, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.ISymbol symbol) -> bool
