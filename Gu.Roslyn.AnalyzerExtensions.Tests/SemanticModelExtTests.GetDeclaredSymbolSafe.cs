@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
-    using System;
     using System.Linq;
     using System.Threading;
     using Gu.Roslyn.Asserts;

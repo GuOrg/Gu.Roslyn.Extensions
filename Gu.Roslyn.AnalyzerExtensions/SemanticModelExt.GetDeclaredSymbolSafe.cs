@@ -260,8 +260,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="ITypeSymbol"/> or null.</returns>
         public static ITypeSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, TypeDeclarationSyntax node, CancellationToken cancellationToken)
         {
-            return (ITypeSymbol)semanticModel.SemanticModelFor(node)
-                                             ?.GetDeclaredSymbol(node, cancellationToken);
+            return semanticModel.SemanticModelFor(node)
+                               ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
         /// <summary>
@@ -292,8 +292,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="IMethodSymbol"/> or null.</returns>
         public static IMethodSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, ConstructorDeclarationSyntax node, CancellationToken cancellationToken)
         {
-            return (IMethodSymbol)semanticModel.SemanticModelFor(node)
-                                               ?.GetDeclaredSymbol(node, cancellationToken);
+            return semanticModel.SemanticModelFor(node)
+                               ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
         /// <summary>
@@ -305,8 +305,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="IEventSymbol"/> or null.</returns>
         public static IEventSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, EventDeclarationSyntax node, CancellationToken cancellationToken)
         {
-            return (IEventSymbol)semanticModel.SemanticModelFor(node)
-                                                 ?.GetDeclaredSymbol(node, cancellationToken);
+            return semanticModel.SemanticModelFor(node)
+                               ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 variableDeclaration.Variables.TrySingle(out var variable))
             {
                 return semanticModel.SemanticModelFor(node)
-                                    ?.GetDeclaredSymbol(variable, cancellationToken) as IEventSymbol;
+                                   ?.GetDeclaredSymbol(variable, cancellationToken) as IEventSymbol;
             }
 
             return null;
@@ -337,8 +337,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="IPropertySymbol"/> or null.</returns>
         public static IPropertySymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, PropertyDeclarationSyntax node, CancellationToken cancellationToken)
         {
-            return (IPropertySymbol)semanticModel.SemanticModelFor(node)
-                                                 ?.GetDeclaredSymbol(node, cancellationToken);
+            return semanticModel.SemanticModelFor(node)
+                               ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
         /// <summary>
@@ -350,8 +350,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="IPropertySymbol"/> or null.</returns>
         public static IPropertySymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, IndexerDeclarationSyntax node, CancellationToken cancellationToken)
         {
-            return (IPropertySymbol)semanticModel.SemanticModelFor(node)
-                                                 ?.GetDeclaredSymbol(node, cancellationToken);
+            return semanticModel.SemanticModelFor(node)
+                               ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static ISymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, BasePropertyDeclarationSyntax node, CancellationToken cancellationToken)
         {
             return semanticModel.SemanticModelFor(node)
-                                ?.GetDeclaredSymbol(node, cancellationToken);
+                               ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
         /// <summary>
@@ -376,8 +376,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="IMethodSymbol"/> or null.</returns>
         public static IMethodSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, MethodDeclarationSyntax node, CancellationToken cancellationToken)
         {
-            return (IMethodSymbol)semanticModel.SemanticModelFor(node)
-                                               ?.GetDeclaredSymbol(node, cancellationToken);
+            return semanticModel.SemanticModelFor(node)
+                               ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (node.Variables.TrySingle(out var variable))
             {
                 return (ILocalSymbol)semanticModel.SemanticModelFor(node)
-                                                  ?.GetDeclaredSymbol(variable, cancellationToken);
+                                                 ?.GetDeclaredSymbol(variable, cancellationToken);
             }
 
             return null;
@@ -523,8 +523,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return GetDeclaredSymbolSafe(semanticModel, discardDesignation, cancellationToken);
                 default:
                     return semanticModel.SemanticModelFor(node)
-                    ?.GetDeclaredSymbol(node, cancellationToken);
-
+                                       ?.GetDeclaredSymbol(node, cancellationToken);
             }
         }
     }
