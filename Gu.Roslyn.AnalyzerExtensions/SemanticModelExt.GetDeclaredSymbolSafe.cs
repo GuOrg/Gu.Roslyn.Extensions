@@ -513,13 +513,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="ISymbol"/> or null.</returns>
         public static ISymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
         {
-            if (node is FieldDeclarationSyntax fieldDeclaration)
+            switch (node)
             {
-                return GetDeclaredSymbolSafe(semanticModel, fieldDeclaration, cancellationToken);
-            }
+                case FieldDeclarationSyntax fieldDeclaration:
+                    return GetDeclaredSymbolSafe(semanticModel, fieldDeclaration, cancellationToken);
+                case DeclarationExpressionSyntax declaration:
+                    return GetDeclaredSymbolSafe(semanticModel, declaration, cancellationToken);
+                default:
+                    return semanticModel.SemanticModelFor(node)
+                    ?.GetDeclaredSymbol(node, cancellationToken);
 
-            return semanticModel.SemanticModelFor(node)
-                                ?.GetDeclaredSymbol(node, cancellationToken);
+            }
         }
     }
 }
