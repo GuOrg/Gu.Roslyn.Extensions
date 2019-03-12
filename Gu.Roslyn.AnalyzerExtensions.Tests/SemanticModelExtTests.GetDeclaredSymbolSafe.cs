@@ -601,7 +601,6 @@ namespace RoslynSandbox
                 Assert.AreEqual(SymbolKind.Discard, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
-            [Explicit("Temp suppress.")]
             [Test]
             public void DiscardDesignationSyntax()
             {
