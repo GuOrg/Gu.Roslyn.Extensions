@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.4.5.0-dev</Version>
+    <Version>0.5.0.0-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -16,8 +16,9 @@
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer</PackageTags>
-    <PackageReleaseNotes>FEATURE: IdentifierNameWalker.For local &amp; parameter.
-BUGFIX: AssignmentExecutionWalker.FirstWith when generic.</PackageReleaseNotes>
+    <PackageReleaseNotes>BUGFIX: Handle discard symbol in TrygetSymbol.
+FEATURE: More TrygetSymbol overloads.
+BREAKING: TryGetSymbol signatures.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>

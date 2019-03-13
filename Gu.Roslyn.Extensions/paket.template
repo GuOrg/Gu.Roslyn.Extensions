@@ -3,7 +3,9 @@ type project
 projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
 
 releasenotes
-  BREAKING: TryGetSymbol returns array symbol or indexer.
+  BUGFIX: Handle discard symbol in TrygetSymbol.
+  FEATURE: More TrygetSymbol overloads.
+  BREAKING: TryGetSymbol signatures.
 
 excludedgroups
   Analyzers

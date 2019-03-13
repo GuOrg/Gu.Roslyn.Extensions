@@ -1,3 +1,8 @@
+#### 0.5.0
+* BUGFIX: Handle discard symbol in TrygetSymbol.
+* FEATURE: More TrygetSymbol overloads.
+* BREAKING: TryGetSymbol signatures.
+
 #### 0.4.2
 * BREAKING: TryGetSymbol returns array symbol or indexer.
 
