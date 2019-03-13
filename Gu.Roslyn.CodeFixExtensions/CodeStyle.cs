@@ -304,7 +304,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
             {
-                if(node.Parent is InitializerExpressionSyntax)
+                if (node.Parent is InitializerExpressionSyntax)
                 {
                     return;
                 }
