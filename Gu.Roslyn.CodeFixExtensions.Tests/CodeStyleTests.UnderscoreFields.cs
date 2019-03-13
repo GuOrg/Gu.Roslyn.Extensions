@@ -108,7 +108,7 @@ namespace RoslynSandbox
 
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
+                Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
             }
 
             [Test]
@@ -117,47 +117,19 @@ namespace RoslynSandbox
                 var fooTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-
-    public class Foo : INotifyPropertyChanged
+    public class Foo
     {
-        private int value;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public int Value
-        {
-            get => this.value;
-            set
-            {
-                if (value == this.value)
-                {
-                    return;
-                }
-
-                this.value = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public int Value { get; set; }
     }
 }");
 
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
+    using System.Collections.Generic;
 
-    public class ViewModel : INotifyPropertyChanged
+    public class C
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public List<Foo> Items { get; } = new List<Foo>
         {
             new Foo { Value = 2 },
@@ -167,7 +139,7 @@ namespace RoslynSandbox
 
                 var compilation = CSharpCompilation.Create("test", new[] { fooTree, syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
+                Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
             }
 
             [Test]

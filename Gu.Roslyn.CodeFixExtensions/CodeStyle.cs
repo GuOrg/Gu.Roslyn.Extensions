@@ -304,6 +304,11 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
             {
+                if(node.Parent is InitializerExpressionSyntax)
+                {
+                    return;
+                }
+
                 this.CheckUsesThis(node.Left);
                 base.VisitAssignmentExpression(node);
             }
