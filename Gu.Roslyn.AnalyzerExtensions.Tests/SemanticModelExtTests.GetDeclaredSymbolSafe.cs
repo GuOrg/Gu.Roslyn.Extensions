@@ -542,7 +542,6 @@ namespace RoslynSandbox
                 Assert.AreEqual(SymbolKind.Local, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None).Kind);
             }
 
-            [Explicit("Temp suppress.")]
             [Test]
             public void DeclarationPatternSyntaxDiscardSwitchLabel()
             {
@@ -569,10 +568,9 @@ namespace RoslynSandbox
                 Assert.AreEqual(SymbolKind.Discard, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None).Kind);
                 Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
                 Assert.AreEqual(SymbolKind.Discard, type.Kind);
-                Assert.AreEqual(SymbolKind.Discard, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(SymbolKind.Discard, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None).Kind);
             }
 
-            [Explicit("Temp suppress.")]
             [Test]
             public void DeclarationPatternSyntaxDiscardIsPattern()
             {
@@ -597,7 +595,7 @@ namespace RoslynSandbox
                 Assert.AreEqual(SymbolKind.Discard, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None).Kind);
                 Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
                 Assert.AreEqual(SymbolKind.Discard, type.Kind);
-                Assert.AreEqual(SymbolKind.Discard, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(SymbolKind.Discard, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None).Kind);
             }
 
             [Test]

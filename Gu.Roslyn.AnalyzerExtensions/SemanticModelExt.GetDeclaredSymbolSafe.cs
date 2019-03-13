@@ -491,6 +491,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return null;
             }
 
+            // Working around https://github.com/dotnet/roslyn/issues/34031
+            // This is not pretty.
             switch (node.Parent)
             {
                 case DeclarationExpressionSyntax declarationExpression:
@@ -498,7 +500,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                                        ?.GetSpeculativeSymbolInfo(node.SpanStart, declarationExpression, SpeculativeBindingOption.BindAsExpression).Symbol as IDiscardSymbol;
                 case DeclarationPatternSyntax declarationPattern:
                     return semanticModel.SemanticModelFor(node)
-                                       ?.GetSymbolInfo(declarationPattern, cancellationToken).Symbol as IDiscardSymbol;
+                                       ?.GetSpeculativeSymbolInfo(node.SpanStart, SyntaxFactory.DeclarationExpression(declarationPattern.Type, node), SpeculativeBindingOption.BindAsExpression).Symbol as IDiscardSymbol;
             }
 
             return null;
