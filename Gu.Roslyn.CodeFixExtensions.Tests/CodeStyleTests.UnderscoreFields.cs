@@ -14,13 +14,13 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int i, double d)
+        internal C(int i, double d)
         {
         }
 
-        internal void Bar()
+        internal void P()
         {
         }
     }
@@ -36,10 +36,10 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Foo
+    class C
     {
-        int _value;
-        public int Bar()  => _value = 1;
+        int _f;
+        public int P()  => _f = 1;
     }
 }");
 
@@ -54,14 +54,14 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Foo
+    class C
     {
-        public Foo(int bar)
+        public C(int bar)
         {
-            this.Bar = bar;
+            this.P = bar;
         }
 
-        public int Bar { get; set; }
+        public int P { get; set; }
     }
 }");
 
@@ -76,14 +76,33 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Foo
+    class C
     {
-        public Foo(int bar)
+        public C(int p)
         {
-            Bar = bar;
+            P = p;
         }
 
-        public int Bar { get; set; }
+        public int P { get; set; }
+    }
+}");
+
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
+            }
+
+            [Test]
+            public void WhenPropertyIsAssignedInObjectInitializer()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    class C
+    {
+        public int P { get; set; }
+
+        public static C Create(int i) => new C { P = i };
     }
 }");
 
@@ -98,10 +117,10 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Foo
+    class C
     {
         int value;
-        public int Bar()  => value = 1;
+        public int P()  => value = 1;
     }
 }");
 
@@ -116,11 +135,11 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Foo
+    class C
     {
         public int Value { get; private set; }
 
-        public int Bar()  => this.value = 1;
+        public int P()  => this.value = 1;
     }
 }");
 
@@ -135,18 +154,18 @@ namespace RoslynSandbox
                 var fooCode = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Foo
+    class C
     {
-        private int _value;
+        private int _f;
 
-        public int Bar()  => _value = 1;
+        public int P()  => _f = 1;
     }
 }");
 
                 var barCode = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Bar
+    class P
     {
     }
 }");
@@ -165,18 +184,18 @@ namespace RoslynSandbox
                 var fooCode = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Foo
+    class C
     {
-        private int _value;
+        private int _f;
 
-        public int Bar()  => _value = 1;
+        public int P()  => _f = 1;
     }
 }");
 
                 var barCode = CSharpSyntaxTree.ParseText(@"
 namespace RoslynSandbox
 {
-    class Bar
+    class P
     {
         private int value;
     }
