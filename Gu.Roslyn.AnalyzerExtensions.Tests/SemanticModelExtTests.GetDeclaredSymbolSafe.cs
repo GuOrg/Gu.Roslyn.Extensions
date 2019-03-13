@@ -366,6 +366,8 @@ namespace RoslynSandbox
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
                 Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
                 Assert.AreEqual(expected, type);
+                Assert.AreEqual(true, semanticModel.TryGetSymbol((SyntaxNode)node, CancellationToken.None, out ILocalSymbol symbol));
+                Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }
 
@@ -391,6 +393,8 @@ namespace RoslynSandbox
                 var expected = semanticModel.GetDeclaredSymbol(node);
                 Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
                 Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
+                Assert.AreEqual(true, semanticModel.TryGetSymbol((SyntaxNode)node, CancellationToken.None, out ILocalSymbol symbol));
                 Assert.AreEqual(expected, type);
                 Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             }

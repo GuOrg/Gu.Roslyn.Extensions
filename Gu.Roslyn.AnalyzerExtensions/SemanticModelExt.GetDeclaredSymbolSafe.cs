@@ -556,6 +556,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return GetDeclaredSymbolSafe(semanticModel, declaration, cancellationToken);
                 case DiscardDesignationSyntax discardDesignation:
                     return GetDeclaredSymbolSafe(semanticModel, discardDesignation, cancellationToken);
+                case VariableDeclarationSyntax variableDeclaration:
+                    return GetDeclaredSymbolSafe(semanticModel, variableDeclaration, cancellationToken);
                 default:
                     return semanticModel.SemanticModelFor(node)
                                        ?.GetDeclaredSymbol(node, cancellationToken);

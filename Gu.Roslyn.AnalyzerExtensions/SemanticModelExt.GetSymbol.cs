@@ -226,21 +226,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="ISymbol"/> or null.</returns>
         public static ISymbol GetSymbolSafe(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
         {
-            if (node is AwaitExpressionSyntax awaitExpression)
+            switch (node)
             {
-                return GetSymbolSafe(semanticModel, awaitExpression, cancellationToken);
+                case AwaitExpressionSyntax awaitExpression:
+                    return GetSymbolSafe(semanticModel, awaitExpression, cancellationToken);
+                case ElementAccessExpressionSyntax elementAccess when semanticModel.TryGetType(elementAccess.Expression, cancellationToken, out var type) &&
+                                                                      type is IArrayTypeSymbol arrayType:
+                    return arrayType;
+                default:
+                    return semanticModel.SemanticModelFor(node)
+                                       ?.GetSymbolInfo(node, cancellationToken)
+                                        .Symbol;
             }
-
-            if (node is ElementAccessExpressionSyntax elementAccess &&
-                semanticModel.TryGetType(elementAccess.Expression, cancellationToken, out var type) &&
-                type is IArrayTypeSymbol arrayType)
-            {
-                return arrayType;
-            }
-
-            return semanticModel.SemanticModelFor(node)
-                                ?.GetSymbolInfo(node, cancellationToken)
-                                .Symbol;
         }
     }
 }
