@@ -112,6 +112,65 @@ namespace RoslynSandbox
             }
 
             [Test]
+            public void WhenObjectInitializerInCollectionInitializer()
+            {
+                var fooTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
+    public class Foo : INotifyPropertyChanged
+    {
+        private int value;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public int Value
+        {
+            get => this.value;
+            set
+            {
+                if (value == this.value)
+                {
+                    return;
+                }
+
+                this.value = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}");
+
+                var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace RoslynSandbox
+{
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+
+    public class ViewModel : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public List<Foo> Items { get; } = new List<Foo>
+        {
+            new Foo { Value = 2 },
+        };
+    }
+}");
+
+                var compilation = CSharpCompilation.Create("test", new[] { fooTree, syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
+            }
+
+            [Test]
             public void WhenFieldIsNotNamedWithUnderscore()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
