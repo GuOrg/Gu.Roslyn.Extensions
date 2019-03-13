@@ -139,7 +139,7 @@ namespace RoslynSandbox
     {
         public int Value { get; private set; }
 
-        public int P()  => this.value = 1;
+        public int P()  => this.Value = 1;
     }
 }");
 
