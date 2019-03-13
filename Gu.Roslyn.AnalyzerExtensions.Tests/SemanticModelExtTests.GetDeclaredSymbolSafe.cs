@@ -370,6 +370,32 @@ namespace RoslynSandbox
             }
 
             [Test]
+            public void VariableDeclarator()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace RoslynSandbox
+{
+    class C
+    {
+        C()
+        {
+            var i = 1;
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var otherModel = compilation.GetSemanticModel(OtherTree);
+                var node = syntaxTree.Find<VariableDeclaratorSyntax>("i = 1");
+                var expected = semanticModel.GetDeclaredSymbol(node);
+                Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+                Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var type));
+                Assert.AreEqual(expected, type);
+                Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            }
+
+            [Test]
             public void VariableDesignationOutVar()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(

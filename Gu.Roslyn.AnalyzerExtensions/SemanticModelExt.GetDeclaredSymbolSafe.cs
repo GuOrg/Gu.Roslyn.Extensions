@@ -152,9 +152,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="node">The <see cref="VariableDeclarationSyntax"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="symbol">The symbol if found.</param>
+        /// <param name="symbol">The An <see cref="ILocalSymbol"/> or <see cref="IFieldSymbol"/> if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetSymbol(this SemanticModel semanticModel, VariableDeclarationSyntax node, CancellationToken cancellationToken, out ILocalSymbol symbol)
+        public static bool TryGetSymbol(this SemanticModel semanticModel, VariableDeclarationSyntax node, CancellationToken cancellationToken, out ISymbol symbol)
+        {
+            symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
+            return symbol != null;
+        }
+
+        /// <summary>
+        /// Try getting the <see cref="ILocalSymbol"/> for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="VariableDeclaratorSyntax"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="symbol">The An <see cref="ILocalSymbol"/> or <see cref="IFieldSymbol"/> if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetSymbol(this SemanticModel semanticModel, VariableDeclaratorSyntax node, CancellationToken cancellationToken, out ISymbol symbol)
         {
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
             return symbol != null;
@@ -398,8 +413,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="node">The <see cref="VariableDeclarationSyntax"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <returns>An <see cref="ILocalSymbol"/> or null.</returns>
-        public static ILocalSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, VariableDeclarationSyntax node, CancellationToken cancellationToken)
+        /// <returns>An <see cref="ILocalSymbol"/> or <see cref="IFieldSymbol"/> or null.</returns>
+        public static ISymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, VariableDeclarationSyntax node, CancellationToken cancellationToken)
         {
             if (node?.Variables == null)
             {
@@ -408,11 +423,29 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (node.Variables.TrySingle(out var variable))
             {
-                return (ILocalSymbol)semanticModel.SemanticModelFor(node)
-                                                 ?.GetDeclaredSymbol(variable, cancellationToken);
+                return semanticModel.SemanticModelFor(node)
+                                   ?.GetDeclaredSymbol(variable, cancellationToken);
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Same as SemanticModel.GetDeclaredSymbol but works when <paramref name="node"/> is not in the syntax tree.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="VariableDeclaratorSyntax"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>An <see cref="ILocalSymbol"/> or <see cref="IFieldSymbol"/> or null.</returns>
+        public static ISymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, VariableDeclaratorSyntax node, CancellationToken cancellationToken)
+        {
+            if (node == null)
+            {
+                return null;
+            }
+
+            return semanticModel.SemanticModelFor(node)
+                               ?.GetDeclaredSymbol(node, cancellationToken);
         }
 
         /// <summary>

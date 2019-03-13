@@ -3,6 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using System.Linq;
     using System.Threading;
     using Gu.Roslyn.Asserts;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
@@ -75,7 +76,7 @@ namespace RoslynSandbox
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindVariableDeclaration("i"), CancellationToken.None, out var local));
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindVariableDeclaration("i"), CancellationToken.None, out ILocalSymbol local));
             using (var walker = IdentifierNameWalker.For(local, semanticModel, CancellationToken.None))
             {
                 CollectionAssert.AreEqual(new[] { "i" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
