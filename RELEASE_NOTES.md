@@ -1,3 +1,6 @@
+#### 0.5.1
+* BUGFIX: Ignore object initializer when figuring out underscore names.
+
 #### 0.5.0
 * BUGFIX: Handle discard symbol in TrygetSymbol.
 * FEATURE: More TrygetSymbol overloads.

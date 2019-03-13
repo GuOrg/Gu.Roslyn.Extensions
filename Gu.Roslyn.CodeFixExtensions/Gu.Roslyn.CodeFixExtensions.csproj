@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.5.0.0-dev</Version>
+    <Version>0.5.1.0-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -16,9 +16,7 @@
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer codefix</PackageTags>
-    <PackageReleaseNotes>BUGFIX: Handle discard symbol in TrygetSymbol.
-FEATURE: More TrygetSymbol overloads.
-BREAKING: TryGetSymbol signatures.</PackageReleaseNotes>
+    <PackageReleaseNotes>BUGFIX: Ignore object initializer when figuring out underscore names.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
