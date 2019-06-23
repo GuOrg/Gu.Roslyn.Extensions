@@ -1,6 +1,1 @@
 Microsoft.CodeAnalysis.CSharp.Workspaces
-
-group Analyzers
-  AsyncUsageAnalyzers
-  IDisposableAnalyzers
-  Gu.Analyzers
