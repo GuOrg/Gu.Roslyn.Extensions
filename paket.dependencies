@@ -20,3 +20,4 @@ group Test
   nuget System.Runtime.CompilerServices.Unsafe 4.5.1
   nuget Gu.Roslyn.Asserts
   nuget NUnit
+  nuget NUnit3TestAdapter
