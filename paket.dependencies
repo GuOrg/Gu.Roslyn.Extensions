@@ -21,3 +21,4 @@ group Test
   nuget Gu.Roslyn.Asserts
   nuget NUnit
   nuget NUnit3TestAdapter
+  nuget Microsoft.NET.Test.Sdk
