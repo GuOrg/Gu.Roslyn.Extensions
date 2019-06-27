@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
@@ -24,7 +23,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             editor.ReplaceNode(
                 editor.OriginalRoot,
-                (root, _) => AddUsing(root as CompilationUnitSyntax, editor.SemanticModel, usingDirective));
+                (root, _) => (root as CompilationUnitSyntax)?.AddUsing(usingDirective, editor.SemanticModel));
 
             return editor;
         }
@@ -145,51 +144,6 @@ namespace Gu.Roslyn.CodeFixExtensions
             return editor;
         }
 
-        private static SyntaxNode AddUsing(CompilationUnitSyntax root, SemanticModel semanticModel, UsingDirectiveSyntax usingDirective)
-        {
-            if (root == null)
-            {
-                return null;
-            }
-
-            using (var walker = UsingDirectiveWalker.Borrow(root))
-            {
-                if (walker.UsingDirectives.Count == 0)
-                {
-                    if (walker.NamespaceDeclarations.TryFirst(out var namespaceDeclaration))
-                    {
-                        if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel))
-                        {
-                            return root.ReplaceNode(namespaceDeclaration, namespaceDeclaration.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
-                        }
-
-                        return root.ReplaceNode(root, root.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
-                    }
-
-                    return root;
-                }
-
-                UsingDirectiveSyntax previous = null;
-                foreach (var directive in walker.UsingDirectives)
-                {
-                    var compare = UsingDirectiveComparer.Compare(directive, usingDirective);
-                    if (compare == 0)
-                    {
-                        return root;
-                    }
-
-                    if (compare > 0)
-                    {
-                        return root.InsertNodesBefore(directive, new[] { usingDirective });
-                    }
-
-                    previous = directive;
-                }
-
-                return root.InsertNodesAfter(previous, new[] { usingDirective });
-            }
-        }
-
         private static TypeDeclarationSyntax AddBackingField(this DocumentEditor editor, TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, string propertyName)
         {
             if (type.TryFindProperty(propertyName, out var property))
@@ -251,45 +205,6 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             return (TypeDeclarationSyntax)generator.AddMembers(containingType, memberDeclaration);
-        }
-
-        private sealed class UsingDirectiveWalker : PooledWalker<UsingDirectiveWalker>
-        {
-            private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
-            private readonly List<NamespaceDeclarationSyntax> namespaceDeclarations = new List<NamespaceDeclarationSyntax>();
-
-            public IReadOnlyList<UsingDirectiveSyntax> UsingDirectives => this.usingDirectives;
-
-            public IReadOnlyList<NamespaceDeclarationSyntax> NamespaceDeclarations => this.namespaceDeclarations;
-
-            public static UsingDirectiveWalker Borrow(CompilationUnitSyntax compilationUnit) => BorrowAndVisit(compilationUnit, () => new UsingDirectiveWalker());
-
-            public override void VisitUsingDirective(UsingDirectiveSyntax node)
-            {
-                this.usingDirectives.Add(node);
-            }
-
-            public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
-            {
-                this.namespaceDeclarations.Add(node);
-                base.VisitNamespaceDeclaration(node);
-            }
-
-            public override void VisitClassDeclaration(ClassDeclarationSyntax node)
-            {
-                // Stop walking here
-            }
-
-            public override void VisitStructDeclaration(StructDeclarationSyntax node)
-            {
-                // Stop walking here
-            }
-
-            protected override void Clear()
-            {
-                this.usingDirectives.Clear();
-                this.namespaceDeclarations.Clear();
-            }
         }
     }
 }
