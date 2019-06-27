@@ -43,6 +43,47 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             return 0;
         }
 
+        /// <summary>
+        /// Returns true for:
+        /// namespace Foo and using Foo;
+        /// namespace Foo.Bar and using Foo;
+        /// </summary>
+        /// <param name="namespaceDeclarationSyntax">The <see cref="NamespaceDeclarationSyntax"/>.</param>
+        /// <param name="usingDirective">The <see cref="UsingDirectiveSyntax"/>.</param>
+        /// <returns>True if the using directive is not needed.</returns>
+        public static bool IsSameOrContained(NamespaceDeclarationSyntax namespaceDeclarationSyntax, UsingDirectiveSyntax usingDirective)
+        {
+            if (TryGetRoot(namespaceDeclarationSyntax.Name, out var nameSpaceName) &&
+                TryGetRoot(usingDirective.Name, out var usingName))
+            {
+                if (nameSpaceName.Identifier.ValueText != usingName.Identifier.ValueText)
+                {
+                    return false;
+                }
+
+                var namespaceParent = nameSpaceName.Parent as QualifiedNameSyntax;
+                var usingParent = usingName.Parent as QualifiedNameSyntax;
+                while (true)
+                {
+                    if (usingParent == null)
+                    {
+                        return true;
+                    }
+
+                    if (namespaceParent == null ||
+                        namespaceParent.Right.Identifier.ValueText != usingParent.Right.Identifier.ValueText)
+                    {
+                        return false;
+                    }
+
+                    namespaceParent = namespaceParent.Parent as QualifiedNameSyntax;
+                    usingParent = usingParent.Parent as QualifiedNameSyntax;
+                }
+            }
+
+            return false;
+        }
+
         /// <inheritdoc />
         int IComparer<UsingDirectiveSyntax>.Compare(UsingDirectiveSyntax x, UsingDirectiveSyntax y) => Compare(x, y);
 

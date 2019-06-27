@@ -21,9 +21,30 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddUsing(this DocumentEditor editor, UsingDirectiveSyntax usingDirective)
         {
-            editor.ReplaceNode(
-                editor.OriginalRoot,
-                (root, _) => (root as CompilationUnitSyntax)?.AddUsing(usingDirective, editor.SemanticModel));
+            if (editor.OriginalRoot is CompilationUnitSyntax compilationUnit)
+            {
+                editor.ReplaceNode(
+                    compilationUnit,
+                    root => root.AddUsing(usingDirective, editor.SemanticModel));
+            }
+
+            return editor;
+        }
+
+        /// <summary>
+        /// Add the using directive and respect if the convention is inside or outside of namespace and sorted with system first.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="type">The <see cref="ITypeSymbol"/> that needs to be brought into scope.</param>
+        /// <returns>The <paramref name="editor"/>.</returns>
+        public static DocumentEditor AddUsing(this DocumentEditor editor, ITypeSymbol type)
+        {
+            if (editor.OriginalRoot is CompilationUnitSyntax compilationUnit)
+            {
+                editor.ReplaceNode(
+                    compilationUnit,
+                    root => root.AddUsing(type, editor.SemanticModel));
+            }
 
             return editor;
         }

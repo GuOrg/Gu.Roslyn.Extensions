@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
+    using System;
     using System.Collections.Generic;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
@@ -19,21 +20,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="type">The <see cref="ITypeSymbol"/> that needs to be brought into scope.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <returns>The updated <see cref="CompilationUnitSyntax"/>.</returns>
-        public static CompilationUnitSyntax AddUsing(this CompilationUnitSyntax compilationUnit, INamedTypeSymbol type, SemanticModel semanticModel)
+        public static CompilationUnitSyntax AddUsing(this CompilationUnitSyntax compilationUnit, ITypeSymbol type, SemanticModel semanticModel)
         {
-            foreach (var member in compilationUnit.Members)
+            if (compilationUnit == null)
             {
-                if (member is NamespaceDeclarationSyntax ns)
-                {
-                    foreach (var typeMembers in ns.Members)
-                    {
-                        if (typeMembers is TypeDeclarationSyntax typeDeclaration &&
-                            !semanticModel.IsAccessible(typeDeclaration.SpanStart, type))
-                        {
-                            return compilationUnit;
-                        }
-                    }
-                }
+                throw new System.ArgumentNullException(nameof(compilationUnit));
+            }
+
+            if (type == null)
+            {
+                throw new System.ArgumentNullException(nameof(type));
+            }
+
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
             }
 
             return AddUsing(compilationUnit, SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(type.ContainingNamespace.ToDisplayString())), semanticModel);
@@ -61,6 +62,12 @@ namespace Gu.Roslyn.CodeFixExtensions
             if (usingDirective == null)
             {
                 throw new System.ArgumentNullException(nameof(usingDirective));
+            }
+
+            if (compilationUnit.Members.TrySingleOfType(out NamespaceDeclarationSyntax ns) &&
+                UsingDirectiveComparer.IsSameOrContained(ns, usingDirective))
+            {
+                return compilationUnit;
             }
 
             using (var walker = UsingDirectiveWalker.Borrow(compilationUnit))
