@@ -399,7 +399,7 @@ Uses a syntax rewriter that adds `Simplifier.Annotation` to all `QualifiedNameSy
 
 # Trivia
 
-Helpers for copying triviat from other nodes.
+Helpers for copying trivia from other nodes.
 
 ## WithTriviaFrom
 Copy trivia from a node.
