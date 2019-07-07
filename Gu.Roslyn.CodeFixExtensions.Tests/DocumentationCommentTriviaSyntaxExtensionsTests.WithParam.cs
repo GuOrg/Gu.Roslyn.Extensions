@@ -40,10 +40,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Id");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithParamText("i", "The <see cref=\"int\"/> to return.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"i\">The <see cref=\"int\"/> to return.</param>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -71,10 +71,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Id");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithParamText("i", "The <see cref=\"int\"/> to return.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"i\">The <see cref=\"int\"/> to return.</param>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -106,10 +106,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Id");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithParamText("i", "The <see cref=\"int\"/> to return.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"i\">The <see cref=\"int\"/> to return.</param>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -137,10 +137,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Id");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithParamText("i", "The <see cref=\"int\"/> to return.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"i\">The <see cref=\"int\"/> to return.</param>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -172,10 +172,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Id");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithParamText("i", "The <see cref=\"int\"/> to return.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"i\">The <see cref=\"int\"/> to return.</param>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -207,10 +207,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Add");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithParamText("y", "The other <see cref=\"int\"/> term.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"y\">The other <see cref=\"int\"/> term.</param>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -242,10 +242,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Add");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithParamText("x", "The first <see cref=\"int\"/> term.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"x\">The first <see cref=\"int\"/> term.</param>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -281,10 +281,10 @@ namespace RoslynSandbox
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
 
                 var updated = comment.WithParamText("i", "The <see cref=\"int\"/> to return.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithParam(Parse.XmlElementSyntax("<param name=\"i\">The <see cref=\"int\"/> to return.</param>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
         }
     }

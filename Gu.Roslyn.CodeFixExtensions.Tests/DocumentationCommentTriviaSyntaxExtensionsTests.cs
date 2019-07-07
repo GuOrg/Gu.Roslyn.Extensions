@@ -35,7 +35,7 @@ namespace RoslynSandbox
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
             var element = Parse.XmlElementSyntax("<summary>Bar</summary>", "        ");
             var updated = comment.InsertBefore(comment.Content.OfType<XmlElementSyntax>().First(), element);
-            AnalyzerAssert.Ast(expected, updated);
+            RoslynAssert.Ast(expected, updated);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace RoslynSandbox
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
             var element = Parse.XmlElementSyntax("<param name=\"x\">The x.</param>", "        ");
             var updated = comment.InsertBefore(comment.Content.OfType<XmlElementSyntax>().Skip(1).First(), element);
-            AnalyzerAssert.Ast(expected, updated);
+            RoslynAssert.Ast(expected, updated);
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace RoslynSandbox
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
             var element = Parse.XmlElementSyntax("<returns>One</returns>", "        ");
             var updated = comment.InsertAfter(comment.Content.OfType<XmlElementSyntax>().First(), element);
-            AnalyzerAssert.Ast(expected, updated);
+            RoslynAssert.Ast(expected, updated);
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace RoslynSandbox
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
             var element = Parse.XmlElementSyntax("<param name=\"y\">The y.</param>", "        ");
             var updated = comment.InsertAfter(comment.Content.OfType<XmlElementSyntax>().Skip(1).First(), element);
-            AnalyzerAssert.Ast(expected, updated);
+            RoslynAssert.Ast(expected, updated);
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace RoslynSandbox
             Assert.AreEqual(true, comment.Content.TrySingleOfType(x => x.HasLocalName("param"), out XmlElementSyntax param));
             var element = Parse.XmlElementSyntax("<returns>The value passed in</returns>", "        ");
             var updated = comment.InsertAfter(param, element);
-            AnalyzerAssert.Ast(expected, updated);
+            RoslynAssert.Ast(expected, updated);
         }
 
         [Test]
@@ -194,7 +194,7 @@ namespace RoslynSandbox
             var updated = comment.WithParamText("x", "The first term.")
                                  .WithParamText("y", "The other term.")
                                  .WithReturnsText("The sum.");
-            AnalyzerAssert.Ast(expected, updated);
+            RoslynAssert.Ast(expected, updated);
         }
 
         private static DocumentationCommentTriviaSyntax GetExpected(string code)

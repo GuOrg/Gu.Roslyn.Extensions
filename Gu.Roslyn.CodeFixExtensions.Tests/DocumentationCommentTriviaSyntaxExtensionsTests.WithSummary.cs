@@ -40,11 +40,11 @@ namespace RoslynSandbox
         }
     }
 }");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
                 Assert.AreEqual(true, updated.TryGetSummary(out _));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -80,11 +80,11 @@ namespace RoslynSandbox
         }
     }
 }");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
                 Assert.AreEqual(true, updated.TryGetSummary(out _));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -121,7 +121,7 @@ namespace RoslynSandbox
         }
     }
 }");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -156,7 +156,7 @@ namespace RoslynSandbox
                 var updated = comment.WithSummaryText("New text.");
                 Assert.AreEqual(true, updated.TryGetSummary(out var summary));
                 Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -193,7 +193,7 @@ namespace RoslynSandbox
                 var updated = comment.WithSummaryText("New text.");
                 Assert.AreEqual(true, updated.TryGetSummary(out var summary));
                 Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -230,10 +230,10 @@ namespace RoslynSandbox
                 var updated = comment.WithSummaryText("New text.");
                 Assert.AreEqual(true, updated.TryGetSummary(out var summary));
                 Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
         }
     }

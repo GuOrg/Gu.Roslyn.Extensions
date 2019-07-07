@@ -14,7 +14,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var declaration = Parse.FieldDeclaration(code);
             Assert.AreEqual(code, declaration.ToFullString());
             var expected = (FieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
-            AnalyzerAssert.Ast(expected, declaration);
+            RoslynAssert.Ast(expected, declaration);
         }
 
         [TestCase("public Foo(){}")]
@@ -23,7 +23,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var declaration = Parse.ConstructorDeclaration(code);
             Assert.AreEqual(code, declaration.ToFullString());
             var expected = (ConstructorDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
-            AnalyzerAssert.Ast(expected, declaration);
+            RoslynAssert.Ast(expected, declaration);
         }
 
         [TestCase("public int Foo { get; }")]
@@ -32,7 +32,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var declaration = Parse.PropertyDeclaration(code);
             Assert.AreEqual(code, declaration.ToFullString());
             var expected = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
-            AnalyzerAssert.Ast(expected, declaration);
+            RoslynAssert.Ast(expected, declaration);
         }
 
         [TestCase("public int Foo() => 1;")]
@@ -41,7 +41,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var declaration = Parse.MethodDeclaration(code);
             Assert.AreEqual(code, declaration.ToFullString());
             var expected = (MethodDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
-            AnalyzerAssert.Ast(expected, declaration);
+            RoslynAssert.Ast(expected, declaration);
         }
 
         [TestCase("<summary> Text </summary>")]
@@ -56,7 +56,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                                         .ChildNodes()
                                         .OfType<XmlElementSyntax>()
                                         .Single();
-            AnalyzerAssert.Ast(expected, node);
+            RoslynAssert.Ast(expected, node);
         }
 
         [TestCase("<summary> Line 1\r\nLine2 </summary>", "<summary> Line 1\r\n/// Line2 </summary>")]

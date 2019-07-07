@@ -38,10 +38,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Bar");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithReturnsText("New text.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithReturns(Parse.XmlElementSyntax("<returns>New text.</returns>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -76,7 +76,7 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Bar");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithReturnsText("Line 1.\r\nLine 2.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -109,7 +109,7 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Id");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithReturnsText("<paramref name=\"i\"/>");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
         }
     }

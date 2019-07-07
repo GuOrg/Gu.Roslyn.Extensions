@@ -42,10 +42,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Id");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithTypeParamText("T", "The type of the value.");
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = comment.WithTypeParam(Parse.XmlElementSyntax("<typeparam name=\"T\">The type of the value.</typeparam>", "        "));
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
         }
     }

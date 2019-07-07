@@ -35,7 +35,7 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Bar");
                 var attribute = "        [Obsolete]";
                 var updated = method.WithAttributeListText(attribute, adjustLeadingWhitespace: false);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -65,10 +65,10 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Bar");
                 var attribute = "[Obsolete]";
                 var updated = method.WithAttributeListText(attribute, adjustLeadingWhitespace: true);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
 
                 updated = method.WithAttributeListText(attribute, adjustLeadingWhitespace: true);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -100,7 +100,7 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Bar");
                 var attribute = "[Obsolete]";
                 var updated = method.WithAttributeListText(attribute);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -132,7 +132,7 @@ namespace RoslynSandbox
                 var method = syntaxTree.FindMethodDeclaration("Bar");
                 var attribute = "        [Obsolete]";
                 var updated = method.WithAttributeListText(attribute, adjustLeadingWhitespace: false);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
         }
     }

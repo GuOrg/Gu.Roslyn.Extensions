@@ -33,7 +33,7 @@ namespace RoslynSandbox
                 var docs = "        /// <summary>New summary.</summary>\r\n" +
                            "        /// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs, adjustLeadingWhitespace: false);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -63,7 +63,7 @@ namespace RoslynSandbox
                 var docs = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -93,7 +93,7 @@ namespace RoslynSandbox
                 var docs = "        /// <summary>New summary.</summary>\r\n" +
                            "        /// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs, adjustLeadingWhitespace: false);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -125,7 +125,7 @@ namespace RoslynSandbox
                 var docs = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -153,7 +153,7 @@ namespace RoslynSandbox
                 var text = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(text, adjustLeadingWhitespace: true);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -181,7 +181,7 @@ namespace RoslynSandbox
                 var text = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(text);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -209,7 +209,7 @@ namespace RoslynSandbox
                 var text = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>\r\n";
                 var updated = method.WithDocumentationText(text);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -239,7 +239,7 @@ namespace RoslynSandbox
                 var docs = "        /// <summary>New summary.</summary>\r\n" +
                            "        /// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -271,7 +271,7 @@ namespace RoslynSandbox
                 var docs = "        /// <summary>New summary.</summary>\r\n" +
                            "        /// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
 
             [Test]
@@ -305,7 +305,7 @@ namespace RoslynSandbox
                 var docs = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
-                AnalyzerAssert.Ast(expected, updated);
+                RoslynAssert.Ast(expected, updated);
             }
         }
     }
