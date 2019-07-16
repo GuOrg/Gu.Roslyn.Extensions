@@ -173,17 +173,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         [DebuggerDisplay("Start: {Start}, End: {End}, Length: {Length}")]
         private struct Substring
         {
-            public Substring(int start, int end)
+            internal Substring(int start, int end)
             {
                 this.Start = start;
                 this.End = end;
             }
 
-            public int Start { get; }
+            internal int Start { get; }
 
-            public int End { get; }
+            internal int End { get; }
 
-            public int Length => this.End - this.Start;
+            internal int Length => this.End - this.Start;
         }
     }
 }

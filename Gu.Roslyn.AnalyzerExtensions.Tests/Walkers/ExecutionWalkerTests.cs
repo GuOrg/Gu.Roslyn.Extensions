@@ -128,12 +128,7 @@ namespace RoslynSandbox
         {
             private readonly List<LiteralExpressionSyntax> literals = new List<LiteralExpressionSyntax>();
 
-            public IReadOnlyList<LiteralExpressionSyntax> Literals => this.literals;
-
-            public static LiteralWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
-            {
-                return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new LiteralWalker());
-            }
+            internal IReadOnlyList<LiteralExpressionSyntax> Literals => this.literals;
 
             public override void VisitLiteralExpression(LiteralExpressionSyntax node)
             {
@@ -143,6 +138,11 @@ namespace RoslynSandbox
                 }
 
                 base.VisitLiteralExpression(node);
+            }
+
+            internal static LiteralWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+            {
+                return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new LiteralWalker());
             }
 
             protected override void Clear()

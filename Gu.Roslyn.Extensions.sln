@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.AnalyzerExtensions", "Gu.Roslyn.AnalyzerExtensions\Gu.Roslyn.AnalyzerExtensions.csproj", "{F139E0EC-7099-44C9-8539-B9C2899D638F}"
 EndProject
@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.AnalyzerExtension
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{A9187C9F-98FB-4696-B023-548C641E7B54}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		paket.dependencies = paket.dependencies
 		paket.lock = paket.lock
 		.paket\paket.targets = .paket\paket.targets
@@ -26,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{26F7F8AB
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Roslyn.Extensions", "Gu.Roslyn.Extensions\Gu.Roslyn.Extensions.csproj", "{8BD4D6BB-9421-405B-8BAF-701BB05E3A06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.Extensions", "Gu.Roslyn.Extensions\Gu.Roslyn.Extensions.csproj", "{8BD4D6BB-9421-405B-8BAF-701BB05E3A06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

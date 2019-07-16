@@ -82,7 +82,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     result = new FieldOrProperty(property);
                     return true;
                 default:
-                    result = default(FieldOrProperty);
+                    result = default;
                     return false;
             }
         }

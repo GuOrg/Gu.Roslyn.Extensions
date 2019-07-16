@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if an element was found.</returns>
         public static bool TryElementAt<T>(this IEnumerable<T> source, int index, out T result)
         {
-            result = default(T);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -51,7 +51,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IEnumerable<T> source, out T result)
         {
-            result = default(T);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -68,7 +68,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
-                result = default(T);
+                result = default;
                 return false;
             }
         }
@@ -84,7 +84,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, out TResult result)
             where TResult : T
         {
-            result = default(TResult);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -111,7 +111,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return false;
                 }
 
-                result = default(TResult);
+                result = default;
                 return false;
             }
         }
@@ -128,7 +128,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, out TResult result)
             where TResult : T
         {
-            result = default(TResult);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -155,7 +155,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
-                result = default(TResult);
+                result = default;
                 return false;
             }
         }
@@ -170,7 +170,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T result)
         {
-            result = default(T);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -187,7 +187,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         {
                             if (predicate(e.Current))
                             {
-                                result = default(T);
+                                result = default;
                                 return false;
                             }
                         }
@@ -197,7 +197,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            result = default(T);
+            result = default;
             return false;
         }
 
@@ -210,7 +210,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IEnumerable<T> source, out T result)
         {
-            result = default(T);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -239,7 +239,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, out TResult result)
             where TResult : T
         {
-            result = default(TResult);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -270,7 +270,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, out TResult result)
             where TResult : T
         {
-            result = default(TResult);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -304,7 +304,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (source == null)
             {
-                result = default(T);
+                result = default;
                 return false;
             }
 
@@ -320,7 +320,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            result = default(T);
+            result = default;
             return false;
         }
 
@@ -333,7 +333,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IEnumerable<T> source, out T result)
         {
-            result = default(T);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -365,7 +365,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T result)
         {
-            result = default(T);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -404,7 +404,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, out TResult result)
             where TResult : T
         {
-            result = default(TResult);
+            result = default;
             if (source == null)
             {
                 return false;
@@ -443,7 +443,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, out TResult result)
             where TResult : T
         {
-            result = default(TResult);
+            result = default;
             if (source == null)
             {
                 return false;

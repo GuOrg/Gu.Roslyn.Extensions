@@ -46,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <summary>
         /// Returns true for:
         /// namespace Foo and using Foo;
-        /// namespace Foo.Bar and using Foo;
+        /// namespace Foo.Bar and using Foo;.
         /// </summary>
         /// <param name="namespaceDeclarationSyntax">The <see cref="NamespaceDeclarationSyntax"/>.</param>
         /// <param name="usingDirective">The <see cref="UsingDirectiveSyntax"/>.</param>

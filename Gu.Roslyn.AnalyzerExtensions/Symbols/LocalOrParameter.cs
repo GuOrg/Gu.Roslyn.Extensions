@@ -78,7 +78,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     result = new LocalOrParameter(parameter);
                     return true;
                 default:
-                    result = default(LocalOrParameter);
+                    result = default;
                     return false;
             }
         }

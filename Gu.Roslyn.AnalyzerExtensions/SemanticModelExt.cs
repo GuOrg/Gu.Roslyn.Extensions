@@ -35,7 +35,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 if (optional.Value == null)
                 {
-                    value = default(T);
+                    value = default;
                     return default(T) == null;
                 }
 
@@ -49,7 +49,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            value = default(T);
+            value = default;
             return false;
         }
 
@@ -131,7 +131,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static Optional<object> GetConstantValueSafe(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
         {
             return semanticModel.SemanticModelFor(node)
-                                ?.GetConstantValue(node, cancellationToken) ?? default(Optional<object>);
+                                ?.GetConstantValue(node, cancellationToken) ?? default;
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static TypeInfo GetTypeInfoSafe(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
         {
             return semanticModel.SemanticModelFor(node)
-                                ?.GetTypeInfo(node, cancellationToken) ?? default(TypeInfo);
+                                ?.GetTypeInfo(node, cancellationToken) ?? default;
         }
 
         /// <summary>

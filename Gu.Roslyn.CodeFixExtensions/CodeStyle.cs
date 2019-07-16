@@ -217,11 +217,9 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
             }
 
-            public Result UsesThis { get; private set; }
+            internal Result UsesThis { get; private set; }
 
-            public Result UsesUnderScore { get; private set; }
-
-            public static UnderscoreFieldWalker Borrow() => Borrow(() => new UnderscoreFieldWalker());
+            internal Result UsesUnderScore { get; private set; }
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
@@ -276,6 +274,9 @@ namespace Gu.Roslyn.CodeFixExtensions
                     }
                 }
             }
+
+            internal static UnderscoreFieldWalker Borrow() => Borrow(() => new UnderscoreFieldWalker());
+
 
             public override void VisitThisExpression(ThisExpressionSyntax node)
             {
@@ -409,8 +410,6 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
 
-            public static UsingDirectiveWalker Borrow() => Borrow(() => new UsingDirectiveWalker());
-
             public override void VisitUsingDirective(UsingDirectiveSyntax node)
             {
                 this.usingDirectives.Add(node);
@@ -426,6 +425,8 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 // Stop walking here
             }
+
+            internal static UsingDirectiveWalker Borrow() => Borrow(() => new UsingDirectiveWalker());
 
             internal Result UsingDirectivesInside()
             {
@@ -454,8 +455,6 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             private Result result;
             private bool newLine;
-
-            public static BackingFieldsAdjacentWalker Borrow() => Borrow(() => new BackingFieldsAdjacentWalker());
 
             public override void VisitReturnStatement(ReturnStatementSyntax node)
             {
@@ -486,7 +485,9 @@ namespace Gu.Roslyn.CodeFixExtensions
                 base.VisitArrowExpressionClause(node);
             }
 
-            public Result Adjacent(out bool newLineBetween)
+            internal static BackingFieldsAdjacentWalker Borrow() => Borrow(() => new BackingFieldsAdjacentWalker());
+
+            internal Result Adjacent(out bool newLineBetween)
             {
                 newLineBetween = this.newLine;
                 return this.result;

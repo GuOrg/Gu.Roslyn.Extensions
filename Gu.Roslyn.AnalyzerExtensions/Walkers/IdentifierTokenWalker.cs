@@ -56,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            identifierToken = default(SyntaxToken);
+            identifierToken = default;
             return false;
         }
 

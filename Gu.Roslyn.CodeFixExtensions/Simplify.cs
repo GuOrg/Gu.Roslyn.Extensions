@@ -24,12 +24,12 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         private class SimplifyNamesRewriter : CSharpSyntaxRewriter
         {
-            public static readonly SimplifyNamesRewriter Default = new SimplifyNamesRewriter();
-
             public override SyntaxNode VisitQualifiedName(QualifiedNameSyntax node)
             {
                 return base.VisitQualifiedName(node).WithAdditionalAnnotations(Simplifier.Annotation);
             }
+
+            internal static readonly SimplifyNamesRewriter Default = new SimplifyNamesRewriter();
         }
     }
 }

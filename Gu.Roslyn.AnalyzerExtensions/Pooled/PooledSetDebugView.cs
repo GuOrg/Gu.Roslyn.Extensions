@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Initializes a new instance of the <see cref="PooledSetDebugView{T}"/> class.
         /// </summary>
         /// <param name="set">The set.</param>
-        public PooledSetDebugView(PooledSet<T> set)
+        internal PooledSetDebugView(PooledSet<T> set)
         {
             this.set = set ?? throw new ArgumentNullException(nameof(set));
         }
@@ -25,6 +25,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Gets the items.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-        public T[] Items => this.set.ToArray();
+        internal T[] Items => this.set.ToArray();
     }
 }

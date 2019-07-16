@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <inheritdoc />
-    internal sealed class MemberPathComparer : IEqualityComparer<ExpressionSyntax>
+    public sealed class MemberPathComparer : IEqualityComparer<ExpressionSyntax>
     {
         /// <summary> The default instance. </summary>
         internal static readonly MemberPathComparer Default = new MemberPathComparer();

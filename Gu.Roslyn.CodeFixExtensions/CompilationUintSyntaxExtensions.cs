@@ -113,11 +113,9 @@ namespace Gu.Roslyn.CodeFixExtensions
             private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
             private readonly List<NamespaceDeclarationSyntax> namespaceDeclarations = new List<NamespaceDeclarationSyntax>();
 
-            public IReadOnlyList<UsingDirectiveSyntax> UsingDirectives => this.usingDirectives;
+            internal IReadOnlyList<UsingDirectiveSyntax> UsingDirectives => this.usingDirectives;
 
-            public IReadOnlyList<NamespaceDeclarationSyntax> NamespaceDeclarations => this.namespaceDeclarations;
-
-            public static UsingDirectiveWalker Borrow(CompilationUnitSyntax compilationUnit) => BorrowAndVisit(compilationUnit, () => new UsingDirectiveWalker());
+            internal IReadOnlyList<NamespaceDeclarationSyntax> NamespaceDeclarations => this.namespaceDeclarations;
 
             public override void VisitUsingDirective(UsingDirectiveSyntax node)
             {
@@ -139,6 +137,8 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 // Stop walking here
             }
+
+            internal static UsingDirectiveWalker Borrow(CompilationUnitSyntax compilationUnit) => BorrowAndVisit(compilationUnit, () => new UsingDirectiveWalker());
 
             protected override void Clear()
             {

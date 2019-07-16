@@ -200,7 +200,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                     case EventFieldDeclarationSyntax eventField:
                         return eventField.Modifiers;
                     default:
-                        return default(SyntaxTokenList);
+                        return default;
                 }
             }
         }

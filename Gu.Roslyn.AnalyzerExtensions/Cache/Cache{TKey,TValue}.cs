@@ -45,7 +45,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             Interlocked.Increment(ref refCount);
 #pragma warning restore GU0011 // Don't ignore the return value.
             Debug.Assert(refCount > 0, "refCount > 0");
-            return default(Transaction_);
+            return default;
         }
 
         /// <summary>
