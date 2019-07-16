@@ -165,22 +165,17 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
             var type = semanticModel.GetDeclaredSymbol(typeDeclaration);
-            Assert.AreEqual(false, type.TryFindFirstMethod(name, out var method));
-            Assert.AreEqual(name, method.Name);
+            Assert.AreEqual(false, type.TryFindFirstMethod(name, out _));
+            Assert.AreEqual(false, type.TryFindSingleMethod(name, out _));
+            Assert.AreEqual(false, type.TryFindFirstMember(name, out _));
 
-            Assert.AreEqual(true, type.TryFindFirstMethodRecursive(name, out method));
-            Assert.AreEqual(name, method.Name);
-
-            Assert.AreEqual(false, type.TryFindSingleMethod(name, out method));
+            Assert.AreEqual(true, type.TryFindFirstMethodRecursive(name, out var method));
             Assert.AreEqual(name, method.Name);
 
             Assert.AreEqual(true, type.TryFindSingleMethodRecursive(name, out method));
             Assert.AreEqual(name, method.Name);
 
-            Assert.AreEqual(false, type.TryFindFirstMember(name, out var member));
-            Assert.AreEqual(name, member.Name);
-
-            Assert.AreEqual(true, type.TryFindFirstMemberRecursive(name, out member));
+            Assert.AreEqual(true, type.TryFindFirstMemberRecursive(name, out var member));
             Assert.AreEqual(name, member.Name);
 
             Assert.AreEqual(false, type.TryFindFirstMethod("missing", out _));
