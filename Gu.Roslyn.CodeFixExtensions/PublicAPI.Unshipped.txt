@@ -1,1 +1,4 @@
-﻿
+﻿Gu.Roslyn.CodeFixExtensions.CompilationUintSyntaxExtensions
+static Gu.Roslyn.CodeFixExtensions.CompilationUintSyntaxExtensions.AddUsing(this Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax compilationUnit, Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax usingDirective, Microsoft.CodeAnalysis.SemanticModel semanticModel) -> Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax
+static Gu.Roslyn.CodeFixExtensions.CompilationUintSyntaxExtensions.AddUsing(this Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax compilationUnit, Microsoft.CodeAnalysis.ITypeSymbol type, Microsoft.CodeAnalysis.SemanticModel semanticModel) -> Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax
+static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddUsing(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.ITypeSymbol type) -> Microsoft.CodeAnalysis.Editing.DocumentEditor

@@ -85,15 +85,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            return obj is QualifiedParameter other && this.Equals(other);
-        }
+        public override bool Equals(object obj) => obj is QualifiedParameter other &&
+                                                   this.Equals(other);
 
         /// <inheritdoc />
         public override int GetHashCode()

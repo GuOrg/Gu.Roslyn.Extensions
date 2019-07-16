@@ -350,17 +350,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             internal readonly List<TypeDeclarationSyntax> Types = new List<TypeDeclarationSyntax>();
 #pragma warning restore SA1401 // Fields must be private
 
-            public static TypeDeclarationWalker Borrow(TypeDeclarationSyntax typeDeclaration)
-            {
-                var walker = Borrow(() => new TypeDeclarationWalker());
-                foreach (var member in typeDeclaration.Members)
-                {
-                    walker.Visit(member);
-                }
-
-                return walker;
-            }
-
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
                 if (node.Declaration is VariableDeclarationSyntax declaration &&
@@ -416,6 +405,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
             public override void VisitStructDeclaration(StructDeclarationSyntax node)
             {
                 this.Types.Add(node);
+            }
+
+            internal static TypeDeclarationWalker Borrow(TypeDeclarationSyntax typeDeclaration)
+            {
+                var walker = Borrow(() => new TypeDeclarationWalker());
+                foreach (var member in typeDeclaration.Members)
+                {
+                    walker.Visit(member);
+                }
+
+                return walker;
             }
 
             protected override void Clear()

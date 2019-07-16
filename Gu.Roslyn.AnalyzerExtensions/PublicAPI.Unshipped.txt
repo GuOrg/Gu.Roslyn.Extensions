@@ -1,1 +1,7 @@
-﻿
+﻿Gu.Roslyn.AnalyzerExtensions.MemberPathComparer
+Gu.Roslyn.AnalyzerExtensions.MemberPathComparer.GetHashCode(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax obj) -> int
+static Gu.Roslyn.AnalyzerExtensions.MemberPathComparer.Equals(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax x, Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax y) -> bool
+static Gu.Roslyn.AnalyzerExtensions.MemberPathComparer.Equals(object _, object __) -> bool
+static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.GetDeclaredSymbolSafe(this Microsoft.CodeAnalysis.SemanticModel semanticModel, Microsoft.CodeAnalysis.CSharp.Syntax.DiscardDesignationSyntax node) -> Microsoft.CodeAnalysis.IDiscardSymbol
+static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.TryGetSymbol(this Microsoft.CodeAnalysis.SemanticModel semanticModel, Microsoft.CodeAnalysis.CSharp.Syntax.DiscardDesignationSyntax node, out Microsoft.CodeAnalysis.IDiscardSymbol symbol) -> bool
+static Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.UsingDirectiveComparer.IsSameOrContained(Microsoft.CodeAnalysis.CSharp.Syntax.NamespaceDeclarationSyntax namespaceDeclarationSyntax, Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax usingDirective) -> bool

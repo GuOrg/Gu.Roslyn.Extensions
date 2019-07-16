@@ -275,9 +275,6 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            internal static UnderscoreFieldWalker Borrow() => Borrow(() => new UnderscoreFieldWalker());
-
-
             public override void VisitThisExpression(ThisExpressionSyntax node)
             {
                 switch (node.Parent.Kind())
@@ -331,6 +328,8 @@ namespace Gu.Roslyn.CodeFixExtensions
                 this.CheckUsesThis(node.Expression);
                 base.VisitConditionalAccessExpression(node);
             }
+
+            internal static UnderscoreFieldWalker Borrow() => Borrow(() => new UnderscoreFieldWalker());
 
             protected override void Clear()
             {

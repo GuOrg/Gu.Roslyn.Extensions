@@ -38,7 +38,7 @@ namespace RoslynSandbox
                 var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
                 var type1 = ctor.Parameters[0].Type;
                 var type2 = ctor.Parameters[1].Type;
-                Assert.AreEqual(true, type1.IsAssignableTo(type2, compilation));
+                Assert.AreEqual(expected, type1.IsAssignableTo(type2, compilation));
             }
 
             [TestCase("int",                                         typeof(int))]

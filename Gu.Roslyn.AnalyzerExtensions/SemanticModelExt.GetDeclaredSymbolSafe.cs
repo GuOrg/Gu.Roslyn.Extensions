@@ -241,12 +241,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="node">The <see cref="VariableDesignationSyntax"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="symbol">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetSymbol(this SemanticModel semanticModel, DiscardDesignationSyntax node, CancellationToken cancellationToken, out IDiscardSymbol symbol)
+        public static bool TryGetSymbol(this SemanticModel semanticModel, DiscardDesignationSyntax node, out IDiscardSymbol symbol)
         {
-            symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
+            symbol = GetDeclaredSymbolSafe(semanticModel, node);
             return symbol != null;
         }
 
@@ -515,9 +514,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="node">The <see cref="VariableDesignationSyntax"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>An <see cref="IDiscardSymbol"/> or null.</returns>
-        public static IDiscardSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, DiscardDesignationSyntax node, CancellationToken cancellationToken)
+        public static IDiscardSymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, DiscardDesignationSyntax node)
         {
             if (node is null)
             {
