@@ -503,7 +503,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case SingleVariableDesignationSyntax singleVariable:
                     return GetDeclaredSymbolSafe(semanticModel, singleVariable, cancellationToken);
                 case DiscardDesignationSyntax discard:
-                    return GetDeclaredSymbolSafe(semanticModel, discard, cancellationToken);
+                    return GetDeclaredSymbolSafe(semanticModel, discard);
             }
 
             return null;
