@@ -16,31 +16,28 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
-    namespace RoslynSandbox
+    internal class C
     {
-        internal class Foo
+        public void M()
         {
-            public void Bar()
-            {
-                Meh(1, 2, 3);
-            }
+            M(1, 2, 3);
+        }
 
-            internal void Meh(int v1, int v2, int v3)
-            {
-            }
+        internal void M(int v1, int v2, int v3)
+        {
         }
     }
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var invocation = syntaxTree.FindInvocation("Meh(1, 2, 3)");
+                var invocation = syntaxTree.FindInvocation("M(1, 2, 3)");
                 var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-                Assert.AreEqual(true, InvocationExpressionSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
+                Assert.AreEqual(true, invocation.TryFindArgument(method.Parameters[index], out var argument));
                 Assert.AreEqual(expected, argument.ToString());
 
-                Assert.AreEqual(true, ArgumentListSyntaxExt.TryFind(invocation.ArgumentList, method.Parameters[index], out argument));
+                Assert.AreEqual(true, invocation.ArgumentList.TryFind(method.Parameters[index], out argument));
                 Assert.AreEqual(expected, argument.ToString());
             }
 
@@ -51,31 +48,28 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
-    namespace RoslynSandbox
+    internal class C
     {
-        internal class Foo
+        public void M()
         {
-            public void Bar()
-            {
-                Meh(v1: 1, v2: 2, v3: 3);
-            }
+            M(v1: 1, v2: 2, v3: 3);
+        }
 
-            internal void Meh(int v1, int v2, int v3)
-            {
-            }
+        internal void M(int v1, int v2, int v3)
+        {
         }
     }
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var invocation = syntaxTree.FindInvocation("Meh(v1: 1, v2: 2, v3: 3)");
+                var invocation = syntaxTree.FindInvocation("M(v1: 1, v2: 2, v3: 3)");
                 var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-                Assert.AreEqual(true, InvocationExpressionSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
+                Assert.AreEqual(true, invocation.TryFindArgument(method.Parameters[index], out var argument));
                 Assert.AreEqual(expected, argument.ToString());
 
-                Assert.AreEqual(true, ArgumentListSyntaxExt.TryFind(invocation.ArgumentList, method.Parameters[index], out argument));
+                Assert.AreEqual(true, invocation.ArgumentList.TryFind(method.Parameters[index], out argument));
                 Assert.AreEqual(expected, argument.ToString());
             }
 
@@ -86,32 +80,86 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-            namespace RoslynSandbox
-            {
-                namespace RoslynSandbox
-                {
-                    internal class Foo
-                    {
-                        public void Bar()
-                        {
-                            Meh(v2: 2, v1: 1, v3: 3);
-                        }
+namespace N
+{
+    class C
+    {
+        public void M()
+        {
+            M(v2: 2, v1: 1, v3: 3);
+        }
 
-                        internal void Meh(int v1, int v2, int v3)
-                        {
-                        }
-                    }
-                }
-            }");
+        internal void M(int v1, int v2, int v3)
+        {
+        }
+    }
+}");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var invocation = syntaxTree.FindInvocation("Meh(v2: 2, v1: 1, v3: 3)");
+                var invocation = syntaxTree.FindInvocation("M(v2: 2, v1: 1, v3: 3)");
                 var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-                Assert.AreEqual(true, InvocationExpressionSyntaxExt.TryFindArgument(invocation, method.Parameters[index], out var argument));
+                Assert.AreEqual(true, invocation.TryFindArgument(method.Parameters[index], out var argument));
                 Assert.AreEqual(expected, argument.ToString());
 
-                Assert.AreEqual(true, ArgumentListSyntaxExt.TryFind(invocation.ArgumentList, method.Parameters[index], out argument));
+                Assert.AreEqual(true, invocation.ArgumentList.TryFind(method.Parameters[index], out argument));
                 Assert.AreEqual(expected, argument.ToString());
+            }
+
+            [Test]
+            public void ParamsExplicitArray()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace N
+{
+    class C
+    {
+        public void M()
+        {
+            M(new[] { 1, 2, 3 });
+        }
+
+        internal void M(params int[] xs)
+        {
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var invocation = syntaxTree.FindInvocation("M(new[] { 1, 2, 3 })");
+                var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
+                Assert.AreEqual(true, invocation.TryFindArgument(method.Parameters[0], out var argument));
+                Assert.AreEqual("new[] { 1, 2, 3 }", argument.ToString());
+
+                Assert.AreEqual(true, invocation.ArgumentList.TryFind(method.Parameters[0], out argument));
+                Assert.AreEqual("new[] { 1, 2, 3 }", argument.ToString());
+            }
+
+            [Test]
+            public void ParamsReturnsFalse()
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace N
+{
+    class C
+    {
+        public void M()
+        {
+            M(1, 2, 3);
+        }
+
+        internal void M(params int[] xs)
+        {
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var invocation = syntaxTree.FindInvocation("M(1, 2, 3)");
+                var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
+                Assert.AreEqual(false,                invocation.TryFindArgument(method.Parameters[0], out var argument));
+                Assert.AreEqual(false,                invocation.ArgumentList.TryFind(method.Parameters[0], out argument));
             }
         }
     }

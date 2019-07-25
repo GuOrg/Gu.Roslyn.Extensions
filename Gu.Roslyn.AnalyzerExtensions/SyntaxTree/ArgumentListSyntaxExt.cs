@@ -20,10 +20,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             argument = null;
             if (argumentList == null ||
                 argumentList.Arguments.Count == 0 ||
-                parameter == null ||
-                parameter.IsParams)
+                parameter == null)
             {
                 return false;
+            }
+
+            if (parameter.IsParams)
+            {
+                return argumentList.Arguments.Count - 1 == parameter.Ordinal &&
+                       argumentList.Arguments.TryElementAt(parameter.Ordinal, out argument);
             }
 
             if (TryFindByNameColon(argumentList, parameter.Name, out argument))
