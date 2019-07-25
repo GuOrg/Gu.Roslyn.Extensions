@@ -36,6 +36,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
+            if (parameter.IsOptional)
+            {
+                if (argumentList.Arguments.TryElementAt(parameter.Ordinal, out var candidate) &&
+                    candidate.NameColon == null)
+                {
+                    argument = candidate;
+                    return true;
+                }
+
+                return false;
+            }
+
             return argumentList.Arguments.TryElementAt(parameter.Ordinal, out argument);
         }
 
