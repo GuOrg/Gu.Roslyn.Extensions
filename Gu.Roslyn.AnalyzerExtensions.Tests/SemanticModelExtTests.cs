@@ -15,9 +15,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var value = 1;
         }
@@ -40,9 +40,9 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var value = 1.0;
         }
@@ -65,9 +65,9 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var value = ""abc"";
         }
@@ -88,9 +88,9 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             string value = null;
         }
@@ -111,9 +111,9 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             int? value = null;
         }
@@ -136,9 +136,9 @@ namespace N
 {
     using System.Reflection;
 
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var value = BindingFlags.Instance;
         }

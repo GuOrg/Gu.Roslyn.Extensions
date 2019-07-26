@@ -19,7 +19,7 @@ namespace N
 {
     namespace N
     {
-        internal class Foo
+        internal class C
         {
             public void Bar()
             {
@@ -51,7 +51,7 @@ namespace N
 {
     namespace N
     {
-        internal class Foo
+        internal class C
         {
             public void Bar()
             {
@@ -83,7 +83,7 @@ namespace N
 {
     namespace N
     {
-        internal class Foo
+        internal class C
         {
             public void Bar()
             {
@@ -115,7 +115,7 @@ namespace N
 {
     namespace N
     {
-        internal class Foo
+        internal class C
         {
             public void Bar()
             {

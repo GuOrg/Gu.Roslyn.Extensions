@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -35,7 +35,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>
@@ -59,7 +59,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -83,7 +83,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -107,7 +107,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.

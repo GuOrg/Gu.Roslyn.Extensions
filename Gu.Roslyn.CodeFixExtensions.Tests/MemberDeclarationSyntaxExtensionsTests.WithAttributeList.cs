@@ -16,7 +16,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         public int Bar() => 1;
     }
@@ -26,7 +26,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         [Obsolete]
         public int Bar() => 1;
@@ -46,7 +46,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         public int Bar() => 1;
     }
@@ -56,7 +56,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         [Obsolete]
         public int Bar() => 1;
@@ -79,7 +79,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         public int Bar() => 1;
@@ -90,7 +90,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         [Obsolete]
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
@@ -111,7 +111,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         public int Bar() => 1;
@@ -122,7 +122,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         [Obsolete]
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.

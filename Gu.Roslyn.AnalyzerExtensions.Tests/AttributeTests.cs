@@ -19,13 +19,13 @@ namespace N
     using System;
 
     [Obsolete]
-    public class Foo
+    public class C
     {
     }
 }";
             code = code.AssertReplace("[Obsolete]", attribute);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var classDeclaration = syntaxTree.FindClassDeclaration("C");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = new QualifiedType("System.ObsoleteAttribute");

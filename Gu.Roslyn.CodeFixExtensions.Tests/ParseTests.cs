@@ -17,7 +17,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             RoslynAssert.Ast(expected, declaration);
         }
 
-        [TestCase("public Foo(){}")]
+        [TestCase("public C(){}")]
         public void ConstructorDeclaration(string code)
         {
             var declaration = Parse.ConstructorDeclaration(code);
@@ -26,7 +26,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             RoslynAssert.Ast(expected, declaration);
         }
 
-        [TestCase("public int Foo { get; }")]
+        [TestCase("public int C { get; }")]
         public void PropertyDeclaration(string code)
         {
             var declaration = Parse.PropertyDeclaration(code);
@@ -35,7 +35,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             RoslynAssert.Ast(expected, declaration);
         }
 
-        [TestCase("public int Foo() => 1;")]
+        [TestCase("public int C() => 1;")]
         public void MethodDeclaration(string code)
         {
             var declaration = Parse.MethodDeclaration(code);
@@ -73,8 +73,8 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
         [TestCase("/// <summary>\r\n/// Line 1\r\n/// </summary>")]
         [TestCase("/// <summary>\r\n/// Line 1\r\n/// Line2\r\n/// </summary>")]
         [TestCase("/// <param name=\"cancellationToken\">The <see cref=\"CancellationToken\"/> that the task will observe.</param>")]
-        [TestCase("/// <summary>\r\n        /// Initializes a new instance of the <see cref=\"Foo\"/> class.\r\n        /// </summary>")]
-        [TestCase("/// <summary> Initializes a new instance of the <see cref=\"Foo\"/> class. </summary>")]
+        [TestCase("/// <summary>\r\n        /// Initializes a new instance of the <see cref=\"C\"/> class.\r\n        /// </summary>")]
+        [TestCase("/// <summary> Initializes a new instance of the <see cref=\"C\"/> class. </summary>")]
         public void DocumentationCommentTriviaSyntax(string code)
         {
             var node = Parse.DocumentationCommentTriviaSyntax(code);

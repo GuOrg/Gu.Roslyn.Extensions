@@ -14,7 +14,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar() => 1;
     }
@@ -22,7 +22,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
@@ -42,7 +42,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         public int Bar() => 1;
@@ -51,7 +51,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New summary.</summary>
@@ -72,7 +72,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         public int Bar() => 1;
@@ -81,7 +81,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New summary.</summary>
@@ -102,7 +102,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar1() => 1;
 
@@ -112,7 +112,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar1() => 1;
 
@@ -134,7 +134,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar() => 1;
     }
@@ -142,7 +142,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
@@ -162,7 +162,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar() => 1;
     }
@@ -170,7 +170,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
@@ -190,7 +190,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar() => 1;
     }
@@ -198,7 +198,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
@@ -218,7 +218,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Old summary.</summary>
         /// <returns>Old returns.</returns>
@@ -228,7 +228,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
@@ -248,7 +248,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>Old summary.</summary>
@@ -259,7 +259,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New summary.</summary>
@@ -280,7 +280,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar1() => 1;
 
@@ -292,7 +292,7 @@ namespace N
                 var expected = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar1() => 1;
 

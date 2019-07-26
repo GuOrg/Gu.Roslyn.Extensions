@@ -19,16 +19,16 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var testCode = @"
 namespace N
 {
-    public abstract class Foo
+    public abstract class C
     {
         public int Filed1 = 1;
         private int filed1;
 
-        public Foo()
+        public C()
         {
         }
 
-        private Foo(int i)
+        private C(int i)
         {
         }
 
@@ -42,21 +42,21 @@ namespace N
                 var sln = CodeFactory.CreateSolution(testCode);
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
                 var declaration = (PropertyDeclarationSyntax)editor.Generator.PropertyDeclaration("Property", SyntaxFactory.ParseTypeName("int"), Accessibility.Public);
-                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
                 _ = editor.AddProperty(containingType, declaration);
                 var expected = @"
 namespace N
 {
-    public abstract class Foo
+    public abstract class C
     {
         public int Filed1 = 1;
         private int filed1;
 
-        public Foo()
+        public C()
         {
         }
 
-        private Foo(int i)
+        private C(int i)
         {
         }
 

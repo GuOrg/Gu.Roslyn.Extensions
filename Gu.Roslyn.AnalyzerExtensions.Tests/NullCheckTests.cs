@@ -19,11 +19,11 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         private readonly string text;
 
-        public Foo(string text, string other)
+        public C(string text, string other)
         {
             if (text == null)
             {
@@ -51,11 +51,11 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         private readonly string text;
 
-        public Foo(string text)
+        public C(string text)
         {
             this.text = text ?? throw new ArgumentNullException(nameof(text));;
         }
@@ -77,11 +77,11 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         private readonly string text;
 
-        public Foo(string text, string other)
+        public C(string text, string other)
         {
             if (text == null || other == null)
             {

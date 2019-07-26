@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int bar1;
         private int bar2;
@@ -42,12 +42,12 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         protected int Bar;
     }
 
-    public class Bar : Foo
+    public class Bar : C
     {
         public Bar()
         {

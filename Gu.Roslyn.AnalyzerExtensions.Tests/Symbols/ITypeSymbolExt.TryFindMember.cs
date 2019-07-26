@@ -14,14 +14,14 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private readonly int bar;
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var typeSymbol = semanticModel.GetDeclaredSymbol(typeDeclaration);
             Assert.AreEqual(true, typeSymbol.TryFindField("bar", out var field));
             Assert.AreEqual("bar", field.Name);
@@ -46,14 +46,14 @@ namespace N
 {
     using System;
 
-    internal class Foo
+    internal class C
     {
         public event EventHandler Bar;
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var typeSymbol = semanticModel.GetDeclaredSymbol(typeDeclaration);
             Assert.AreEqual(true, typeSymbol.TryFindEvent("Bar", out var field));
             Assert.AreEqual("Bar", field.Name);
@@ -80,14 +80,14 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Bar { get; set; }
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var typeSymbol = semanticModel.GetDeclaredSymbol(typeDeclaration);
             Assert.AreEqual(true, typeSymbol.TryFindProperty("Bar", out var property));
             Assert.AreEqual("Bar", property.Name);
@@ -114,14 +114,14 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public override string ToString() => ""abc"";
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var type = semanticModel.GetDeclaredSymbol(typeDeclaration);
             Assert.AreEqual(true, type.TryFindFirstMethod("ToString", out var method));
             Assert.AreEqual("ToString", method.Name);
@@ -157,13 +157,13 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var typeDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var type = semanticModel.GetDeclaredSymbol(typeDeclaration);
             Assert.AreEqual(false, type.TryFindFirstMethod(name, out _));
             Assert.AreEqual(false, type.TryFindSingleMethod(name, out _));

@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
                 @"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
         internal object Bar()
         {
@@ -52,7 +52,7 @@ namespace N
 {
     using System;
 
-    internal class Foo
+    internal class C
     {
         internal object Bar() { }
         internal string Other() { }

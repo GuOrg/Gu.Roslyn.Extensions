@@ -16,10 +16,10 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         private readonly int i;
-        public Foo()
+        public C()
         {
             i = 1;
         }
@@ -40,7 +40,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         public static bool Get(int a, int b) => a == 1 && b == 2;
     }
@@ -59,7 +59,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         public static bool Get(int a, int b) => a == 1 || b == 2;
     }
@@ -78,9 +78,9 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             this.E += (_, __) =>
             {
@@ -114,9 +114,9 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var a = 1;
             this.E += (_, __) => a = 3;
@@ -153,9 +153,9 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
-        public Foo(int a)
+        public C(int a)
         {
             a = 1;
             this.E += (_, __) => a = 3;

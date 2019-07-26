@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
         private int value2;
@@ -43,7 +43,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
         private int value2;
@@ -78,7 +78,7 @@ namespace N
             var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int GetOnly { get; }
 
@@ -126,7 +126,7 @@ namespace N
             var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int GetOnly { get; }
 
@@ -172,7 +172,7 @@ namespace N
             var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int backingField;
 
@@ -219,7 +219,7 @@ namespace N
             var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int GetOnly { get; }
 

@@ -14,13 +14,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
         private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo : IFoo
+    public class C : IC
     {
         public static int PublicStatic() => 1;
 
         public int Public() => 1;
 
-        object IFoo.Public() => 1;
+        object IC.Public() => 1;
 
         internal static int InternalStatic() => 1;
 
@@ -31,7 +31,7 @@ namespace N
         private int Private() => 1;
     }
 
-    public interface IFoo
+    public interface IC
     {
         object Public();
     }
@@ -59,10 +59,10 @@ namespace N
 
         private static IEnumerable<TestCaseData> CreateTestCases()
         {
-            var foo = SyntaxTree.FindClassDeclaration("Foo");
-            foreach (var member1 in foo.Members)
+            var C = SyntaxTree.FindClassDeclaration("C");
+            foreach (var member1 in C.Members)
             {
-                foreach (var member2 in foo.Members)
+                foreach (var member2 in C.Members)
                 {
                     if (member1.SpanStart < member2.SpanStart)
                     {

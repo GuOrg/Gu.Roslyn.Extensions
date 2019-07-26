@@ -20,11 +20,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
 
-        public Foo()
+        public C()
         {
             this.value = 1;
         }
@@ -49,11 +49,11 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
 
-        public static Foo Create() => new Foo { value = 1 };
+        public static C Create() => new C { value = 1 };
     }
 }";
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
@@ -74,11 +74,11 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
 
-        public Foo()
+        public C()
         {
             Update(ref this.value);
         }
@@ -107,11 +107,11 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
 
-        public Foo()
+        public C()
         {
             Update(out this.value);
         }

@@ -19,16 +19,16 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var testCode = @"
 namespace N
 {
-    public abstract class Foo
+    public abstract class C
     {
         public int Field1 = 1;
         private int field1;
 
-        public Foo()
+        public C()
         {
         }
 
-        private Foo(int i)
+        private C(int i)
         {
         }
 
@@ -57,22 +57,22 @@ namespace N
 }";
                 var sln = CodeFactory.CreateSolution(testCode);
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-                var containingType = SyntaxNodeExt.FindClassDeclaration(editor.OriginalRoot.SyntaxTree, "Foo");
+                var containingType = SyntaxNodeExt.FindClassDeclaration(editor.OriginalRoot.SyntaxTree, "C");
 
                 var expected = @"
 namespace N
 {
-    public abstract class Foo
+    public abstract class C
     {
         public int Field1 = 1;
         private int field1;
         private bool disposable;
 
-        public Foo()
+        public C()
         {
         }
 
-        private Foo(int i)
+        private C(int i)
         {
         }
 
@@ -114,7 +114,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Meh1 = 1;
         private int meh2;
@@ -130,7 +130,7 @@ namespace N
                 var expected = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Meh1 = 1;
         private int meh2;
@@ -148,7 +148,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
 
@@ -163,7 +163,7 @@ namespace N
                 var expected = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
         private int value_;
@@ -180,7 +180,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
         private int value3;
@@ -208,7 +208,7 @@ namespace N
                 var expected = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
         private int value2;
@@ -238,9 +238,9 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
         }
 
@@ -262,9 +262,9 @@ namespace N
                 var expected = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
         }
 
@@ -288,9 +288,9 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
         }
 
@@ -313,9 +313,9 @@ namespace N
                 var expected = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
         }
 

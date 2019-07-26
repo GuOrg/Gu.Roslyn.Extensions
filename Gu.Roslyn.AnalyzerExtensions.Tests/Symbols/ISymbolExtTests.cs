@@ -14,9 +14,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
             var testCode = @"
 namespace N
 {
-    public abstract class FooBase<T>
+    public abstract class CBase<T>
     {
-        protected FooBase()
+        protected CBase()
         {
             this.Value = default(T);
         }
@@ -24,9 +24,9 @@ namespace N
         public abstract T Value { get; set; }
     }
 
-    public class Foo : FooBase<int>
+    public class C : CBase<int>
     {
-        public Foo()
+        public C()
         {
             var temp = this.Value;
         }

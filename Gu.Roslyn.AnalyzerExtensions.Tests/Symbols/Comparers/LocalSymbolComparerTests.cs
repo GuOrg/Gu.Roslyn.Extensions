@@ -15,9 +15,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var bar1;
             var bar2;

@@ -16,11 +16,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
 
-        public Foo()
+        public C()
         {
             this.value = 1;
         }
@@ -30,7 +30,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var classDeclaration = syntaxTree.FindClassDeclaration("C");
             using (var walker = MutationWalker.Borrow(classDeclaration, Scope.Instance, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual(mutation, walker.All().Single().ToString());
@@ -46,11 +46,11 @@ namespace N
             var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
 
-        public Foo()
+        public C()
         {
             Mutate(out this.value);
         }
@@ -65,7 +65,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
+            var classDeclaration = syntaxTree.FindClassDeclaration("C");
             using (var walker = MutationWalker.Borrow(classDeclaration, Scope.Type, semanticModel, CancellationToken.None))
             {
                 CollectionAssert.IsEmpty(walker.PrefixUnaries);

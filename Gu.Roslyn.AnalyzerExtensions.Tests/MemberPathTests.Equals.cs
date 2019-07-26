@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value;
 
@@ -45,7 +45,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
         private int value2;
@@ -95,7 +95,7 @@ namespace N
         public Bar Bar;
     }
 
-    public class Foo
+    public class C
     {
         private Bar bar1 = new Bar();
         private Bar bar2 = new Bar();

@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
         private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo : IFoo
+    public class C : IC
     {
         public static int PublicStaticGet { get; } = 1;
 
@@ -24,7 +24,7 @@ namespace N
 
         public int PublicGet { get; }
 
-        object IFoo.PublicGet => this.PublicGet;
+        object IC.PublicGet => this.PublicGet;
 
         public int PublicExpressionBody1 => this.PublicGet;
 
@@ -48,7 +48,7 @@ namespace N
 
         public int PublicGetSet { get; set; }
 
-        object IFoo.PublicGetSet
+        object IC.PublicGetSet
         {
             get { return this.PublicGetSet; }
             set { this.PublicGetSet = (int)value; }
@@ -69,7 +69,7 @@ namespace N
         private int PrivateGetSet { get; set; }
     }
 
-    public interface IFoo
+    public interface IC
     {
         object PublicGet { get; }
 
@@ -114,7 +114,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    class Foo
+    class C
     {
         public static int PublicStatic1 { get; } = PublicStatic2;
         public static int PublicStatic2 { get; } = 3;
@@ -130,10 +130,10 @@ namespace N
 
         private static IEnumerable<TestCaseData> CreateTestCases()
         {
-            var foo = SyntaxTree.FindClassDeclaration("Foo");
-            foreach (var member1 in foo.Members)
+            var C = SyntaxTree.FindClassDeclaration("C");
+            foreach (var member1 in C.Members)
             {
-                foreach (var member2 in foo.Members)
+                foreach (var member2 in C.Members)
                 {
                     if (member1.SpanStart < member2.SpanStart)
                     {

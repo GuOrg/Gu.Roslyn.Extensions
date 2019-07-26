@@ -13,7 +13,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
     }
 }");
@@ -28,7 +28,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
 
@@ -50,7 +50,7 @@ namespace N
                 var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
     }
 }");
@@ -58,9 +58,9 @@ namespace N
                 var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
         }
 
@@ -85,7 +85,7 @@ namespace N
                 var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
     }
 }");
@@ -93,11 +93,11 @@ namespace N
                 var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
 
-        public Foo()
+        public C()
         {
         }
 
@@ -119,11 +119,11 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
 
-        public Foo()
+        public C()
         {
         }
 
@@ -145,9 +145,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
         }
 
@@ -171,9 +171,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
         }
 

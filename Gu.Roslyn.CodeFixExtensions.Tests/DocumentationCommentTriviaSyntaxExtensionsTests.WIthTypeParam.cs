@@ -15,7 +15,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -28,7 +28,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.

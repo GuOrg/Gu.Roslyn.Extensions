@@ -21,7 +21,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             [TestCase("Cast<object>(1)")]
             [TestCase("Cast<System.StringComparison>(System.StringComparison.CurrentCulture)")]
             [TestCase("Cast<System.StringComparison>((object)System.StringComparison.CurrentCulture)")]
-            [TestCase("Cast<FooEnum>(FooEnum.Bar)")]
+            [TestCase("Cast<CEnum>(CEnum.Bar)")]
             [TestCase("Cast<object>(new object())")]
             [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")")]
             public void TrueWhen(string call)
@@ -29,7 +29,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
                 var enumCode = @"
 namespace N
 {
-    public enum FooEnum
+    public enum CEnum
     {
         Bar,
         Baz,
@@ -38,9 +38,9 @@ namespace N
                 var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var cast = Cast<int>(1);
         }
@@ -68,9 +68,9 @@ namespace N
                 var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo(int? arg)
+        public C(int? arg)
         {
             var cast = Cast<int?>(arg);
         }
@@ -100,9 +100,9 @@ namespace N
                 var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var cast = Cast<int>(1);
         }

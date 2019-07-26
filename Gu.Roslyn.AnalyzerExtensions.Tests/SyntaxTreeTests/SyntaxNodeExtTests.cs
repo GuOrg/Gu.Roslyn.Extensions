@@ -19,7 +19,7 @@ namespace N
     using System;
     using System.Linq.Expressions;
 
-    public class Foo
+    public class C
     {
         public Expression<Func<int>> Bar() => () => 1;
         public Func<int> Bar() => () => 2;

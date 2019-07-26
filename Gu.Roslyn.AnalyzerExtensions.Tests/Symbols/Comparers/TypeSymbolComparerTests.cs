@@ -17,19 +17,19 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
                 @"
 namespace N
 {
-    public class Foo1
+    public class C1
     {
     }
 
-    public class Foo2
+    public class C2
     {
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindTypeDeclaration("Foo1");
+            var node1 = syntaxTree.FindTypeDeclaration("C1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1, CancellationToken.None);
-            var node2 = syntaxTree.FindTypeDeclaration("Foo2");
+            var node2 = syntaxTree.FindTypeDeclaration("C2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2, CancellationToken.None);
             Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
             Assert.AreEqual(false, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
@@ -46,7 +46,7 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo<T>
+    public class C<T>
     {
         public T Bar1 { get; }
         public T Bar2 { get; }
@@ -73,7 +73,7 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo<T>
+    public class C<T>
     {
         public int Bar1(T x) => 1;
 

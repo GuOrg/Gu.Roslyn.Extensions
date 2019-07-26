@@ -113,7 +113,7 @@ Extension methods for `ItypeSymbol`.
 
 ### IsAssignableTo
 
-For checking if `foo is Type`
+For checking if `C is Type`
 
 ### TryFindMember
 

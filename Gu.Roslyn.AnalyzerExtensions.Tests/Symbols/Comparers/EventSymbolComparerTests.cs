@@ -17,7 +17,7 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         public event EventHandler Bar1;
         public event EventHandler Bar2;

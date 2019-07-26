@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper fow working with member paths like foo.Bar?.Baz.
+    /// Helper fow working with member paths like C.Bar?.Baz.
     /// </summary>
     public static class MemberPath
     {
@@ -75,7 +75,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         //// ReSharper restore UnusedParameter.Global
 
         /// <summary>
-        /// Tries to find foo in this.foo.Bar.Baz.
+        /// Tries to find C in this.C.Bar.Baz.
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="member">The root member.</param>
@@ -89,7 +89,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Tries to find Baz in this.foo.Bar.Baz.
+        /// Tries to find Baz in this.C.Bar.Baz.
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="member">The leaf member.</param>
@@ -107,7 +107,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="member">The single member.</param>
-        /// <returns>True if the path was only one member this.foo or foo for example.</returns>
+        /// <returns>True if the path was only one member this.C or C for example.</returns>
         public static bool TrySingle(ExpressionSyntax expression, out IdentifierNameSyntax member)
         {
             using (var walker = PathWalker.Borrow(expression))

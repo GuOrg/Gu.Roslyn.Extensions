@@ -18,9 +18,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             var code = @"
 namespace N
 {
-    class Foo
+    class C
     {
-        Foo()
+        C()
         {
             1;
         }
@@ -40,9 +40,9 @@ namespace N
             var code = @"
 namespace N
 {
-    class Foo
+    class C
     {
-        Foo()
+        C()
         {
             1;
         }
@@ -63,9 +63,9 @@ namespace N
             var code = @"
 namespace N
 {
-    class Foo
+    class C
     {
-        Foo()
+        C()
         {
             1;
         }

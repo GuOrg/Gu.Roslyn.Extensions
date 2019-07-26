@@ -19,9 +19,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var i = 1;
         }
@@ -29,7 +29,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindConstructorDeclaration("Foo");
+                var node = syntaxTree.FindConstructorDeclaration("C");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual("1", walker.Literals.Single().ToString());
@@ -45,14 +45,14 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        static Foo()
+        static C()
         {
             var i = 1;
         }
 
-        public Foo()
+        public C()
         {
             var i = 2;
         }
@@ -60,7 +60,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindTypeDeclaration("Foo");
+                var node = syntaxTree.FindTypeDeclaration("C");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -76,14 +76,14 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var i = 2;
         }
 
-        static Foo()
+        static C()
         {
             var i = 1;
         }
@@ -91,7 +91,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindTypeDeclaration("Foo");
+                var node = syntaxTree.FindTypeDeclaration("C");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -107,15 +107,15 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
             : this(1)
         {
             var j = 3;
         }
 
-        public Foo(int _)
+        public C(int _)
         {
             var i = 2;
         }
@@ -123,7 +123,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindConstructorDeclaration("Foo");
+                var node = syntaxTree.FindConstructorDeclaration("C");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -139,17 +139,17 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class FooBase
+    public class CBase
     {
-        public FooBase()
+        public CBase()
         {
             var i = 1;
         }
     }
 
-    public class Foo : FooBase
+    public class C : CBase
     {
-        public Foo()
+        public C()
         {
             var j = 2;
         }
@@ -157,7 +157,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindConstructorDeclaration("public Foo()");
+                var node = syntaxTree.FindConstructorDeclaration("public C()");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -173,17 +173,17 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class FooBase
+    public class CBase
     {
-        public FooBase()
+        public CBase()
         {
             var i = 1;
         }
     }
 
-    public class Foo : FooBase
+    public class C : CBase
     {
-        public Foo()
+        public C()
             : base()
         {
             var j = 2;
@@ -192,7 +192,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindConstructorDeclaration("public Foo()");
+                var node = syntaxTree.FindConstructorDeclaration("public C()");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -208,11 +208,11 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private readonly int value = 1;
 
-        public Foo()
+        public C()
         {
             this.value = 2;
         }
@@ -220,7 +220,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindClassDeclaration("Foo");
+                var node = syntaxTree.FindClassDeclaration("C");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -236,9 +236,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             this.value = 2;
         }
@@ -248,7 +248,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindClassDeclaration("Foo");
+                var node = syntaxTree.FindClassDeclaration("C");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -264,11 +264,11 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public sealed class Foo
+    public sealed class C
     {
-        public static readonly Foo Default = new Foo() { Value2 = 2 };
+        public static readonly C Default = new C() { Value2 = 2 };
 
-        public Foo()
+        public C()
         {
         }
 
@@ -279,7 +279,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindExpression("new Foo() { Value2 = 2 }");
+                var node = syntaxTree.FindExpression("new C() { Value2 = 2 }");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -295,9 +295,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public sealed class Foo
+    public sealed class C
     {
-        public static readonly Foo Default = new Foo() { Value2 = 2 };
+        public static readonly C Default = new C() { Value2 = 2 };
 
         public int Value1 { get; set; } = 1;
 
@@ -306,7 +306,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindExpression("new Foo() { Value2 = 2 }");
+                var node = syntaxTree.FindExpression("new C() { Value2 = 2 }");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -322,9 +322,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public sealed class Foo
+    public sealed class C
     {
-        public static readonly Foo Default = new Foo { Value2 = 2 };
+        public static readonly C Default = new C { Value2 = 2 };
 
         public int Value1 { get; set; } = 1;
 
@@ -333,7 +333,7 @@ namespace N
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindExpression("new Foo { Value2 = 2 }");
+                var node = syntaxTree.FindExpression("new C { Value2 = 2 }");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));

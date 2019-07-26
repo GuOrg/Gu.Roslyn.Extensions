@@ -19,9 +19,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo(int value)
+        public C(int value)
         {
             value = 1;
         }

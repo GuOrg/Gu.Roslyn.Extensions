@@ -15,7 +15,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <returns>One</returns>
         public int Bar() => 1;
@@ -24,7 +24,7 @@ namespace N
             var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Bar</summary>
         /// <returns>One</returns>
@@ -44,7 +44,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""y"">The y.</param>
@@ -55,7 +55,7 @@ namespace N
             var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""x"">The x.</param>
@@ -77,7 +77,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Bar</summary>
         public int Bar() => 1;
@@ -86,7 +86,7 @@ namespace N
             var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Bar</summary>
         /// <returns>One</returns>
@@ -106,7 +106,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""x"">The x.</param>
@@ -117,7 +117,7 @@ namespace N
             var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""x"">The x.</param>
@@ -139,7 +139,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>The id function.</summary>
         /// <param name=""x"">The x.</param>
@@ -149,7 +149,7 @@ namespace N
             var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>The id function.</summary>
         /// <param name=""x"">The x.</param>
@@ -171,7 +171,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         public int Add(int x, int y) => x + y;
@@ -180,7 +180,7 @@ namespace N
             var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""x"">The first term.</param>

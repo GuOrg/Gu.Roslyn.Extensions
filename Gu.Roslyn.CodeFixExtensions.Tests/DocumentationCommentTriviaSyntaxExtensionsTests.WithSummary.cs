@@ -15,7 +15,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <remarks></remarks>
         public void Bar()
@@ -31,7 +31,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>New text.</summary>
         /// <remarks></remarks>
@@ -53,7 +53,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <remarks></remarks>
@@ -70,7 +70,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New text.</summary>
@@ -93,7 +93,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <remarks></remarks>
         public void Bar()
@@ -109,7 +109,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// Line 1.
@@ -130,7 +130,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>The identity function.</summary>
         /// <typeparam name=""T"">The type</typeparam>
@@ -142,7 +142,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>New text.</summary>
         /// <typeparam name=""T"">The type</typeparam>
@@ -165,7 +165,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>Old text.</summary>
@@ -178,7 +178,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New text.</summary>
@@ -202,7 +202,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -216,7 +216,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>New text.</summary>
         /// <typeparam name=""T"">The type</typeparam>

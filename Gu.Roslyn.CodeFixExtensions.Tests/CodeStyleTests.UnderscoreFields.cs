@@ -114,10 +114,10 @@ namespace N
             [Test]
             public void WhenObjectInitializerInCollectionInitializer()
             {
-                var fooTree = CSharpSyntaxTree.ParseText(@"
+                var CTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Value { get; set; }
     }
@@ -130,14 +130,14 @@ namespace N
 
     public class C
     {
-        public List<Foo> Items { get; } = new List<Foo>
+        public List<C> Items { get; } = new List<C>
         {
-            new Foo { Value = 2 },
+            new C { Value = 2 },
         };
     }
 }");
 
-                var compilation = CSharpCompilation.Create("test", new[] { fooTree, syntaxTree });
+                var compilation = CSharpCompilation.Create("test", new[] { CTree, syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
             }
@@ -182,7 +182,7 @@ namespace N
             [Test]
             public void FiguresOutFromOtherClass()
             {
-                var fooCode = CSharpSyntaxTree.ParseText(@"
+                var CCode = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C
@@ -200,7 +200,7 @@ namespace N
     {
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] { fooCode, barCode }, MetadataReferences.FromAttributes());
+                var compilation = CSharpCompilation.Create("test", new[] { CCode, barCode }, MetadataReferences.FromAttributes());
                 Assert.AreEqual(2, compilation.SyntaxTrees.Length);
                 foreach (var tree in compilation.SyntaxTrees)
                 {
@@ -212,7 +212,7 @@ namespace N
             [Test]
             public void ChecksContainingClassFirst()
             {
-                var fooCode = CSharpSyntaxTree.ParseText(@"
+                var CCode = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C
@@ -231,7 +231,7 @@ namespace N
         private int value;
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] { fooCode, barCode }, MetadataReferences.FromAttributes());
+                var compilation = CSharpCompilation.Create("test", new[] { CCode, barCode }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[0]);
                 Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
 

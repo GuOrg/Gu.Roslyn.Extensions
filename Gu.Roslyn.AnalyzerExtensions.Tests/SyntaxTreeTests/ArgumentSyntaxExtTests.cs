@@ -12,10 +12,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         [TestCase("string.Empty", "")]
         [TestCase("String.Empty", "")]
         [TestCase("null", null)]
-        [TestCase("nameof(Foo)", "Foo")]
-        [TestCase("nameof(N.Foo)", "Foo")]
-        [TestCase("nameof(Foo<int>)", "Foo")]
-        [TestCase("nameof(NestedFoo<int>)", "NestedFoo")]
+        [TestCase("nameof(C)", "C")]
+        [TestCase("nameof(N.C)", "C")]
+        [TestCase("nameof(C<int>)", "C")]
+        [TestCase("nameof(NestedC<int>)", "NestedC")]
         [TestCase("nameof(Bar)", "Bar")]
         [TestCase("nameof(this.Bar)", "Bar")]
         [TestCase("(string)null", null)]
@@ -26,21 +26,21 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
         public const string Const = ""const text"";
 
-        public Foo()
+        public C()
         {
             Bar(""text"");
         }
 
         private void Bar(string arg) { }
 
-        public class NestedFoo<T> { }
+        public class NestedC<T> { }
     }
 
-    public class Foo<T> { }
+    public class C<T> { }
 }".AssertReplace("\"text\"", code);
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
             var compilation =
@@ -59,9 +59,9 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             Bar(typeof(int));
         }

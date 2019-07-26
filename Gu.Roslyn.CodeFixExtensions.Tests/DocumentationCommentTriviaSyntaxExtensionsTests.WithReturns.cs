@@ -15,7 +15,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <remarks></remarks>
         public void Bar()
@@ -26,7 +26,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <remarks></remarks>
         /// <returns>New text.</returns>
@@ -50,7 +50,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <remarks></remarks>
         public void Bar()
@@ -61,7 +61,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <remarks></remarks>
         /// <returns>
@@ -85,7 +85,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>The identity function.</summary>
         /// <typeparam name=""T"">The type</typeparam>
@@ -97,7 +97,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>The identity function.</summary>
         /// <typeparam name=""T"">The type</typeparam>

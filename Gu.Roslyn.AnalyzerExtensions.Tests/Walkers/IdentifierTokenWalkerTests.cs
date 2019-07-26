@@ -13,18 +13,18 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var i = 1;
         }
     }
 }");
-            var node = syntaxTree.FindTypeDeclaration("Foo");
+            var node = syntaxTree.FindTypeDeclaration("C");
             using (var walker = IdentifierTokenWalker.Borrow(node))
             {
-                CollectionAssert.AreEqual(new[] { "Foo", "Foo", "var", "i" }, walker.IdentifierTokens.Select(x => x.ValueText));
+                CollectionAssert.AreEqual(new[] { "C", "C", "var", "i" }, walker.IdentifierTokens.Select(x => x.ValueText));
                 Assert.AreEqual(true, walker.TryFind("i", out var match));
                 Assert.AreEqual("i", match.ValueText);
                 Assert.AreEqual(false, walker.TryFind("missing", out _));

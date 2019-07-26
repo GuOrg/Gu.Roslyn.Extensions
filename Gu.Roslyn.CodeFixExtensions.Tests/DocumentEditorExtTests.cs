@@ -16,18 +16,18 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
     }
 }";
             var sln = CodeFactory.CreateSolution(testCode);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             _ = editor.ReplaceToken(containingType.Modifiers.First(), SyntaxFactory.Token(SyntaxKind.InternalKeyword));
             var expected = @"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
     }
 }";

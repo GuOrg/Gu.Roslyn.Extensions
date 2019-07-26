@@ -14,11 +14,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
     }
 }");
-                var node = syntaxTree.FindClassDeclaration("Foo");
+                var node = syntaxTree.FindClassDeclaration("C");
                 CodeAssert.AreEqual("    ", node.LeadingWhitespace());
             }
 
@@ -30,13 +30,13 @@ namespace N
 {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
     /// <summary>
-    /// The Foo
+    /// The C
     /// </summary>
-    public class Foo
+    public class C
     {
     }
 }");
-                var node = syntaxTree.FindClassDeclaration("Foo");
+                var node = syntaxTree.FindClassDeclaration("C");
                 CodeAssert.AreEqual("    ", node.LeadingWhitespace());
             }
 
@@ -47,13 +47,13 @@ namespace N
 namespace N
 {
     /// <summary>
-    /// The Foo
+    /// The C
     /// </summary>
-    public class Foo
+    public class C
     {
     }
 }");
-                var node = syntaxTree.FindClassDeclaration("Foo");
+                var node = syntaxTree.FindClassDeclaration("C");
                 CodeAssert.AreEqual("    ", node.LeadingWhitespace());
             }
 
@@ -63,15 +63,15 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        /// <summary> Initializes a new instance of the <see cref=""Foo""/> class. </summary>
-        public Foo()
+        /// <summary> Initializes a new instance of the <see cref=""C""/> class. </summary>
+        public C()
         {
         }
     }
 }");
-                var node = syntaxTree.FindConstructorDeclaration("Foo");
+                var node = syntaxTree.FindConstructorDeclaration("C");
                 CodeAssert.AreEqual("        ", node.LeadingWhitespace());
             }
 
@@ -81,14 +81,14 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
         }
     }
 }");
-                var node = syntaxTree.FindConstructorDeclaration("Foo");
+                var node = syntaxTree.FindConstructorDeclaration("C");
                 CodeAssert.AreEqual("        ", node.LeadingWhitespace());
             }
 
@@ -98,7 +98,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// Gets or sets the value
@@ -116,7 +116,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Id(int i) => i;
     }
@@ -131,7 +131,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.

@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private int value1;
         private int value2;
@@ -41,7 +41,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Value1 { get; }
 
@@ -64,7 +64,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Value1() => 1;
 
@@ -87,7 +87,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Value1() => 1;
 
@@ -110,7 +110,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Value1 { get; }
 
@@ -133,7 +133,7 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Value1 { get; }
 
@@ -156,9 +156,9 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var value1 = 1;
             var value2 = 2;
@@ -181,9 +181,9 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             Out(out var value1);
             Out(out var value2);
@@ -211,9 +211,9 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo(int value1, int value2)
+        public C(int value1, int value2)
         {
         }
     }

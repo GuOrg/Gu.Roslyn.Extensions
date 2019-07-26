@@ -153,7 +153,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="SyntaxTriviaList"/>.</returns>
         public static AttributeListSyntax AttributeList(string text, string leadingWhitespace = null)
         {
-            var code = $"{text.WithLeadingWhiteSpace(leadingWhitespace)}\r\n{leadingWhitespace}public class Foo {{}}";
+            var code = $"{text.WithLeadingWhiteSpace(leadingWhitespace)}\r\n{leadingWhitespace}public class C {{}}";
             if (SyntaxFactory.ParseCompilationUnit(code) is CompilationUnitSyntax compilationUnit &&
                 compilationUnit.Members.TrySingleOfType(out ClassDeclarationSyntax member) &&
                 member.AttributeLists.TrySingle(out var attributeList))

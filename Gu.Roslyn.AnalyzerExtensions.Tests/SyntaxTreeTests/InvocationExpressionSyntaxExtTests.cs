@@ -10,20 +10,20 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     {
         [TestCase("Method1()", "Method1")]
         [TestCase("this.Method1()", "Method1")]
-        [TestCase("new Foo()?.Method1()", "Method1")]
+        [TestCase("new C()?.Method1()", "Method1")]
         [TestCase("this.Method2<int>()", "Method2")]
         public void TryGetInvokedMethodName(string code, string expected)
         {
             var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var i = Method1();
             i = this.Method1();
-            i = new Foo()?.Method1() ?? 0;
+            i = new C()?.Method1() ?? 0;
             i = Method2<int>();
             i = this.Method2<int>();
         }
@@ -45,9 +45,9 @@ namespace N
 {
     using System.Reflection;
 
-    public class Foo
+    public class C
     {
-        public Foo(Assembly assembly)
+        public C(Assembly assembly)
         {
             assembly.GetType(""System.Int32"");
         }
@@ -70,9 +70,9 @@ namespace N
 {
     using System.Reflection;
 
-    public class Foo
+    public class C
     {
-        public Foo(Assembly assembly)
+        public C(Assembly assembly)
         {
             assembly.GetType(""System.Int32"");
         }
@@ -96,9 +96,9 @@ namespace N
 {
     using System.Reflection;
 
-    public class Foo
+    public class C
     {
-        public Foo(Assembly assembly)
+        public C(Assembly assembly)
         {
             assembly.GetType(""System.Int32"");
         }
@@ -122,9 +122,9 @@ namespace N
 {
     using System.Reflection;
 
-    public class Foo
+    public class C
     {
-        public Foo(Assembly assembly)
+        public C(Assembly assembly)
         {
             assembly.GetType(""System.Int32"");
         }

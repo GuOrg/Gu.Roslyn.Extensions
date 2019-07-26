@@ -15,15 +15,15 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 namespace N
 {
     /// <summary>
-    /// The Foo
+    /// The C
     /// </summary>
-    public class Foo
+    public class C
     {
     }
 }");
-                var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
+                var classDeclaration = syntaxTree.FindClassDeclaration("C");
                 Assert.AreEqual(true, classDeclaration.TryGetDocumentationComment(out var result));
-                var expected = "/// <summary>\r\n    /// The Foo\r\n    /// </summary>\r\n";
+                var expected = "/// <summary>\r\n    /// The C\r\n    /// </summary>\r\n";
                 CodeAssert.AreEqual(expected, result.ToFullString());
             }
 
@@ -33,17 +33,17 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        /// <summary> Initializes a new instance of the <see cref=""Foo""/> class. </summary>
-        public Foo()
+        /// <summary> Initializes a new instance of the <see cref=""C""/> class. </summary>
+        public C()
         {
         }
     }
 }");
-                var ctor = syntaxTree.FindConstructorDeclaration("Foo");
+                var ctor = syntaxTree.FindConstructorDeclaration("C");
                 Assert.AreEqual(true, ctor.TryGetDocumentationComment(out var result));
-                var expected = "/// <summary> Initializes a new instance of the <see cref=\"Foo\"/> class. </summary>\r\n";
+                var expected = "/// <summary> Initializes a new instance of the <see cref=\"C\"/> class. </summary>\r\n";
                 CodeAssert.AreEqual(expected, result.ToFullString());
             }
 
@@ -53,7 +53,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// Gets or sets the value
@@ -75,7 +75,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -103,15 +103,15 @@ namespace N
 {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
     /// <summary>
-    /// The Foo
+    /// The C
     /// </summary>
-    public class Foo
+    public class C
     {
     }
 }");
-                var classDeclaration = syntaxTree.FindClassDeclaration("Foo");
+                var classDeclaration = syntaxTree.FindClassDeclaration("C");
                 Assert.AreEqual(true, classDeclaration.TryGetDocumentationComment(out var result));
-                var expected = "/// <summary>\r\n    /// The Foo\r\n    /// </summary>\r\n";
+                var expected = "/// <summary>\r\n    /// The C\r\n    /// </summary>\r\n";
                 CodeAssert.AreEqual(expected, result.ToFullString());
             }
         }

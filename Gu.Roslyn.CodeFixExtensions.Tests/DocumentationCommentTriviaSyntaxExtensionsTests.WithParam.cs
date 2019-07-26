@@ -15,7 +15,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -27,7 +27,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -52,7 +52,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>The identity function.</summary>
         public int Id(int i) => i;
@@ -61,7 +61,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>The identity function.</summary>
         /// <param name=""i"">The <see cref=""int""/> to return.</param>
@@ -83,7 +83,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -94,7 +94,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -118,7 +118,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <returns>The value passed in.</returns>
         public int Id(int i) => i;
@@ -127,7 +127,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <param name=""i"">The <see cref=""int""/> to return.</param>
         /// <returns>The value passed in.</returns>
@@ -149,7 +149,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <returns>
         /// The value passed in.
@@ -160,7 +160,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <param name=""i"">The <see cref=""int""/> to return.</param>
         /// <returns>
@@ -184,7 +184,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""x"">The first <see cref=""int""/> term.</param>
@@ -195,7 +195,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""x"">The first <see cref=""int""/> term.</param>
@@ -219,7 +219,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""y"">The other <see cref=""int""/> term.</param>
@@ -230,7 +230,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>Sum two numbers.</summary>
         /// <param name=""x"">The first <see cref=""int""/> term.</param>
@@ -254,7 +254,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.
@@ -267,7 +267,7 @@ namespace N
                 var expected = GetExpected(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         /// <summary>
         /// The identity function.

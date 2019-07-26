@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
                 @"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
         internal object Bar()
         {
@@ -23,7 +23,7 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindMethodDeclaration("Bar"));
-            var qualifiedMethod = new QualifiedMethod(new QualifiedType("N.Foo"), "Bar");
+            var qualifiedMethod = new QualifiedMethod(new QualifiedType("N.C"), "Bar");
             Assert.AreEqual(true,  symbol == qualifiedMethod);
             Assert.AreEqual(false, symbol != qualifiedMethod);
         }

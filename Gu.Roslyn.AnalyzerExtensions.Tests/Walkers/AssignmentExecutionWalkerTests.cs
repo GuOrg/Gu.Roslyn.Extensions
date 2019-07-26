@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class Foo
+    public class C
     {
         private Bar bar1;
         private Bar bar2;

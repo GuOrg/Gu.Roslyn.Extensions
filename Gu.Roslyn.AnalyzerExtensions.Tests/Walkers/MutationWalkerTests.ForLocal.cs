@@ -20,9 +20,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
                 var testCode = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var value = 0;
             value = 1;

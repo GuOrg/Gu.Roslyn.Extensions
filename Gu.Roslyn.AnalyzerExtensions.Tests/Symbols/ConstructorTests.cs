@@ -14,18 +14,18 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
                 @"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo()
+        internal C()
         {
         }
 
-        internal Foo(int intValue)
+        internal C(int intValue)
             : this()
         {
         }
 
-        internal Foo(string textValue)
+        internal C(string textValue)
             : this(1)
         {
         }
@@ -33,9 +33,9 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("Foo"));
+            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("C"));
             Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out var ctor));
-            Assert.AreEqual("N.Foo.Foo()", ctor.ToString());
+            Assert.AreEqual("N.C.C()", ctor.ToString());
         }
 
         [TestCase(Search.TopLevel)]
@@ -46,25 +46,25 @@ namespace N
                 @"
 namespace N
 {
-    class FooBase
+    class CBase
     {
-        public FooBase()
+        public CBase()
         {
         }
     }
 
-    internal class Foo : FooBase
+    internal class C : CBase
     {
-        internal Foo()
+        internal C()
         {
         }
 
-        internal Foo(int intValue)
+        internal C(int intValue)
             : this()
         {
         }
 
-        internal Foo(string textValue)
+        internal C(string textValue)
             : this(1)
         {
         }
@@ -72,38 +72,38 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class Foo : FooBase"));
+            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class C : CBase"));
             Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out var ctor));
-            Assert.AreEqual("N.Foo.Foo()", ctor.ToString());
+            Assert.AreEqual("N.C.C()", ctor.ToString());
 
-            type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("class FooBase"));
+            type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("class CBase"));
             Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out ctor));
-            Assert.AreEqual("N.FooBase.FooBase()", ctor.ToString());
+            Assert.AreEqual("N.CBase.CBase()", ctor.ToString());
         }
 
         [TestCase(Search.TopLevel, null)]
-        [TestCase(Search.Recursive, "N.FooBase.FooBase()")]
+        [TestCase(Search.Recursive, "N.CBase.CBase()")]
         public void TryFindDefaultWithBase(Search search, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
 namespace N
 {
-    class FooBase
+    class CBase
     {
-        public FooBase()
+        public CBase()
         {
         }
     }
 
-    internal class Foo : FooBase
+    internal class C : CBase
     {
-        internal Foo(int intValue)
+        internal C(int intValue)
             : this()
         {
         }
 
-        internal Foo(string textValue)
+        internal C(string textValue)
             : this(1)
         {
         }
@@ -111,38 +111,38 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class Foo : FooBase"));
+            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class C : CBase"));
             Assert.AreEqual(expected != null, Constructor.TryFindDefault(type, search, out var ctor));
             Assert.AreEqual(expected, ctor?.ToString());
         }
 
         [TestCase(Search.TopLevel, null)]
-        [TestCase(Search.Recursive, "N.FooBaseBase.FooBaseBase()")]
+        [TestCase(Search.Recursive, "N.CBaseBase.CBaseBase()")]
         public void TryFindDefaultWithBaseWithGap(Search search, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
 namespace N
 {
-    class FooBaseBase
+    class CBaseBase
     {
-        public FooBaseBase()
+        public CBaseBase()
         {
         }
     }
 
-    class FooBase : FooBaseBase
+    class CBase : CBaseBase
     {
     }
 
-    internal class Foo : FooBase
+    internal class C : CBase
     {
-        internal Foo(int intValue)
+        internal C(int intValue)
             : this()
         {
         }
 
-        internal Foo(string textValue)
+        internal C(string textValue)
             : this(1)
         {
         }
@@ -150,7 +150,7 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class Foo : FooBase"));
+            var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class C : CBase"));
             Assert.AreEqual(expected != null, Constructor.TryFindDefault(type, search, out var ctor));
             Assert.AreEqual(expected, ctor?.ToString());
         }

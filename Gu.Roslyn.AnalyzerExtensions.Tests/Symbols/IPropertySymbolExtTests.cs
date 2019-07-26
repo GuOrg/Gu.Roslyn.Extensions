@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int GetOnly { get; }
 
@@ -40,7 +40,7 @@ namespace N
                 @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int GetOnly { get; }
 

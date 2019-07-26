@@ -13,9 +13,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int i, double d)
+        internal C(int i, double d)
         {
         }
 
@@ -24,7 +24,7 @@ namespace N
         }
     }
 }");
-            var ctor = syntaxTree.FindConstructorDeclaration("Foo");
+            var ctor = syntaxTree.FindConstructorDeclaration("C");
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryFirst(out var parameter));
             Assert.AreEqual("int i", parameter.ToString());
 
@@ -53,9 +53,9 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int i, double d)
+        internal C(int i, double d)
         {
         }
 
@@ -64,7 +64,7 @@ namespace N
         }
     }
 }");
-            var ctor = syntaxTree.FindConstructorDeclaration("Foo");
+            var ctor = syntaxTree.FindConstructorDeclaration("C");
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryLast(out var parameter));
             Assert.AreEqual("double d", parameter.ToString());
 
@@ -96,9 +96,9 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int i, double d)
+        internal C(int i, double d)
         {
         }
 
@@ -111,7 +111,7 @@ namespace N
         }
     }
 }");
-            var ctor = syntaxTree.FindConstructorDeclaration("Foo");
+            var ctor = syntaxTree.FindConstructorDeclaration("C");
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TrySingle(out var parameter));
 
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "i", out parameter));
@@ -146,14 +146,14 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
         internal int Bar() => 1;
 
         internal int Bar(int i) => i;
     }
 }");
-            var type = syntaxTree.FindClassDeclaration("Foo");
+            var type = syntaxTree.FindClassDeclaration("C");
             Assert.AreEqual(false, type.Members.TrySingle(out var member));
 
             Assert.AreEqual(false, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.Identifier.ValueText == "Bar", out member));
@@ -172,14 +172,14 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int i, double d)
+        internal C(int i, double d)
         {
         }
     }
 }");
-            var ctor = syntaxTree.FindConstructorDeclaration("Foo");
+            var ctor = syntaxTree.FindConstructorDeclaration("C");
             Assert.AreEqual(true, ctor.ParameterList.Parameters.TryElementAt(index, out var result));
             Assert.AreEqual(expected, result.ToString());
         }
@@ -190,14 +190,14 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int i, double d)
+        internal C(int i, double d)
         {
         }
     }
 }");
-            var ctor = syntaxTree.FindConstructorDeclaration("Foo");
+            var ctor = syntaxTree.FindConstructorDeclaration("C");
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryElementAt(index, out _));
         }
 
@@ -207,14 +207,14 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo()
+        internal C()
         {
         }
     }
 }");
-            var ctor = syntaxTree.FindConstructorDeclaration("Foo");
+            var ctor = syntaxTree.FindConstructorDeclaration("C");
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryElementAt(0, out _));
         }
     }

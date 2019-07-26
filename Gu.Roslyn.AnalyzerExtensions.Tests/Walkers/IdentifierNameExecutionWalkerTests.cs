@@ -8,18 +8,18 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
 
     public class IdentifierNameExecutionWalkerTests
     {
-        [TestCase(Scope.Member, "Foo")]
-        [TestCase(Scope.Instance, "text, Foo")]
-        [TestCase(Scope.Type, "text, Foo")]
-        [TestCase(Scope.Recursive, "text, Foo")]
+        [TestCase(Scope.Member, "C")]
+        [TestCase(Scope.Instance, "text, C")]
+        [TestCase(Scope.Type, "text, C")]
+        [TestCase(Scope.Recursive, "text, C")]
         public void StaticInitializers(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public sealed class Foo
+    public sealed class C
     {
-        public static readonly Foo Default = new Foo();
+        public static readonly C Default = new C();
         
         private static readonly string text = ""abc"";
         
@@ -28,7 +28,7 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindExpression("new Foo()");
+            var node = syntaxTree.FindExpression("new C()");
             using (var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual(expected, string.Join(", ", walker.IdentifierNames));
@@ -47,12 +47,12 @@ namespace N
     using System.Windows;
     using System.Windows.Controls;
 
-    public class FooControl : Control
+    public class CControl : Control
     {
         private static readonly DependencyPropertyKey ValuePropertyKey = DependencyProperty.RegisterReadOnly(
             nameof(Value),
             typeof(int),
-            typeof(FooControl), 
+            typeof(CControl), 
             new PropertyMetadata(default(int)));
 
         public static readonly DependencyProperty ValueProperty = ValuePropertyKey.DependencyProperty;

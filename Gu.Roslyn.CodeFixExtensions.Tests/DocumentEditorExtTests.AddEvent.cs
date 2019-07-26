@@ -19,16 +19,16 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
                 var testCode = @"
 namespace N
 {
-    public abstract class Foo
+    public abstract class C
     {
         public int Filed1 = 1;
         private int filed1;
 
-        public Foo()
+        public C()
         {
         }
 
-        private Foo(int i)
+        private C(int i)
         {
         }
 
@@ -42,21 +42,21 @@ namespace N
                 var sln = CodeFactory.CreateSolution(testCode);
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
                 var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
-                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
                 _ = editor.AddEvent(containingType, eventDeclaration);
                 var expected = @"
 namespace N
 {
-    public abstract class Foo
+    public abstract class C
     {
         public int Filed1 = 1;
         private int filed1;
 
-        public Foo()
+        public C()
         {
         }
 
-        private Foo(int i)
+        private C(int i)
         {
         }
 
@@ -78,16 +78,16 @@ namespace N
                 var testCode = @"
 namespace N
 {
-    public abstract class Foo
+    public abstract class C
     {
         public int Filed1 = 1;
         private int filed1;
 
-        public Foo()
+        public C()
         {
         }
 
-        private Foo(int i)
+        private C(int i)
         {
         }
 
@@ -101,21 +101,21 @@ namespace N
                 var sln = CodeFactory.CreateSolution(testCode);
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
                 var eventDeclaration = (EventDeclarationSyntax)editor.Generator.CustomEventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
-                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
                 _ = editor.AddEvent(containingType, eventDeclaration);
                 var expected = @"
 namespace N
 {
-    public abstract class Foo
+    public abstract class C
     {
         public int Filed1 = 1;
         private int filed1;
 
-        public Foo()
+        public C()
         {
         }
 
-        private Foo(int i)
+        private C(int i)
         {
         }
 

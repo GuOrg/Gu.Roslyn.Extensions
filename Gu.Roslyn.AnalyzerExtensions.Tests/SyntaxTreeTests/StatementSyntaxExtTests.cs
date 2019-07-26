@@ -16,9 +16,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo()
+        internal C()
         {
             var temp = 1;
             temp = 2;
@@ -38,9 +38,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo()
+        internal C()
         {
             while (true)
             {
@@ -68,9 +68,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo()
+        internal C()
         {
             var temp = 0;
             while (true)
@@ -96,9 +96,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int[] ints)
+        internal C(int[] ints)
         {
             foreach (var i in ints)
             {
@@ -121,9 +121,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int[] ints)
+        internal C(int[] ints)
         {
             for (var index = 0; index < ints.Length; index++)
             {
@@ -150,9 +150,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(bool condition)
+        internal C(bool condition)
         {
             var temp = 1;
             if (condition)
@@ -185,9 +185,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(bool condition)
+        internal C(bool condition)
         {
             var temp = 1;
             if (condition)
@@ -224,9 +224,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(bool condition)
+        internal C(bool condition)
         {
             var temp = 1;
             if (condition)
@@ -254,9 +254,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo()
+        internal C()
         {
             var temp = 1;
             if (true)
@@ -287,9 +287,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo()
+        internal C()
         {
             var temp = 1;
             if (true)
@@ -319,7 +319,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
         internal void Bar(bool condition)
         {
@@ -358,7 +358,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
         internal void Bar(bool condition)
         {
@@ -400,7 +400,7 @@ namespace N
 {
     using System;
 	
-    internal class Foo
+    internal class C
     {
         internal void Bar(bool condition)
         {
@@ -439,7 +439,7 @@ namespace N
 {
     using System;
 	
-    internal class Foo
+    internal class C
     {
         internal void Bar(bool condition)
         {
@@ -476,9 +476,9 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             this.E += (_, __) =>
             {
@@ -512,9 +512,9 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
-        public Foo()
+        public C()
         {
             var a = 1;
             this.E += (_, __) => 
@@ -554,9 +554,9 @@ namespace N
 {
     using System;
 
-    public class Foo
+    public class C
     {
-        public Foo(int a)
+        public C(int a)
         {
             a = 1;
             this.E += (_, __) => 
@@ -596,9 +596,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo()
+        internal C()
         {
             int temp = 1;
             try
@@ -644,9 +644,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int i)
+        internal C(int i)
         {
             int temp = 1;
             switch (i)
@@ -688,9 +688,9 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class Foo
+    internal class C
     {
-        internal Foo(int i)
+        internal C(int i)
         {
             int temp = 1;
             switch (i)

@@ -24,9 +24,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
                 var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo(int value1, int value2)
+        public C(int value1, int value2)
         {
         }
     }
@@ -35,7 +35,7 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
+                var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("C"));
                 var type1 = ctor.Parameters[0].Type;
                 var type2 = ctor.Parameters[1].Type;
                 Assert.AreEqual(expected, type1.IsAssignableTo(type2, compilation));
@@ -55,7 +55,7 @@ namespace N
                 var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
         public int Value { get; }
     }
@@ -77,9 +77,9 @@ namespace N
                 var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo(int value)
+        public C(int value)
         {
         }
     }
@@ -89,7 +89,7 @@ namespace N
                 var compilation =
                     CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
+                var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("C"));
                 var type = ctor.Parameters[0].Type;
                 var qualifiedType = new QualifiedType(typeName);
                 Assert.AreEqual(true, type.IsAssignableTo(qualifiedType, compilation));
@@ -150,9 +150,9 @@ namespace N
                 var code = @"
 namespace N
 {
-    public class Foo
+    public class C
     {
-        public Foo(int value)
+        public C(int value)
         {
         }
     }
@@ -162,7 +162,7 @@ namespace N
                 var compilation =
                     CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("Foo"));
+                var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("C"));
                 var type = ctor.Parameters[0].Type;
                 Assert.AreEqual(expected, type.IsAwaitable());
             }
