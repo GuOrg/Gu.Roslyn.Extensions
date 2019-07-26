@@ -178,8 +178,28 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 if (MemberDeclarationComparer.Compare(member, existing) < 0)
                 {
+                    if (!existing.IsKind(SyntaxKind.FieldDeclaration))
+                    {
+                        member = member.WithTrailingLineFeed();
+                    }
+
                     return (TypeDeclarationSyntax)generator.InsertNodesBefore(containingType, existing, new[] { member });
                 }
+            }
+
+            if (containingType.CloseBraceToken.LeadingTrivia.Any(x => x.IsDirective))
+            {
+                containingType = (TypeDeclarationSyntax)generator.AddMembers(
+                    containingType,
+                    member.WithLeadingTrivia(
+                        SyntaxFactory.TriviaList(
+                            containingType.CloseBraceToken.LeadingTrivia.Where(x => x.IsDirective).Concat(new[] { SyntaxFactory.LineFeed }))));
+                return containingType.ReplaceToken(
+                    containingType.CloseBraceToken,
+                    SyntaxFactory.Token(
+                        SyntaxFactory.TriviaList(containingType.CloseBraceToken.LeadingTrivia.Where(x => !x.IsDirective)),
+                        SyntaxKind.CloseBraceToken,
+                        containingType.CloseBraceToken.TrailingTrivia));
             }
 
             return (TypeDeclarationSyntax)generator.AddMembers(containingType, member);

@@ -207,6 +207,123 @@ namespace N
                 _ = editor.AddMethod(containingType, (MethodDeclarationSyntax)method);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
+
+            [Test]
+            public async Task AfterPropertyWithPragma()
+            {
+                var testCode = @"
+namespace N
+{
+    public abstract class C
+    {
+#pragma warning disable INPC002 // Mutable public property should notify.
+        public int P { get; set; }
+#pragma warning restore INPC002 // Mutable public property should notify.
+    }
+}";
+                var sln = CodeFactory.CreateSolution(testCode);
+                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+                var method = SyntaxFactory.ParseCompilationUnit("public int NewMethod() => 1;")
+                                          .Members
+                                          .Single()
+                                          .WithLeadingTrivia(SyntaxFactory.ElasticMarker)
+                                          .WithTrailingTrivia(SyntaxFactory.ElasticMarker)
+                                          .WithAdditionalAnnotations(Formatter.Annotation);
+
+                var expected = @"
+namespace N
+{
+    public abstract class C
+    {
+#pragma warning disable INPC002 // Mutable public property should notify.
+        public int P { get; set; }
+#pragma warning restore INPC002 // Mutable public property should notify.
+
+        public int NewMethod() => 1;
+    }
+}";
+                _ = editor.AddMethod(containingType, (MethodDeclarationSyntax)method);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
+
+            [Test]
+            public async Task AfterPropertyInConditional()
+            {
+                var testCode = @"
+namespace N
+{
+    public class C
+    {
+#if true
+     public int P { get; }
+#endif
+    }
+}";
+                var sln = CodeFactory.CreateSolution(testCode);
+                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+                var method = SyntaxFactory.ParseCompilationUnit("public int NewMethod() => 1;")
+                                          .Members
+                                          .Single()
+                                          .WithLeadingTrivia(SyntaxFactory.ElasticMarker)
+                                          .WithTrailingTrivia(SyntaxFactory.ElasticMarker)
+                                          .WithAdditionalAnnotations(Formatter.Annotation);
+
+                var expected = @"
+namespace N
+{
+    public class C
+    {
+#if true
+        public int P { get; }
+#endif
+
+        public int NewMethod() => 1;
+    }
+}";
+                _ = editor.AddMethod(containingType, (MethodDeclarationSyntax)method);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
+
+            [Test]
+            public async Task BeforeMethodInConditional()
+            {
+                var testCode = @"
+namespace N
+{
+    public class C
+    {
+#if true
+     private int M() => 1;
+#endif
+    }
+}";
+                var sln = CodeFactory.CreateSolution(testCode);
+                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+                var method = SyntaxFactory.ParseCompilationUnit("public int NewMethod() => 1;")
+                                          .Members
+                                          .Single()
+                                          .WithLeadingTrivia(SyntaxFactory.ElasticMarker)
+                                          .WithTrailingTrivia(SyntaxFactory.ElasticMarker)
+                                          .WithAdditionalAnnotations(Formatter.Annotation);
+
+                var expected = @"
+namespace N
+{
+    public class C
+    {
+        public int NewMethod() => 1;
+
+#if true
+        private int M() => 1;
+#endif
+    }
+}";
+                _ = editor.AddMethod(containingType, (MethodDeclarationSyntax)method);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
         }
     }
 }
