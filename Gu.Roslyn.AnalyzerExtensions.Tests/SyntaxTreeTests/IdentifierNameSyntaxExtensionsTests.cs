@@ -14,8 +14,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             var testCode = @"
 namespace N
 {
-    using System.Reflection;
-
     public class C
     {
         public object M(string text) => text.Length;
@@ -28,6 +26,78 @@ namespace N
             var method = new QualifiedProperty(new QualifiedType(typeof(string).FullName), "Length");
             Assert.AreEqual(true, identifierNameSyntax.TryGetTarget(method, semanticModel, CancellationToken.None, out var target));
             Assert.AreEqual("string.Length", target.ToString());
+        }
+
+        [TestCase("Length")]
+        [TestCase("text")]
+        public void IsSymbol(string identifier)
+        {
+            var testCode = @"
+namespace N
+{
+    public class C
+    {
+        public object M(string text) => text.Length;
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+            var identifierName = (IdentifierNameSyntax)syntaxTree.FindExpression(identifier);
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(identifierName, CancellationToken.None, out var symbol));
+            Assert.AreEqual(true, identifierName.IsSymbol(symbol, semanticModel, CancellationToken.None));
+        }
+
+        [TestCase("Length")]
+        [TestCase("text")]
+        [TestCase("number")]
+        [TestCase("M")]
+        public void IsSymbolExtensionMethod(string identifier)
+        {
+            var testCode = @"
+namespace N
+{
+    public static class C
+    {
+        public static object M(this string text, int number) => text.Length + number;
+
+        public static object P => string.Empty.M(1);
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+            var identifierName = (IdentifierNameSyntax)syntaxTree.FindExpression(identifier);
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(identifierName, CancellationToken.None, out var symbol));
+            Assert.AreEqual(true, identifierName.IsSymbol(symbol, semanticModel, CancellationToken.None));
+        }
+
+        [Test]
+        public void IsSymbolExtensionMethodParameter()
+        {
+            var testCode = @"
+namespace N
+{
+    public static class C
+    {
+        public static object M(this string text, int number) => text.Length + number;
+
+        public static object P => string.Empty.M(1);
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+            var identifierName = (IdentifierNameSyntax)syntaxTree.FindExpression("number");
+
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindMethodDeclaration("M"), CancellationToken.None, out var method));
+            Assert.AreEqual(true, identifierName.IsSymbol(method.Parameters[1], semanticModel, CancellationToken.None));
+
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindInvocation("M(1)"), CancellationToken.None, out method));
+            Assert.AreEqual(true, identifierName.IsSymbol(method.Parameters[0], semanticModel, CancellationToken.None));
         }
     }
 }

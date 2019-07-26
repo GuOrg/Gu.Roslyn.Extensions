@@ -2,7 +2,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Threading;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -55,16 +54,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
         public static bool IsSymbol(this IdentifierNameSyntax candidate, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (symbol.IsEitherKind(SymbolKind.Local, SymbolKind.Parameter) &&
-                candidate.Parent.IsKind(SyntaxKind.SimpleMemberAccessExpression))
+            if (candidate?.Identifier.ValueText == symbol.Name &&
+                semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol candidateSymbol))
             {
-                return false;
+                switch (symbol.Kind)
+                {
+                    case SymbolKind.Parameter:
+                        return candidateSymbol.OriginalDefinition.Equals(symbol.OriginalDefinition);
+                    default:
+                        return candidateSymbol.OriginalDefinition.Equals(symbol.OriginalDefinition);
+                }
             }
 
-            return candidate != null &&
-                   candidate.Identifier.ValueText == symbol.Name &&
-                   semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol candidateSymbol) &&
-                   symbol.Equals(candidateSymbol);
+            return false;
         }
     }
 }

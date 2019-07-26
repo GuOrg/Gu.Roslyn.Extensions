@@ -83,9 +83,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             bool IsMatch(IdentifierNameSyntax candidate)
             {
-                return candidate.Identifier.Text == localOrParameter.Name &&
-                       semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol symbol) &&
-                       symbol.Equals(localOrParameter.Symbol);
+                return candidate.IsSymbol(localOrParameter.Symbol, semanticModel, cancellationToken);
             }
         }
 
