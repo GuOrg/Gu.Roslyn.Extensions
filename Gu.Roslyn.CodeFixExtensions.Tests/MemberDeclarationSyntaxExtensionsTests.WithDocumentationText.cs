@@ -16,7 +16,7 @@ namespace N
 {
     public class C
     {
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -26,10 +26,10 @@ namespace N
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var docs = "        /// <summary>New summary.</summary>\r\n" +
                            "        /// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs, adjustLeadingWhitespace: false);
@@ -45,7 +45,7 @@ namespace N
     public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -56,10 +56,10 @@ namespace N
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var docs = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
@@ -75,7 +75,7 @@ namespace N
     public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -86,10 +86,10 @@ namespace N
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var docs = "        /// <summary>New summary.</summary>\r\n" +
                            "        /// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs, adjustLeadingWhitespace: false);
@@ -104,9 +104,9 @@ namespace N
 {
     public class C
     {
-        public int Bar1() => 1;
+        public int M1() => 1;
 
-        public int Bar2() => 2;
+        public int M2() => 2;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -114,14 +114,14 @@ namespace N
 {
     public class C
     {
-        public int Bar1() => 1;
+        public int M1() => 1;
 
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar2() => 2;
+        public int M2() => 2;
     }
-}").FindMethodDeclaration("Bar2");
-                var method = syntaxTree.FindMethodDeclaration("Bar2");
+}").FindMethodDeclaration("M2");
+                var method = syntaxTree.FindMethodDeclaration("M2");
                 var docs = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
@@ -136,7 +136,7 @@ namespace N
 {
     public class C
     {
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -146,10 +146,10 @@ namespace N
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var text = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(text, adjustLeadingWhitespace: true);
@@ -164,7 +164,7 @@ namespace N
 {
     public class C
     {
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -174,10 +174,10 @@ namespace N
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var text = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(text);
@@ -192,7 +192,7 @@ namespace N
 {
     public class C
     {
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -202,10 +202,10 @@ namespace N
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var text = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>\r\n";
                 var updated = method.WithDocumentationText(text);
@@ -222,7 +222,7 @@ namespace N
     {
         /// <summary>Old summary.</summary>
         /// <returns>Old returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -232,10 +232,10 @@ namespace N
     {
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var docs = "        /// <summary>New summary.</summary>\r\n" +
                            "        /// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
@@ -253,7 +253,7 @@ namespace N
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>Old summary.</summary>
         /// <returns>Old returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -264,10 +264,10 @@ namespace N
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var docs = "        /// <summary>New summary.</summary>\r\n" +
                            "        /// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);
@@ -282,11 +282,11 @@ namespace N
 {
     public class C
     {
-        public int Bar1() => 1;
+        public int M1() => 1;
 
         /// <summary>Old summary.</summary>
         /// <returns>Old returns.</returns>
-        public int Bar2() => 2;
+        public int M2() => 2;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -294,14 +294,14 @@ namespace N
 {
     public class C
     {
-        public int Bar1() => 1;
+        public int M1() => 1;
 
         /// <summary>New summary.</summary>
         /// <returns>New returns.</returns>
-        public int Bar2() => 2;
+        public int M2() => 2;
     }
-}").FindMethodDeclaration("Bar2");
-                var method = syntaxTree.FindMethodDeclaration("Bar2");
+}").FindMethodDeclaration("M2");
+                var method = syntaxTree.FindMethodDeclaration("M2");
                 var docs = "/// <summary>New summary.</summary>\r\n" +
                            "/// <returns>New returns.</returns>";
                 var updated = method.WithDocumentationText(docs);

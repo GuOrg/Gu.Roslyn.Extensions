@@ -39,7 +39,7 @@ namespace N
     class C
     {
         int _f;
-        public int P()  => _f = 1;
+        public int P => _f = 1;
     }
 }");
 

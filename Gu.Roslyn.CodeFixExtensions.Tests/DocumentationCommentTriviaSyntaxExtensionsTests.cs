@@ -18,7 +18,7 @@ namespace N
     public class C
     {
         /// <returns>One</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
             var expected = GetExpected(@"
@@ -26,14 +26,14 @@ namespace N
 {
     public class C
     {
-        /// <summary>Bar</summary>
+        /// <summary>M</summary>
         /// <returns>One</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("Bar");
+            var method = syntaxTree.FindMethodDeclaration("M");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var element = Parse.XmlElementSyntax("<summary>Bar</summary>", "        ");
+            var element = Parse.XmlElementSyntax("<summary>M</summary>", "        ");
             var updated = comment.InsertBefore(comment.Content.OfType<XmlElementSyntax>().First(), element);
             RoslynAssert.Ast(expected, updated);
         }
@@ -79,8 +79,8 @@ namespace N
 {
     public class C
     {
-        /// <summary>Bar</summary>
-        public int Bar() => 1;
+        /// <summary>M</summary>
+        public int M() => 1;
     }
 }");
             var expected = GetExpected(@"
@@ -88,12 +88,12 @@ namespace N
 {
     public class C
     {
-        /// <summary>Bar</summary>
+        /// <summary>M</summary>
         /// <returns>One</returns>
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("Bar");
+            var method = syntaxTree.FindMethodDeclaration("M");
             Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
             var element = Parse.XmlElementSyntax("<returns>One</returns>", "        ");
             var updated = comment.InsertAfter(comment.Content.OfType<XmlElementSyntax>().First(), element);

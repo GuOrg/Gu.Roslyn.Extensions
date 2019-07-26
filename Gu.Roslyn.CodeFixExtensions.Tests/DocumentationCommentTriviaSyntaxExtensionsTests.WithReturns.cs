@@ -18,7 +18,7 @@ namespace N
     public class C
     {
         /// <remarks></remarks>
-        public void Bar()
+        public void M()
         {
         }
     }
@@ -30,12 +30,12 @@ namespace N
     {
         /// <remarks></remarks>
         /// <returns>New text.</returns>
-        public void Bar()
+        public void M()
         {
         }
     }
 }");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithReturnsText("New text.");
                 RoslynAssert.Ast(expected, updated);
@@ -53,7 +53,7 @@ namespace N
     public class C
     {
         /// <remarks></remarks>
-        public void Bar()
+        public void M()
         {
         }
     }
@@ -68,12 +68,12 @@ namespace N
         /// Line 1.
         /// Line 2.
         /// </returns>
-        public void Bar()
+        public void M()
         {
         }
     }
 }");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithReturnsText("Line 1.\r\nLine 2.");
                 RoslynAssert.Ast(expected, updated);

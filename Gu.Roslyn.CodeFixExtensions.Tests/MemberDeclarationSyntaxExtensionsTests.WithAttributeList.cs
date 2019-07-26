@@ -18,7 +18,7 @@ namespace N
 
     public class C
     {
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -29,10 +29,10 @@ namespace N
     public class C
     {
         [Obsolete]
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var attribute = "        [Obsolete]";
                 var updated = method.WithAttributeListText(attribute, adjustLeadingWhitespace: false);
                 RoslynAssert.Ast(expected, updated);
@@ -48,7 +48,7 @@ namespace N
 
     public class C
     {
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -59,10 +59,10 @@ namespace N
     public class C
     {
         [Obsolete]
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var attribute = "[Obsolete]";
                 var updated = method.WithAttributeListText(attribute, adjustLeadingWhitespace: true);
                 RoslynAssert.Ast(expected, updated);
@@ -82,7 +82,7 @@ namespace N
     public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -94,10 +94,10 @@ namespace N
     {
         [Obsolete]
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var attribute = "[Obsolete]";
                 var updated = method.WithAttributeListText(attribute);
                 RoslynAssert.Ast(expected, updated);
@@ -114,7 +114,7 @@ namespace N
     public class C
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
-        public int Bar() => 1;
+        public int M() => 1;
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
@@ -126,10 +126,10 @@ namespace N
     {
         [Obsolete]
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
-        public int Bar() => 1;
+        public int M() => 1;
     }
-}").FindMethodDeclaration("Bar");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+}").FindMethodDeclaration("M");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 var attribute = "        [Obsolete]";
                 var updated = method.WithAttributeListText(attribute, adjustLeadingWhitespace: false);
                 RoslynAssert.Ast(expected, updated);

@@ -33,7 +33,7 @@ namespace N
         {
         }
 
-        public int Prop1 { get; set; }
+        public int P1 { get; set; }
 
         public void M1()
         {
@@ -82,7 +82,7 @@ namespace N
         {
         }
 
-        public int Prop1 { get; set; }
+        public int P1 { get; set; }
 
         public void M1()
         {
@@ -130,7 +130,7 @@ namespace N
         {
         }
 
-        public int Prop1 { get; set; }
+        public int P1 { get; set; }
 
         public void M1()
         {
@@ -179,7 +179,7 @@ namespace N
         {
         }
 
-        public int Prop1 { get; set; }
+        public int P1 { get; set; }
 
         public void M1()
         {

@@ -32,9 +32,9 @@ namespace N
         {
         }
 
-        public int Prop1 { get; set; }
+        public int P1 { get; set; }
 
-        public void Bar1()
+        public void M1()
         {
         }
     }
@@ -60,7 +60,7 @@ namespace N
         {
         }
 
-        public int Prop1 { get; set; }
+        public int P1 { get; set; }
 
         public int Property
         {
@@ -73,7 +73,7 @@ namespace N
             }
         }
 
-        public void Bar1()
+        public void M1()
         {
         }
     }

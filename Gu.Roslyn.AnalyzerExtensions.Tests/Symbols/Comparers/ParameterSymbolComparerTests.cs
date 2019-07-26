@@ -19,12 +19,12 @@ namespace N
 {
     public class C
     {
-        public int Bar(int bar1, int bar2) => 1;
+        public int M(int i1, int i2) => 1;
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var parameters = syntaxTree.FindMethodDeclaration("Bar").ParameterList.Parameters;
+            var parameters = syntaxTree.FindMethodDeclaration("M").ParameterList.Parameters;
             var symbol1 = semanticModel.GetDeclaredSymbol(parameters[0], CancellationToken.None);
             var symbol2 = semanticModel.GetDeclaredSymbol(parameters[1], CancellationToken.None);
             Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));

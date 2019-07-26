@@ -18,12 +18,12 @@ namespace N
     public class C
     {
         /// <remarks></remarks>
-        public void Bar()
+        public void M()
         {
         }
     }
 }");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithSummaryText("New text.");
                 Assert.AreEqual(true, updated.TryGetSummary(out _));
@@ -35,7 +35,7 @@ namespace N
     {
         /// <summary>New text.</summary>
         /// <remarks></remarks>
-        public void Bar()
+        public void M()
         {
         }
     }
@@ -57,12 +57,12 @@ namespace N
     {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <remarks></remarks>
-        public void Bar()
+        public void M()
         {
         }
     }
 }");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithSummaryText("New text.");
                 Assert.AreEqual(true, updated.TryGetSummary(out _));
@@ -75,7 +75,7 @@ namespace N
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
         /// <summary>New text.</summary>
         /// <remarks></remarks>
-        public void Bar()
+        public void M()
         {
         }
     }
@@ -96,12 +96,12 @@ namespace N
     public class C
     {
         /// <remarks></remarks>
-        public void Bar()
+        public void M()
         {
         }
     }
 }");
-                var method = syntaxTree.FindMethodDeclaration("Bar");
+                var method = syntaxTree.FindMethodDeclaration("M");
                 Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
                 var updated = comment.WithSummaryText("Line 1.\r\nLine 2.");
                 Assert.AreEqual(true, updated.TryGetSummary(out _));
@@ -116,7 +116,7 @@ namespace N
         /// Line 2.
         /// </summary>
         /// <remarks></remarks>
-        public void Bar()
+        public void M()
         {
         }
     }

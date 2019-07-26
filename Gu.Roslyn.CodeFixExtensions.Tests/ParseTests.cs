@@ -88,7 +88,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             Assert.AreEqual(code + "\r\n", node.ToFullString());
         }
 
-        [TestCase("[TemplatePart(Name = \"PART_Bar\", Type = typeof(Border))]")]
+        [TestCase("[TemplatePart(Name = \"PART_Border\", Type = typeof(Border))]")]
         public void AttributeList(string code)
         {
             var node = Parse.AttributeList(code);
