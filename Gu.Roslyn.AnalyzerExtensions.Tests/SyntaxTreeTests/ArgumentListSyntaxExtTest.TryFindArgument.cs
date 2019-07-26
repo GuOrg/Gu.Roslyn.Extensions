@@ -41,6 +41,69 @@ namespace N
                 Assert.AreEqual(expected, argument.ToString());
             }
 
+            [TestCase(0, "2")]
+            [TestCase(1, "3")]
+            public void OrdinalExtensionMethod(int index, string expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace N
+{
+    internal static class C
+    {
+        public void M()
+        {
+            1.M(2, 3);
+        }
+
+        internal static void M(this int i1, int i2, int i3)
+        {
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var invocation = syntaxTree.FindInvocation("M(2, 3)");
+                var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
+                Assert.AreEqual(true,     invocation.TryFindArgument(method.Parameters[index], out var argument));
+                Assert.AreEqual(expected, argument.ToString());
+
+                Assert.AreEqual(true,     invocation.ArgumentList.TryFind(method.Parameters[index], out argument));
+                Assert.AreEqual(expected, argument.ToString());
+            }
+
+            [TestCase(0, "1")]
+            [TestCase(1, "2")]
+            [TestCase(2, "3")]
+            public void OrdinalExtensionMethodStaticInvocation(int index, string expected)
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(
+                    @"
+namespace N
+{
+    internal static class C
+    {
+        public void M()
+        {
+            M(1, 2, 3);
+        }
+
+        internal static void M(this int i1, int i2, int i3)
+        {
+        }
+    }
+}");
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var invocation = syntaxTree.FindInvocation("M(1, 2, 3)");
+                var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
+                Assert.AreEqual(true,     invocation.TryFindArgument(method.Parameters[index], out var argument));
+                Assert.AreEqual(expected, argument.ToString());
+
+                Assert.AreEqual(true,     invocation.ArgumentList.TryFind(method.Parameters[index], out argument));
+                Assert.AreEqual(expected, argument.ToString());
+            }
+
             [TestCase(0, "i1: 1")]
             [TestCase(1, "i2: 2")]
             [TestCase(2, "i3: 3")]
