@@ -229,7 +229,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            return semanticModel.TryGetType(attribute, cancellationToken, out var attributeType) &&
+            return semanticModel.TryGetNamedType(attribute, cancellationToken, out var attributeType) &&
                    attributeType == expected;
 
             bool IsMatch(SimpleNameSyntax sn, QualifiedType qt)

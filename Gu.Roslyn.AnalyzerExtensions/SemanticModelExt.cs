@@ -75,6 +75,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Try getting the GetTypeInfo for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="type">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, out INamedTypeSymbol type)
+        {
+            if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is INamedTypeSymbol temp)
+            {
+                type = temp;
+                return true;
+            }
+
+            type = null;
+            return false;
+        }
+
+        /// <summary>
         /// Check if (destination)(object)expression will work.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
