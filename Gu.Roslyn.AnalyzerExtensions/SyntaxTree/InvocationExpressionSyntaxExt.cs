@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Collections.Immutable;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -301,6 +302,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
             argument = null;
             return invocation?.ArgumentList is ArgumentListSyntax argumentList &&
                    argumentList.TryFind(parameter, out argument);
+        }
+
+        /// <summary>
+        /// Get the argument that matches <paramref name="parameter"/>.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="arguments">The <see cref="ImmutableArray{ArgumentSyntax}"/>.</param>
+        /// <returns>True if one or more were found.</returns>
+        public static bool TryFindArgumentParams(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
+        {
+            arguments = default;
+            return invocation?.ArgumentList is ArgumentListSyntax argumentList &&
+                   argumentList.TryFindParams(parameter, out arguments);
         }
 
         /// <summary>

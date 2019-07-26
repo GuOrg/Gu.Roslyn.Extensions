@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Collections.Immutable;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -49,6 +50,30 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return argumentList.Arguments.TryElementAt(parameter.Ordinal, out argument);
+        }
+
+        /// <summary>
+        /// Get the arguments that matches <paramref name="parameter"/>.
+        /// </summary>
+        /// <param name="argumentList">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <param name="arguments">The <see cref="ImmutableArray{ArgumentSyntax}"/>.</param>
+        /// <returns>True if one or more were found.</returns>
+        public static bool TryFindParams(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
+        {
+            if (parameter.IsParams)
+            {
+                var builder = ImmutableArray.CreateBuilder<ArgumentSyntax>(argumentList.Arguments.Count - parameter.Ordinal);
+                for (var i = parameter.Ordinal; i < argumentList.Arguments.Count; i++)
+                {
+                    builder.Add(argumentList.Arguments[i]);
+                }
+
+                arguments = builder.MoveToImmutable();
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

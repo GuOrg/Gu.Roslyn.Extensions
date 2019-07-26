@@ -5,8 +5,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class ArgumentListSyntaxExtTest
+    public partial class ArgumentListSyntaxExtTest
     {
+
         public class TryFindArgument
         {
             [TestCase(0, "1")]
