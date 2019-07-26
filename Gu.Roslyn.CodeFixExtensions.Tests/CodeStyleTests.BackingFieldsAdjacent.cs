@@ -11,7 +11,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public void DefaultsToStyleCopEmptyClass()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -26,7 +26,7 @@ namespace RoslynSandbox
             public void DefaultsToStyleCopWhenOneProperty()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -48,7 +48,7 @@ namespace RoslynSandbox
             public void FindsAdjacentInCompilation()
             {
                 var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -56,7 +56,7 @@ namespace RoslynSandbox
 }");
 
                 var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -83,7 +83,7 @@ namespace RoslynSandbox
             public void FindsStyleCopInCompilation()
             {
                 var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -91,7 +91,7 @@ namespace RoslynSandbox
 }");
 
                 var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -117,7 +117,7 @@ namespace RoslynSandbox
             public void WhenStyleCop()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -143,7 +143,7 @@ namespace RoslynSandbox
             public void WhenAdjacentNoEmptyLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -169,7 +169,7 @@ namespace RoslynSandbox
             public void WhenAdjacentWithEmptyLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

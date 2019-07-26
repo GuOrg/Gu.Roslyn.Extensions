@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
             public void TypeSymbols(string parameters, bool expected)
             {
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -53,7 +53,7 @@ namespace RoslynSandbox
             public void QualifiedTypeFromType(string typeString, Type destination)
             {
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -75,7 +75,7 @@ namespace RoslynSandbox
             public void WhenTrueIsAssignableToQualifiedType(string parameters, string typeName)
             {
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -99,7 +99,7 @@ namespace RoslynSandbox
             public void Inheritance()
             {
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     class A
     {
@@ -123,7 +123,7 @@ namespace RoslynSandbox
             public void InheritsGeneric()
             {
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     class A<T>
     {
@@ -148,7 +148,7 @@ namespace RoslynSandbox
             public void IsAwaitable(string parameter, bool expected)
             {
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

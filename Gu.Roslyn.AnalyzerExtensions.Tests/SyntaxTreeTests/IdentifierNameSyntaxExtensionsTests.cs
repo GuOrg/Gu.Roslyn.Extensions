@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         public void TryGetTargetProperty()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Reflection;
 

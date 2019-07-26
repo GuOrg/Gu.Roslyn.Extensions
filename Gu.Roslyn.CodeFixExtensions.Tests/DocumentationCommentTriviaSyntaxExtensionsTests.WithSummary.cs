@@ -13,7 +13,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public void InsertBeforeRemarksSingleLineSummary()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -29,7 +29,7 @@ namespace RoslynSandbox
                 Assert.AreEqual(true, updated.TryGetSummary(out _));
 
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -51,7 +51,7 @@ namespace RoslynSandbox
             public void InsertBeforeRemarksSingleLineSummaryWhenPragma()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -68,7 +68,7 @@ namespace RoslynSandbox
                 Assert.AreEqual(true, updated.TryGetSummary(out _));
 
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -91,7 +91,7 @@ namespace RoslynSandbox
             public void InsertBeforeRemarksMultiLineSummary()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -107,7 +107,7 @@ namespace RoslynSandbox
                 Assert.AreEqual(true, updated.TryGetSummary(out _));
 
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -128,7 +128,7 @@ namespace RoslynSandbox
             public void ReplaceSingleLineWithSingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -140,7 +140,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -163,7 +163,7 @@ namespace RoslynSandbox
             public void ReplaceWhenPragma()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -176,7 +176,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -200,7 +200,7 @@ namespace RoslynSandbox
             public void ReplaceMultiLineWithSingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -214,7 +214,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
         public void StaticInitializers(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public sealed class Foo
     {
@@ -42,7 +42,7 @@ namespace RoslynSandbox
         public void DependencyPropertyRegisterReadOnly(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System.Windows;
     using System.Windows.Controls;
@@ -80,7 +80,7 @@ namespace RoslynSandbox
         public void TryFindWhenProperty(Scope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {
@@ -113,7 +113,7 @@ namespace RoslynSandbox
         public void TryFindWhenProperty2(Scope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {

@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -48,7 +48,7 @@ namespace RoslynSandbox
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 

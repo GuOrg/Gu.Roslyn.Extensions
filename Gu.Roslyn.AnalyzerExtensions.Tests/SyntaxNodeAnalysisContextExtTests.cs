@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox.Properties {
+namespace N.Properties {
     using System;
 
     /// <summary>
@@ -41,7 +41,7 @@ namespace RoslynSandbox.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager(""""RoslynSandbox.Properties.Resources"""", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager(""""N.Properties.Resources"""", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -85,7 +85,7 @@ namespace RoslynSandbox.Properties {
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox.Properties {
+namespace N.Properties {
     using System;
 
     /// <summary>
@@ -113,7 +113,7 @@ namespace RoslynSandbox.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager(""""RoslynSandbox.Properties.Resources"""", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager(""""N.Properties.Resources"""", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

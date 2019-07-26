@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             public void StatementBody(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -48,7 +48,7 @@ namespace RoslynSandbox
             public void Static(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -80,7 +80,7 @@ namespace RoslynSandbox
             public void StaticOtherType(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public static class Bar
     {
@@ -112,7 +112,7 @@ namespace RoslynSandbox
             public void ExpressionBody(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -141,7 +141,7 @@ namespace RoslynSandbox
             public void WalkOverridden(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class FooBase
     {
@@ -169,7 +169,7 @@ namespace RoslynSandbox
             public void InvocationAsArgument(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -198,7 +198,7 @@ namespace RoslynSandbox
             public void InvocationVirtual(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -236,7 +236,7 @@ namespace RoslynSandbox
             public void ArgumentBeforeInvocation(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -270,7 +270,7 @@ namespace RoslynSandbox
             public void ArgumentBeforeInvocationStaticAndInstance(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

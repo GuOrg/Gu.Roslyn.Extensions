@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
     public class MethodDeclarationComparerTests
     {
         private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo : IFoo
     {

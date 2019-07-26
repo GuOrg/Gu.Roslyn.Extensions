@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         public void TryGetGetter(string propertyName, string getter)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandBox
+namespace N
 {
     public class Foo
     {
@@ -41,7 +41,7 @@ namespace RoslynSandBox
         public void TryGetSetter(string propertyName, string setter)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandBox
+namespace N
 {
     public class Foo
     {
@@ -76,7 +76,7 @@ namespace RoslynSandBox
         public void IsAutoProperty(string name, bool expected)
         {
             var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -124,7 +124,7 @@ namespace RoslynSandbox
         public void IsGetOnly(string name, bool expected)
         {
             var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -170,7 +170,7 @@ namespace RoslynSandbox
         public void TryGetBackingFieldWhenTrue(string name)
         {
             var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -217,7 +217,7 @@ namespace RoslynSandbox
         public void TryGetBackingFieldWhenFalse(string name)
         {
             var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

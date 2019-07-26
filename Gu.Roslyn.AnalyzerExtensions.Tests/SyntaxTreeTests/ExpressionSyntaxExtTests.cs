@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         public void IsAssignableTo(string text, Type type)
         {
             var code = @"
-namespace RoslynSandbox
+namespace N
 {
     class Foo
     {
@@ -38,7 +38,7 @@ namespace RoslynSandbox
         public void IsAssignableTo(string text, string fullname)
         {
             var code = @"
-namespace RoslynSandbox
+namespace N
 {
     class Foo
     {
@@ -61,7 +61,7 @@ namespace RoslynSandbox
         public void IsSameType(string text, Type type)
         {
             var code = @"
-namespace RoslynSandbox
+namespace N
 {
     class Foo
     {

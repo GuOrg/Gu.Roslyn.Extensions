@@ -13,7 +13,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
         public static void SystemWhenEmpty()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
@@ -21,7 +21,7 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
             var expected = @"
-namespace RoslynSandbox
+namespace N
 {
 usingSystem;}";
             var usingDirective = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System"));
@@ -35,7 +35,7 @@ usingSystem;}";
         public static void StringBuilderType()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
@@ -43,7 +43,7 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
             var expected = @"
-namespace RoslynSandbox
+namespace N
 {
 usingSystem.Text;}";
             var compilationUnit = syntaxTree.GetCompilationUnitRoot(CancellationToken.None);
@@ -56,7 +56,7 @@ usingSystem.Text;}";
         public static void StringBuilderTypeWhenALreadyHasUsing()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Text;
 }";
@@ -65,7 +65,7 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
             var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Text;
 }";

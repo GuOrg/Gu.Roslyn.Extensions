@@ -13,7 +13,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public void WhenSummaryAndReturn()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -25,7 +25,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -50,7 +50,7 @@ namespace RoslynSandbox
             public void WhenSummaryOnlySingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -59,7 +59,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -81,7 +81,7 @@ namespace RoslynSandbox
             public void WhenSummaryOnlyMultiLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -92,7 +92,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -116,7 +116,7 @@ namespace RoslynSandbox
             public void WhenReturnsOnlySingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -125,7 +125,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -147,7 +147,7 @@ namespace RoslynSandbox
             public void WhenReturnsOnlyMultiLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -158,7 +158,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -182,7 +182,7 @@ namespace RoslynSandbox
             public void WhenParamExistsInsertAfter()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -193,7 +193,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -217,7 +217,7 @@ namespace RoslynSandbox
             public void WhenParamExistsInsertBefore()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -228,7 +228,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -252,7 +252,7 @@ namespace RoslynSandbox
             public void ReplaceExisting()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -265,7 +265,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

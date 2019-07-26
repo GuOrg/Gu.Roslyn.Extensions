@@ -12,7 +12,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public void Add()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -20,7 +20,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -40,7 +40,7 @@ namespace RoslynSandbox
             public void AddWhenPragma()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -49,7 +49,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -70,7 +70,7 @@ namespace RoslynSandbox
             public void AddWhenPragmaExplicitWhitespace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -79,7 +79,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -100,7 +100,7 @@ namespace RoslynSandbox
             public void AddToSecondMember()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -110,7 +110,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -132,7 +132,7 @@ namespace RoslynSandbox
             public void AddAdjustWhiteSpace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -140,7 +140,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -160,7 +160,7 @@ namespace RoslynSandbox
             public void AddAdjustWhiteSpaceDefaultHandleMissingNewLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -168,7 +168,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -188,7 +188,7 @@ namespace RoslynSandbox
             public void AddAdjustWhiteSpaceDefault()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -196,7 +196,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -216,7 +216,7 @@ namespace RoslynSandbox
             public void ReplaceExisting()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -226,7 +226,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -246,7 +246,7 @@ namespace RoslynSandbox
             public void ReplaceExistingWhenPragma()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -257,7 +257,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -278,7 +278,7 @@ namespace RoslynSandbox
             public void ReplaceExistingSecondMember()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -290,7 +290,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

@@ -20,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             public void FieldCtorArg(Scope scope)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     internal class C
     {
@@ -52,7 +52,7 @@ namespace RoslynSandbox
             public void GenericFieldCtorArg(Scope scope)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     internal class C<T>
     {
@@ -84,7 +84,7 @@ namespace RoslynSandbox
             public void GenericFieldTypedCtorArg(Scope scope)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     internal class C<T>
     {
@@ -119,7 +119,7 @@ namespace RoslynSandbox
             public void FieldCtorArgViaLocal(Scope scope)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     internal class C
     {
@@ -151,7 +151,7 @@ namespace RoslynSandbox
             public void FieldCtorArgInNested(Scope scope)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.IO;
 
@@ -185,7 +185,7 @@ namespace RoslynSandbox
             public void ChainedCtorArg(Scope scope)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     internal class C
     {
@@ -232,7 +232,7 @@ namespace RoslynSandbox
             public void FieldWithCtorArgViaProperty(Scope scope)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     internal class C
     {

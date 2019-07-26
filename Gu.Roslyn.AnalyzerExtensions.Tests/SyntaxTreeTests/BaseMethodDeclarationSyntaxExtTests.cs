@@ -15,9 +15,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
-    namespace RoslynSandbox
+    namespace N
     {
         internal class Foo
         {
@@ -47,9 +47,9 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
-    namespace RoslynSandbox
+    namespace N
     {
         internal class Foo
         {
@@ -79,9 +79,9 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
-    namespace RoslynSandbox
+    namespace N
     {
         internal class Foo
         {
@@ -111,9 +111,9 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
-    namespace RoslynSandbox
+    namespace N
     {
         internal class Foo
         {

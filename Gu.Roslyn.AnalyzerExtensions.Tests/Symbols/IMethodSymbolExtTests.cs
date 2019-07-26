@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
         public void TryFindParameter(string objectCreation, string arg, string expected)
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {
@@ -47,7 +47,7 @@ namespace RoslynSandbox
         public void TryFindParameterWhenParams(string objectCreation, string arg, string expected)
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {

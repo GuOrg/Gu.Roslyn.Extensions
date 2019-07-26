@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
             public void Field(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -39,7 +39,7 @@ namespace RoslynSandbox
             public void Property(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -62,7 +62,7 @@ namespace RoslynSandbox
             public void Method(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -85,7 +85,7 @@ namespace RoslynSandbox
             public void ExplicitMethod(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -108,7 +108,7 @@ namespace RoslynSandbox
             public void Accessor(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -131,7 +131,7 @@ namespace RoslynSandbox
             public void ExplicitAccessor(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -154,7 +154,7 @@ namespace RoslynSandbox
             public void Local(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -179,7 +179,7 @@ namespace RoslynSandbox
             public void OutLocal(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -209,7 +209,7 @@ namespace RoslynSandbox
             public void Parameter(string name)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

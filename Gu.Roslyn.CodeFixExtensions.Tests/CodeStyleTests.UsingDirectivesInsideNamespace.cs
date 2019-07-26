@@ -12,7 +12,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public void UsingDirectiveInsideNamespace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 }");
@@ -26,7 +26,7 @@ namespace RoslynSandbox
             public void NoDirective()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
 }");
 
@@ -41,7 +41,7 @@ namespace RoslynSandbox
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 using System;
 
-namespace RoslynSandbox
+namespace N
 {
     using System.Collections;
 }");
@@ -56,7 +56,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 using System;
-namespace RoslynSandbox
+namespace N
 {
 }");
 

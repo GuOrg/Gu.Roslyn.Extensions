@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             public void ExplicitParameterless(Scope scope)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -43,7 +43,7 @@ namespace RoslynSandbox
             public void StaticBeforeExplicitParameterless(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -74,7 +74,7 @@ namespace RoslynSandbox
             public void StaticBeforeExplicitParameterlessWhenNotDocumentOrder(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -105,7 +105,7 @@ namespace RoslynSandbox
             public void ChainedThis(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -137,7 +137,7 @@ namespace RoslynSandbox
             public void ImplicitBaseParameterLess(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class FooBase
     {
@@ -171,7 +171,7 @@ namespace RoslynSandbox
             public void ExplicitBaseParameterLess(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class FooBase
     {
@@ -206,7 +206,7 @@ namespace RoslynSandbox
             public void FieldInitializerBeforeConstructor(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -234,7 +234,7 @@ namespace RoslynSandbox
             public void FieldInitializerBeforeConstructorWhenNotDocumentOrder(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -262,7 +262,7 @@ namespace RoslynSandbox
             public void PropertyInitializerBeforeConstructor(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public sealed class Foo
     {
@@ -293,7 +293,7 @@ namespace RoslynSandbox
             public void PropertyInitializerBeforeDefaultCtor(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public sealed class Foo
     {
@@ -320,7 +320,7 @@ namespace RoslynSandbox
             public void PropertyInitializerBeforeDefaultCtorObjectInitializer(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public sealed class Foo
     {

@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         [TestCase("String.Empty", "")]
         [TestCase("null", null)]
         [TestCase("nameof(Foo)", "Foo")]
-        [TestCase("nameof(RoslynSandbox.Foo)", "Foo")]
+        [TestCase("nameof(N.Foo)", "Foo")]
         [TestCase("nameof(Foo<int>)", "Foo")]
         [TestCase("nameof(NestedFoo<int>)", "NestedFoo")]
         [TestCase("nameof(Bar)", "Bar")]
@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         public void TryGetStringValue(string code, string expected)
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -55,7 +55,7 @@ namespace RoslynSandbox
         public void TryGetTypeofValue()
         {
             var code = @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 

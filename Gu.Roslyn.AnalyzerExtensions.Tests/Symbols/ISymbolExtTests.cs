@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
         public void PropertyIsEquivalentTo()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class FooBase<T>
     {

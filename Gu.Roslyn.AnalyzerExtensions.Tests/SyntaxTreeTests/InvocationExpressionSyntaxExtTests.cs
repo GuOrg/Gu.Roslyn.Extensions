@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         public void TryGetInvokedMethodName(string code, string expected)
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -41,7 +41,7 @@ namespace RoslynSandbox
         public void TryGetTargetAssemblyGetType()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Reflection;
 
@@ -66,7 +66,7 @@ namespace RoslynSandbox
         public void TryGetTargetAssemblyGetTypeWithParameterByName()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Reflection;
 
@@ -92,7 +92,7 @@ namespace RoslynSandbox
         public void TryGetTargetAssemblyGetTypeWithParameterByType()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Reflection;
 
@@ -118,7 +118,7 @@ namespace RoslynSandbox
         public void TryGetTargetAssemblyGetTypeWithParameterByNameAndType()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Reflection;
 

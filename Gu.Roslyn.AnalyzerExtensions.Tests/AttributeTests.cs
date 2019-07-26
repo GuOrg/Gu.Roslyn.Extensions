@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         public void Test(string attribute)
         {
             string code = @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 

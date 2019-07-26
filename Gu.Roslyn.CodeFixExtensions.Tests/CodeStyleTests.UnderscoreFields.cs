@@ -12,7 +12,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public void DefaultsToFalse()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class C
     {
@@ -34,7 +34,7 @@ namespace RoslynSandbox
             public void WhenFieldIsNamedWithUnderscore()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -52,7 +52,7 @@ namespace RoslynSandbox
             public void WhenPropertyIsAssignedWithThis()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -74,7 +74,7 @@ namespace RoslynSandbox
             public void WhenPropertyIsAssignedWithoutThis()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -96,7 +96,7 @@ namespace RoslynSandbox
             public void WhenPropertyIsAssignedInObjectInitializer()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -115,7 +115,7 @@ namespace RoslynSandbox
             public void WhenObjectInitializerInCollectionInitializer()
             {
                 var fooTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -124,7 +124,7 @@ namespace RoslynSandbox
 }");
 
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System.Collections.Generic;
 
@@ -146,7 +146,7 @@ namespace RoslynSandbox
             public void WhenFieldIsNotNamedWithUnderscore()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -164,7 +164,7 @@ namespace RoslynSandbox
             public void WhenUsingThis()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -183,7 +183,7 @@ namespace RoslynSandbox
             public void FiguresOutFromOtherClass()
             {
                 var fooCode = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -194,7 +194,7 @@ namespace RoslynSandbox
 }");
 
                 var barCode = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class P
     {
@@ -213,7 +213,7 @@ namespace RoslynSandbox
             public void ChecksContainingClassFirst()
             {
                 var fooCode = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -224,7 +224,7 @@ namespace RoslynSandbox
 }");
 
                 var barCode = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class P
     {

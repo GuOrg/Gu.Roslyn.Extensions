@@ -16,14 +16,14 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public async Task SystemWhenEmpty()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
                 var sln = CodeFactory.CreateSolution(testCode);
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 }";
@@ -36,14 +36,14 @@ namespace RoslynSandbox
             public async Task SystemWhenEmptyOutside()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
 
                 var otherCode = @"
 using System;
 
-namespace RoslynSandbox
+namespace N
 {
 }";
                 var sln = CodeFactory.CreateSolution(new[] { testCode, otherCode });
@@ -51,7 +51,7 @@ namespace RoslynSandbox
 
                 var expected = @"using System;
 
-namespace RoslynSandbox
+namespace N
 {
 }";
                 var usingDirective = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System"));
@@ -63,7 +63,7 @@ namespace RoslynSandbox
             public async Task SystemWhenSystemCollectionsExists()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Collections;
 }";
@@ -71,7 +71,7 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
     using System.Collections;
@@ -85,7 +85,7 @@ namespace RoslynSandbox
             public async Task StringBuilderType()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
                 var sln = CodeFactory.CreateSolution(testCode, MetadataReferences.FromAttributes());
@@ -93,7 +93,7 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Text;
 }";
@@ -106,7 +106,7 @@ namespace RoslynSandbox
             public async Task StringBuilderTypeWhenUsingExists()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Text;
 }";
@@ -115,7 +115,7 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Text;
 }";
@@ -128,13 +128,13 @@ namespace RoslynSandbox
             public async Task TypeInNestedNamespace()
             {
                 var classCode = @"
-namespace RoslynSandbox.Extensions
+namespace N.Extensions
 {
     class C { }
 }
 ";
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
                 var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
@@ -142,11 +142,11 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
-    using RoslynSandbox.Extensions;
+    using N.Extensions;
 }";
-                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("RoslynSandbox.Extensions.C");
+                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.Extensions.C");
                 _ = editor.AddUsing(type);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
@@ -182,13 +182,13 @@ namespace A.B.C
             public async Task TypeInContainingNamespace()
             {
                 var classCode = @"
-namespace RoslynSandbox
+namespace N
 {
     class C { }
 }
 ";
                 var testCode = @"
-namespace RoslynSandbox.Extensions
+namespace N.Extensions
 {
 }";
                 var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
@@ -196,10 +196,10 @@ namespace RoslynSandbox.Extensions
                 var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox.Extensions
+namespace N.Extensions
 {
 }";
-                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("RoslynSandbox.C");
+                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.C");
                 _ = editor.AddUsing(type);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
@@ -234,13 +234,13 @@ namespace A.B.C.Extensions
             public async Task TypeInSameNamespace()
             {
                 var classCode = @"
-namespace RoslynSandbox
+namespace N
 {
     class C1 { }
 }
 ";
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     class C2 { }
 }";
@@ -249,11 +249,11 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     class C2 { }
 }";
-                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("RoslynSandbox.C1");
+                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.C1");
                 _ = editor.AddUsing(type);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
@@ -290,13 +290,13 @@ namespace A.B.C
             public async Task GenericTypeInSameNamespace()
             {
                 var classCode = @"
-namespace RoslynSandbox
+namespace N
 {
     class C<T> { }
 }
 ";
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
                 var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
@@ -304,10 +304,10 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
-                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("RoslynSandbox.C`1");
+                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.C`1");
                 _ = editor.AddUsing(type);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
@@ -316,13 +316,13 @@ namespace RoslynSandbox
             public async Task TypeInSameNamespaceWhenEmptyNamespace()
             {
                 var classCode = @"
-namespace RoslynSandbox
+namespace N
 {
     class C1 { }
 }
 ";
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
                 var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
@@ -330,10 +330,10 @@ namespace RoslynSandbox
                 var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
 }";
-                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("RoslynSandbox.C1");
+                var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.C1");
                 _ = editor.AddUsing(type);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }

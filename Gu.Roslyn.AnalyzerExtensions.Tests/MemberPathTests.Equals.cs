@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             public void SimpleValue()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -43,7 +43,7 @@ namespace RoslynSandbox
             public void Simple(string getter, string setter, bool expected)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -86,7 +86,7 @@ namespace RoslynSandbox
             public void Nested(string getter, string setter, bool expected)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Bar
     {

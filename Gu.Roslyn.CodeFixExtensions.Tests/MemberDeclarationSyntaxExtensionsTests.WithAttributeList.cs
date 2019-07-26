@@ -12,7 +12,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public void AddDontAdjustWhitespace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -22,7 +22,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -42,7 +42,7 @@ namespace RoslynSandbox
             public void AddWhitespace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -52,7 +52,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -75,7 +75,7 @@ namespace RoslynSandbox
             public void AddWhenPragma()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -86,7 +86,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -107,7 +107,7 @@ namespace RoslynSandbox
             public void AddWhenPragmaExplicitWhitespace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -118,7 +118,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 

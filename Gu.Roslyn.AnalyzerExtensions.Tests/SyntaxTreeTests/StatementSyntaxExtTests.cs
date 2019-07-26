@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             public void SameBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -36,7 +36,7 @@ namespace RoslynSandbox
             public void DeclaredInWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -66,7 +66,7 @@ namespace RoslynSandbox
             public void DeclaredBeforeWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -94,7 +94,7 @@ namespace RoslynSandbox
             public void DeclaredInForeachLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -119,7 +119,7 @@ namespace RoslynSandbox
             public void DeclaredInForLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -148,7 +148,7 @@ namespace RoslynSandbox
             public void IfBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -183,7 +183,7 @@ namespace RoslynSandbox
             public void IfElseBlocks(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -222,7 +222,7 @@ namespace RoslynSandbox
             public void IfElseStatements(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -252,7 +252,7 @@ namespace RoslynSandbox
             public void InsideIfBlockCurlyElse(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -285,7 +285,7 @@ namespace RoslynSandbox
             public void InsideIfSingleStatement(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -317,7 +317,7 @@ namespace RoslynSandbox
             public void IfReturnBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -356,7 +356,7 @@ namespace RoslynSandbox
             public void IfReturnBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -396,7 +396,7 @@ namespace RoslynSandbox
             public void IfThrowBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 	
@@ -435,7 +435,7 @@ namespace RoslynSandbox
             public void IfThrowBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 	
@@ -472,7 +472,7 @@ namespace RoslynSandbox
             public void LambdaLocal(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -508,7 +508,7 @@ namespace RoslynSandbox
             public void LambdaLocalClosure(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -550,7 +550,7 @@ namespace RoslynSandbox
             public void LambdaParameterClosure(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -594,7 +594,7 @@ namespace RoslynSandbox
             public void TryCatchCatchFinally(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -642,7 +642,7 @@ namespace RoslynSandbox
             public void Switch(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -686,7 +686,7 @@ namespace RoslynSandbox
             public void SwitchPattern(string firstStatement, string otherStatement, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {

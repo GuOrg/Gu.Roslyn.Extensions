@@ -14,7 +14,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
         public async Task ReplaceToken()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -25,7 +25,7 @@ namespace RoslynSandbox
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
             _ = editor.ReplaceToken(containingType.Modifiers.First(), SyntaxFactory.Token(SyntaxKind.InternalKeyword));
             var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {

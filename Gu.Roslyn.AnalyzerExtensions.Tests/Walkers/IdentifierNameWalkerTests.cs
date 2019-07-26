@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
         public void TryFindWhenParameter()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {
@@ -37,7 +37,7 @@ namespace RoslynSandbox
         public void ForWhenParameter()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {
@@ -63,7 +63,7 @@ namespace RoslynSandbox
         public void ForWhenLocal()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {
@@ -90,7 +90,7 @@ namespace RoslynSandbox
         public void TryFindWhenProperty()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {
@@ -118,7 +118,7 @@ namespace RoslynSandbox
         public void TryFindFirst()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {
@@ -148,7 +148,7 @@ namespace RoslynSandbox
         public void TryFindLast()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class C
     {

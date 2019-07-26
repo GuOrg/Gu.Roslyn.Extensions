@@ -17,7 +17,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public async Task AddEventFieldDeclarationSyntax()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -45,7 +45,7 @@ namespace RoslynSandbox
                 var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
                 _ = editor.AddEvent(containingType, eventDeclaration);
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -76,7 +76,7 @@ namespace RoslynSandbox
             public async Task AddEventDeclarationSyntax()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -104,7 +104,7 @@ namespace RoslynSandbox
                 var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
                 _ = editor.AddEvent(containingType, eventDeclaration);
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {

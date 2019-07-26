@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             public void TrueWhen(string call)
             {
                 var enumCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public enum FooEnum
     {
@@ -36,7 +36,7 @@ namespace RoslynSandbox
     }
 }";
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -66,7 +66,7 @@ namespace RoslynSandbox
             public void TrueWhenNullable(string call)
             {
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -98,7 +98,7 @@ namespace RoslynSandbox
             public void FalseWhen(string call)
             {
                 var code = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

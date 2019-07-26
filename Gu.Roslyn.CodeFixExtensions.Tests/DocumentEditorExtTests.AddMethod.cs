@@ -18,7 +18,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public async Task Private()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -67,7 +67,7 @@ namespace RoslynSandbox
                                           .WithAdditionalAnnotations(Formatter.Annotation);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -115,7 +115,7 @@ namespace RoslynSandbox
             public async Task Public()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -164,7 +164,7 @@ namespace RoslynSandbox
                                           .WithAdditionalAnnotations(Formatter.Annotation);
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {

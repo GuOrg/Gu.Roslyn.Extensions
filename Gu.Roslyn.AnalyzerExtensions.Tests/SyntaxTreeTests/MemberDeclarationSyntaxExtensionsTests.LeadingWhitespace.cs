@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             public void Class()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -26,7 +26,7 @@ namespace RoslynSandbox
             public void ClassWithPragmaAndDocs()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
     /// <summary>
@@ -44,7 +44,7 @@ namespace RoslynSandbox
             public void ClassWithDocs()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     /// <summary>
     /// The Foo
@@ -61,7 +61,7 @@ namespace RoslynSandbox
             public void Constructor()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -79,7 +79,7 @@ namespace RoslynSandbox
             public void ConstructorWithDocs()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -96,7 +96,7 @@ namespace RoslynSandbox
             public void Property()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -114,7 +114,7 @@ namespace RoslynSandbox
             public void Method()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -129,7 +129,7 @@ namespace RoslynSandbox
             public void MethodWithDocs()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

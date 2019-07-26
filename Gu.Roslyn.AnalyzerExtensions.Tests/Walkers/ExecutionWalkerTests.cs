@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
         public void LocalDeclarationWithExpressionBody(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -46,7 +46,7 @@ namespace RoslynSandbox
         public void LocalDeclarationWithCastExpressionBody(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -75,7 +75,7 @@ namespace RoslynSandbox
         public void IgnoreNameOfProperty(Scope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -103,7 +103,7 @@ namespace RoslynSandbox
         public void IgnoreNameOfMethod(Scope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

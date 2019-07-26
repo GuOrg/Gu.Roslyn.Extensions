@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo1
     {

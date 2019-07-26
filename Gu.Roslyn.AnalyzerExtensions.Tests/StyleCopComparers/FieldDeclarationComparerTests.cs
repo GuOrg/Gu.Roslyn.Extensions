@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
     public class FieldDeclarationComparerTests
     {
         private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class Foo
     {
@@ -61,7 +61,7 @@ namespace RoslynSandbox
         public void InitializedWithOther()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class Foo
     {
@@ -81,7 +81,7 @@ namespace RoslynSandbox
         public void BackingField()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     class Foo
     {

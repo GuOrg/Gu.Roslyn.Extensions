@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
             public void InnerBeforeOuter()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -36,7 +36,7 @@ namespace RoslynSandbox
             public void And(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -55,7 +55,7 @@ namespace RoslynSandbox
             public void Or(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -74,7 +74,7 @@ namespace RoslynSandbox
             public void LambdaLocal(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -110,7 +110,7 @@ namespace RoslynSandbox
             public void LambdaLocalClosure(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -149,7 +149,7 @@ namespace RoslynSandbox
             public void LambdaParameterClosure(string firstInt, string otherInt, ExecutedBefore expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 

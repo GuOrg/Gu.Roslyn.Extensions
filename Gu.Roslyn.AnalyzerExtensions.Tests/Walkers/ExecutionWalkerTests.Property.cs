@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             public void StatementBody(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -48,7 +48,7 @@ namespace RoslynSandbox
             public void Static(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -77,7 +77,7 @@ namespace RoslynSandbox
             public void StaticOtherType(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public static class Bar
     {
@@ -109,7 +109,7 @@ namespace RoslynSandbox
             public void ExpressionBody(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -138,7 +138,7 @@ namespace RoslynSandbox
             public void ExpressionBodyGetter(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -170,7 +170,7 @@ namespace RoslynSandbox
             public void AssignmentSetterWithGetter(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -204,7 +204,7 @@ namespace RoslynSandbox
             public void AssignmentSetterWithGetterThis(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -238,7 +238,7 @@ namespace RoslynSandbox
             public void PropertyUnary(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -272,7 +272,7 @@ namespace RoslynSandbox
             public void BinaryCompare(string expression, Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -303,7 +303,7 @@ namespace RoslynSandbox
             public void Binary(string expression, Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -330,7 +330,7 @@ namespace RoslynSandbox
             public void ExpressionBodyAsArgument(Scope scope, string expected)
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

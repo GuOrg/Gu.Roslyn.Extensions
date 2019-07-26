@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -24,7 +24,7 @@ namespace RoslynSandbox
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindMethodDeclaration("Bar"));
-            var qualifiedMethod = new QualifiedOverload(new QualifiedType("RoslynSandbox.Foo"), "Bar", ImmutableArray<QualifiedParameter>.Empty);
+            var qualifiedMethod = new QualifiedOverload(new QualifiedType("N.Foo"), "Bar", ImmutableArray<QualifiedParameter>.Empty);
             Assert.AreEqual(true,  symbol == qualifiedMethod);
             Assert.AreEqual(false, symbol != qualifiedMethod);
         }

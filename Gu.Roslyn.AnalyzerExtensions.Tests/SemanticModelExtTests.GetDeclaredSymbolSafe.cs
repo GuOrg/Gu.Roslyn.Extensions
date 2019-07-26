@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         {
             private static readonly SyntaxTree OtherTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -27,7 +27,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -50,7 +50,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -73,7 +73,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -98,7 +98,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -127,7 +127,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -152,7 +152,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -176,7 +176,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -200,7 +200,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -224,7 +224,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -248,7 +248,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Collections.Generic;
 
@@ -274,7 +274,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Collections.Generic;
 
@@ -300,7 +300,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -323,7 +323,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -348,7 +348,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -376,7 +376,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -404,7 +404,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -427,7 +427,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -458,7 +458,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -493,7 +493,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -521,7 +521,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -548,7 +548,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -577,7 +577,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -606,7 +606,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -633,7 +633,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -661,7 +661,7 @@ namespace RoslynSandbox
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(
                     @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {

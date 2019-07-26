@@ -17,7 +17,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public async Task AddPropertyDeclarationSyntax()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -45,7 +45,7 @@ namespace RoslynSandbox
                 var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("Foo");
                 _ = editor.AddProperty(containingType, declaration);
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {

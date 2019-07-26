@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             public void PropertyOrField(string code, string expected)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -80,7 +80,7 @@ namespace RoslynSandbox
             public void ForMethodInvocation(string code, string expected)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 
@@ -115,7 +115,7 @@ namespace RoslynSandbox
             public void MemberAccessExpression(string code, string expected)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public sealed class Foo
     {
@@ -148,7 +148,7 @@ namespace RoslynSandbox
             public void Recursive()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {

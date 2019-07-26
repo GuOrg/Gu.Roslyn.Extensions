@@ -13,7 +13,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public void WhenSummaryAndReturn()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -26,7 +26,7 @@ namespace RoslynSandbox
     }
 }");
                 var expected = GetExpected(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

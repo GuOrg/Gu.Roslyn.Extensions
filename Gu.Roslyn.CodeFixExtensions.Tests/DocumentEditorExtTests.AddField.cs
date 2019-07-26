@@ -17,7 +17,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
             public async Task AddPrivateField()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -60,7 +60,7 @@ namespace RoslynSandbox
                 var containingType = SyntaxNodeExt.FindClassDeclaration(editor.OriginalRoot.SyntaxTree, "Foo");
 
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public abstract class Foo
     {
@@ -112,7 +112,7 @@ namespace RoslynSandbox
             public async Task AddBackingFieldWhenNoBackingFields()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -128,7 +128,7 @@ namespace RoslynSandbox
                 var field = editor.AddBackingField(property);
                 Assert.AreEqual("privateint value;", field.ToFullString());
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -146,7 +146,7 @@ namespace RoslynSandbox
             public async Task AddBackingFieldWhenNameCollision()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -161,7 +161,7 @@ namespace RoslynSandbox
                 var field = editor.AddBackingField(property);
                 Assert.AreEqual("privateint value_;", field.ToFullString());
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -178,7 +178,7 @@ namespace RoslynSandbox
             public async Task AddBackingFieldBetween()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -206,7 +206,7 @@ namespace RoslynSandbox
                 var field = editor.AddBackingField(property);
                 Assert.AreEqual("privateint value2;", field.ToFullString());
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -236,7 +236,7 @@ namespace RoslynSandbox
             public async Task AddBackingFieldAdjacentToProperty()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -260,7 +260,7 @@ namespace RoslynSandbox
                 var field = editor.AddBackingField(property);
                 Assert.AreEqual("privateint value2;", field.ToFullString());
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -286,7 +286,7 @@ namespace RoslynSandbox
             public async Task AddBackingFieldAdjacentToPropertyNewLine()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -311,7 +311,7 @@ namespace RoslynSandbox
                 var field = editor.AddBackingField(property);
                 Assert.AreEqual("privateint value2;", field.ToFullString());
                 var expected = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

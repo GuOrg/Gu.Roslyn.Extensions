@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -38,7 +38,7 @@ namespace RoslynSandbox
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -63,7 +63,7 @@ namespace RoslynSandbox
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -86,7 +86,7 @@ namespace RoslynSandbox
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -109,7 +109,7 @@ namespace RoslynSandbox
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -132,7 +132,7 @@ namespace RoslynSandbox
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     using System.Reflection;
 

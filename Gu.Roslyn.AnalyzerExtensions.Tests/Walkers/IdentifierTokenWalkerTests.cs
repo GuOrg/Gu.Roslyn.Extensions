@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
         public void Test()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

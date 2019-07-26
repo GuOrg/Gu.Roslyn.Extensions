@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         public static void TryFirstParameter()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -51,7 +51,7 @@ namespace RoslynSandbox
         public static void TryLastParameter()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -94,7 +94,7 @@ namespace RoslynSandbox
         public static void TrySingleParameter()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -144,7 +144,7 @@ namespace RoslynSandbox
         public static void TrySingleMethod()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -170,7 +170,7 @@ namespace RoslynSandbox
         public static void TryElementAtParameter(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -188,7 +188,7 @@ namespace RoslynSandbox
         public static void TryElementAtParameterWhenOutOfBounds(int index)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -205,7 +205,7 @@ namespace RoslynSandbox
         public static void TryElementAtParameterWhenEmpty()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {

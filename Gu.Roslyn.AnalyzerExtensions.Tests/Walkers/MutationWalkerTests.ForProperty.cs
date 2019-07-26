@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             public void Single(string mutation)
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {
@@ -45,7 +45,7 @@ namespace RoslynSandbox
             public void ObjectInitializer()
             {
                 var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     public class Foo
     {

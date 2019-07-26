@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
         public void LocalInCtor()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -36,7 +36,7 @@ namespace RoslynSandbox
         public void LocalInMethod()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -59,7 +59,7 @@ namespace RoslynSandbox
         public void LocalInLocalFunction()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     class C
     {
@@ -85,7 +85,7 @@ namespace RoslynSandbox
         public void LocalInLambda()
         {
             var testCode = @"
-namespace RoslynSandbox
+namespace N
 {
     using System;
 

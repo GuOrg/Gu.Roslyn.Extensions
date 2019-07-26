@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     internal class Foo
     {
@@ -35,7 +35,7 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("Foo"));
             Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out var ctor));
-            Assert.AreEqual("RoslynSandbox.Foo.Foo()", ctor.ToString());
+            Assert.AreEqual("N.Foo.Foo()", ctor.ToString());
         }
 
         [TestCase(Search.TopLevel)]
@@ -44,7 +44,7 @@ namespace RoslynSandbox
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     class FooBase
     {
@@ -74,20 +74,20 @@ namespace RoslynSandbox
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class Foo : FooBase"));
             Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out var ctor));
-            Assert.AreEqual("RoslynSandbox.Foo.Foo()", ctor.ToString());
+            Assert.AreEqual("N.Foo.Foo()", ctor.ToString());
 
             type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("class FooBase"));
             Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out ctor));
-            Assert.AreEqual("RoslynSandbox.FooBase.FooBase()", ctor.ToString());
+            Assert.AreEqual("N.FooBase.FooBase()", ctor.ToString());
         }
 
         [TestCase(Search.TopLevel, null)]
-        [TestCase(Search.Recursive, "RoslynSandbox.FooBase.FooBase()")]
+        [TestCase(Search.Recursive, "N.FooBase.FooBase()")]
         public void TryFindDefaultWithBase(Search search, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     class FooBase
     {
@@ -117,12 +117,12 @@ namespace RoslynSandbox
         }
 
         [TestCase(Search.TopLevel, null)]
-        [TestCase(Search.Recursive, "RoslynSandbox.FooBaseBase.FooBaseBase()")]
+        [TestCase(Search.Recursive, "N.FooBaseBase.FooBaseBase()")]
         public void TryFindDefaultWithBaseWithGap(Search search, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-namespace RoslynSandbox
+namespace N
 {
     class FooBaseBase
     {
