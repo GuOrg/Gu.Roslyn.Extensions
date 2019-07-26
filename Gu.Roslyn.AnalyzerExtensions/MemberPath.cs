@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper fow working with member paths like C.Bar?.Baz.
+    /// Helper fow working with member paths like C.P1?.P2.
     /// </summary>
     public static class MemberPath
     {
@@ -75,7 +75,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         //// ReSharper restore UnusedParameter.Global
 
         /// <summary>
-        /// Tries to find C in this.C.Bar.Baz.
+        /// Tries to find C in this.C.P1.P2.
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="member">The root member.</param>
@@ -89,7 +89,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Tries to find Baz in this.C.Bar.Baz.
+        /// Tries to find Baz in this.C.P1.P2.
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="member">The leaf member.</param>

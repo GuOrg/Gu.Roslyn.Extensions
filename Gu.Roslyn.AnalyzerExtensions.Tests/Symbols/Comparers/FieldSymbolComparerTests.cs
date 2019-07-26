@@ -17,15 +17,15 @@ namespace N
 {
     public class C
     {
-        private int bar1;
-        private int bar2;
+        private int f1;
+        private int f2;
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindFieldDeclaration("bar1");
+            var node1 = syntaxTree.FindFieldDeclaration("f1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
-            var node2 = syntaxTree.FindFieldDeclaration("bar2");
+            var node2 = syntaxTree.FindFieldDeclaration("f2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2.Declaration.Variables[0], CancellationToken.None);
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(false, SymbolComparer.Equals(symbol1, symbol2));
@@ -42,24 +42,24 @@ namespace N
                 @"
 namespace N
 {
-    public class C
+    public class C1
     {
-        protected int Bar;
+        protected int F;
     }
 
-    public class Bar : C
+    public class C2 : C1
     {
-        public Bar()
+        public C2()
         {
-            var temp = this.Bar;
+            var temp = this.F;
         }
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindFieldDeclaration("Bar");
+            var node1 = syntaxTree.FindFieldDeclaration("F");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
-            var node2 = syntaxTree.FindMemberAccessExpression("this.Bar");
+            var node2 = syntaxTree.FindMemberAccessExpression("this.F");
             var symbol2 = semanticModel.GetSymbolInfo(node2, CancellationToken.None).Symbol;
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol2));

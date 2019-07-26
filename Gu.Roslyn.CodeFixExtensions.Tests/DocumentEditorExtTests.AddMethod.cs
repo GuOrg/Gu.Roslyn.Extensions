@@ -35,23 +35,23 @@ namespace N
 
         public int Prop1 { get; set; }
 
-        public void Bar1()
+        public void M1()
         {
         }
 
-        internal void Bar2()
+        internal void M2()
         {
         }
 
-        protected void Bar3()
+        protected void M3()
         {
         }
 
-        private static void Bar4()
+        private static void M4()
         {
         }
 
-        private void Bar5()
+        private void M5()
         {
         }
     }
@@ -84,23 +84,23 @@ namespace N
 
         public int Prop1 { get; set; }
 
-        public void Bar1()
+        public void M1()
         {
         }
 
-        internal void Bar2()
+        internal void M2()
         {
         }
 
-        protected void Bar3()
+        protected void M3()
         {
         }
 
-        private static void Bar4()
+        private static void M4()
         {
         }
 
-        private void Bar5()
+        private void M5()
         {
         }
 
@@ -132,23 +132,23 @@ namespace N
 
         public int Prop1 { get; set; }
 
-        public void Bar1()
+        public void M1()
         {
         }
 
-        internal void Bar2()
+        internal void M2()
         {
         }
 
-        protected void Bar3()
+        protected void M3()
         {
         }
 
-        private static void Bar4()
+        private static void M4()
         {
         }
 
-        private void Bar5()
+        private void M5()
         {
         }
     }
@@ -181,25 +181,25 @@ namespace N
 
         public int Prop1 { get; set; }
 
-        public void Bar1()
+        public void M1()
         {
         }
 
         public int NewMethod() => 1;
 
-        internal void Bar2()
+        internal void M2()
         {
         }
 
-        protected void Bar3()
+        protected void M3()
         {
         }
 
-        private static void Bar4()
+        private static void M4()
         {
         }
 
-        private void Bar5()
+        private void M5()
         {
         }
     }

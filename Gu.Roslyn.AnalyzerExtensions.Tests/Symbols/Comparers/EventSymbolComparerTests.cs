@@ -19,15 +19,15 @@ namespace N
 
     public class C
     {
-        public event EventHandler Bar1;
-        public event EventHandler Bar2;
+        public event EventHandler E1;
+        public event EventHandler E2;
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindEventFieldDeclaration("Bar1");
+            var node1 = syntaxTree.FindEventFieldDeclaration("E1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
-            var node2 = syntaxTree.FindEventFieldDeclaration("Bar2");
+            var node2 = syntaxTree.FindEventFieldDeclaration("E2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2.Declaration.Variables[0], CancellationToken.None);
             Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
             Assert.AreEqual(false, SymbolComparer.Equals(symbol1, symbol2));
