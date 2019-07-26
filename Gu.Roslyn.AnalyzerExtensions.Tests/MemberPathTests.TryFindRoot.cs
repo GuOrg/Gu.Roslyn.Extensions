@@ -38,7 +38,7 @@ namespace N
 
         public C Inner => this.C;
 
-        public void Bar()
+        public void M()
         {
             var temp = C.Inner;
         }
@@ -127,7 +127,7 @@ namespace N
             this.Inner = inner;
         }
 
-        public static object Bar(C C) => C.Inner;
+        public static object M(C C) => C.Inner;
 
         public C Inner { get; }
     }

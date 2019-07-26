@@ -21,7 +21,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             Assert.AreEqual(expected, text.IsParts(part1, part2));
         }
 
-        [TestCase("<summary>Identifies the <see cref=\"Bar\"/> dependency property.</summary>", "<summary>Identifies the <see cref=\"", "Bar", "\"/> dependency property.</summary>", true)]
+        [TestCase("<summary>Identifies the <see cref=\"P\"/> dependency property.</summary>", "<summary>Identifies the <see cref=\"", "P", "\"/> dependency property.</summary>", true)]
         public void IsThreeParts(string text, string part1, string part2, string part3, bool expected)
         {
             Assert.AreEqual(expected, text.IsParts(part1, part2, part3));

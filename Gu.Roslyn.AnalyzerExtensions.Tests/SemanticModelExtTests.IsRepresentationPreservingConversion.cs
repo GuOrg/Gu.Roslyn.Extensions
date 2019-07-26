@@ -21,18 +21,18 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
             [TestCase("Cast<object>(1)")]
             [TestCase("Cast<System.StringComparison>(System.StringComparison.CurrentCulture)")]
             [TestCase("Cast<System.StringComparison>((object)System.StringComparison.CurrentCulture)")]
-            [TestCase("Cast<CEnum>(CEnum.Bar)")]
+            [TestCase("Cast<E>(E.M1)")]
             [TestCase("Cast<object>(new object())")]
             [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")")]
             public void TrueWhen(string call)
             {
-                var enumCode = @"
+                var e = @"
 namespace N
 {
-    public enum CEnum
+    public enum E
     {
-        Bar,
-        Baz,
+        M1,
+        M2,
     }
 }";
                 var code = @"
@@ -50,7 +50,7 @@ namespace N
 }";
                 code = code.AssertReplace("Cast<int>(1)", call);
                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, CSharpSyntaxTree.ParseText(enumCode) }, MetadataReferences.FromAttributes());
+                var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, CSharpSyntaxTree.ParseText(e) }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var invocation = syntaxTree.FindInvocation(call);
                 var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
