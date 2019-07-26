@@ -54,19 +54,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
         public static bool IsSymbol(this IdentifierNameSyntax candidate, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (candidate?.Identifier.ValueText == symbol.Name &&
-                semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol candidateSymbol))
-            {
-                switch (symbol.Kind)
-                {
-                    case SymbolKind.Parameter:
-                        return candidateSymbol.OriginalDefinition.Equals(symbol.OriginalDefinition);
-                    default:
-                        return candidateSymbol.OriginalDefinition.Equals(symbol.OriginalDefinition);
-                }
-            }
-
-            return false;
+            return candidate?.Identifier.ValueText == symbol.Name &&
+                   semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol candidateSymbol) &&
+                   candidateSymbol.IsEquivalentTo(symbol);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace N
         [TestCase("text")]
         [TestCase("number")]
         [TestCase("M")]
-        public void IsSymbolExtensionMethod(string identifier)
+        public void IsSymbolExtensionMethod1(string identifier)
         {
             var testCode = @"
 namespace N
@@ -71,6 +71,28 @@ namespace N
 
             var identifierName = (IdentifierNameSyntax)syntaxTree.FindExpression(identifier);
             Assert.AreEqual(true, semanticModel.TryGetSymbol(identifierName, CancellationToken.None, out var symbol));
+            Assert.AreEqual(true, identifierName.IsSymbol(symbol, semanticModel, CancellationToken.None));
+        }
+
+        [Test]
+        public void IsSymbolExtensionMethod2()
+        {
+            var testCode = @"
+namespace N
+{
+    public static class C
+    {
+        public static object M(this string text, int number) => text.Length + number;
+
+        public static object P => string.Empty.M(1);
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindMethodDeclaration("M"), CancellationToken.None, out var symbol));
+            var identifierName = (IdentifierNameSyntax)syntaxTree.FindExpression("M");
             Assert.AreEqual(true, identifierName.IsSymbol(symbol, semanticModel, CancellationToken.None));
         }
 

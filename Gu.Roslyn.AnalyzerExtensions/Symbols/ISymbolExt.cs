@@ -69,7 +69,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool IsEquivalentTo(this ISymbol x, ISymbol y)
         {
             if (x == null ||
-                y == null)
+                y == null ||
+                x.Name != y.Name ||
+                x.Kind != y.Kind)
             {
                 return false;
             }
@@ -87,12 +89,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             switch (y)
             {
+                case IParameterSymbol _:
+                    return IsEquivalentTo(x.ContainingSymbol, y.ContainingSymbol);
                 case IPropertySymbol property when property.OverriddenProperty is IPropertySymbol overridden:
                     return IsEquivalentTo(x, overridden);
                 case IEventSymbol eventSymbol when eventSymbol.OverriddenEvent is IEventSymbol overridden:
                     return IsEquivalentTo(x, overridden);
                 case IMethodSymbol methodSymbol when methodSymbol.OverriddenMethod is IMethodSymbol overridden:
                     return IsEquivalentTo(x, overridden);
+                case IMethodSymbol ym when x is IMethodSymbol xm && xm.IsExtensionMethod && ym.IsExtensionMethod:
+                    return xm.ReducedFrom?.Equals(ym) == true ||
+                           xm.Equals(ym.ReducedFrom);
             }
 
             return false;
