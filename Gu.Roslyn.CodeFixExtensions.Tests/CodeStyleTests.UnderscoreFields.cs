@@ -151,7 +151,7 @@ namespace N
     class C
     {
         int value;
-        public int P()  => value = 1;
+        public int M() => value = 1;
     }
 }");
 
@@ -170,7 +170,7 @@ namespace N
     {
         public int Value { get; private set; }
 
-        public int P()  => this.Value = 1;
+        public int M() => this.Value = 1;
     }
 }");
 
@@ -182,25 +182,25 @@ namespace N
             [Test]
             public void FiguresOutFromOtherClass()
             {
-                var CCode = CSharpSyntaxTree.ParseText(@"
+                var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    class C
+    class C1
     {
         private int _f;
 
-        public int P()  => _f = 1;
+        public int M() => _f = 1;
     }
 }");
 
-                var barCode = CSharpSyntaxTree.ParseText(@"
+                var c2 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    class P
+    class C2
     {
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] { CCode, barCode }, MetadataReferences.FromAttributes());
+                var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, MetadataReferences.FromAttributes());
                 Assert.AreEqual(2, compilation.SyntaxTrees.Length);
                 foreach (var tree in compilation.SyntaxTrees)
                 {
@@ -212,26 +212,26 @@ namespace N
             [Test]
             public void ChecksContainingClassFirst()
             {
-                var CCode = CSharpSyntaxTree.ParseText(@"
+                var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    class C
+    class C1
     {
         private int _f;
 
-        public int P()  => _f = 1;
+        public int M() => _f = 1;
     }
 }");
 
-                var barCode = CSharpSyntaxTree.ParseText(@"
+                var c2 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    class P
+    class C1
     {
         private int value;
     }
 }");
-                var compilation = CSharpCompilation.Create("test", new[] { CCode, barCode }, MetadataReferences.FromAttributes());
+                var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[0]);
                 Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
 

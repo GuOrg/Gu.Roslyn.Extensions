@@ -7,7 +7,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 
     public partial class ArgumentListSyntaxExtTest
     {
-
         public class TryFindArgument
         {
             [TestCase(0, "1")]

@@ -130,10 +130,10 @@ namespace N
 
         private static IEnumerable<TestCaseData> CreateTestCases()
         {
-            var C = SyntaxTree.FindClassDeclaration("C");
-            foreach (var member1 in C.Members)
+            var c = SyntaxTree.FindClassDeclaration("C");
+            foreach (var member1 in c.Members)
             {
-                foreach (var member2 in C.Members)
+                foreach (var member2 in c.Members)
                 {
                     if (member1.SpanStart < member2.SpanStart)
                     {
