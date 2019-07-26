@@ -321,7 +321,7 @@ namespace N
 {
     internal class C
     {
-        internal void Bar(bool condition)
+        internal void M(bool condition)
         {
             var temp = 1;
             if (condition)
@@ -360,7 +360,7 @@ namespace N
 {
     internal class C
     {
-        internal void Bar(bool condition)
+        internal void M(bool condition)
         {
             var temp = 1;
             meh:
@@ -402,7 +402,7 @@ namespace N
 	
     internal class C
     {
-        internal void Bar(bool condition)
+        internal void M(bool condition)
         {
             var temp = 1;
             if (condition)
@@ -441,7 +441,7 @@ namespace N
 	
     internal class C
     {
-        internal void Bar(bool condition)
+        internal void M(bool condition)
         {
             var temp = 1;
             meh:

@@ -16,7 +16,7 @@ namespace N
 {
     internal class C
     {
-        internal object Bar()
+        internal object M()
         {
         }
     }
@@ -24,7 +24,7 @@ namespace N
             var compilation =
                 CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindMethodDeclaration("Bar");
+            var node = syntaxTree.FindMethodDeclaration("M");
             var typeSymbol = semanticModel.GetDeclaredSymbol(node).ReturnType;
             Assert.AreEqual(true, typeSymbol == new QualifiedType("System.Object"));
             Assert.AreEqual(true, typeSymbol == QualifiedType.System.Object);
@@ -54,12 +54,12 @@ namespace N
 
     internal class C
     {
-        internal object Bar() { }
+        internal object M() { }
         internal string Other() { }
     }
 }".AssertReplace("object", typeText)
   .AssertReplace("string", otherTypeText));
-            var typeSyntax = syntaxTree.FindMethodDeclaration("Bar").ReturnType;
+            var typeSyntax = syntaxTree.FindMethodDeclaration("M").ReturnType;
             var qualifiedType = QualifiedType.FromType(type);
             Assert.AreEqual(true, typeSyntax == qualifiedType);
             Assert.AreEqual(false, typeSyntax != qualifiedType);

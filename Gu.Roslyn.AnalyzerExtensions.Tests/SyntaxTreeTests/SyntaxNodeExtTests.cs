@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     {
         [TestCase("1", true)]
         [TestCase("2", false)]
-        [TestCase("Bar", false)]
+        [TestCase("M", false)]
         public void IsInExpressionTree(string text, bool expected)
         {
             var testCode = @"
@@ -21,8 +21,8 @@ namespace N
 
     public class C
     {
-        public Expression<Func<int>> Bar() => () => 1;
-        public Func<int> Bar() => () => 2;
+        public Expression<Func<int>> M() => () => 1;
+        public Func<int> M() => () => 2;
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(testCode);

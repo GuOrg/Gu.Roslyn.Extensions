@@ -65,50 +65,50 @@ namespace N
                 Assert.AreEqual(expected, MemberPath.Equals(getExpression, setExpression));
             }
 
-            [TestCase("get => this.bar1.Value1;", "set => this.bar1.Value1 = value;", true)]
-            [TestCase("get => this.bar1.Value1;", "set => bar1.Value1 = value;", true)]
-            [TestCase("get => bar1.Value1;", "set => this.bar1.Value1 = value;", true)]
-            [TestCase("get => bar1.Value1;", "set => bar1.Value1 = value;", true)]
-            [TestCase("get => this.bar1?.Value1;", "set => this.bar1.Value1 = value;", true)]
-            [TestCase("get => this.bar1.Value1;", "set => bar1?.Value1 = value;", true)]
-            [TestCase("get => bar1?.Value1;", "set => this.bar1?.Value1 = value;", true)]
-            [TestCase("get => bar1?.Bar?.Value1;", "set => this.bar1.Bar.Value1 = value;", true)]
-            [TestCase("get => this.bar1.Value1;", "set => this.bar2.Value1 = value;", false)]
-            [TestCase("get => this.bar1.Value1;", "set => bar2.Value1 = value;", false)]
-            [TestCase("get => bar1.Value1;", "set => this.bar2.Value1 = value;", false)]
-            [TestCase("get => bar1.Value1;", "set => bar2.Value1 = value;", false)]
-            [TestCase("get => this.bar1.Value1;", "set => this.bar1 = value;", false)]
-            [TestCase("get => this.bar1.Value1;", "set => this.bar2 = value;", false)]
-            [TestCase("get => this.bar1.Value1;", "set => bar1 = value;", false)]
-            [TestCase("get => this.bar1.Value1;", "set => bar2 = value;", false)]
-            [TestCase("get => bar1.Value1;", "set => this.bar1 = value;", false)]
-            [TestCase("get => bar1.Value1;", "set => this.bar2 = value;", false)]
+            [TestCase("get => this.f1.Value1;", "set => this.f1.Value1 = value;", true)]
+            [TestCase("get => this.f1.Value1;", "set => f1.Value1 = value;", true)]
+            [TestCase("get => f1.Value1;", "set => this.f1.Value1 = value;", true)]
+            [TestCase("get => f1.Value1;", "set => f1.Value1 = value;", true)]
+            [TestCase("get => this.f1?.Value1;", "set => this.f1.Value1 = value;", true)]
+            [TestCase("get => this.f1.Value1;", "set => f1?.Value1 = value;", true)]
+            [TestCase("get => f1?.Value1;", "set => this.f1?.Value1 = value;", true)]
+            [TestCase("get => f1?.P?.Value1;", "set => this.f1.P.Value1 = value;", true)]
+            [TestCase("get => this.f1.Value1;", "set => this.f2.Value1 = value;", false)]
+            [TestCase("get => this.f1.Value1;", "set => f2.Value1 = value;", false)]
+            [TestCase("get => f1.Value1;", "set => this.f2.Value1 = value;", false)]
+            [TestCase("get => f1.Value1;", "set => f2.Value1 = value;", false)]
+            [TestCase("get => this.f1.Value1;", "set => this.f1 = value;", false)]
+            [TestCase("get => this.f1.Value1;", "set => this.f2 = value;", false)]
+            [TestCase("get => this.f1.Value1;", "set => f1 = value;", false)]
+            [TestCase("get => this.f1.Value1;", "set => f2 = value;", false)]
+            [TestCase("get => f1.Value1;", "set => this.f1 = value;", false)]
+            [TestCase("get => f1.Value1;", "set => this.f2 = value;", false)]
             public void Nested(string getter, string setter, bool expected)
             {
                 var testCode = @"
 namespace N
 {
-    public class Bar
+    public class C1
     {
         public int Value1;
         public int Value2;
-        public Bar Bar;
+        public C1 P;
     }
 
-    public class C
+    public class C2
     {
-        private Bar bar1 = new Bar();
-        private Bar bar2 = new Bar();
+        private C1 f1 = new C1();
+        private C1 f2 = new C1();
 
         public int Value
         {
-            get => this.bar1.Value1;
-            set => this.bar2.Value1 = value;
+            get => this.f1.Value1;
+            set => this.f2.Value1 = value;
         }
     }
 }";
-                testCode = testCode.AssertReplace("get => this.bar1.Value1;", getter)
-                                   .AssertReplace("set => this.bar2.Value1 = value;", setter);
+                testCode = testCode.AssertReplace("get => this.f1.Value1;", getter)
+                                   .AssertReplace("set => this.f2.Value1 = value;", setter);
                 var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
                 var getExpression = syntaxTree.FindAccessorDeclaration(getter).ExpressionBody.Expression;
                 var setExpression = ((AssignmentExpressionSyntax)syntaxTree.FindAccessorDeclaration(setter).ExpressionBody.Expression).Left;

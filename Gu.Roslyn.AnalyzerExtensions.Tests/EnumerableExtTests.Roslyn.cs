@@ -19,7 +19,7 @@ namespace N
         {
         }
 
-        internal void Bar()
+        internal void M()
         {
         }
     }
@@ -42,7 +42,7 @@ namespace N
 
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryFirst(x => x.Identifier.ValueText == "missing", out parameter));
 
-            var barDeclaration = syntaxTree.FindMethodDeclaration("Bar");
+            var barDeclaration = syntaxTree.FindMethodDeclaration("M");
             Assert.AreEqual(false, barDeclaration.ParameterList.Parameters.TryFirst(out parameter));
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryFirst(x => x.Identifier.ValueText == "missing", out parameter));
         }
@@ -59,7 +59,7 @@ namespace N
         {
         }
 
-        internal void Bar()
+        internal void M()
         {
         }
     }
@@ -85,7 +85,7 @@ namespace N
 
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryLast(x => x.Identifier.ValueText == "missing", out parameter));
 
-            var barDeclaration = syntaxTree.FindMethodDeclaration("Bar");
+            var barDeclaration = syntaxTree.FindMethodDeclaration("M");
             Assert.AreEqual(false, barDeclaration.ParameterList.Parameters.TryFirst(out parameter));
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TryLast(x => x.Identifier.ValueText == "missing", out parameter));
         }
@@ -102,7 +102,7 @@ namespace N
         {
         }
 
-        internal void Bar()
+        internal void M()
         {
         }
 
@@ -128,7 +128,7 @@ namespace N
 
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "missing", out parameter));
 
-            var barDeclaration = syntaxTree.FindMethodDeclaration("Bar");
+            var barDeclaration = syntaxTree.FindMethodDeclaration("M");
             Assert.AreEqual(false, barDeclaration.ParameterList.Parameters.TrySingle(out parameter));
             Assert.AreEqual(false, ctor.ParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == "missing", out parameter));
 
@@ -148,21 +148,21 @@ namespace N
 {
     internal class C
     {
-        internal int Bar() => 1;
+        internal int M() => 1;
 
-        internal int Bar(int i) => i;
+        internal int M(int i) => i;
     }
 }");
             var type = syntaxTree.FindClassDeclaration("C");
             Assert.AreEqual(false, type.Members.TrySingle(out var member));
 
-            Assert.AreEqual(false, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.Identifier.ValueText == "Bar", out member));
+            Assert.AreEqual(false, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.Identifier.ValueText == "M", out member));
 
             Assert.AreEqual(true, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.ParameterList.Parameters.Count == 0, out member));
-            Assert.AreEqual("internal int Bar() => 1;", member.ToString());
+            Assert.AreEqual("internal int M() => 1;", member.ToString());
 
             Assert.AreEqual(true, type.Members.TrySingle(x => x is MethodDeclarationSyntax methodDeclaration && methodDeclaration.ParameterList.Parameters.Count == 1, out member));
-            Assert.AreEqual("internal int Bar(int i) => i;", member.ToString());
+            Assert.AreEqual("internal int M(int i) => i;", member.ToString());
         }
 
         [TestCase(0, "int i")]

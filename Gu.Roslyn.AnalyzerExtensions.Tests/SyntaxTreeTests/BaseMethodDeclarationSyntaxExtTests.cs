@@ -21,7 +21,7 @@ namespace N
     {
         internal class C
         {
-            public void Bar()
+            public void M()
             {
                 Meh(1, 2, 3);
             }
@@ -53,7 +53,7 @@ namespace N
     {
         internal class C
         {
-            public void Bar()
+            public void M()
             {
                 Meh(v1: 1, v2: 2, v3: 3);
             }
@@ -85,7 +85,7 @@ namespace N
     {
         internal class C
         {
-            public void Bar()
+            public void M()
             {
                 Meh(v2: 2, v1: 1, v3: 3);
             }
@@ -117,7 +117,7 @@ namespace N
     {
         internal class C
         {
-            public void Bar()
+            public void M()
             {
                 Meh(1, 2, 3);
             }

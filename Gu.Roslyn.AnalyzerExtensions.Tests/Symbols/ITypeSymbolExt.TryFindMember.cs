@@ -48,24 +48,24 @@ namespace N
 
     internal class C
     {
-        public event EventHandler Bar;
+        public event EventHandler E;
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var typeSymbol = semanticModel.GetDeclaredSymbol(typeDeclaration);
-            Assert.AreEqual(true, typeSymbol.TryFindEvent("Bar", out var field));
-            Assert.AreEqual("Bar", field.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindEvent("E", out var field));
+            Assert.AreEqual("E", field.Name);
 
-            Assert.AreEqual(true, typeSymbol.TryFindEventRecursive("Bar", out field));
-            Assert.AreEqual("Bar", field.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindEventRecursive("E", out field));
+            Assert.AreEqual("E", field.Name);
 
-            Assert.AreEqual(true, typeSymbol.TryFindFirstMember("Bar", out var member));
-            Assert.AreEqual("Bar", member.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindFirstMember("E", out var member));
+            Assert.AreEqual("E", member.Name);
 
-            Assert.AreEqual(true, typeSymbol.TryFindFirstMemberRecursive("Bar", out member));
-            Assert.AreEqual("Bar", member.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindFirstMemberRecursive("E", out member));
+            Assert.AreEqual("E", member.Name);
 
             Assert.AreEqual(false, typeSymbol.TryFindEvent("missing", out _));
             Assert.AreEqual(false, typeSymbol.TryFindEvent("missing", out _));
@@ -82,24 +82,24 @@ namespace N
 {
     public class C
     {
-        public int Bar { get; set; }
+        public int P { get; set; }
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var typeSymbol = semanticModel.GetDeclaredSymbol(typeDeclaration);
-            Assert.AreEqual(true, typeSymbol.TryFindProperty("Bar", out var property));
-            Assert.AreEqual("Bar", property.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindProperty("P", out var property));
+            Assert.AreEqual("P", property.Name);
 
-            Assert.AreEqual(true, typeSymbol.TryFindPropertyRecursive("Bar", out property));
-            Assert.AreEqual("Bar", property.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindPropertyRecursive("P", out property));
+            Assert.AreEqual("P", property.Name);
 
-            Assert.AreEqual(true, typeSymbol.TryFindFirstMember("Bar", out var member));
-            Assert.AreEqual("Bar", member.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindFirstMember("P", out var member));
+            Assert.AreEqual("P", member.Name);
 
-            Assert.AreEqual(true, typeSymbol.TryFindFirstMemberRecursive("Bar", out member));
-            Assert.AreEqual("Bar", member.Name);
+            Assert.AreEqual(true, typeSymbol.TryFindFirstMemberRecursive("P", out member));
+            Assert.AreEqual("P", member.Name);
 
             Assert.AreEqual(false, typeSymbol.TryFindProperty("missing", out _));
             Assert.AreEqual(false, typeSymbol.TryFindProperty("missing", out _));

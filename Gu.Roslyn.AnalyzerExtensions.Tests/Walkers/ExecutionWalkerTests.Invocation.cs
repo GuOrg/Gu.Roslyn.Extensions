@@ -82,16 +82,16 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public static class Bar
+    public static class C1
     {
         public static int Value() => 1;
     }
 
-    public class C
+    public class C2
     {
-        public C()
+        public C2()
         {
-            Equals(Bar.Value(), 2);
+            Equals(C1.Value(), 2);
             int j = 3;
         }
     }
@@ -145,17 +145,17 @@ namespace N
 {
     public class CBase
     {
-        protected virtual int Bar() => 2;
+        protected virtual int M() => 2;
     }
 
     public sealed class C : CBase
     {
-        protected override int Bar() => 1 * base.Bar();
+        protected override int M() => 1 * base.M();
     }
 }");
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindMethodDeclaration("protected override int Bar()");
+                var node = syntaxTree.FindMethodDeclaration("protected override int M()");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));

@@ -79,16 +79,16 @@ namespace N
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public static class Bar
+    public static class C1
     {
         public static int Value => 1;
     }
 
-    public class C
+    public class C2
     {
-        public C()
+        public C2()
         {
-            Equals(Bar.Value, 2);
+            Equals(C1.Value, 2);
             int j = 3;
         }
     }
@@ -280,12 +280,12 @@ namespace N
 
         public int Value2 => 2;
 
-        public bool Bar() => Value1 > Value2;
+        public bool M() => Value1 > Value2;
     }
 }".AssertReplace("Value1 > Value2", expression));
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindMethodDeclaration("Bar");
+                var node = syntaxTree.FindMethodDeclaration("M");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -311,12 +311,12 @@ namespace N
 
         public object Value2 => 2;
 
-        public object Bar() => Value1 ?? Value2;
+        public object M() => Value1 ?? Value2;
     }
 }".AssertReplace("Value1 ?? Value2", expression));
                 var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var node = syntaxTree.FindMethodDeclaration("Bar");
+                var node = syntaxTree.FindMethodDeclaration("M");
                 using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
                 {
                     Assert.AreEqual(expected, string.Join(", ", walker.Literals));

@@ -15,12 +15,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class C
+    public class C1
     {
-        private Bar bar1;
-        private Bar bar2;
+        private C bar1;
+        private C bar2;
 
-        public Bar Bar1
+        public C2 P1
         {
             get
             {
@@ -36,7 +36,7 @@ namespace N
 
                 if (value != null && this.bar2 != null)
                 {
-                    this.Bar2 = null;
+                    this.P2 = null;
                 }
 
                 if (this.bar1 != null)
@@ -52,7 +52,7 @@ namespace N
             }
         }
 
-        public Bar Bar2
+        public C2 P2
         {
             get
             {
@@ -68,7 +68,7 @@ namespace N
 
                 if (value != null && this.bar1 != null)
                 {
-                    this.Bar1 = null;
+                    this.P1 = null;
                 }
 
                 if (this.bar2 != null)
@@ -85,18 +85,18 @@ namespace N
         }
     }
 
-    public class Bar
+    public class C2
     {
         public bool Selected { get; set; }
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var setter = syntaxTree.FindPropertyDeclaration("Bar2").Find<AccessorDeclarationSyntax>("set");
+            var setter = syntaxTree.FindPropertyDeclaration("P2").Find<AccessorDeclarationSyntax>("set");
             using (var assignedValues = AssignmentExecutionWalker.Borrow(setter, Scope.Recursive, semanticModel, CancellationToken.None))
             {
                 var actual = string.Join(", ", assignedValues.Assignments);
-                var expected = "this.Bar2 = null, this.Bar1 = null, this.Bar2 = null, this.bar1.Selected = false, this.bar1 = value, this.bar1.Selected = true, this.bar2.Selected = false, this.bar2 = value, this.bar2.Selected = true, this.bar1.Selected = false, this.bar1 = value, this.bar1.Selected = true";
+                var expected = "this.P2 = null, this.P1 = null, this.P2 = null, this.bar1.Selected = false, this.bar1 = value, this.bar1.Selected = true, this.bar2.Selected = false, this.bar2 = value, this.bar2.Selected = true, this.bar1.Selected = false, this.bar1 = value, this.bar1.Selected = true";
                 Assert.AreEqual(expected, actual);
             }
         }

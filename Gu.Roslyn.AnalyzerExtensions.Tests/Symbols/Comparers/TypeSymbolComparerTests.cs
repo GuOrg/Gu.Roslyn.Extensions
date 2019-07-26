@@ -48,15 +48,15 @@ namespace N
 {
     public class C<T>
     {
-        public T Bar1 { get; }
-        public T Bar2 { get; }
+        public T P1 { get; }
+        public T P2 { get; }
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindPropertyDeclaration("Bar1");
+            var node1 = syntaxTree.FindPropertyDeclaration("P1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1, CancellationToken.None).Type;
-            var node2 = syntaxTree.FindPropertyDeclaration("Bar2");
+            var node2 = syntaxTree.FindPropertyDeclaration("P2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2, CancellationToken.None).Type;
             Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
             Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
@@ -75,16 +75,16 @@ namespace N
 {
     public class C<T>
     {
-        public int Bar1(T x) => 1;
+        public int M1(T x) => 1;
 
-        public int Bar2(T x) => 2;
+        public int M2(T x) => 2;
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node1 = syntaxTree.FindMethodDeclaration("Bar1");
+            var node1 = syntaxTree.FindMethodDeclaration("M1");
             var symbol1 = semanticModel.GetDeclaredSymbol(node1, CancellationToken.None).Parameters[0].Type;
-            var node2 = syntaxTree.FindMethodDeclaration("Bar2");
+            var node2 = syntaxTree.FindMethodDeclaration("M2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2, CancellationToken.None).Parameters[0].Type;
             Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
             Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));

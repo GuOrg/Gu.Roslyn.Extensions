@@ -16,8 +16,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         [TestCase("nameof(N.C)", "C")]
         [TestCase("nameof(C<int>)", "C")]
         [TestCase("nameof(NestedC<int>)", "NestedC")]
-        [TestCase("nameof(Bar)", "Bar")]
-        [TestCase("nameof(this.Bar)", "Bar")]
+        [TestCase("nameof(M)", "M")]
+        [TestCase("nameof(this.M)", "M")]
         [TestCase("(string)null", null)]
         public void TryGetStringValue(string code, string expected)
         {
@@ -32,10 +32,10 @@ namespace N
 
         public C()
         {
-            Bar(""text"");
+            M(""text"");
         }
 
-        private void Bar(string arg) { }
+        private void M(string arg) { }
 
         public class NestedC<T> { }
     }
@@ -63,10 +63,10 @@ namespace N
     {
         public C()
         {
-            Bar(typeof(int));
+            M(typeof(int));
         }
 
-        private void Bar(Type arg)
+        private void M(Type arg)
         {
         }
     }

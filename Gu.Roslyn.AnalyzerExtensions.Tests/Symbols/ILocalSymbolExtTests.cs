@@ -40,7 +40,7 @@ namespace N
 {
     class C
     {
-        public void Bar()
+        public void M()
         {
             var i = 0;
         }
@@ -52,7 +52,7 @@ namespace N
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
             Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out ILocalSymbol symbol));
             Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
-            CodeAssert.AreEqual("public void Bar()\r\n        {\r\n            var i = 0;\r\n        }", scope.ToString());
+            CodeAssert.AreEqual("public void M()\r\n        {\r\n            var i = 0;\r\n        }", scope.ToString());
         }
 
         [Test]
@@ -63,9 +63,9 @@ namespace N
 {
     class C
     {
-        public void Bar()
+        public void M()
         {
-            void BarCore()
+            void MCore()
             {
                 var i = 0;
             }
@@ -78,7 +78,7 @@ namespace N
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
             Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out ILocalSymbol symbol));
             Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
-            CodeAssert.AreEqual("void BarCore()\r\n            {\r\n                var i = 0;\r\n            }", scope.ToString());
+            CodeAssert.AreEqual("void MCore()\r\n            {\r\n                var i = 0;\r\n            }", scope.ToString());
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace N
 
     class C
     {
-        public void Bar()
+        public void M()
         {
             Console.CancelKeyPress += (sender, args) =>
             {

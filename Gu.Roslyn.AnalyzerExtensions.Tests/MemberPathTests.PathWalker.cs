@@ -41,7 +41,7 @@ namespace N
 
         public C Inner => this.C;
 
-        public void Bar()
+        public void M()
         {
             var temp = C.Inner;
         }

@@ -16,15 +16,15 @@ namespace N
 {
     internal class C
     {
-        internal object Bar()
+        internal object M()
         {
         }
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindMethodDeclaration("Bar"));
-            var qualifiedMethod = new QualifiedOverload(new QualifiedType("N.C"), "Bar", ImmutableArray<QualifiedParameter>.Empty);
+            var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindMethodDeclaration("M"));
+            var qualifiedMethod = new QualifiedOverload(new QualifiedType("N.C"), "M", ImmutableArray<QualifiedParameter>.Empty);
             Assert.AreEqual(true,  symbol == qualifiedMethod);
             Assert.AreEqual(false, symbol != qualifiedMethod);
         }
