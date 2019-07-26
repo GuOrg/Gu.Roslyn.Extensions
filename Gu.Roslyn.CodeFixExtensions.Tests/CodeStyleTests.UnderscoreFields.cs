@@ -20,7 +20,7 @@ namespace N
         {
         }
 
-        internal void P()
+        internal void M()
         {
         }
     }
