@@ -222,8 +222,8 @@ namespace N
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 var invocation = syntaxTree.FindInvocation("M(1, 2, 3)");
                 var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-                Assert.AreEqual(false,                invocation.TryFindArgument(method.Parameters[0], out var argument));
-                Assert.AreEqual(false,                invocation.ArgumentList.TryFind(method.Parameters[0], out argument));
+                Assert.AreEqual(false,                invocation.TryFindArgument(method.Parameters[0], out _));
+                Assert.AreEqual(false,                invocation.ArgumentList.TryFind(method.Parameters[0], out _));
             }
         }
     }

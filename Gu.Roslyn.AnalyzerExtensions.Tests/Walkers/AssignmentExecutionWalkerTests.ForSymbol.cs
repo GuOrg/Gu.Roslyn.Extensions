@@ -90,7 +90,7 @@ namespace RoslynSandbox
                 }
                 else
                 {
-                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out _));
                 }
             }
 
@@ -172,7 +172,7 @@ namespace RoslynSandbox
                 }
                 else
                 {
-                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out _));
                 }
             }
 
@@ -217,7 +217,7 @@ namespace RoslynSandbox
                 }
                 else
                 {
-                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
+                    Assert.AreEqual(false, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out _));
                 }
             }
         }
