@@ -165,6 +165,26 @@ namespace Gu.Roslyn.CodeFixExtensions
             return editor;
         }
 
+        /// <summary>
+        /// Add the field and respect StyleCop ordering.
+        /// </summary>
+        /// <param name="generator">The <see cref="SyntaxGenerator"/>.</param>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
+        public static TypeDeclarationSyntax AddSorted(this SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member)
+        {
+            foreach (var existing in containingType.Members)
+            {
+                if (MemberDeclarationComparer.Compare(member, existing) < 0)
+                {
+                    return (TypeDeclarationSyntax)generator.InsertNodesBefore(containingType, existing, new[] { member });
+                }
+            }
+
+            return (TypeDeclarationSyntax)generator.AddMembers(containingType, member);
+        }
+
         private static TypeDeclarationSyntax AddBackingField(this DocumentEditor editor, TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, string propertyName)
         {
             if (type.TryFindProperty(propertyName, out var property))
@@ -213,19 +233,6 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             return AddSorted(editor.Generator, type, backingField);
-        }
-
-        private static TypeDeclarationSyntax AddSorted(SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax memberDeclaration)
-        {
-            foreach (var member in containingType.Members)
-            {
-                if (MemberDeclarationComparer.Compare(memberDeclaration, member) < 0)
-                {
-                    return (TypeDeclarationSyntax)generator.InsertNodesBefore(containingType, member, new[] { memberDeclaration });
-                }
-            }
-
-            return (TypeDeclarationSyntax)generator.AddMembers(containingType, memberDeclaration);
         }
     }
 }
