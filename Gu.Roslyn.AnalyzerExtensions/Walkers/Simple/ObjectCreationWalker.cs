@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// A collection with the <see cref="ObjectCreationExpressionSyntax"/> found when walking.
+        /// Gets a collection with the <see cref="ObjectCreationExpressionSyntax"/> found when walking.
         /// </summary>
         public IReadOnlyList<ObjectCreationExpressionSyntax> ObjectCreations => this.objectCreations;
 
@@ -34,6 +34,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             base.VisitObjectCreationExpression(node);
         }
 
+        /// <inheritdoc/>
         protected override void Clear()
         {
             this.objectCreations.Clear();

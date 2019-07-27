@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// A collection with the <see cref="InvocationExpressionSyntax"/> found when walking.
+        /// Gets a collection with the <see cref="InvocationExpressionSyntax"/> found when walking.
         /// </summary>
         public IReadOnlyList<InvocationExpressionSyntax> Invocations => this.invocations;
 

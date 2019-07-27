@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// A collection with the <see cref="LiteralExpressionSyntax"/> found when walking.
+        /// Gets a collection with the <see cref="LiteralExpressionSyntax"/> found when walking.
         /// </summary>
         public IReadOnlyList<LiteralExpressionSyntax> Literals => this.literals;
 

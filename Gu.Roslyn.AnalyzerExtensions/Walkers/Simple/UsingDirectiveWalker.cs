@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
 
         /// <summary>
-        /// A collection with the <see cref="InvocationExpressionSyntax"/> found when walking.
+        /// Gets a collection with the <see cref="InvocationExpressionSyntax"/> found when walking.
         /// </summary>
         public IReadOnlyList<UsingDirectiveSyntax> UsingDirectives => this.usingDirectives;
 
@@ -56,6 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             // Stop walking here
         }
 
+        /// <inheritdoc/>
         public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
         {
             // Stop walking here
