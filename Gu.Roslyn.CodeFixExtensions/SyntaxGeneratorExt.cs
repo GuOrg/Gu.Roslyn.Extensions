@@ -32,6 +32,15 @@ namespace Gu.Roslyn.CodeFixExtensions
                         member = member.WithTrailingLineFeed();
                     }
 
+                    if (TryMoveDirectives(existing.GetFirstToken(), member, out var token, out var memberWithDirectives))
+                    {
+                        containingType = (TypeDeclarationSyntax)generator.InsertNodesBefore(
+                            containingType,
+                            existing,
+                            new[] { memberWithDirectives });
+                        return containingType.ReplaceToken(containingType.Members[i + 1].GetFirstToken(), token);
+                    }
+
                     if (containingType.Members.TryElementAt(i - 1, out var last) &&
                         ShouldAddLeadingLineFeed(last, member))
                     {
@@ -47,19 +56,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            if (containingType.CloseBraceToken.LeadingTrivia.Any(x => x.IsDirective))
+            if (TryMoveDirectives(containingType.CloseBraceToken, member, out var closeBraceToken, out var memberWithDirective))
             {
-                member = member.WithLeadingDirectivesFrom(containingType.CloseBraceToken.LeadingTrivia);
-                if (containingType.Members.TryLast(out var last) &&
-                    ShouldAddLeadingLineFeed(last, member))
-                {
-                    member = member.WithLeadingTrivia(member.GetLeadingTrivia().Add(SyntaxFactory.LineFeed));
-                }
-
                 containingType = (TypeDeclarationSyntax)generator.AddMembers(
                     containingType,
-                    member);
-                return containingType.RemoveLeadingDirectives(containingType.CloseBraceToken);
+                    memberWithDirective);
+                return containingType.ReplaceToken(containingType.CloseBraceToken, closeBraceToken);
             }
             else
             {
@@ -70,6 +72,36 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
 
                 return (TypeDeclarationSyntax)generator.AddMembers(containingType, member);
+            }
+        }
+
+        private static bool TryMoveDirectives<T>(SyntaxToken source, T target, out SyntaxToken updated, out T updatedTarget)
+            where T : SyntaxNode
+        {
+            if (source.HasLeadingTrivia &&
+                source.LeadingTrivia.Any(x => ShouldMove(x)))
+            {
+                updated = source.WithLeadingTrivia(source.LeadingTrivia.SkipWhile(x => ShouldMove(x)));
+                var leading = source.LeadingTrivia.TakeWhile(x => ShouldMove(x)).Concat(new[] { SyntaxFactory.LineFeed }).ToArray();
+                updatedTarget = target.WithLeadingTrivia(leading);
+                return true;
+            }
+
+            updated = default;
+            updatedTarget = default;
+            return false;
+
+            bool ShouldMove(SyntaxTrivia trivia)
+            {
+                switch (trivia.Kind())
+                {
+                    case SyntaxKind.EndIfDirectiveTrivia:
+                    case SyntaxKind.EndRegionDirectiveTrivia:
+                    case SyntaxKind.PragmaWarningDirectiveTrivia when trivia.ToString().Contains("#pragma warning restore"):
+                        return true;
+                    default:
+                        return false;
+                }
             }
         }
 
@@ -91,18 +123,6 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             return true;
-        }
-
-        private static T WithLeadingDirectivesFrom<T>(this T node, SyntaxTriviaList source)
-            where T : SyntaxNode
-        {
-            return node.WithLeadingTrivia(node.GetLeadingTrivia().AddRange(source.Where(x => x.IsDirective)));
-        }
-
-        private static T RemoveLeadingDirectives<T>(this T node, SyntaxToken token)
-            where T : SyntaxNode
-        {
-            return node.ReplaceToken(token, token.WithLeadingTrivia(SyntaxFactory.TriviaList(token.LeadingTrivia.Where(x => !x.IsDirective))));
         }
     }
 }
