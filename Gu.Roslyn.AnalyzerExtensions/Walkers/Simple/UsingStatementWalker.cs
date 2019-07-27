@@ -27,12 +27,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="node"/>.</returns>
         public static UsingStatementWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new UsingStatementWalker());
 
+        /// <inheritdoc/>
         public override void VisitUsingStatement(UsingStatementSyntax node)
         {
             this.usingStatements.Add(node);
             base.VisitUsingStatement(node);
         }
 
+        /// <inheritdoc/>
         protected override void Clear()
         {
             this.usingStatements.Clear();
