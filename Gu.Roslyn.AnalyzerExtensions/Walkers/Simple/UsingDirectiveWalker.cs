@@ -7,9 +7,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// A silly optimization for pooling syntax walkers.
+    /// Find all <see cref="UsingDirectiveSyntax"/> in the scope.
     /// </summary>
-    /// <typeparam name="T">The inheriting type.</typeparam>
     public sealed class UsingDirectiveWalker : PooledWalker<UsingDirectiveWalker>
     {
         private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
