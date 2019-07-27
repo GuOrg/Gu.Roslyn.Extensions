@@ -15,12 +15,12 @@
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer codefix</PackageTags>
+    <PackageReleaseNotes>BUGFIX: Ignore object initializer when figuring out underscore names.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
-    <PackageReleaseNotes>BUGFIX: Ignore object initializer when figuring out underscore names.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
