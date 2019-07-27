@@ -16,6 +16,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// A collection with the <see cref="InvocationExpressionSyntax"/> found when walking.
+        /// </summary>
+        public IReadOnlyList<InvocationExpressionSyntax> Invocations => this.invocations;
+
+        /// <summary>
         /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
         /// <param name="node">The scope.</param>
