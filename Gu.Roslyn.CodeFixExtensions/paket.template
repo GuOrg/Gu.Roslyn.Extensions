@@ -1,9 +1,0 @@
-type project
-
-projectUrl https://github.com/GuOrg/Gu.Roslyn.Extensions
-
-releasenotes
-  BUGFIX: Ignore object initializer when figuring out underscore names.
-
-excludedgroups
-  Analyzers
