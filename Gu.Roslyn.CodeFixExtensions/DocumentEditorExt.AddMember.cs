@@ -2,7 +2,6 @@ namespace Gu.Roslyn.CodeFixExtensions
 {
     using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions;
-    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -58,7 +57,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddField(this DocumentEditor editor, TypeDeclarationSyntax containingType, FieldDeclarationSyntax field)
         {
-            editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (TypeDeclarationSyntax)node, field));
+            editor.ReplaceNode(
+                containingType,
+                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, field));
             return editor;
         }
 
@@ -122,7 +123,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventDeclarationSyntax @event)
         {
-            editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (ClassDeclarationSyntax)node, @event));
+            editor.ReplaceNode(
+                containingType,
+                (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event));
             return editor;
         }
 
@@ -135,7 +138,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventFieldDeclarationSyntax @event)
         {
-            editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (ClassDeclarationSyntax)node, @event));
+            editor.ReplaceNode(
+                containingType,
+                (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event));
             return editor;
         }
 
@@ -148,7 +153,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddProperty(this DocumentEditor editor, TypeDeclarationSyntax containingType, BasePropertyDeclarationSyntax property)
         {
-            editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (TypeDeclarationSyntax)node, property));
+            editor.ReplaceNode(
+                containingType,
+                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, property));
             return editor;
         }
 
@@ -161,48 +168,25 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddMethod(this DocumentEditor editor, TypeDeclarationSyntax containingType, MethodDeclarationSyntax method)
         {
-            editor.ReplaceNode(containingType, (node, generator) => AddSorted(generator, (TypeDeclarationSyntax)node, method));
+            editor.ReplaceNode(
+                containingType,
+                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, method));
             return editor;
         }
 
         /// <summary>
         /// Add the field and respect StyleCop ordering.
         /// </summary>
-        /// <param name="generator">The <see cref="SyntaxGenerator"/>.</param>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="containingType">The containing type.</param>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
-        public static TypeDeclarationSyntax AddSorted(this SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member)
+        /// <returns>The <paramref name="editor"/>.</returns>
+        public static DocumentEditor AddMember(this DocumentEditor editor, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member)
         {
-            foreach (var existing in containingType.Members)
-            {
-                if (MemberDeclarationComparer.Compare(member, existing) < 0)
-                {
-                    if (!existing.IsKind(SyntaxKind.FieldDeclaration))
-                    {
-                        member = member.WithTrailingLineFeed();
-                    }
-
-                    return (TypeDeclarationSyntax)generator.InsertNodesBefore(containingType, existing, new[] { member });
-                }
-            }
-
-            if (containingType.CloseBraceToken.LeadingTrivia.Any(x => x.IsDirective))
-            {
-                containingType = (TypeDeclarationSyntax)generator.AddMembers(
-                    containingType,
-                    member.WithLeadingTrivia(
-                        SyntaxFactory.TriviaList(
-                            containingType.CloseBraceToken.LeadingTrivia.Where(x => x.IsDirective).Concat(new[] { SyntaxFactory.LineFeed }))));
-                return containingType.ReplaceToken(
-                    containingType.CloseBraceToken,
-                    SyntaxFactory.Token(
-                        SyntaxFactory.TriviaList(containingType.CloseBraceToken.LeadingTrivia.Where(x => !x.IsDirective)),
-                        SyntaxKind.CloseBraceToken,
-                        containingType.CloseBraceToken.TrailingTrivia));
-            }
-
-            return (TypeDeclarationSyntax)generator.AddMembers(containingType, member);
+            editor.ReplaceNode(
+                containingType,
+                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, member));
+            return editor;
         }
 
         private static TypeDeclarationSyntax AddBackingField(this DocumentEditor editor, TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, string propertyName)
@@ -252,7 +236,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            return AddSorted(editor.Generator, type, backingField);
+            return editor.Generator.AddSorted(type, backingField);
         }
     }
 }

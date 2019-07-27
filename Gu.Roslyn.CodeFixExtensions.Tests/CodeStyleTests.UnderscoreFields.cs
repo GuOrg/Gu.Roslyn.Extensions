@@ -114,10 +114,10 @@ namespace N
             [Test]
             public void WhenObjectInitializerInCollectionInitializer()
             {
-                var CTree = CSharpSyntaxTree.ParseText(@"
+                var c = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    public class C
+    public class C1
     {
         public int Value { get; set; }
     }
@@ -128,16 +128,16 @@ namespace N
 {
     using System.Collections.Generic;
 
-    public class C
+    public class C2
     {
-        public List<C> Items { get; } = new List<C>
+        public List<C1> Items { get; } = new List<C1>
         {
-            new C { Value = 2 },
+            new C1 { Value = 2 },
         };
     }
 }");
 
-                var compilation = CSharpCompilation.Create("test", new[] { CTree, syntaxTree });
+                var compilation = CSharpCompilation.Create("test", new[] { c, syntaxTree });
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
                 Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
             }

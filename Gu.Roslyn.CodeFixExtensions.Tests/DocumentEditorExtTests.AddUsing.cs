@@ -3,17 +3,16 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using System.Linq;
     using System.Threading.Tasks;
     using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Editing;
     using NUnit.Framework;
 
-    public partial class DocumentEditorExtTests
+    public static partial class DocumentEditorExtTests
     {
-        public class AddUsing
+        public static class AddUsing
         {
             [Test]
-            public async Task SystemWhenEmpty()
+            public static async Task SystemWhenEmpty()
             {
                 var testCode = @"
 namespace N
@@ -33,7 +32,7 @@ namespace N
             }
 
             [Test]
-            public async Task SystemWhenEmptyOutside()
+            public static async Task SystemWhenEmptyOutside()
             {
                 var testCode = @"
 namespace N
@@ -60,7 +59,7 @@ namespace N
             }
 
             [Test]
-            public async Task SystemWhenSystemCollectionsExists()
+            public static async Task SystemWhenSystemCollectionsExists()
             {
                 var testCode = @"
 namespace N
@@ -82,7 +81,7 @@ namespace N
             }
 
             [Test]
-            public async Task StringBuilderType()
+            public static async Task StringBuilderType()
             {
                 var testCode = @"
 namespace N
@@ -103,7 +102,7 @@ namespace N
             }
 
             [Test]
-            public async Task StringBuilderTypeWhenUsingExists()
+            public static async Task StringBuilderTypeWhenUsingExists()
             {
                 var testCode = @"
 namespace N
@@ -125,7 +124,7 @@ namespace N
             }
 
             [Test]
-            public async Task TypeInNestedNamespace()
+            public static async Task TypeInNestedNamespace()
             {
                 var classCode = @"
 namespace N.Extensions
@@ -152,7 +151,7 @@ namespace N
             }
 
             [Test]
-            public async Task TypeInNestedDeepNamespace()
+            public static async Task TypeInNestedDeepNamespace()
             {
                 var classCode = @"
 namespace A.B.C.Extensions
@@ -179,7 +178,7 @@ namespace A.B.C
             }
 
             [Test]
-            public async Task TypeInContainingNamespace()
+            public static async Task TypeInContainingNamespace()
             {
                 var classCode = @"
 namespace N
@@ -205,7 +204,7 @@ namespace N.Extensions
             }
 
             [Test]
-            public async Task TypeInContainingDeepNamespace()
+            public static async Task TypeInContainingDeepNamespace()
             {
                 var classCode = @"
 namespace A.B.C
@@ -231,7 +230,7 @@ namespace A.B.C.Extensions
             }
 
             [Test]
-            public async Task TypeInSameNamespace()
+            public static async Task TypeInSameNamespace()
             {
                 var classCode = @"
 namespace N
@@ -259,7 +258,7 @@ namespace N
             }
 
             [Test]
-            public async Task TypeInSameDeepNamespace()
+            public static async Task TypeInSameDeepNamespace()
             {
                 var classCode = @"
 namespace A.B.C
@@ -287,7 +286,7 @@ namespace A.B.C
             }
 
             [Test]
-            public async Task GenericTypeInSameNamespace()
+            public static async Task GenericTypeInSameNamespace()
             {
                 var classCode = @"
 namespace N
@@ -313,7 +312,7 @@ namespace N
             }
 
             [Test]
-            public async Task TypeInSameNamespaceWhenEmptyNamespace()
+            public static async Task TypeInSameNamespaceWhenEmptyNamespace()
             {
                 var classCode = @"
 namespace N

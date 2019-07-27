@@ -8,10 +8,10 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.Editing;
     using NUnit.Framework;
 
-    public partial class DocumentEditorExtTests
+    public static partial class DocumentEditorExtTests
     {
         [Test]
-        public async Task ReplaceToken()
+        public static async Task ReplaceToken()
         {
             var testCode = @"
 namespace N

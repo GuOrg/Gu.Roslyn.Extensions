@@ -3,18 +3,172 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using System.Linq;
     using System.Threading.Tasks;
     using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Editing;
     using NUnit.Framework;
 
-    public partial class DocumentEditorExtTests
+    public static partial class DocumentEditorExtTests
     {
-        public class AddField
+        public static class AddField
         {
+            [TestCase("public static readonly int NewField = 1;")]
+            [TestCase("private int newField;")]
+            public static async Task AddPrivateFieldWhenEmpty(string declaration)
+            {
+                var testCode = @"
+namespace N
+{
+    class C
+    {
+    }
+}";
+                var sln = CodeFactory.CreateSolution(testCode);
+                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+                var expected = @"
+namespace N
+{
+    class C
+    {
+        private int newField;
+    }
+}".AssertReplace("private int newField;", declaration);
+
+                var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(declaration);
+                _ = editor.AddField(containingType, newField);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
+
             [Test]
-            public async Task AddPrivateField()
+            public static async Task AddPublicFieldWhenPrivateExists()
+            {
+                var testCode = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+    }
+}";
+                var sln = CodeFactory.CreateSolution(testCode);
+                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+                var expected = @"
+namespace N
+{
+    class C
+    {
+        public int NewField;
+
+        private int f;
+    }
+}";
+
+                var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewField;");
+                _ = editor.AddField(containingType, newField);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
+
+            [Test]
+            public static async Task AddPublicFieldWhenPublicAndPrivateExists()
+            {
+                var testCode = @"
+namespace N
+{
+    class C
+    {
+        public int F;
+
+        private int f;
+    }
+}";
+                var sln = CodeFactory.CreateSolution(testCode);
+                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+                var expected = @"
+namespace N
+{
+    class C
+    {
+        public int F;
+        public int NewField;
+
+        private int f;
+    }
+}";
+
+                var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewField;");
+                _ = editor.AddField(containingType, newField);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
+
+            [Test]
+            public static async Task AddPrivateFieldWhenPublicExists()
+            {
+                var testCode = @"
+namespace N
+{
+    class C
+    {
+        public int F;
+    }
+}";
+                var sln = CodeFactory.CreateSolution(testCode);
+                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+                var expected = @"
+namespace N
+{
+    class C
+    {
+        public int F;
+
+        private int newField;
+    }
+}";
+
+                var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private int newField;");
+                _ = editor.AddField(containingType, newField);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
+
+            [Test]
+            public static async Task AddPrivateFieldWhenPrivateExists()
+            {
+                var testCode = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+    }
+}";
+                var sln = CodeFactory.CreateSolution(testCode);
+                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+                var expected = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+        private int newField;
+    }
+}";
+
+                var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private int newField;");
+                _ = editor.AddField(containingType, newField);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
+
+            [Test]
+            public static async Task TypicalClass()
             {
                 var testCode = @"
 namespace N
@@ -57,7 +211,7 @@ namespace N
 }";
                 var sln = CodeFactory.CreateSolution(testCode);
                 var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-                var containingType = SyntaxNodeExt.FindClassDeclaration(editor.OriginalRoot.SyntaxTree, "C");
+                var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
 
                 var expected = @"
 namespace N
@@ -100,238 +254,8 @@ namespace N
     }
 }";
 
-                var newField = (FieldDeclarationSyntax)editor.Generator.FieldDeclaration(
-                    "disposable",
-                    SyntaxFactory.ParseTypeName("bool"),
-                    Accessibility.Private);
+                var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private bool disposable;");
                 _ = editor.AddField(containingType, newField);
-                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-            }
-
-            [Test]
-            public async Task AddBackingFieldWhenNoBackingFields()
-            {
-                var testCode = @"
-namespace N
-{
-    public class C
-    {
-        public int Meh1 = 1;
-        private int meh2;
-
-        public int Value { get; set; }
-    }
-}";
-                var sln = CodeFactory.CreateSolution(testCode);
-                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-                var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value");
-                var field = editor.AddBackingField(property);
-                Assert.AreEqual("privateint value;", field.ToFullString());
-                var expected = @"
-namespace N
-{
-    public class C
-    {
-        public int Meh1 = 1;
-        private int meh2;
-        private int value;
-
-        public int Value { get; set; }
-    }
-}";
-                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-            }
-
-            [Test]
-            public async Task AddBackingFieldWhenNameCollision()
-            {
-                var testCode = @"
-namespace N
-{
-    public class C
-    {
-        private int value;
-
-        public int Value { get; set; }
-    }
-}";
-                var sln = CodeFactory.CreateSolution(testCode);
-                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-                var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value");
-                var field = editor.AddBackingField(property);
-                Assert.AreEqual("privateint value_;", field.ToFullString());
-                var expected = @"
-namespace N
-{
-    public class C
-    {
-        private int value;
-        private int value_;
-
-        public int Value { get; set; }
-    }
-}";
-                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-            }
-
-            [Test]
-            public async Task AddBackingFieldBetween()
-            {
-                var testCode = @"
-namespace N
-{
-    public class C
-    {
-        private int value1;
-        private int value3;
-
-        public int Value1
-        {
-            get => this.value1;
-            set => this.value1 = value;
-        }
-
-        public int Value2 { get; set; }
-
-        public int Value3
-        {
-            get => this.value3;
-            set => this.value3 = value;
-        }
-    }
-}";
-                var sln = CodeFactory.CreateSolution(testCode);
-                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-                var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
-                var field = editor.AddBackingField(property);
-                Assert.AreEqual("privateint value2;", field.ToFullString());
-                var expected = @"
-namespace N
-{
-    public class C
-    {
-        private int value1;
-        private int value2;
-        private int value3;
-
-        public int Value1
-        {
-            get => this.value1;
-            set => this.value1 = value;
-        }
-
-        public int Value2 { get; set; }
-
-        public int Value3
-        {
-            get => this.value3;
-            set => this.value3 = value;
-        }
-    }
-}";
-                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-            }
-
-            [Test]
-            public async Task AddBackingFieldAdjacentToProperty()
-            {
-                var testCode = @"
-namespace N
-{
-    public class C
-    {
-        public C()
-        {
-        }
-
-        private int value1;
-        public int Value1
-        {
-            get => this.value1;
-            set => this.value1 = value;
-        }
-
-        public int Value2 { get; set; }
-    }
-}";
-                var sln = CodeFactory.CreateSolution(testCode);
-                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-                var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
-                var field = editor.AddBackingField(property);
-                Assert.AreEqual("privateint value2;", field.ToFullString());
-                var expected = @"
-namespace N
-{
-    public class C
-    {
-        public C()
-        {
-        }
-
-        private int value1;
-        public int Value1
-        {
-            get => this.value1;
-            set => this.value1 = value;
-        }
-
-        private int value2;
-        public int Value2 { get; set; }
-    }
-}";
-                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-            }
-
-            [Test]
-            public async Task AddBackingFieldAdjacentToPropertyNewLine()
-            {
-                var testCode = @"
-namespace N
-{
-    public class C
-    {
-        public C()
-        {
-        }
-
-        private int value1;
-
-        public int Value1
-        {
-            get => this.value1;
-            set => this.value1 = value;
-        }
-
-        public int Value2 { get; set; }
-    }
-}";
-                var sln = CodeFactory.CreateSolution(testCode);
-                var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-                var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
-                var field = editor.AddBackingField(property);
-                Assert.AreEqual("privateint value2;", field.ToFullString());
-                var expected = @"
-namespace N
-{
-    public class C
-    {
-        public C()
-        {
-        }
-
-        private int value1;
-
-        public int Value1
-        {
-            get => this.value1;
-            set => this.value1 = value;
-        }
-
-        private int value2;
-
-        public int Value2 { get; set; }
-    }
-}";
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
         }

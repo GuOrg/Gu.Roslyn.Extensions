@@ -1,7 +1,5 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
-    using System.Collections.Immutable;
-    using System.Linq;
     using System.Threading;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
