@@ -14,10 +14,8 @@ Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Span.get -> Microsoft.C
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixProvider
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixProvider.DocumentEditorCodeFixProvider() -> void
 Gu.Roslyn.CodeFixExtensions.DocumentEditorExt
-Gu.Roslyn.CodeFixExtensions.DocumentEditorExt
 Gu.Roslyn.CodeFixExtensions.DocumentEditorFixAllProvider
 Gu.Roslyn.CodeFixExtensions.DocumentationCommentTriviaSyntaxExtensions
-Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions
 Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions
 Gu.Roslyn.CodeFixExtensions.Parse
 Gu.Roslyn.CodeFixExtensions.Simplify

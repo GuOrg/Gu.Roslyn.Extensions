@@ -23,7 +23,6 @@ Gu.Roslyn.AnalyzerExtensions.ConstructorInitializerSyntaxExt
 Gu.Roslyn.AnalyzerExtensions.DiagnosticDescriptorExt
 Gu.Roslyn.AnalyzerExtensions.DocumentationCommentTriviaSyntaxExtensions
 Gu.Roslyn.AnalyzerExtensions.EnumerableExt
-Gu.Roslyn.AnalyzerExtensions.EnumerableExt
 Gu.Roslyn.AnalyzerExtensions.EventSymbolComparer
 Gu.Roslyn.AnalyzerExtensions.EventSymbolComparer.GetHashCode(Microsoft.CodeAnalysis.IEventSymbol obj) -> int
 Gu.Roslyn.AnalyzerExtensions.ExecutedBefore
@@ -61,9 +60,6 @@ Gu.Roslyn.AnalyzerExtensions.INamedTypeSymbolExtensions
 Gu.Roslyn.AnalyzerExtensions.IParameterSymbolExt
 Gu.Roslyn.AnalyzerExtensions.IPropertySymbolExt
 Gu.Roslyn.AnalyzerExtensions.ISymbolExt
-Gu.Roslyn.AnalyzerExtensions.ISymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
 Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker.IdentifierNames.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>
@@ -232,8 +228,6 @@ Gu.Roslyn.AnalyzerExtensions.Search.Recursive = 1 -> Gu.Roslyn.AnalyzerExtension
 Gu.Roslyn.AnalyzerExtensions.Search.TopLevel = 0 -> Gu.Roslyn.AnalyzerExtensions.Search
 Gu.Roslyn.AnalyzerExtensions.SemanticModelCacheAnalyzer
 Gu.Roslyn.AnalyzerExtensions.SemanticModelCacheAnalyzer.SemanticModelCacheAnalyzer() -> void
-Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
-Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
 Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
 Gu.Roslyn.AnalyzerExtensions.StatementSyntaxExt
 Gu.Roslyn.AnalyzerExtensions.StringBuilderPool
