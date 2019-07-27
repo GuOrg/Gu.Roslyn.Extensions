@@ -36,7 +36,17 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
 
-            return AddUsing(compilationUnit, SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(type.ContainingNamespace.ToDisplayString())), semanticModel);
+            var updated = AddUsing(compilationUnit, SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(type.ContainingNamespace.ToDisplayString())), semanticModel);
+            if (type is INamedTypeSymbol namedType &&
+                namedType.IsGenericType)
+            {
+                foreach (var argument in namedType.TypeArguments)
+                {
+                    updated = AddUsing(updated, argument, semanticModel);
+                }
+            }
+
+            return updated;
         }
 
         /// <summary>

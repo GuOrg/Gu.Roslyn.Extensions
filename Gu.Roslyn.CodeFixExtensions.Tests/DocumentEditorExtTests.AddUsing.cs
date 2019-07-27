@@ -3,6 +3,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using System.Linq;
     using System.Threading.Tasks;
     using Gu.Roslyn.Asserts;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Editing;
     using NUnit.Framework;
@@ -97,6 +98,32 @@ namespace N
     using System.Text;
 }";
                 var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("System.Text.StringBuilder");
+                _ = editor.AddUsing(type);
+                CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+            }
+
+            [Test]
+            public static async Task ListOfStringBuilderType()
+            {
+                var testCode = @"
+namespace N
+{
+}";
+                var sln = CodeFactory.CreateSolution(testCode, MetadataReferences.FromAttributes());
+                var document = sln.Projects.First().Documents.First();
+                var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
+
+                var expected = @"
+namespace N
+{
+    using System.Collections.Generic;
+    using System.Text;
+}";
+
+                var type = editor.SemanticModel.GetSpeculativeTypeInfo(
+                    0,
+                    SyntaxFactory.ParseTypeName("System.Collections.Generic.List<System.Text.StringBuilder>"),
+                    SpeculativeBindingOption.BindAsTypeOrNamespace).Type;
                 _ = editor.AddUsing(type);
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
