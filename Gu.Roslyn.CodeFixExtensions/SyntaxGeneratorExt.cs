@@ -46,11 +46,17 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             if (containingType.CloseBraceToken.LeadingTrivia.Any(x => x.IsDirective))
             {
-                _ = (TypeDeclarationSyntax)generator.AddMembers(
+                var leadingTrivia = SyntaxFactory.TriviaList(containingType.CloseBraceToken.LeadingTrivia.Where(x => x.IsDirective));
+                if (containingType.Members.TryLast(out var last) &&
+                    ShouldAddLeadingLineFeed(last, member))
+                {
+                    leadingTrivia = leadingTrivia.Add(SyntaxFactory.LineFeed);
+                }
+
+                containingType = (TypeDeclarationSyntax)generator.AddMembers(
                     containingType,
                     member.WithLeadingTrivia(
-                        SyntaxFactory.TriviaList(
-                            containingType.CloseBraceToken.LeadingTrivia.Where(x => x.IsDirective).Concat(new[] { SyntaxFactory.LineFeed }))));
+                        leadingTrivia));
                 return containingType.ReplaceToken(
                     containingType.CloseBraceToken,
                     SyntaxFactory.Token(
@@ -58,14 +64,16 @@ namespace Gu.Roslyn.CodeFixExtensions
                         SyntaxKind.CloseBraceToken,
                         containingType.CloseBraceToken.TrailingTrivia));
             }
-
-            if (containingType.Members.TryLast(out var last) &&
-                ShouldAddLeadingLineFeed(last, member))
+            else
             {
-                member = member.WithLeadingLineFeed();
-            }
+                if (containingType.Members.TryLast(out var last) &&
+                    ShouldAddLeadingLineFeed(last, member))
+                {
+                    member = member.WithLeadingLineFeed();
+                }
 
-            return (TypeDeclarationSyntax)generator.AddMembers(containingType, member);
+                return (TypeDeclarationSyntax)generator.AddMembers(containingType, member);
+            }
         }
 
         private static bool ShouldAddLeadingLineFeed(MemberDeclarationSyntax before, MemberDeclarationSyntax after)

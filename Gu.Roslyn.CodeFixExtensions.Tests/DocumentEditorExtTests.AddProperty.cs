@@ -140,7 +140,6 @@ namespace N
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
 
-            [Explicit("Temp suppress.")]
             [Test]
             public static async Task AfterPropertyInConditional()
             {
