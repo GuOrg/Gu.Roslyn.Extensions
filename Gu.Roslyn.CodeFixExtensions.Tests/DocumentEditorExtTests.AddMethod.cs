@@ -264,7 +264,6 @@ namespace N
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
 
-            [Explicit("Temp suppress.")]
             [Test]
             public static async Task AfterPropertyInConditionalWithMethodAfter()
             {
@@ -295,6 +294,8 @@ namespace N
 #endif
 
         public int NewMethod() => 1;
+
+        private int M() => 1;
     }
 }";
                 _ = editor.AddMethod(containingType, method);
@@ -335,7 +336,6 @@ namespace N
                 CodeAssert.AreEqual(expected, editor.GetChangedDocument());
             }
 
-            [Explicit("Temp suppress.")]
             [Test]
             public static async Task BetweenInConditionalDirectives()
             {

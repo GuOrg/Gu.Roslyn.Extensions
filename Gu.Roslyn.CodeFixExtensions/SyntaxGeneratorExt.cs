@@ -8,6 +8,9 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Editing;
 
+    /// <summary>
+    /// Helper methods for <see cref="SyntaxGenerator"/>.
+    /// </summary>
     public static class SyntaxGeneratorExt
     {
         /// <summary>
@@ -29,15 +32,15 @@ namespace Gu.Roslyn.CodeFixExtensions
                         member = member.WithTrailingLineFeed();
                     }
 
-                    if (containingType.Members.TryElementAt(i - 1, out var existingBefore) &&
-                        ShouldAddLeadingLineFeed(existingBefore, member))
+                    if (containingType.Members.TryElementAt(i - 1, out var last) &&
+                        ShouldAddLeadingLineFeed(last, member))
                     {
                         member = member.WithLeadingLineFeed();
                     }
 
                     if (ShouldAddLeadingLineFeed(member, existing))
                     {
-                        containingType = (TypeDeclarationSyntax)generator.ReplaceNode(containingType, existing, existing.WithLeadingLineFeed());
+                        containingType = (TypeDeclarationSyntax)generator.ReplaceNode(containingType, containingType.Members[i], existing.WithLeadingLineFeed());
                     }
 
                     return (TypeDeclarationSyntax)generator.InsertNodesBefore(containingType, containingType.Members[i], new[] { member });
@@ -46,23 +49,17 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             if (containingType.CloseBraceToken.LeadingTrivia.Any(x => x.IsDirective))
             {
-                var leadingTrivia = SyntaxFactory.TriviaList(containingType.CloseBraceToken.LeadingTrivia.Where(x => x.IsDirective));
+                member = member.WithLeadingDirectivesFrom(containingType.CloseBraceToken.LeadingTrivia);
                 if (containingType.Members.TryLast(out var last) &&
                     ShouldAddLeadingLineFeed(last, member))
                 {
-                    leadingTrivia = leadingTrivia.Add(SyntaxFactory.LineFeed);
+                    member = member.WithLeadingTrivia(member.GetLeadingTrivia().Add(SyntaxFactory.LineFeed));
                 }
 
                 containingType = (TypeDeclarationSyntax)generator.AddMembers(
                     containingType,
-                    member.WithLeadingTrivia(
-                        leadingTrivia));
-                return containingType.ReplaceToken(
-                    containingType.CloseBraceToken,
-                    SyntaxFactory.Token(
-                        SyntaxFactory.TriviaList(containingType.CloseBraceToken.LeadingTrivia.Where(x => !x.IsDirective)),
-                        SyntaxKind.CloseBraceToken,
-                        containingType.CloseBraceToken.TrailingTrivia));
+                    member);
+                return containingType.RemoveLeadingDirectives(containingType.CloseBraceToken);
             }
             else
             {
@@ -94,6 +91,18 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             return true;
+        }
+
+        private static T WithLeadingDirectivesFrom<T>(this T node, SyntaxTriviaList source)
+            where T : SyntaxNode
+        {
+            return node.WithLeadingTrivia(node.GetLeadingTrivia().AddRange(source.Where(x => x.IsDirective)));
+        }
+
+        private static T RemoveLeadingDirectives<T>(this T node, SyntaxToken token)
+            where T : SyntaxNode
+        {
+            return node.ReplaceToken(token, token.WithLeadingTrivia(SyntaxFactory.TriviaList(token.LeadingTrivia.Where(x => !x.IsDirective))));
         }
     }
 }
