@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Helper fow working with member paths like C.P1?.P2.
+    /// Helper for working with member paths like C.P1?.P2.
     /// </summary>
     public static class MemberPath
     {

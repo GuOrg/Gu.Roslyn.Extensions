@@ -1,4 +1,5 @@
 ﻿Gu.Roslyn.CodeFixExtensions.CodeStyle
+Gu.Roslyn.CodeFixExtensions.CompilationUintSyntaxExtensions
 Gu.Roslyn.CodeFixExtensions.DocumentEditorAction
 Gu.Roslyn.CodeFixExtensions.DocumentEditorAction.Action.get -> System.Action<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken>
 Gu.Roslyn.CodeFixExtensions.DocumentEditorAction.DocumentEditorAction(string title, Microsoft.CodeAnalysis.Document document, System.Action<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken> action, string equivalenceKey) -> void
@@ -6,7 +7,6 @@ Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.CancellationToken.get -> System.Threading.CancellationToken
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Diagnostics.get -> System.Collections.Immutable.ImmutableArray<Microsoft.CodeAnalysis.Diagnostic>
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Document.get -> Microsoft.CodeAnalysis.Document
-Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.DocumentEditorCodeFixContext() -> void
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.DocumentEditorCodeFixContext(Microsoft.CodeAnalysis.CodeFixes.CodeFixContext context) -> void
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.RegisterCodeFix(string title, System.Action<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken> action, System.Type equivalenceKey, Microsoft.CodeAnalysis.Diagnostic diagnostic) -> void
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.RegisterCodeFix(string title, System.Action<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken> action, string equivalenceKey, Microsoft.CodeAnalysis.Diagnostic diagnostic) -> void
@@ -14,12 +14,15 @@ Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Span.get -> Microsoft.C
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixProvider
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixProvider.DocumentEditorCodeFixProvider() -> void
 Gu.Roslyn.CodeFixExtensions.DocumentEditorExt
+Gu.Roslyn.CodeFixExtensions.DocumentEditorExt
 Gu.Roslyn.CodeFixExtensions.DocumentEditorFixAllProvider
 Gu.Roslyn.CodeFixExtensions.DocumentationCommentTriviaSyntaxExtensions
+Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions
 Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions
 Gu.Roslyn.CodeFixExtensions.Parse
 Gu.Roslyn.CodeFixExtensions.Simplify
 Gu.Roslyn.CodeFixExtensions.StringExt
+Gu.Roslyn.CodeFixExtensions.SyntaxGeneratorExt
 Gu.Roslyn.CodeFixExtensions.SyntaxNodeExt
 Gu.Roslyn.CodeFixExtensions.Trivia
 abstract Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixProvider.RegisterCodeFixesAsync(Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext context) -> System.Threading.Tasks.Task
@@ -33,13 +36,17 @@ override sealed Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixProvider.Regist
 static Gu.Roslyn.CodeFixExtensions.CodeStyle.BackingFieldsAdjacent(this Microsoft.CodeAnalysis.SemanticModel semanticModel, out bool newLineBetween) -> bool
 static Gu.Roslyn.CodeFixExtensions.CodeStyle.UnderscoreFields(this Microsoft.CodeAnalysis.SemanticModel semanticModel) -> bool
 static Gu.Roslyn.CodeFixExtensions.CodeStyle.UsingDirectivesInsideNamespace(Microsoft.CodeAnalysis.SemanticModel semanticModel) -> bool
+static Gu.Roslyn.CodeFixExtensions.CompilationUintSyntaxExtensions.AddUsing(this Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax compilationUnit, Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax usingDirective, Microsoft.CodeAnalysis.SemanticModel semanticModel) -> Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax
+static Gu.Roslyn.CodeFixExtensions.CompilationUintSyntaxExtensions.AddUsing(this Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax compilationUnit, Microsoft.CodeAnalysis.ITypeSymbol type, Microsoft.CodeAnalysis.SemanticModel semanticModel) -> Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddBackingField(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax propertyDeclaration) -> Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddEvent(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax event) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddEvent(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax event) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddField(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax field) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
+static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddMember(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddMethod(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax method) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddProperty(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax property) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddUsing(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax usingDirective) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
+static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.AddUsing(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.ITypeSymbol type) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.CreateBackingField(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax propertyDeclaration) -> Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.FormatNode(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode node) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
 static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.ReplaceNode<T>(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, T node, System.Func<T, Microsoft.CodeAnalysis.SyntaxNode> replacement) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
@@ -112,6 +119,7 @@ static Gu.Roslyn.CodeFixExtensions.Simplify.WithSimplifiedNames<T>(this T node) 
 static Gu.Roslyn.CodeFixExtensions.StringExt.ToFirstCharLower(this string text) -> string
 static Gu.Roslyn.CodeFixExtensions.StringExt.ToFirstCharUpper(this string text) -> string
 static Gu.Roslyn.CodeFixExtensions.StringExt.WithLeadingWhiteSpace(this string text, string leadingWhitespace) -> string
+static Gu.Roslyn.CodeFixExtensions.SyntaxGeneratorExt.AddSorted(this Microsoft.CodeAnalysis.Editing.SyntaxGenerator generator, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member) -> Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.SyntaxNodeExt.TryFindNode<T>(this Microsoft.CodeAnalysis.SyntaxNode syntaxRoot, Microsoft.CodeAnalysis.Diagnostic diagnostic, out T node) -> bool
 static Gu.Roslyn.CodeFixExtensions.SyntaxNodeExt.TryFindNodeOrAncestor<T>(this Microsoft.CodeAnalysis.SyntaxNode syntaxRoot, Microsoft.CodeAnalysis.Diagnostic diagnostic, out T node) -> bool
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithLeadingElasticLineFeed<T>(this T node) -> T
