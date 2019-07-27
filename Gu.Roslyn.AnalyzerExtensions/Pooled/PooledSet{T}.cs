@@ -28,8 +28,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public int Count => this.inner.Count;
 
-        /// <summary>Gets the <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> object that is used to determine equality for the values in the set.</summary>
-        /// <returns>The <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> object that is used to determine equality for the values in the set.</returns>
+        /// <summary>Gets the <see cref="System.Collections.Generic.IEqualityComparer{T}" /> object that is used to determine equality for the values in the set.</summary>
+        /// <returns>The <see cref="System.Collections.Generic.IEqualityComparer{T}" /> object that is used to determine equality for the values in the set.</returns>
         public IEqualityComparer<T> Comparer => this.inner.Comparer;
 
         /// <summary>

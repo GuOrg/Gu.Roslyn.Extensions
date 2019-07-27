@@ -134,7 +134,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(text));
             }
 
-            if (!text.EndsWith("\n"))
+            if (!text.EndsWith("\n", StringComparison.Ordinal))
             {
                 text += Environment.NewLine;
             }

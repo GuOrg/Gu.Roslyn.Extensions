@@ -26,7 +26,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
-        /// Gets the document corresponding to the <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Span" /> to fix.
+        /// Gets the document corresponding to the <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Span" /> to fix.
         /// </summary>
         public Document Document => this.context.Document;
 
@@ -36,23 +36,23 @@ namespace Gu.Roslyn.CodeFixExtensions
         public CancellationToken CancellationToken => this.context.CancellationToken;
 
         /// <summary>
-        /// Gets the text span within the <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Document" /> to fix.
+        /// Gets the text span within the <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Document" /> to fix.
         /// </summary>
         public TextSpan Span => this.context.Span;
 
         /// <summary>
         /// Gets the diagnostics to fix.
-        /// NOTE: All the diagnostics in this collection have the same <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Span" />.
+        /// NOTE: All the diagnostics in this collection have the same <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Span" />.
         /// </summary>
         public ImmutableArray<Diagnostic> Diagnostics => this.context.Diagnostics;
 
         /// <summary>
         /// Add supplied <paramref name="action" /> to the list of fixes that will be offered to the user.
         /// </summary>
-        /// <param name="title">Title of the <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" />.</param>
-        /// <param name="action">The <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
-        /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="P:Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
-        /// <param name="diagnostic">The subset of <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
+        /// <param name="title">Title of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />.</param>
+        /// <param name="action">The <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
+        /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
+        /// <param name="diagnostic">The subset of <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
         public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, Type equivalenceKey, Diagnostic diagnostic)
         {
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
@@ -64,10 +64,10 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add supplied <paramref name="action" /> to the list of fixes that will be offered to the user.
         /// </summary>
-        /// <param name="title">Title of the <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" />.</param>
-        /// <param name="action">The <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
-        /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="T:Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="P:Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
-        /// <param name="diagnostic">The subset of <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
+        /// <param name="title">Title of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />.</param>
+        /// <param name="action">The <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
+        /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
+        /// <param name="diagnostic">The subset of <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
         public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, string equivalenceKey, Diagnostic diagnostic)
         {
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
