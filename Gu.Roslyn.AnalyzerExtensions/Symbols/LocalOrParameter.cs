@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// A wrapper for a local or a parameter.
     /// </summary>
     [DebuggerDisplay("{this.Symbol}")]
-    public struct LocalOrParameter
+    public struct LocalOrParameter : IEquatable<LocalOrParameter>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalOrParameter"/> struct.
@@ -62,6 +62,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public string Name => (this.Symbol as ILocalSymbol)?.Name ?? ((IParameterSymbol)this.Symbol).Name;
 
         /// <summary>
+        /// Check if <paramref name="left"/> is equal to <paramref name="right"/>.
+        /// </summary>
+        /// <param name="left">The left <see cref="LocalOrParameter"/>.</param>
+        /// <param name="right">The right <see cref="LocalOrParameter"/>.</param>
+        /// <returns>True if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
+        public static bool operator ==(LocalOrParameter left, LocalOrParameter right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Check if <paramref name="left"/> is not equal to <paramref name="right"/>.
+        /// </summary>
+        /// <param name="left">The left <see cref="LocalOrParameter"/>.</param>
+        /// <param name="right">The right <see cref="LocalOrParameter"/>.</param>
+        /// <returns>True if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
+        public static bool operator !=(LocalOrParameter left, LocalOrParameter right)
+        {
+            return !left.Equals(right);
+        }
+
+        /// <summary>
         /// Try create a <see cref="LocalOrParameter"/> from <paramref name="symbol"/>.
         /// </summary>
         /// <param name="symbol">The <see cref="ISymbol"/>.</param>
@@ -100,6 +122,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 default:
                     throw new InvalidOperationException("Should never get here.");
             }
+        }
+
+        public bool Equals(LocalOrParameter other)
+        {
+            return this.Symbol.Equals(other.Symbol);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is LocalOrParameter other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Symbol.GetHashCode();
         }
     }
 }

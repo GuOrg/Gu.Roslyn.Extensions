@@ -45,7 +45,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             if (fixAllContext.Scope == FixAllScope.Document)
             {
-                var actions = await GetDocumentEditorActionsAsync(fixAllContext, fixAllContext.Document);
+                var actions = await GetDocumentEditorActionsAsync(fixAllContext, fixAllContext.Document).ConfigureAwait(false);
 
                 if (actions.Count == 0)
                 {
@@ -60,7 +60,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 var docActions = new Dictionary<Document, List<DocumentEditorAction>>();
                 foreach (var document in fixAllContext.Project.Documents)
                 {
-                    var actions = await GetDocumentEditorActionsAsync(fixAllContext, document);
+                    var actions = await GetDocumentEditorActionsAsync(fixAllContext, document).ConfigureAwait(false);
                     if (actions.Count == 0)
                     {
                         continue;
@@ -84,7 +84,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 {
                     foreach (var document in project.Documents)
                     {
-                        var actions = await GetDocumentEditorActionsAsync(fixAllContext, document);
+                        var actions = await GetDocumentEditorActionsAsync(fixAllContext, document).ConfigureAwait(false);
                         if (actions.Count == 0)
                         {
                             continue;
@@ -146,7 +146,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             foreach (var docAction in docActions)
             {
-                var document = await FixDocumentAsync(docAction.Key, docAction.Value, cancellationToken);
+                var document = await FixDocumentAsync(docAction.Key, docAction.Value, cancellationToken).ConfigureAwait(false);
                 solution = solution.WithDocumentSyntaxRoot(
                     document.Id,
                     await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false));

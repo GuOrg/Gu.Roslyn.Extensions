@@ -21,6 +21,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>What System.Type.FullName returns.</returns>
         public static string FullName(this INamedTypeSymbol type)
         {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             var builder = StringBuilderPool.Borrow();
             var previous = default(SymbolDisplayPart);
             foreach (var part in type.ToDisplayParts(Simple))
@@ -37,7 +42,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         builder.Append(previous.Symbol == null || previous.Symbol.Kind == SymbolKind.Namespace ? "." : "+");
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidOperationException($"Not handling member {part.Kind}.");
                 }
 
                 if (part.Symbol != null)

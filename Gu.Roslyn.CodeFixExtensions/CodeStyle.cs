@@ -27,6 +27,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool UnderscoreFields(this SemanticModel semanticModel)
         {
+            if (semanticModel == null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
             using (var walker = UnderscoreFieldWalker.Borrow())
             {
                 switch (UnderscoreFields(semanticModel.SyntaxTree, walker))
@@ -39,7 +44,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     case Result.No:
                         return false;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidOperationException("Not handling member.");
                 }
 
                 foreach (var tree in semanticModel.Compilation.SyntaxTrees)
@@ -54,7 +59,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                         case Result.No:
                             return false;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new InvalidOperationException("Not handling member.");
                     }
                 }
             }
@@ -69,6 +74,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool UsingDirectivesInsideNamespace(SemanticModel semanticModel)
         {
+            if (semanticModel == null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
             using (var walker = UsingDirectiveWalker.Borrow())
             {
                 switch (UsingDirectivesInsideNamespace(semanticModel.SyntaxTree, walker))
@@ -81,7 +91,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     case Result.No:
                         return false;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidOperationException("Not handling member.");
                 }
 
                 foreach (var tree in semanticModel.Compilation.SyntaxTrees)
@@ -96,7 +106,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                         case Result.No:
                             return false;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new InvalidOperationException("Not handling member.");
                     }
                 }
             }
@@ -112,6 +122,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static bool BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)
         {
+            if (semanticModel == null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
             using (var walker = BackingFieldsAdjacentWalker.Borrow())
             {
                 switch (BackingFieldsAdjacent(semanticModel.SyntaxTree, walker, out newLineBetween))
@@ -124,7 +139,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     case Result.No:
                         return false;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidOperationException("Not handling member.");
                 }
 
                 foreach (var tree in semanticModel.Compilation.SyntaxTrees)
@@ -139,7 +154,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                         case Result.No:
                             return false;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new InvalidOperationException("Not handling member.");
                     }
                 }
             }
@@ -236,7 +251,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 foreach (var variable in node.Declaration.Variables)
                 {
                     var name = variable.Identifier.ValueText;
-                    if (name.StartsWith("_"))
+                    if (name.StartsWith("_", StringComparison.Ordinal))
                     {
                         switch (this.UsesUnderScore)
                         {
@@ -251,7 +266,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                             case Result.Maybe:
                                 break;
                             default:
-                                throw new ArgumentOutOfRangeException();
+                                throw new InvalidOperationException("Not handling member.");
                         }
                     }
                     else
@@ -269,7 +284,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                             case Result.Maybe:
                                 break;
                             default:
-                                throw new ArgumentOutOfRangeException();
+                                throw new InvalidOperationException("Not handling member.");
                         }
                     }
                 }
@@ -296,7 +311,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     case Result.Maybe:
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidOperationException("Not handling member.");
                 }
             }
 
@@ -361,7 +376,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                         case Result.Maybe:
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new InvalidOperationException("Not handling member.");
                     }
                 }
 
@@ -399,7 +414,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                         case Result.Maybe:
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new InvalidOperationException("Not handling member.");
                     }
                 }
             }

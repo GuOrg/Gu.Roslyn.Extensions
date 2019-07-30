@@ -83,7 +83,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidOperationException($"Not handling member {this.Scope}.");
             }
         }
 
