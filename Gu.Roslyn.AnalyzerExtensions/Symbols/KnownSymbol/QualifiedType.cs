@@ -5,6 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Globalization;
     using System.Linq;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -235,7 +236,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                            qualifiedGenericType.Type == "Nullable`1" &&
                            typeArg.Equals(nullable.ElementType);
                 case GenericNameSyntax genericName:
-                    return this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString());
+                    return this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString(CultureInfo.InvariantCulture));
                 case SimpleNameSyntax simple:
                     return this.NameEquals(simple.Identifier.ValueText);
                 case QualifiedNameSyntax qualified:

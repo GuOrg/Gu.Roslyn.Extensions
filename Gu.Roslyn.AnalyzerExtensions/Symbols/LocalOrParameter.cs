@@ -133,7 +133,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return obj is LocalOrParameter other && Equals(other);
+            return obj is LocalOrParameter other && this.Equals(other);
         }
 
         /// <inheritdoc/>
