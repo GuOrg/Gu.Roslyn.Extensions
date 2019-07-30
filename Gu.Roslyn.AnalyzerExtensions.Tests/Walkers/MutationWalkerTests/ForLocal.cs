@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
         [TestCase("value += 1")]
         public void One(string mutation)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -27,8 +27,8 @@ namespace N
         }
     }
 }";
-            testCode = testCode.AssertReplace("value = 1", mutation);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            code = code.AssertReplace("value = 1", mutation);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));

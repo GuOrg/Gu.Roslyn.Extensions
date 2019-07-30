@@ -175,7 +175,7 @@ namespace N
         [Test]
         public static async Task TypicalClass()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public abstract class C
@@ -198,7 +198,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var declaration = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty { get; set; }");
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");

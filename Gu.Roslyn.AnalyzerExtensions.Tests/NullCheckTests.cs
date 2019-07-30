@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         [TestCase("text is null")]
         public void IsCheckedWhenOldStyleNullCheck(string check)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System;
@@ -34,8 +34,8 @@ namespace N
         }
     }
 }";
-            testCode = testCode.AssertReplace("text == null", check);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            code = code.AssertReplace("text == null", check);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var parameter = syntaxTree.FindParameter("text");
@@ -46,7 +46,7 @@ namespace N
         [Test]
         public void IsCheckedWhenCoalesceThrow()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System;
@@ -61,7 +61,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var parameter = syntaxTree.FindParameter("text");
@@ -72,7 +72,7 @@ namespace N
         [Test]
         public void IsCheckedWhenOldStyleNullCheckOrOtherCheck()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System;
@@ -92,7 +92,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var parameter = syntaxTree.FindParameter("text");

@@ -5,12 +5,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.MemberDeclarationSy
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class MemberAccessExpressionSyntaxTests
+    public class TryGetTarget
     {
         [Test]
         public void TryGetTargetProperty()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.Reflection;
@@ -20,7 +20,7 @@ namespace N
         public object M(string text) => text.Length;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var identifierNameSyntax = syntaxTree.FindMemberAccessExpression("text.Length");

@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
         [TestCase("this.value += 1")]
         public void One(string mutation)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -26,8 +26,8 @@ namespace N
         }
     }
 }";
-            testCode = testCode.AssertReplace("this.value = 1", mutation);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            code = code.AssertReplace("this.value = 1", mutation);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("C");
@@ -43,7 +43,7 @@ namespace N
         [TestCase("ref")]
         public void OneRefOrOut(string modifier)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -61,8 +61,8 @@ namespace N
         }
     }
 }";
-            testCode = testCode.AssertReplace("out", modifier);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            code = code.AssertReplace("out", modifier);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("C");

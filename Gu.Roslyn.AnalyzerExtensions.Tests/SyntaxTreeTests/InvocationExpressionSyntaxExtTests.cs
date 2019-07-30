@@ -12,9 +12,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         [TestCase("this.Method1()", "Method1")]
         [TestCase("new C()?.Method1()", "Method1")]
         [TestCase("this.Method2<int>()", "Method2")]
-        public void TryGetInvokedMethodName(string code, string expected)
+        public void TryGetInvokedMethodName(string expression, string expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -31,8 +31,8 @@ namespace N
         private int Method2<T>() => 2;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
-            var invocation = syntaxTree.FindInvocation(code);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var invocation = syntaxTree.FindInvocation(expression);
             Assert.AreEqual(true, invocation.TryGetMethodName(out var name));
             Assert.AreEqual(expected, name);
         }
@@ -40,7 +40,7 @@ namespace N
         [Test]
         public void TryGetTargetAssemblyGetType()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.Reflection;
@@ -53,7 +53,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation("GetType");
@@ -65,7 +65,7 @@ namespace N
         [Test]
         public void TryGetTargetAssemblyGetTypeWithParameterByName()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.Reflection;
@@ -78,7 +78,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation("GetType");
@@ -91,7 +91,7 @@ namespace N
         [Test]
         public void TryGetTargetAssemblyGetTypeWithParameterByType()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.Reflection;
@@ -104,7 +104,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation("GetType");
@@ -117,7 +117,7 @@ namespace N
         [Test]
         public void TryGetTargetAssemblyGetTypeWithParameterByNameAndType()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.Reflection;
@@ -130,7 +130,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation("GetType");

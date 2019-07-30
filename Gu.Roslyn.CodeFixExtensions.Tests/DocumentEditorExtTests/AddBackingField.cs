@@ -11,7 +11,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
         [Test]
         public static async Task WhenNoBackingFields()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -22,7 +22,7 @@ namespace N
         public int Value { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value");
             var field = editor.AddBackingField(property);
@@ -45,7 +45,7 @@ namespace N
         [Test]
         public static async Task WhenNameCollision()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -55,7 +55,7 @@ namespace N
         public int Value { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value");
             var field = editor.AddBackingField(property);
@@ -77,7 +77,7 @@ namespace N
         [Test]
         public static async Task Between()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -100,7 +100,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
             var field = editor.AddBackingField(property);
@@ -135,7 +135,7 @@ namespace N
         [Test]
         public static async Task AdjacentToProperty()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -154,7 +154,7 @@ namespace N
         public int Value2 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
             var field = editor.AddBackingField(property);
@@ -185,7 +185,7 @@ namespace N
         [Test]
         public static async Task AdjacentToPropertyNewLine()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -205,7 +205,7 @@ namespace N
         public int Value2 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
             var field = editor.AddBackingField(property);

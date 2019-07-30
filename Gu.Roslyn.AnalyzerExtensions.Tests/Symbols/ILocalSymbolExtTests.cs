@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
         [Test]
         public void LocalInCtor()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C
@@ -23,7 +23,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
@@ -35,7 +35,7 @@ namespace N
         [Test]
         public void LocalInMethod()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C
@@ -46,7 +46,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
@@ -58,7 +58,7 @@ namespace N
         [Test]
         public void LocalInLocalFunction()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C
@@ -72,7 +72,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindVariableDeclaration("var i = 0");
@@ -84,7 +84,7 @@ namespace N
         [Test]
         public void LocalInLambda()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System;
@@ -100,7 +100,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindVariableDeclaration("var i = 0");

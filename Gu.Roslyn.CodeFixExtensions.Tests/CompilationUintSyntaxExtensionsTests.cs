@@ -10,11 +10,11 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
         [Test]
         public static void SystemWhenEmpty()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
@@ -32,11 +32,11 @@ usingSystem;}";
         [Test]
         public static void StringBuilderType()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
@@ -53,12 +53,12 @@ usingSystem.Text;}";
         [Test]
         public static void StringBuilderTypeWhenALreadyHasUsing()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.Text;
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 

@@ -22,9 +22,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.MemberPathTests
         [TestCase("this.C.Inner.C?.Inner", "C")]
         [TestCase("(meh as C)?.Inner", "meh")]
         [TestCase("((C)meh)?.Inner", "meh")]
-        public static void PropertyOrField(string code, string expected)
+        public static void PropertyOrField(string expression, string expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System;
@@ -41,10 +41,9 @@ namespace N
             var temp = C.Inner;
         }
     }
-}";
-            testCode = testCode.AssertReplace("C.Inner", code);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
-            var value = syntaxTree.FindExpression(code);
+}".AssertReplace("C.Inner", expression);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var value = syntaxTree.FindExpression(expression);
             Assert.AreEqual(true, MemberPath.TryFindRoot(value, out var member));
             Assert.AreEqual(expected, member.ToString());
 
@@ -75,9 +74,9 @@ namespace N
         [TestCase("(this.Inner.meh as C).Get<int>(1)", "Inner")]
         [TestCase("(this.Inner.meh as C)?.Get<int>(1)", "Inner")]
         [TestCase("(meh as C)?.Get<int>(1)", "meh")]
-        public static void ForMethodInvocation(string code, string expected)
+        public static void ForMethodInvocation(string expression, string expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System;
@@ -97,9 +96,9 @@ namespace N
         private T Get<T>(int value) => default(T);
     }
 }";
-            testCode = testCode.AssertReplace("this.C.Get<int>(1)", code);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
-            var invocation = syntaxTree.FindExpression(code);
+            code = code.AssertReplace("this.C.Get<int>(1)", expression);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var invocation = syntaxTree.FindExpression(expression);
             Assert.AreEqual(true, MemberPath.TryFindRoot(invocation, out var member));
             Assert.AreEqual(expected, member.ToString());
 
@@ -110,9 +109,9 @@ namespace N
         }
 
         [TestCase("C.Inner", "C")]
-        public static void MemberAccessExpression(string code, string expected)
+        public static void MemberAccessExpression(string expression, string expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public sealed class C
@@ -130,9 +129,9 @@ namespace N
         public C Inner { get; }
     }
 }";
-            testCode = testCode.AssertReplace("C.Inner", code);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
-            var value = syntaxTree.FindMemberAccessExpression(code);
+            code = code.AssertReplace("C.Inner", code);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var value = syntaxTree.FindMemberAccessExpression(expression);
             Assert.AreEqual(true, MemberPath.TryFindRoot(value, out var member));
             Assert.AreEqual(expected, member.ToString());
 
@@ -145,7 +144,7 @@ namespace N
         [Test]
         public static void Recursive()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -159,7 +158,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var invocation = syntaxTree.FindMemberAccessExpression("this.Value");
             Assert.AreEqual(true, MemberPath.TryFindRoot(invocation, out var member));
             Assert.AreEqual("Value", member.ToString());

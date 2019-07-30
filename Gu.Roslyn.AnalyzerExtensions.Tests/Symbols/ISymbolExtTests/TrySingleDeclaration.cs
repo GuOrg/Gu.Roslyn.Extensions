@@ -7,13 +7,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ISymbolExtTests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class TrySingleDeclaration
+    public static class TrySingleDeclaration
     {
         [TestCase("value1")]
         [TestCase("value2")]
-        public void Field(string name)
+        public static void Field(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -22,7 +22,7 @@ namespace N
         private int value2;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindFieldDeclaration(name);
@@ -33,9 +33,9 @@ namespace N
 
         [TestCase("Value1")]
         [TestCase("Value2")]
-        public void Property(string name)
+        public static void Property(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -45,7 +45,7 @@ namespace N
         public int Value2 { get; }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindPropertyDeclaration(name);
@@ -56,9 +56,9 @@ namespace N
 
         [TestCase("Value1")]
         [TestCase("Value2")]
-        public void Method(string name)
+        public static void Method(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -68,7 +68,7 @@ namespace N
         public int Value2() => 2;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration(name);
@@ -79,9 +79,9 @@ namespace N
 
         [TestCase("Value1")]
         [TestCase("Value2")]
-        public void ExplicitMethod(string name)
+        public static void ExplicitMethod(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -91,7 +91,7 @@ namespace N
         public int Value2() => 2;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration(name);
@@ -102,9 +102,9 @@ namespace N
 
         [TestCase("Value1")]
         [TestCase("Value2")]
-        public void Accessor(string name)
+        public static void Accessor(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -114,7 +114,7 @@ namespace N
         public int Value2 { get; }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindPropertyDeclaration(name);
@@ -125,9 +125,9 @@ namespace N
 
         [TestCase("Value1")]
         [TestCase("Value2")]
-        public void ExplicitAccessor(string name)
+        public static void ExplicitAccessor(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -137,7 +137,7 @@ namespace N
         public int Value2 { get; }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindPropertyDeclaration(name);
@@ -148,9 +148,9 @@ namespace N
 
         [TestCase("value1")]
         [TestCase("value2")]
-        public void Local(string name)
+        public static void Local(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -162,7 +162,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<VariableDeclaratorSyntax>(name);
@@ -173,9 +173,9 @@ namespace N
 
         [TestCase("value1")]
         [TestCase("value2")]
-        public void OutLocal(string name)
+        public static void OutLocal(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -192,7 +192,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<VariableDesignationSyntax>(name);
@@ -203,9 +203,9 @@ namespace N
 
         [TestCase("value1")]
         [TestCase("value2")]
-        public void Parameter(string name)
+        public static void Parameter(string name)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -215,7 +215,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindParameter(name);

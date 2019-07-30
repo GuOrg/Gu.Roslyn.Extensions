@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
         [TestCase(Scope.Recursive)]
         public void FieldWithCtorArg(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -28,7 +28,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindMemberAccessExpression("this.value");
@@ -49,7 +49,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void FieldWithChainedCtorArg(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -67,7 +67,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindMemberAccessExpression("this.value");
@@ -96,7 +96,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void FieldPrivateCtorCalledByInitializer(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -110,7 +110,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = semanticModel.GetDeclaredSymbolSafe(syntaxTree.FindFieldDeclaration("private readonly int value"), CancellationToken.None);
@@ -130,7 +130,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void FieldWithCtorArgViaProperty(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -149,7 +149,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindMemberAccessExpression("this.number");
@@ -179,7 +179,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void FieldInPropertyExpressionBody(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -194,7 +194,7 @@ namespace N
         public int Number => this.number = 3;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindMemberAccessExpression("this.number");

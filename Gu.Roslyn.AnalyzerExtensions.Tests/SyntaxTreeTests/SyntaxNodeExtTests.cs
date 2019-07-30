@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         [TestCase("M", false)]
         public void IsInExpressionTree(string text, bool expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System;
@@ -25,7 +25,7 @@ namespace N
         public Func<int> M() => () => 2;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var expression = syntaxTree.Find<SyntaxNode>(text);

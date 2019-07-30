@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ExpressionSyntaxExt
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class ExpressionSyntaxExtTests
+    public static class Types
     {
         [TestCase("1", typeof(int))]
         [TestCase("1", typeof(int?))]
@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ExpressionSyntaxExt
         [TestCase("1", typeof(object))]
         [TestCase("1", typeof(IComparable))]
         [TestCase("1", typeof(IComparable<int>))]
-        public void IsAssignableTo(string text, Type type)
+        public static void IsAssignableTo(string text, Type type)
         {
             var code = @"
 namespace N
@@ -35,7 +35,7 @@ namespace N
         }
 
         [TestCase("1", "System.Int32")]
-        public void IsAssignableTo(string text, string fullname)
+        public static void IsAssignableTo(string text, string fullname)
         {
             var code = @"
 namespace N
@@ -58,7 +58,7 @@ namespace N
 
         [TestCase("1", typeof(int))]
         [TestCase("1.0", typeof(double))]
-        public void IsSameType(string text, Type type)
+        public static void IsSameType(string text, Type type)
         {
             var code = @"
 namespace N

@@ -13,11 +13,11 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
         [Test]
         public static async Task SystemWhenEmpty()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
 
             var expected = @"
@@ -33,7 +33,7 @@ namespace N
         [Test]
         public static async Task SystemWhenEmptyOutside()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
@@ -44,7 +44,7 @@ using System;
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(new[] { testCode, otherCode });
+            var sln = CodeFactory.CreateSolution(new[] { code, otherCode });
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
 
             var expected = @"using System;
@@ -60,12 +60,12 @@ namespace N
         [Test]
         public static async Task SystemWhenSystemCollectionsExists()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.Collections;
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
 
             var expected = @"
@@ -82,11 +82,11 @@ namespace N
         [Test]
         public static async Task StringBuilderType()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(testCode, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
             var document = sln.Projects.First().Documents.First();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -103,11 +103,11 @@ namespace N
         [Test]
         public static async Task ListOfStringBuilderType()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(testCode, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
             var document = sln.Projects.First().Documents.First();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -129,12 +129,12 @@ namespace N
         [Test]
         public static async Task StringBuilderTypeWhenUsingExists()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.Text;
 }";
-            var sln = CodeFactory.CreateSolution(testCode, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
             var document = sln.Projects.First().Documents.First();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -157,11 +157,11 @@ namespace N.Extensions
     class C { }
 }
 ";
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
+            var sln = CodeFactory.CreateSolution(new[] { classCode, code });
             var document = sln.Projects.First().Documents.First();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -184,11 +184,11 @@ namespace A.B.C.Extensions
     class C { }
 }
 ";
-            var testCode = @"
+            var code = @"
 namespace A.B.C
 {
 }";
-            var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
+            var sln = CodeFactory.CreateSolution(new[] { classCode, code });
             var document = sln.Projects.First().Documents.First();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -211,11 +211,11 @@ namespace N
     class C { }
 }
 ";
-            var testCode = @"
+            var code = @"
 namespace N.Extensions
 {
 }";
-            var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
+            var sln = CodeFactory.CreateSolution(new[] { classCode, code });
             var document = sln.Projects.First().Documents.Last();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -237,11 +237,11 @@ namespace A.B.C
     class C1 { }
 }
 ";
-            var testCode = @"
+            var code = @"
 namespace A.B.C.Extensions
 {
 }";
-            var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
+            var sln = CodeFactory.CreateSolution(new[] { classCode, code });
             var document = sln.Projects.First().Documents.Last();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -263,12 +263,12 @@ namespace N
     class C1 { }
 }
 ";
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C2 { }
 }";
-            var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
+            var sln = CodeFactory.CreateSolution(new[] { classCode, code });
             var document = sln.Projects.First().Documents.Last();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -291,12 +291,12 @@ namespace A.B.C
     class C1 { }
 }
 ";
-            var testCode = @"
+            var code = @"
 namespace A.B.C
 {
     class C2 { }
 }";
-            var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
+            var sln = CodeFactory.CreateSolution(new[] { classCode, code });
             var document = sln.Projects.First().Documents.Last();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -319,11 +319,11 @@ namespace N
     class C<T> { }
 }
 ";
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
+            var sln = CodeFactory.CreateSolution(new[] { classCode, code });
             var document = sln.Projects.First().Documents.Last();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -345,11 +345,11 @@ namespace N
     class C1 { }
 }
 ";
-            var testCode = @"
+            var code = @"
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(new[] { classCode, testCode });
+            var sln = CodeFactory.CreateSolution(new[] { classCode, code });
             var document = sln.Projects.First().Documents.Last();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 

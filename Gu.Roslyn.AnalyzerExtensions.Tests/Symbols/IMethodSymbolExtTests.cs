@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
         [TestCase("new C(m: 2, n: 1)", "m: 2", "m")]
         public void TryFindParameter(string objectCreation, string arg, string expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -30,7 +30,7 @@ namespace N
         public static C M() => new C(1, 2);
     }
 }".AssertReplace("new C(1, 2)", objectCreation);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindConstructorDeclaration("C(int n, int m)"), CancellationToken.None, out var method));
@@ -46,7 +46,7 @@ namespace N
         [TestCase("new C(1, 2, 3)", "3", "ms")]
         public void TryFindParameterWhenParams(string objectCreation, string arg, string expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -58,7 +58,7 @@ namespace N
         public static C M() => new C(1, 2);
     }
 }".AssertReplace("new C(1, 2)", objectCreation);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindConstructorDeclaration("C(int n, params int[] ms)"), CancellationToken.None, out var method));

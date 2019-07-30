@@ -8,19 +8,19 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
     using Microsoft.CodeAnalysis.Editing;
     using NUnit.Framework;
 
-    public static partial class DocumentEditorExtTests
+    public static class ReplaceToken
     {
         [Test]
-        public static async Task ReplaceToken()
+        public static async Task Modifier()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
     {
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             _ = editor.ReplaceToken(containingType.Modifiers.First(), SyntaxFactory.Token(SyntaxKind.InternalKeyword));

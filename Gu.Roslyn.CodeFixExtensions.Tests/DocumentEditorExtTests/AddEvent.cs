@@ -14,7 +14,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
         [Test]
         public async Task AddEventFieldDeclarationSyntax()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public abstract class C
@@ -37,7 +37,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
@@ -73,7 +73,7 @@ namespace N
         [Test]
         public async Task AddEventDeclarationSyntax()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public abstract class C
@@ -96,7 +96,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var eventDeclaration = (EventDeclarationSyntax)editor.Generator.CustomEventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");

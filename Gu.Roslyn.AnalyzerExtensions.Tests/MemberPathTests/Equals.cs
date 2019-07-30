@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.MemberPathTests
         [Test]
         public static void SimpleValue()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -24,7 +24,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var getExpression = syntaxTree.FindAccessorDeclaration("get => this.value;").ExpressionBody.Expression;
             var setExpression = ((AssignmentExpressionSyntax)syntaxTree.FindAccessorDeclaration("set => this.value = value;").ExpressionBody.Expression).Left;
             Assert.AreEqual(true, MemberPath.Equals(getExpression, setExpression));
@@ -40,7 +40,7 @@ namespace N
         [TestCase("get => value1;", "set => value2 = value;", false)]
         public static void Simple(string getter, string setter, bool expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -55,9 +55,9 @@ namespace N
         }
     }
 }";
-            testCode = testCode.AssertReplace("get => this.value1;", getter)
+            code = code.AssertReplace("get => this.value1;", getter)
                                .AssertReplace("set => this.value1 = value;", setter);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var getExpression = syntaxTree.FindAccessorDeclaration(getter).ExpressionBody.Expression;
             var setExpression = ((AssignmentExpressionSyntax)syntaxTree.FindAccessorDeclaration(setter).ExpressionBody.Expression).Left;
             Assert.AreEqual(expected, MemberPath.Equals(getExpression, setExpression));
@@ -83,7 +83,7 @@ namespace N
         [TestCase("get => f1.Value1;", "set => this.f2 = value;", false)]
         public static void Nested(string getter, string setter, bool expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C1
@@ -105,9 +105,9 @@ namespace N
         }
     }
 }";
-            testCode = testCode.AssertReplace("get => this.f1.Value1;", getter)
+            code = code.AssertReplace("get => this.f1.Value1;", getter)
                                .AssertReplace("set => this.f2.Value1 = value;", setter);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var getExpression = syntaxTree.FindAccessorDeclaration(getter).ExpressionBody.Expression;
             var setExpression = ((AssignmentExpressionSyntax)syntaxTree.FindAccessorDeclaration(setter).ExpressionBody.Expression).Left;
             Assert.AreEqual(expected, MemberPath.Equals(getExpression, setExpression));

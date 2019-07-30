@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         [Test]
         public void TryGetTargetProperty()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -19,7 +19,7 @@ namespace N
         public object M(string text) => text.Length;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var identifierNameSyntax = (IdentifierNameSyntax)syntaxTree.FindExpression("Length");
@@ -32,7 +32,7 @@ namespace N
         [TestCase("text")]
         public void IsSymbol(string identifier)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -40,7 +40,7 @@ namespace N
         public object M(string text) => text.Length;
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
@@ -55,7 +55,7 @@ namespace N
         [TestCase("M")]
         public void IsSymbolExtensionMethod1(string identifier)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public static class C
@@ -65,7 +65,7 @@ namespace N
         public static object P => string.Empty.M(1);
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
@@ -77,7 +77,7 @@ namespace N
         [Test]
         public void IsSymbolExtensionMethod2()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public static class C
@@ -87,7 +87,7 @@ namespace N
         public static object P => string.Empty.M(1);
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
@@ -99,7 +99,7 @@ namespace N
         [Test]
         public void IsSymbolExtensionMethodParameter()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public static class C
@@ -109,7 +109,7 @@ namespace N
         public static object P => string.Empty.M(1);
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 

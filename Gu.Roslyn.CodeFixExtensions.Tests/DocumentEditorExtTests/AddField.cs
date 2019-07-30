@@ -14,14 +14,14 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
         [TestCase("private int newField;")]
         public static async Task AddPrivateFieldWhenEmpty(string declaration)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C
     {
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
 
@@ -42,7 +42,7 @@ namespace N
         [Test]
         public static async Task AddPublicFieldWhenPrivateExists()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C
@@ -50,7 +50,7 @@ namespace N
         private int f;
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
 
@@ -73,7 +73,7 @@ namespace N
         [Test]
         public static async Task AddPublicFieldWhenPublicAndPrivateExists()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C
@@ -83,7 +83,7 @@ namespace N
         private int f;
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
 
@@ -107,7 +107,7 @@ namespace N
         [Test]
         public static async Task AddPrivateFieldWhenPublicExists()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C
@@ -115,7 +115,7 @@ namespace N
         public int F;
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
 
@@ -138,7 +138,7 @@ namespace N
         [Test]
         public static async Task AddPrivateFieldWhenPrivateExists()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     class C
@@ -146,7 +146,7 @@ namespace N
         private int f;
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
 
@@ -168,7 +168,7 @@ namespace N
         [Test]
         public static async Task TypicalClass()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public abstract class C
@@ -207,7 +207,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
 

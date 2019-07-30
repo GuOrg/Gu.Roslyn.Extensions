@@ -19,9 +19,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         [TestCase("nameof(M)", "M")]
         [TestCase("nameof(this.M)", "M")]
         [TestCase("(string)null", null)]
-        public void TryGetStringValue(string code, string expected)
+        public void TryGetStringValue(string expression, string expected)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System;
@@ -41,12 +41,12 @@ namespace N
     }
 
     public class C<T> { }
-}".AssertReplace("\"text\"", code);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+}".AssertReplace("\"text\"", expression);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation =
             CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var invocation = syntaxTree.FindArgument(code);
+            var invocation = syntaxTree.FindArgument(expression);
             Assert.AreEqual(true, invocation.TryGetStringValue(semanticModel, CancellationToken.None, out var name));
             Assert.AreEqual(expected, name);
         }

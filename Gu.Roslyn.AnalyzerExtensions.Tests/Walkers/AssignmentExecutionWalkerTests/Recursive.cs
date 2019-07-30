@@ -7,10 +7,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public partial class AssignmentExecutionWalkerTests
+    public static class Recursive
     {
         [Test]
-        public void Recursive()
+        public static void Properties()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

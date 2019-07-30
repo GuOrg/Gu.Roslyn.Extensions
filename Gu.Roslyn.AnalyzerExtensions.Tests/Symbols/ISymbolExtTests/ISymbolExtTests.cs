@@ -5,13 +5,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ISymbolExtTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    // ReSharper disable once InconsistentNaming
-    public partial class ISymbolExtTests
+    public static class IsEquivalentTo
     {
         [Test]
-        public void PropertyIsEquivalentTo()
+        public static void PropertyIsEquivalentTo()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public abstract class CBase<T>
@@ -34,7 +33,7 @@ namespace N
         public override int Value { get; set; }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetDeclaredSymbolSafe(syntaxTree.FindPropertyDeclaration("public override int Value { get; set; }"), CancellationToken.None);

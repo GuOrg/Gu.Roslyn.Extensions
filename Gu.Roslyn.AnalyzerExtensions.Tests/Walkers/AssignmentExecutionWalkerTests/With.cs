@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
         [TestCase(Scope.Recursive)]
         public void FieldCtorArg(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -29,7 +29,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindParameter("arg");
@@ -48,7 +48,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void GenericFieldCtorArg(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C<T>
@@ -61,7 +61,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindParameter("arg");
@@ -80,7 +80,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void GenericFieldTypedCtorArg(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C<T>
@@ -95,7 +95,7 @@ namespace N
          public static C<int> Create(int n) => new C<int>(n);
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             ArgumentSyntax argument = syntaxTree.FindArgument("n");
@@ -115,7 +115,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void FieldCtorArgViaLocal(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -129,7 +129,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
@@ -147,7 +147,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void FieldCtorArgInNested(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     using System.IO;
@@ -162,7 +162,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindParameter("stream");
@@ -181,7 +181,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void ChainedCtorArg(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -199,7 +199,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
@@ -228,7 +228,7 @@ namespace N
         [TestCase(Scope.Recursive)]
         public void FieldWithCtorArgViaProperty(Scope scope)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     internal class C
@@ -247,7 +247,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindParameter("arg");

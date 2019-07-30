@@ -13,7 +13,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
         [Test]
         public static async Task Private()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public abstract class C
@@ -52,7 +52,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private int NewMethod() => 1;");
@@ -105,7 +105,7 @@ namespace N
         [Test]
         public static async Task Public()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public abstract class C
@@ -144,7 +144,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
@@ -197,7 +197,7 @@ namespace N
         [Test]
         public static async Task AfterPropertyWithPragma()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public abstract class C
@@ -207,7 +207,7 @@ namespace N
 #pragma warning restore INPC002 // Mutable public property should notify.
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
@@ -303,7 +303,7 @@ namespace N
         [Test]
         public static async Task BeforeMethodInConditional()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -313,7 +313,7 @@ namespace N
 #endif
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
@@ -337,7 +337,7 @@ namespace N
         [Test]
         public static async Task BetweenInConditionalDirectives()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -351,7 +351,7 @@ namespace N
 #endif
     }
 }";
-            var sln = CodeFactory.CreateSolution(testCode);
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");

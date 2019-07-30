@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
         [TestCase("this.value += 1")]
         public void One(string mutation)
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -28,8 +28,8 @@ namespace N
         }
     }
 }";
-            testCode = testCode.AssertReplace("this.value = 1", mutation);
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            code = code.AssertReplace("this.value = 1", mutation);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
@@ -44,7 +44,7 @@ namespace N
         [Test]
         public void ObjectInitializer()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -54,7 +54,7 @@ namespace N
         public static C Create() => new C { value = 1 };
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
@@ -69,7 +69,7 @@ namespace N
         [Test]
         public void Ref()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -87,7 +87,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
@@ -102,7 +102,7 @@ namespace N
         [Test]
         public void Out()
         {
-            var testCode = @"
+            var code = @"
 namespace N
 {
     public class C
@@ -120,7 +120,7 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(testCode);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
