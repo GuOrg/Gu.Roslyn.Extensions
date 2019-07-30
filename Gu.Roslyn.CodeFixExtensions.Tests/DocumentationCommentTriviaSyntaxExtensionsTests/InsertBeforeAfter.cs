@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentationCommentTriviaSyntaxExtensionsTests
 {
     using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions;
@@ -7,7 +7,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public static partial class DocumentationCommentTriviaSyntaxExtensionsTests
+    public static partial class InsertBeforeAfter
     {
         [Test]
         public static void InsertBeforeFirst()
