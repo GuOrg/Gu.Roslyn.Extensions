@@ -1,4 +1,5 @@
 #pragma warning disable CA1034 // Nested types should not be visible
+#pragma warning disable CA1720 // Identifier contains type name
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
