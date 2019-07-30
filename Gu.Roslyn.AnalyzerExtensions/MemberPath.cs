@@ -44,6 +44,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the instances are found equal.</returns>
         public static bool Equals(PathWalker x, PathWalker y)
         {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is null || y is null)
+            {
+                return false;
+            }
+
             var xs = x.IdentifierNames;
             var ys = y.IdentifierNames;
             if (xs.Count == 0 ||

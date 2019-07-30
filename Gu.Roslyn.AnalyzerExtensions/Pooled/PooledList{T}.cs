@@ -1,15 +1,17 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
 
+#pragma warning disable CA1710 // Identifiers should have correct suffix
     /// <summary>
     /// A <see cref="List{T}"/> for re-use.
     /// </summary>
     /// <typeparam name="T">The type of items.</typeparam>
     public sealed class PooledList<T> : IList<T>, IDisposable
+#pragma warning restore CA1710 // Identifiers should have correct suffix
     {
         private static readonly ConcurrentQueue<PooledList<T>> Cache = new ConcurrentQueue<PooledList<T>>();
 

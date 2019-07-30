@@ -1,3 +1,4 @@
+#pragma warning disable CA1000 // Do not declare static members on generic types
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
@@ -56,6 +57,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The cached value.</returns>
         public static TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
         {
+            if (valueFactory == null)
+            {
+                throw new ArgumentNullException(nameof(valueFactory));
+            }
+
             return refCount == 0 ? valueFactory(key) : Inner.GetOrAdd(key, valueFactory);
         }
 

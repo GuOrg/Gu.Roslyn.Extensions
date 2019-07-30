@@ -14,7 +14,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <typeparam name="T">The type of items in the set.</typeparam>
     [DebuggerTypeProxy(typeof(PooledSetDebugView<>))]
     [DebuggerDisplay("Count = {this.Count}, refCount = {this.refCount}")]
+#pragma warning disable CA1710 // Identifiers should have correct suffix
     public sealed class PooledSet<T> : IDisposable, IReadOnlyCollection<T>
+#pragma warning restore CA1710 // Identifiers should have correct suffix
     {
         private static readonly ConcurrentQueue<PooledSet<T>> Cache = new ConcurrentQueue<PooledSet<T>>();
         private readonly HashSet<T> inner = new HashSet<T>(GetComparer());

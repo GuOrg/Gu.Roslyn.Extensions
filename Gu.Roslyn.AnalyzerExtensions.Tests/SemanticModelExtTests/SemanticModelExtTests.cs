@@ -6,10 +6,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class SemanticModelExtTests
+    public static class TryGetConstantValue
     {
         [Test]
-        public void TryGetConstantValueInt()
+        public static void WhenInt()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -34,7 +34,7 @@ namespace N
         }
 
         [Test]
-        public void TryGetConstantValueDouble()
+        public static void WhenDouble()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -58,8 +58,9 @@ namespace N
             Assert.AreEqual(false, semanticModel.TryGetConstantValue<int>(node, CancellationToken.None, out _));
         }
 
-        [Test]
-        public void TryGetConstantValueString()
+        [TestCase("\"abc\"", "abc")]
+        [TestCase("null", null)]
+        public static void WhenString(string literal, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -72,17 +73,18 @@ namespace N
             var value = ""abc"";
         }
     }
-}");
+}".AssertReplace("\"abc\"", literal));
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindEqualsValueClause("=").Value;
             Assert.AreEqual(true, semanticModel.TryGetConstantValue<string>(node, CancellationToken.None, out var value));
-            Assert.AreEqual("abc", value);
-            Assert.AreEqual("abc", semanticModel.GetConstantValueSafe(node, CancellationToken.None).Value);
+            Assert.AreEqual(expected, value);
+            Assert.AreEqual(expected, semanticModel.GetConstantValueSafe(node, CancellationToken.None).Value);
         }
 
-        [Test]
-        public void TryGetConstantValueStringNull()
+        [TestCase("1", 1)]
+        [TestCase("null", null)]
+        public static void WhenNullableInt(string literal, int? expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -92,43 +94,20 @@ namespace N
     {
         public C()
         {
-            string value = null;
+            int? value = 1;
         }
     }
-}");
+}".AssertReplace("1", literal));
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindEqualsValueClause("=").Value;
-            Assert.AreEqual(true, semanticModel.TryGetConstantValue<string>(node, CancellationToken.None, out var value));
-            Assert.AreEqual(null, value);
-            Assert.AreEqual(null, semanticModel.GetConstantValueSafe(node, CancellationToken.None).Value);
+            Assert.AreEqual(true, semanticModel.TryGetConstantValue<int?>(node, CancellationToken.None, out var value));
+            Assert.AreEqual(expected, value);
+            Assert.AreEqual(expected, semanticModel.GetConstantValueSafe(node, CancellationToken.None).Value);
         }
 
         [Test]
-        public void TryGetConstantValueNullableIntNull()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
-namespace N
-{
-    public class C
-    {
-        public C()
-        {
-            int? value = null;
-        }
-    }
-}");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindEqualsValueClause("=").Value;
-            Assert.AreEqual(true, semanticModel.TryGetConstantValue<string>(node, CancellationToken.None, out var value));
-            Assert.AreEqual(null, value);
-            Assert.AreEqual(null, semanticModel.GetConstantValueSafe(node, CancellationToken.None).Value);
-        }
-
-        [Test]
-        public void TryGetConstantValueBindingFlags()
+        public static void WhenBindingFlags()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
