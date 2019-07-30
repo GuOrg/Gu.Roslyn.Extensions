@@ -12,6 +12,7 @@
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
