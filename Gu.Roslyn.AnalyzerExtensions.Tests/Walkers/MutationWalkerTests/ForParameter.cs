@@ -7,12 +7,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class ForParameter
+    public static class ForParameter
     {
         [TestCase("value = 1")]
         [TestCase("value++")]
         [TestCase("value += 1")]
-        public void One(string mutation)
+        public static void One(string mutation)
         {
             var code = @"
 namespace N

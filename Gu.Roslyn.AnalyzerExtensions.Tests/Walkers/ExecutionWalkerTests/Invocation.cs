@@ -5,13 +5,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class Invocation
+    public static class Invocation
     {
         [TestCase(Scope.Member, "2, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void StatementBody(Scope scope, string expected)
+        public static void StatementBody(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -43,7 +43,7 @@ namespace N
         [TestCase(Scope.Instance, "2, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void Static(Scope scope, string expected)
+        public static void Static(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -75,7 +75,7 @@ namespace N
         [TestCase(Scope.Instance, "2, 3")]
         [TestCase(Scope.Type, "2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void StaticOtherType(Scope scope, string expected)
+        public static void StaticOtherType(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -107,7 +107,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void ExpressionBody(Scope scope, string expected)
+        public static void ExpressionBody(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -136,7 +136,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void WalkOverridden(Scope scope, string expected)
+        public static void WalkOverridden(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -164,7 +164,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void InvocationAsArgument(Scope scope, string expected)
+        public static void InvocationAsArgument(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -193,7 +193,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void InvocationVirtual(Scope scope, string expected)
+        public static void InvocationVirtual(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -231,7 +231,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void ArgumentBeforeInvocation(Scope scope, string expected)
+        public static void ArgumentBeforeInvocation(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -265,7 +265,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void ArgumentBeforeInvocationStaticAndInstance(Scope scope, string expected)
+        public static void ArgumentBeforeInvocationStaticAndInstance(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

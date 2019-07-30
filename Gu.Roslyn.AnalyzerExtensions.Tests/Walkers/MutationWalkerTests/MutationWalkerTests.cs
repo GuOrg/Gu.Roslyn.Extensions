@@ -6,12 +6,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class MutationWalkerTests
+    public static class WhenOne
     {
         [TestCase("this.value = 1")]
         [TestCase("this.value++")]
         [TestCase("this.value += 1")]
-        public void One(string mutation)
+        public static void One(string mutation)
         {
             var code = @"
 namespace N
@@ -41,7 +41,7 @@ namespace N
 
         [TestCase("out")]
         [TestCase("ref")]
-        public void OneRefOrOut(string modifier)
+        public static void OneRefOrOut(string modifier)
         {
             var code = @"
 namespace N

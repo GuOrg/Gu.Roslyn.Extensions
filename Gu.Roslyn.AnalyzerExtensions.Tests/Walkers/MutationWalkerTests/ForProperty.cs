@@ -6,12 +6,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class ForProperty
+    public static class ForProperty
     {
         [TestCase("this.Value = 1")]
         [TestCase("this.Value++")]
         [TestCase("this.Value += 1")]
-        public void One(string mutation)
+        public static void One(string mutation)
         {
             var code = @"
 namespace N
@@ -40,7 +40,7 @@ namespace N
         }
 
         [Test]
-        public void ObjectInitializer()
+        public static void ObjectInitializer()
         {
             var code = @"
 namespace N

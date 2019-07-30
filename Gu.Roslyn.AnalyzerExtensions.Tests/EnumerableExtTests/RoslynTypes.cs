@@ -1,11 +1,11 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public partial class EnumerableExtTests
+    public static class RoslynTypes
     {
         [Test]
         public static void TryFirstParameter()

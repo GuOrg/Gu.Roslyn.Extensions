@@ -6,13 +6,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class Constructor
+    public static class Constructor
     {
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Type)]
         [TestCase(Scope.Recursive)]
-        public void ExplicitParameterless(Scope scope)
+        public static void ExplicitParameterless(Scope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -38,7 +38,7 @@ namespace N
         [TestCase(Scope.Instance, "2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void StaticBeforeExplicitParameterless(Scope scope, string expected)
+        public static void StaticBeforeExplicitParameterless(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -69,7 +69,7 @@ namespace N
         [TestCase(Scope.Instance, "2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void StaticBeforeExplicitParameterlessWhenNotDocumentOrder(Scope scope, string expected)
+        public static void StaticBeforeExplicitParameterlessWhenNotDocumentOrder(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -100,7 +100,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2, 3")]
         [TestCase(Scope.Type, "1, 2, 3")]
         [TestCase(Scope.Recursive, "1, 2, 3")]
-        public void ChainedThis(Scope scope, string expected)
+        public static void ChainedThis(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -132,7 +132,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void ImplicitBaseParameterLess(Scope scope, string expected)
+        public static void ImplicitBaseParameterLess(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -166,7 +166,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void ExplicitBaseParameterLess(Scope scope, string expected)
+        public static void ExplicitBaseParameterLess(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -201,7 +201,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void FieldInitializerBeforeConstructor(Scope scope, string expected)
+        public static void FieldInitializerBeforeConstructor(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -229,7 +229,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void FieldInitializerBeforeConstructorWhenNotDocumentOrder(Scope scope, string expected)
+        public static void FieldInitializerBeforeConstructorWhenNotDocumentOrder(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -257,7 +257,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void PropertyInitializerBeforeConstructor(Scope scope, string expected)
+        public static void PropertyInitializerBeforeConstructor(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -288,7 +288,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void PropertyInitializerBeforeDefaultCtor(Scope scope, string expected)
+        public static void PropertyInitializerBeforeDefaultCtor(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -315,7 +315,7 @@ namespace N
         [TestCase(Scope.Instance, "1, 2")]
         [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
-        public void PropertyInitializerBeforeDefaultCtorObjectInitializer(Scope scope, string expected)
+        public static void PropertyInitializerBeforeDefaultCtorObjectInitializer(Scope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

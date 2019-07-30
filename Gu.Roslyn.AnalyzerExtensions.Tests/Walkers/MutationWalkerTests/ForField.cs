@@ -8,12 +8,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class ForField
+    public static class ForField
     {
         [TestCase("this.value = 1")]
         [TestCase("this.value++")]
         [TestCase("this.value += 1")]
-        public void One(string mutation)
+        public static void One(string mutation)
         {
             var code = @"
 namespace N
@@ -42,7 +42,7 @@ namespace N
         }
 
         [Test]
-        public void ObjectInitializer()
+        public static void ObjectInitializer()
         {
             var code = @"
 namespace N
@@ -67,7 +67,7 @@ namespace N
         }
 
         [Test]
-        public void Ref()
+        public static void Ref()
         {
             var code = @"
 namespace N
@@ -100,7 +100,7 @@ namespace N
         }
 
         [Test]
-        public void Out()
+        public static void Out()
         {
             var code = @"
 namespace N
