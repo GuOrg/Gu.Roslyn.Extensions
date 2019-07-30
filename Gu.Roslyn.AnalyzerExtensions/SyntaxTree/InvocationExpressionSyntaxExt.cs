@@ -18,6 +18,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if it possibly return void.</returns>
         public static bool IsPotentialReturnVoid(this InvocationExpressionSyntax invocation)
         {
+            if (invocation == null)
+            {
+                throw new System.ArgumentNullException(nameof(invocation));
+            }
+
             if (invocation.Parent is ArgumentSyntax ||
                 invocation.Parent is EqualsValueClauseSyntax ||
                 invocation.Parent is AssignmentExpressionSyntax)
@@ -41,6 +46,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if it possibly is a member call in the containing instance.</returns>
         public static bool IsPotentialThis(this InvocationExpressionSyntax invocation)
         {
+            if (invocation == null)
+            {
+                throw new System.ArgumentNullException(nameof(invocation));
+            }
+
             switch (invocation.Expression)
             {
                 case IdentifierNameSyntax _:
@@ -59,6 +69,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if it possibly is a member call in the containing instance.</returns>
         public static bool IsPotentialThisOrBase(this InvocationExpressionSyntax invocation)
         {
+            if (invocation == null)
+            {
+                throw new System.ArgumentNullException(nameof(invocation));
+            }
+
             switch (invocation.Expression)
             {
                 case IdentifierNameSyntax _:
@@ -126,7 +141,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="invocation"/> is a call to <paramref name="expected"/>.</returns>
         public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol target)
         {
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             target = null;
+            if (invocation == null)
+            {
+                return false;
+            }
+
             return invocation.ArgumentList != null &&
                    invocation.TryGetMethodName(out var name) &&
                    name == expected.Name &&
@@ -147,6 +177,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="invocation"/> is a call to <paramref name="expected"/>.</returns>
         public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, QualifiedParameter qualifiedParameter0, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol target, out ArgumentSyntax argument)
         {
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             argument = null;
             return TryGetTarget(invocation, expected, semanticModel, cancellationToken, out target) &&
                    target.Parameters.TrySingle(out var parameter) &&
@@ -169,6 +209,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="invocation"/> is a call to <paramref name="expected"/>.</returns>
         public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, QualifiedParameter qualifiedParameter0, QualifiedParameter qualifiedParameter1, SemanticModel semanticModel, CancellationToken cancellationToken, out IMethodSymbol target, out ArgumentSyntax argument0, out ArgumentSyntax argument1)
         {
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             argument0 = null;
             argument1 = null;
             return TryGetTarget(invocation, expected, semanticModel, cancellationToken, out target) &&
@@ -207,6 +257,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             out ArgumentSyntax argument1,
             out ArgumentSyntax argument2)
         {
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             argument0 = null;
             argument1 = null;
             argument2 = null;
@@ -252,6 +312,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             out ArgumentSyntax argument2,
             out ArgumentSyntax argument3)
         {
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             argument0 = null;
             argument1 = null;
             argument2 = null;
@@ -275,6 +345,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the invocation is nameof().</returns>
         public static bool IsNameOf(this InvocationExpressionSyntax invocation)
         {
+            if (invocation == null)
+            {
+                throw new System.ArgumentNullException(nameof(invocation));
+            }
+
             return invocation.TryGetMethodName(out var name) &&
                    name == "nameof";
         }
@@ -286,6 +361,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the invocation is typeof().</returns>
         public static bool IsTypeOf(this InvocationExpressionSyntax invocation)
         {
+            if (invocation == null)
+            {
+                throw new System.ArgumentNullException(nameof(invocation));
+            }
+
             return invocation.TryGetMethodName(out var name) &&
                    name == "typeof";
         }
@@ -299,6 +379,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
+            if (parameter == null)
+            {
+                throw new System.ArgumentNullException(nameof(parameter));
+            }
+
             argument = null;
             return invocation?.ArgumentList is ArgumentListSyntax argumentList &&
                    argumentList.TryFind(parameter, out argument);
@@ -313,6 +398,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one or more were found.</returns>
         public static bool TryFindArgumentParams(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
         {
+            if (parameter == null)
+            {
+                throw new System.ArgumentNullException(nameof(parameter));
+            }
+
             arguments = default;
             return invocation?.ArgumentList is ArgumentListSyntax argumentList &&
                    argumentList.TryFindParams(parameter, out arguments);
@@ -328,6 +418,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the declaration was found.</returns>
         public static bool TryGetTargetDeclaration(this InvocationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out MethodDeclarationSyntax declaration)
         {
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             declaration = null;
             return semanticModel.TryGetSymbol(invocation, cancellationToken, out var symbol) &&
                    symbol.TrySingleDeclaration(cancellationToken, out declaration);

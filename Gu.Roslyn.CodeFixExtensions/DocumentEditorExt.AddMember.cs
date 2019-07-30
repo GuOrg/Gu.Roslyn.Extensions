@@ -20,6 +20,16 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddUsing(this DocumentEditor editor, UsingDirectiveSyntax usingDirective)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (usingDirective == null)
+            {
+                throw new System.ArgumentNullException(nameof(usingDirective));
+            }
+
             if (editor.OriginalRoot is CompilationUnitSyntax compilationUnit)
             {
                 editor.ReplaceNode(
@@ -38,6 +48,16 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddUsing(this DocumentEditor editor, ITypeSymbol type)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (type == null)
+            {
+                throw new System.ArgumentNullException(nameof(type));
+            }
+
             if (editor.OriginalRoot is CompilationUnitSyntax compilationUnit)
             {
                 editor.ReplaceNode(
@@ -57,6 +77,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddField(this DocumentEditor editor, TypeDeclarationSyntax containingType, FieldDeclarationSyntax field)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (containingType == null)
+            {
+                throw new System.ArgumentNullException(nameof(containingType));
+            }
+
+            if (field == null)
+            {
+                throw new System.ArgumentNullException(nameof(field));
+            }
+
             editor.ReplaceNode(
                 containingType,
                 (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, field));
@@ -73,6 +108,16 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>A <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax AddBackingField(this DocumentEditor editor, PropertyDeclarationSyntax propertyDeclaration)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (propertyDeclaration == null)
+            {
+                throw new System.ArgumentNullException(nameof(propertyDeclaration));
+            }
+
             var property = editor.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
             var type = (TypeDeclarationSyntax)propertyDeclaration.Parent;
             var backingField = CreateBackingField(editor, propertyDeclaration);
@@ -91,6 +136,16 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>A <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax CreateBackingField(this DocumentEditor editor, PropertyDeclarationSyntax propertyDeclaration)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (propertyDeclaration == null)
+            {
+                throw new System.ArgumentNullException(nameof(propertyDeclaration));
+            }
+
             var property = editor.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
             var name = editor.SemanticModel.UnderscoreFields()
                 ? $"_{property.Name.ToFirstCharLower()}"
@@ -123,6 +178,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventDeclarationSyntax @event)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (containingType == null)
+            {
+                throw new System.ArgumentNullException(nameof(containingType));
+            }
+
+            if (@event == null)
+            {
+                throw new System.ArgumentNullException(nameof(@event));
+            }
+
             editor.ReplaceNode(
                 containingType,
                 (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event));
@@ -138,6 +208,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventFieldDeclarationSyntax @event)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (containingType == null)
+            {
+                throw new System.ArgumentNullException(nameof(containingType));
+            }
+
+            if (@event == null)
+            {
+                throw new System.ArgumentNullException(nameof(@event));
+            }
+
             editor.ReplaceNode(
                 containingType,
                 (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event));
@@ -153,6 +238,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddProperty(this DocumentEditor editor, TypeDeclarationSyntax containingType, BasePropertyDeclarationSyntax property)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (containingType == null)
+            {
+                throw new System.ArgumentNullException(nameof(containingType));
+            }
+
+            if (property == null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
             editor.ReplaceNode(
                 containingType,
                 (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, property));
@@ -168,6 +268,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddMethod(this DocumentEditor editor, TypeDeclarationSyntax containingType, MethodDeclarationSyntax method)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (containingType == null)
+            {
+                throw new System.ArgumentNullException(nameof(containingType));
+            }
+
+            if (method == null)
+            {
+                throw new System.ArgumentNullException(nameof(method));
+            }
+
             editor.ReplaceNode(
                 containingType,
                 (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, method));
@@ -183,6 +298,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddMember(this DocumentEditor editor, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member)
         {
+            if (editor == null)
+            {
+                throw new System.ArgumentNullException(nameof(editor));
+            }
+
+            if (containingType == null)
+            {
+                throw new System.ArgumentNullException(nameof(containingType));
+            }
+
+            if (member == null)
+            {
+                throw new System.ArgumentNullException(nameof(member));
+            }
+
             editor.ReplaceNode(
                 containingType,
                 (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, member));

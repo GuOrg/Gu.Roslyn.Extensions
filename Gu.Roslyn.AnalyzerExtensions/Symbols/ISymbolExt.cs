@@ -114,7 +114,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a single attribute of type <paramref name="attributeType"/> declared on <paramref name="symbol"/>.</returns>
         public static bool TryGetAttribute(this ISymbol symbol, QualifiedType attributeType, out AttributeData attribute)
         {
-            return symbol.GetAttributes().TrySingle(x => x.AttributeClass == attributeType, out attribute);
+            attribute = null;
+            return symbol?.GetAttributes().TrySingle(x => x.AttributeClass == attributeType, out attribute) ?? false;
         }
 
         /// <summary>

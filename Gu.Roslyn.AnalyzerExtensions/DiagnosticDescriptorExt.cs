@@ -15,6 +15,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the descriptor is currently suppressed.</returns>
         public static bool IsSuppressed(this DiagnosticDescriptor descriptor, SemanticModel semanticModel)
         {
+            if (descriptor == null)
+            {
+                throw new System.ArgumentNullException(nameof(descriptor));
+            }
+
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             if (semanticModel.Compilation.Options.SpecificDiagnosticOptions.TryGetValue(descriptor.Id, out var report))
             {
                 return report == ReportDiagnostic.Suppress;
