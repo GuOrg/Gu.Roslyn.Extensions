@@ -12,7 +12,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     /// <summary>
     /// A CodeFixContext for usage with <see cref="DocumentEditorCodeFixProvider"/>.
     /// </summary>
-    public struct DocumentEditorCodeFixContext
+    public struct DocumentEditorCodeFixContext : IEquatable<DocumentEditorCodeFixContext>
     {
         private readonly CodeFixContext context;
 
@@ -47,6 +47,28 @@ namespace Gu.Roslyn.CodeFixExtensions
         public ImmutableArray<Diagnostic> Diagnostics => this.context.Diagnostics;
 
         /// <summary>
+        /// Check if <paramref name="left"/> is equal to <paramref name="right"/>.
+        /// </summary>
+        /// <param name="left">The left <see cref="DocumentEditorCodeFixContext"/>.</param>
+        /// <param name="right">The right <see cref="DocumentEditorCodeFixContext"/>.</param>
+        /// <returns>True if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
+        public static bool operator ==(DocumentEditorCodeFixContext left, DocumentEditorCodeFixContext right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Check if <paramref name="left"/> is not equal to <paramref name="right"/>.
+        /// </summary>
+        /// <param name="left">The left <see cref="DocumentEditorCodeFixContext"/>.</param>
+        /// <param name="right">The right <see cref="DocumentEditorCodeFixContext"/>.</param>
+        /// <returns>True if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
+        public static bool operator !=(DocumentEditorCodeFixContext left, DocumentEditorCodeFixContext right)
+        {
+            return !left.Equals(right);
+        }
+
+        /// <summary>
         /// Add supplied <paramref name="action" /> to the list of fixes that will be offered to the user.
         /// </summary>
         /// <param name="title">Title of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />.</param>
@@ -74,6 +96,24 @@ namespace Gu.Roslyn.CodeFixExtensions
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey),
                 diagnostic);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(DocumentEditorCodeFixContext other)
+        {
+            return this.context.Equals(other.context);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return obj is DocumentEditorCodeFixContext other && Equals(other);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return this.context.GetHashCode();
         }
     }
 }

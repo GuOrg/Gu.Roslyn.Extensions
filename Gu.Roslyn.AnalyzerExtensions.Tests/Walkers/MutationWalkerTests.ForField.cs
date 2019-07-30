@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
             [TestCase("this.value = 1")]
             [TestCase("this.value++")]
             [TestCase("this.value += 1")]
-            public void Single(string mutation)
+            public void One(string mutation)
             {
                 var testCode = @"
 namespace N

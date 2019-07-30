@@ -124,16 +124,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
+        /// <inheritdoc/>
         public bool Equals(LocalOrParameter other)
         {
             return this.Symbol.Equals(other.Symbol);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             return obj is LocalOrParameter other && Equals(other);
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return this.Symbol.GetHashCode();
