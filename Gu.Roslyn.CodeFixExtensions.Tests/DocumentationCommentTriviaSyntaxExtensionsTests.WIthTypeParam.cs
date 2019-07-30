@@ -5,12 +5,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class DocumentationCommentTriviaSyntaxExtensionsTests
+    public static partial class DocumentationCommentTriviaSyntaxExtensionsTests
     {
-        public class WithTypeParam
+        public static class WithTypeParam
         {
             [Test]
-            public void WhenSummaryAndReturn()
+            public static void WhenSummaryAndReturn()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

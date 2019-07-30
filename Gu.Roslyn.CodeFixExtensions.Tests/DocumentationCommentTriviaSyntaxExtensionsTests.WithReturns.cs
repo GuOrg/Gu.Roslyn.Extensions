@@ -5,12 +5,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class DocumentationCommentTriviaSyntaxExtensionsTests
+    public static partial class DocumentationCommentTriviaSyntaxExtensionsTests
     {
-        public class WithReturns
+        public static class WithReturns
         {
             [Test]
-            public void InsertAfterRemarksSingleLine()
+            public static void InsertAfterRemarksSingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -45,7 +45,7 @@ namespace N
             }
 
             [Test]
-            public void InsertAfterRemarksMultiLine()
+            public static void InsertAfterRemarksMultiLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -80,7 +80,7 @@ namespace N
             }
 
             [Test]
-            public void ReplaceSingleLineWithSingleLine()
+            public static void ReplaceSingleLineWithSingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

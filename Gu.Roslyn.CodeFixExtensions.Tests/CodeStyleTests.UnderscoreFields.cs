@@ -4,12 +4,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class CodeStyleTests
+    public static partial class CodeStyleTests
     {
-        public class UnderscoreFields
+        public static class UnderscoreFields
         {
             [Test]
-            public void DefaultsToFalse()
+            public static void DefaultsToFalse()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -31,7 +31,7 @@ namespace N
             }
 
             [Test]
-            public void WhenFieldIsNamedWithUnderscore()
+            public static void WhenFieldIsNamedWithUnderscore()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -49,7 +49,7 @@ namespace N
             }
 
             [Test]
-            public void WhenPropertyIsAssignedWithThis()
+            public static void WhenPropertyIsAssignedWithThis()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -71,7 +71,7 @@ namespace N
             }
 
             [Test]
-            public void WhenPropertyIsAssignedWithoutThis()
+            public static void WhenPropertyIsAssignedWithoutThis()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -93,7 +93,7 @@ namespace N
             }
 
             [Test]
-            public void WhenPropertyIsAssignedInObjectInitializer()
+            public static void WhenPropertyIsAssignedInObjectInitializer()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -112,7 +112,7 @@ namespace N
             }
 
             [Test]
-            public void WhenObjectInitializerInCollectionInitializer()
+            public static void WhenObjectInitializerInCollectionInitializer()
             {
                 var c = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -143,7 +143,7 @@ namespace N
             }
 
             [Test]
-            public void WhenFieldIsNotNamedWithUnderscore()
+            public static void WhenFieldIsNotNamedWithUnderscore()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -161,7 +161,7 @@ namespace N
             }
 
             [Test]
-            public void WhenUsingThis()
+            public static void WhenUsingThis()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -180,7 +180,7 @@ namespace N
             }
 
             [Test]
-            public void FiguresOutFromOtherClass()
+            public static void FiguresOutFromOtherClass()
             {
                 var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -210,7 +210,7 @@ namespace N
             }
 
             [Test]
-            public void ChecksContainingClassFirst()
+            public static void ChecksContainingClassFirst()
             {
                 var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N

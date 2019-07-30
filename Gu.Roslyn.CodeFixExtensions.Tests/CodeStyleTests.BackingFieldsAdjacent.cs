@@ -3,12 +3,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class CodeStyleTests
+    public static partial class CodeStyleTests
     {
-        public class BackingFieldsAdjacent
+        public static class BackingFieldsAdjacent
         {
             [Test]
-            public void DefaultsToStyleCopEmptyClass()
+            public static void DefaultsToStyleCopEmptyClass()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -23,7 +23,7 @@ namespace N
             }
 
             [Test]
-            public void DefaultsToStyleCopWhenOneProperty()
+            public static void DefaultsToStyleCopWhenOneProperty()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -45,7 +45,7 @@ namespace N
             }
 
             [Test]
-            public void FindsAdjacentInCompilation()
+            public static void FindsAdjacentInCompilation()
             {
                 var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -80,7 +80,7 @@ namespace N
             }
 
             [Test]
-            public void FindsStyleCopInCompilation()
+            public static void FindsStyleCopInCompilation()
             {
                 var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -114,7 +114,7 @@ namespace N
             }
 
             [Test]
-            public void WhenStyleCop()
+            public static void WhenStyleCop()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -140,7 +140,7 @@ namespace N
             }
 
             [Test]
-            public void WhenAdjacentNoEmptyLine()
+            public static void WhenAdjacentNoEmptyLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -166,7 +166,7 @@ namespace N
             }
 
             [Test]
-            public void WhenAdjacentWithEmptyLine()
+            public static void WhenAdjacentWithEmptyLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

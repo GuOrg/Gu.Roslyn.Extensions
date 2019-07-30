@@ -7,10 +7,10 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public partial class DocumentationCommentTriviaSyntaxExtensionsTests
+    public static partial class DocumentationCommentTriviaSyntaxExtensionsTests
     {
         [Test]
-        public void InsertBeforeFirst()
+        public static void InsertBeforeFirst()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -39,7 +39,7 @@ namespace N
         }
 
         [Test]
-        public void InsertBeforeSecond()
+        public static void InsertBeforeSecond()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -72,7 +72,7 @@ namespace N
         }
 
         [Test]
-        public void InsertAfterFirst()
+        public static void InsertAfterFirst()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -101,7 +101,7 @@ namespace N
         }
 
         [Test]
-        public void InsertAfterSecond()
+        public static void InsertAfterSecond()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -134,7 +134,7 @@ namespace N
         }
 
         [Test]
-        public void InsertAfterLast()
+        public static void InsertAfterLast()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -166,7 +166,7 @@ namespace N
         }
 
         [Test]
-        public void WithSummaryTextParamAndReturns()
+        public static void WithSummaryTextParamAndReturns()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

@@ -5,12 +5,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class DocumentationCommentTriviaSyntaxExtensionsTests
+    public static partial class DocumentationCommentTriviaSyntaxExtensionsTests
     {
-        public class WithSummary
+        public static class WithSummary
         {
             [Test]
-            public void InsertBeforeRemarksSingleLineSummary()
+            public static void InsertBeforeRemarksSingleLineSummary()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -48,7 +48,7 @@ namespace N
             }
 
             [Test]
-            public void InsertBeforeRemarksSingleLineSummaryWhenPragma()
+            public static void InsertBeforeRemarksSingleLineSummaryWhenPragma()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -88,7 +88,7 @@ namespace N
             }
 
             [Test]
-            public void InsertBeforeRemarksMultiLineSummary()
+            public static void InsertBeforeRemarksMultiLineSummary()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -125,7 +125,7 @@ namespace N
             }
 
             [Test]
-            public void ReplaceSingleLineWithSingleLine()
+            public static void ReplaceSingleLineWithSingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -160,7 +160,7 @@ namespace N
             }
 
             [Test]
-            public void ReplaceWhenPragma()
+            public static void ReplaceWhenPragma()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -197,7 +197,7 @@ namespace N
             }
 
             [Test]
-            public void ReplaceMultiLineWithSingleLine()
+            public static void ReplaceMultiLineWithSingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

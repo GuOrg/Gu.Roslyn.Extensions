@@ -5,12 +5,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class DocumentationCommentTriviaSyntaxExtensionsTests
+    public static partial class DocumentationCommentTriviaSyntaxExtensionsTests
     {
-        public class WithParam
+        public static class WithParam
         {
             [Test]
-            public void WhenSummaryAndReturn()
+            public static void WhenSummaryAndReturn()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -47,7 +47,7 @@ namespace N
             }
 
             [Test]
-            public void WhenSummaryOnlySingleLine()
+            public static void WhenSummaryOnlySingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -78,7 +78,7 @@ namespace N
             }
 
             [Test]
-            public void WhenSummaryOnlyMultiLine()
+            public static void WhenSummaryOnlyMultiLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -113,7 +113,7 @@ namespace N
             }
 
             [Test]
-            public void WhenReturnsOnlySingleLine()
+            public static void WhenReturnsOnlySingleLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -144,7 +144,7 @@ namespace N
             }
 
             [Test]
-            public void WhenReturnsOnlyMultiLine()
+            public static void WhenReturnsOnlyMultiLine()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -179,7 +179,7 @@ namespace N
             }
 
             [Test]
-            public void WhenParamExistsInsertAfter()
+            public static void WhenParamExistsInsertAfter()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -214,7 +214,7 @@ namespace N
             }
 
             [Test]
-            public void WhenParamExistsInsertBefore()
+            public static void WhenParamExistsInsertBefore()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -249,7 +249,7 @@ namespace N
             }
 
             [Test]
-            public void ReplaceExisting()
+            public static void ReplaceExisting()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

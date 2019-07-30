@@ -4,12 +4,12 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public partial class CodeStyleTests
+    public static partial class CodeStyleTests
     {
-        public class UsingDirectivesInsideNamespace
+        public static class UsingDirectivesInsideNamespace
         {
             [Test]
-            public void UsingDirectiveInsideNamespace()
+            public static void UsingDirectiveInsideNamespace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -23,7 +23,7 @@ namespace N
             }
 
             [Test]
-            public void NoDirective()
+            public static void NoDirective()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -36,7 +36,7 @@ namespace N
             }
 
             [Test]
-            public void UsingDirectiveInsideAndOutsideNamespace()
+            public static void UsingDirectiveInsideAndOutsideNamespace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 using System;
@@ -52,7 +52,7 @@ namespace N
             }
 
             [Test]
-            public void UsingDirectiveOutsideNamespace()
+            public static void UsingDirectiveOutsideNamespace()
             {
                 var syntaxTree = CSharpSyntaxTree.ParseText(@"
 using System;

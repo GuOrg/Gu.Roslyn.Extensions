@@ -5,7 +5,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class CompilationUintSyntaxExtensionsTests
+    public static class CompilationUintSyntaxExtensionsTests
     {
         [Test]
         public static void SystemWhenEmpty()
