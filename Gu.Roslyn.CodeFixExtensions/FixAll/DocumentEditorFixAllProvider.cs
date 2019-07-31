@@ -43,6 +43,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override async Task<CodeAction> GetFixAsync(FixAllContext fixAllContext)
         {
+            if (fixAllContext == null)
+            {
+                throw new System.ArgumentNullException(nameof(fixAllContext));
+            }
+
             if (fixAllContext.Scope == FixAllScope.Document)
             {
                 var actions = await GetDocumentEditorActionsAsync(fixAllContext, fixAllContext.Document).ConfigureAwait(false);

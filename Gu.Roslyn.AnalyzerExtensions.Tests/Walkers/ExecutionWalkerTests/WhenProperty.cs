@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class Property
+    public class WhenProperty
     {
         [TestCase(Scope.Member, "2, 3")]
         [TestCase(Scope.Instance, "1, 2, 3")]

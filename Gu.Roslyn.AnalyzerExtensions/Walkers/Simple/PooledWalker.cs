@@ -25,8 +25,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
         }
 
+#pragma warning disable CA1063 // Implement IDisposable Correctly
         /// <inheritdoc />
         public void Dispose()
+#pragma warning restore CA1063 // Implement IDisposable Correctly
         {
             Debug.Assert(!Cache.Contains(this), "!Cache.Contains(this)");
             this.Clear();

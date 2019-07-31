@@ -1,3 +1,4 @@
+#pragma warning disable CA1062 // Validate arguments of public methods
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
@@ -158,8 +159,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         private static bool Is(ExpressionSyntax expression, IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             return expression is IdentifierNameSyntax identifier &&
-                   identifier.Identifier.ValueText == parameter.Name &&
-                   ParameterSymbolComparer.Equals(semanticModel.GetSymbolSafe(expression, cancellationToken) as IParameterSymbol, parameter);
+                   identifier.IsSymbol(parameter, semanticModel, cancellationToken);
         }
     }
 }

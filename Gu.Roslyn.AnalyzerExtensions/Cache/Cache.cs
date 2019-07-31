@@ -3,10 +3,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System;
     using Microsoft.CodeAnalysis.Diagnostics;
 
-#pragma warning disable CA1724 // Type names should not match namespaces
     /// <summary>
     /// Helper for using the cache.
     /// </summary>
+#pragma warning disable CA1724 // Type names should not match namespaces
     public static class Cache
 #pragma warning restore CA1724 // Type names should not match namespaces
     {

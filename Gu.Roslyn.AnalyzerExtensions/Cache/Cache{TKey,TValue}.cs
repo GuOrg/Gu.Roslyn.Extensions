@@ -9,7 +9,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary> A cache. </summary>
     /// <typeparam name="TKey">The key type.</typeparam>
     /// <typeparam name="TValue">The value type.</typeparam>
+#pragma warning disable CA1724
     public static class Cache<TKey, TValue>
+#pragma warning restore CA1724
     {
         private static readonly ConcurrentDictionary<TKey, TValue> Inner = new ConcurrentDictionary<TKey, TValue>();
         //// ReSharper disable once StaticMemberInGenericType
