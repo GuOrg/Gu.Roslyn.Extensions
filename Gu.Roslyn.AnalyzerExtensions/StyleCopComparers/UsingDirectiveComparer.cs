@@ -17,6 +17,16 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <param name="y">The second node to compare.</param>
         public static int Compare(UsingDirectiveSyntax x, UsingDirectiveSyntax y)
         {
+            if (x == null)
+            {
+                throw new ArgumentNullException(nameof(x));
+            }
+
+            if (y == null)
+            {
+                throw new ArgumentNullException(nameof(y));
+            }
+
             if (TryGetRoot(x.Name, out var xn) &&
                 TryGetRoot(y.Name, out var yn))
             {

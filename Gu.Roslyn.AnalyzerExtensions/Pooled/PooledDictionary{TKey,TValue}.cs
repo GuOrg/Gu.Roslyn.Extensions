@@ -40,11 +40,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             set => this.inner[key] = value;
         }
 
+#pragma warning disable CA1000 // Do not declare static members on generic types
         /// <summary>
         /// Borrow a dictionary, dispose returns it.
         /// </summary>
         /// <returns>A <see cref="PooledDictionary{TKey,TValue}"/>.</returns>
         public static PooledDictionary<TKey, TValue> Borrow()
+#pragma warning restore CA1000 // Do not declare static members on generic types
         {
             if (Cache.TryDequeue(out var dictionary))
             {

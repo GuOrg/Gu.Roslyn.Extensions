@@ -65,6 +65,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A <see cref="NullCheckWalker"/> filtered by all null checks for <paramref name="parameter"/>.</returns>
         public static NullCheckWalker For(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
+            if (parameter == null)
+            {
+                throw new System.ArgumentNullException(nameof(parameter));
+            }
+
+            if (scope == null)
+            {
+                throw new System.ArgumentNullException(nameof(scope));
+            }
+
             var walker = NullCheckWalker.Borrow(scope.FirstAncestorOrSelf<MemberDeclarationSyntax>());
             walker.Filter(parameter, semanticModel, cancellationToken);
             return walker;

@@ -198,6 +198,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A walker.</returns>
             public static PathWalker Borrow(ExpressionSyntax node)
             {
+                if (node == null)
+                {
+                    throw new ArgumentNullException(nameof(node));
+                }
+
                 if (node.Parent is ConditionalAccessExpressionSyntax conditionalAccess)
                 {
                     return Borrow(conditionalAccess);
@@ -250,6 +255,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>True if this path starts with the other or is equal.</returns>
             public bool StartsWith(PathWalker other)
             {
+                if (other == null)
+                {
+                    throw new ArgumentNullException(nameof(other));
+                }
+
                 if (other.identifierNames.Count == 0 ||
                     other.identifierNames.Count > this.identifierNames.Count)
                 {

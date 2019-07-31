@@ -6,6 +6,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <CodeAnalysisRuleSet>Gu.Roslyn.CodeFixExtensions.Tests.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>NU1603</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

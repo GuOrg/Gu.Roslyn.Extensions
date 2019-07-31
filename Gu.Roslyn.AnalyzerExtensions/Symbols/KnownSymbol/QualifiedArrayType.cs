@@ -14,9 +14,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="elementType">The element type.</param>
         public QualifiedArrayType(QualifiedType elementType)
-            : base(elementType.FullName + "[]", NamespaceParts, elementType.Type + "[]")
+            : base(elementType?.FullName + "[]", NamespaceParts, elementType.Type + "[]")
         {
-            this.ElementType = elementType;
+            this.ElementType = elementType ?? throw new global::System.ArgumentNullException(nameof(elementType));
         }
 
         /// <summary>

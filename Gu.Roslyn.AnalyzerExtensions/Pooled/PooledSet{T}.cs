@@ -34,11 +34,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="System.Collections.Generic.IEqualityComparer{T}" /> object that is used to determine equality for the values in the set.</returns>
         public IEqualityComparer<T> Comparer => this.inner.Comparer;
 
+#pragma warning disable CA1000 // Do not declare static members on generic types
         /// <summary>
         /// The result from this call is meant to be used in a using.
         /// </summary>
         /// <returns>A <see cref="PooledSet{T}"/>.</returns>
         public static PooledSet<T> Borrow()
+#pragma warning restore CA1000 // Do not declare static members on generic types
         {
             if (Cache.TryDequeue(out var set))
             {
@@ -51,12 +53,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
 #pragma warning disable IDISP015 // Member should not return created and cached instance.
-                                /// <summary>
-                                /// The result from this call is meant to be used in a using.
-                                /// </summary>
-                                /// <param name="set">A previously borrowed set or null.</param>
-                                /// <returns>A newly borrowed set or the same instance with incremented ref count.</returns>
+#pragma warning disable CA1000 // Do not declare static members on generic types
+        /// <summary>
+        /// The result from this call is meant to be used in a using.
+        /// </summary>
+        /// <param name="set">A previously borrowed set or null.</param>
+        /// <returns>A newly borrowed set or the same instance with incremented ref count.</returns>
         public static PooledSet<T> BorrowOrIncrementUsage(PooledSet<T> set)
+#pragma warning restore CA1000 // Do not declare static members on generic types
 #pragma warning restore IDISP015 // Member should not return created and cached instance.
         {
             if (set == null)
