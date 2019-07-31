@@ -7,10 +7,12 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+#pragma warning disable CA1724 // Type names should not match namespaces
     /// <summary>
     /// Helper for figuring out if the code uses underscore prefix in field names.
     /// </summary>
     public static class CodeStyle
+#pragma warning restore CA1724 // Type names should not match namespaces
     {
         private enum Result
         {
@@ -222,8 +224,8 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         private static bool IsExcluded(SyntaxTree syntaxTree)
         {
-            return syntaxTree.FilePath.EndsWith(".g.i.cs") ||
-                   syntaxTree.FilePath.EndsWith(".g.cs");
+            return syntaxTree.FilePath.EndsWith(".g.i.cs", StringComparison.Ordinal) ||
+                   syntaxTree.FilePath.EndsWith(".g.cs", StringComparison.Ordinal);
         }
 
         private sealed class UnderscoreFieldWalker : PooledWalker<UnderscoreFieldWalker>

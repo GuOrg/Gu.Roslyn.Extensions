@@ -74,7 +74,9 @@ namespace N
             }
         }
 
-        public class Nested
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes
+        private class Nested
+#pragma warning restore CA1812 // Avoid uninstantiated internal classes
         {
         }
     }

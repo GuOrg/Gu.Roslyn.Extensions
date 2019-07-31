@@ -18,6 +18,16 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static bool TryFindNode<T>(this SyntaxNode syntaxRoot, Diagnostic diagnostic, out T node)
             where T : SyntaxNode
         {
+            if (syntaxRoot == null)
+            {
+                throw new System.ArgumentNullException(nameof(syntaxRoot));
+            }
+
+            if (diagnostic == null)
+            {
+                throw new System.ArgumentNullException(nameof(diagnostic));
+            }
+
             var candidate = syntaxRoot.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true);
             while (candidate.Span == diagnostic.Location.SourceSpan)
             {
@@ -46,6 +56,16 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static bool TryFindNodeOrAncestor<T>(this SyntaxNode syntaxRoot, Diagnostic diagnostic, out T node)
             where T : SyntaxNode
         {
+            if (syntaxRoot == null)
+            {
+                throw new System.ArgumentNullException(nameof(syntaxRoot));
+            }
+
+            if (diagnostic == null)
+            {
+                throw new System.ArgumentNullException(nameof(diagnostic));
+            }
+
             node = syntaxRoot.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true)
                              .FirstAncestorOrSelf<T>();
             return node != null;

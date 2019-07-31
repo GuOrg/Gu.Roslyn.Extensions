@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public sealed class ThrowWalker : PooledWalker<ThrowWalker>
     {
-        private readonly List<SyntaxToken> throwStatementsAndExpressions = new List<SyntaxToken>();
+        private readonly List<SyntaxNode> throwStatementsAndExpressions = new List<SyntaxNode>();
 
         private ThrowWalker()
         {
@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets a collection with the <see cref="ThrowStatementSyntax"/> and <see cref="ThrowExpressionSyntax"/> found when walking.
         /// </summary>
-        public IReadOnlyList<SyntaxToken> ThrowStatementsAndExpressions => this.throwStatementsAndExpressions;
+        public IReadOnlyList<SyntaxNode> ThrowStatementsAndExpressions => this.throwStatementsAndExpressions;
 
         /// <summary>
         /// Get a walker that has visited <paramref name="node"/>.
@@ -48,14 +48,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc/>
         public override void VisitThrowStatement(ThrowStatementSyntax node)
         {
-            this.throwStatementsAndExpressions.Add(node.ThrowKeyword);
+            this.throwStatementsAndExpressions.Add(node);
             base.VisitThrowStatement(node);
         }
 
         /// <inheritdoc/>
         public override void VisitThrowExpression(ThrowExpressionSyntax node)
         {
-            this.throwStatementsAndExpressions.Add(node.ThrowKeyword);
+            this.throwStatementsAndExpressions.Add(node);
             base.VisitThrowExpression(node);
         }
 

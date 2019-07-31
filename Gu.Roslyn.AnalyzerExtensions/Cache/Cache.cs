@@ -29,9 +29,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="context">The <see cref="AnalysisContext"/>.</param>
         public static void CacheToCompilationEnd<TKey, TValue>(this AnalysisContext context)
         {
-#pragma warning disable RS1013 // Start action has no registered non-end actions.
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
             context.RegisterCompilationStartAction(x =>
-#pragma warning restore RS1013 // Start action has no registered non-end actions.
             {
                 Cache<TKey, TValue>.Begin();
                 x.RegisterCompilationEndAction(_ => Cache<TKey, TValue>.End());

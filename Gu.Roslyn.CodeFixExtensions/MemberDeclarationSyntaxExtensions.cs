@@ -21,6 +21,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static TNode WithDocumentationText<TNode>(this TNode member, string text, bool adjustLeadingWhitespace = true)
             where TNode : MemberDeclarationSyntax
         {
+            if (member == null)
+            {
+                throw new System.ArgumentNullException(nameof(member));
+            }
+
             var leadingTrivia = Parse.LeadingTrivia(text, adjustLeadingWhitespace ? member.LeadingWhitespace() : null);
             if (member.HasLeadingTrivia &&
                 leadingTrivia.TrySingle(x => x.HasStructure && x.GetStructure() is DocumentationCommentTriviaSyntax, out var withStructure) &&
@@ -42,6 +47,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static TNode WithDocs<TNode>(this TNode member, DocumentationCommentTriviaSyntax docs)
             where TNode : MemberDeclarationSyntax
         {
+            if (member == null)
+            {
+                throw new System.ArgumentNullException(nameof(member));
+            }
+
             if (member.HasLeadingTrivia &&
                 member.GetLeadingTrivia() is var triviaList)
             {

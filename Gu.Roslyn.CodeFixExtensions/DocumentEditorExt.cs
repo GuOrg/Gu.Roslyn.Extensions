@@ -21,6 +21,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static DocumentEditor ReplaceNode<T>(this DocumentEditor editor, T node, Func<T, SyntaxNode> replacement)
             where T : SyntaxNode
         {
+            if (editor == null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            if (replacement == null)
+            {
+                throw new ArgumentNullException(nameof(replacement));
+            }
+
             editor.ReplaceNode(node, (x, _) => replacement((T)x));
             return editor;
         }
@@ -34,6 +49,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor ReplaceToken(this DocumentEditor editor, SyntaxToken oldToken, SyntaxToken newToken)
         {
+            if (editor == null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
             editor.ReplaceNode(oldToken.Parent, oldToken.Parent.ReplaceToken(oldToken, newToken));
             return editor;
         }
@@ -46,9 +66,14 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor FormatNode(this DocumentEditor editor, SyntaxNode node)
         {
+            if (editor == null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
             if (node == null)
             {
-                return editor;
+                throw new ArgumentNullException(nameof(node));
             }
 
             editor.ReplaceNode(node, (x, _) => x.WithAdditionalAnnotations(Formatter.Annotation));

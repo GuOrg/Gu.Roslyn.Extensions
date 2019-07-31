@@ -18,6 +18,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithLeadingTriviaFrom<T>(this T target, SyntaxNode source)
             where T : SyntaxNode
         {
+            if (source == null)
+            {
+                throw new System.ArgumentNullException(nameof(source));
+            }
+
             return source.HasLeadingTrivia
                 ? target.WithLeadingTrivia(source.GetLeadingTrivia())
                 : target;
@@ -33,6 +38,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithTrailingTriviaFrom<T>(this T target, SyntaxNode source)
             where T : SyntaxNode
         {
+            if (source == null)
+            {
+                throw new System.ArgumentNullException(nameof(source));
+            }
+
             return source.HasTrailingTrivia
                 ? target.WithTrailingTrivia(source.GetTrailingTrivia())
                 : target;
@@ -47,6 +57,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithLeadingElasticLineFeed<T>(this T node)
             where T : SyntaxNode
         {
+            if (node == null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             if (node.HasLeadingTrivia)
             {
                 return node.WithLeadingTrivia(
@@ -66,6 +81,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithLeadingLineFeed<T>(this T node)
             where T : SyntaxNode
         {
+            if (node == null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             if (node.HasLeadingTrivia)
             {
                 return node.WithLeadingTrivia(
@@ -85,6 +105,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithTrailingElasticLineFeed<T>(this T node)
             where T : SyntaxNode
         {
+            if (node == null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             if (node.HasTrailingTrivia)
             {
                 return node.WithTrailingTrivia(
@@ -104,6 +129,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithTrailingLineFeed<T>(this T node)
             where T : SyntaxNode
         {
+            if (node == null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             if (node.HasTrailingTrivia)
             {
                 return node.WithTrailingTrivia(

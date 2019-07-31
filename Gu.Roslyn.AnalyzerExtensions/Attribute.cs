@@ -206,6 +206,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the attribute is of the expected type.</returns>
         public static bool IsType(AttributeSyntax attribute, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
             if (attribute == null)
             {
                 return false;

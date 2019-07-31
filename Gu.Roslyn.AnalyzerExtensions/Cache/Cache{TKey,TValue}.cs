@@ -20,9 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public static void Begin()
         {
-#pragma warning disable GU0011 // Don't ignore the return value.
-            Interlocked.Increment(ref refCount);
-#pragma warning restore GU0011 // Don't ignore the return value.
+            _ = Interlocked.Increment(ref refCount);
         }
 
         /// <summary>
@@ -30,9 +28,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public static void End()
         {
-#pragma warning disable GU0011 // Don't ignore the return value.
-            Interlocked.Exchange(ref refCount, 0);
-#pragma warning restore GU0011 // Don't ignore the return value.
+            _ = Interlocked.Exchange(ref refCount, 0);
             Inner.Clear();
         }
 
@@ -42,10 +38,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A <see cref="Transaction_"/>.</returns>
         public static Transaction_ Transaction()
         {
-#pragma warning disable GU0011 // Don't ignore the return value.
-            Interlocked.Increment(ref refCount);
-#pragma warning restore GU0011 // Don't ignore the return value.
-            Debug.Assert(refCount > 0, "refCount > 0");
+            var current = Interlocked.Increment(ref refCount);
+            Debug.Assert(current > 0, "refCount > 0");
             return default;
         }
 
@@ -69,7 +63,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// A transaction that decrements ref count when disposed.
         /// </summary>
         // ReSharper disable once InconsistentNaming
+#pragma warning disable CA1034, CA1707, CA1815
         public struct Transaction_ : IDisposable
+#pragma warning restore CA1034, CA1707, CA1815
         {
             /// <inheritdoc />
             public void Dispose()

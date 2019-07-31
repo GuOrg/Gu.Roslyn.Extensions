@@ -33,6 +33,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
         public static async Task<UsingDirectiveWalker> BorrowAsync(SyntaxTree tree, CancellationToken cancellationToken)
         {
+            if (tree == null)
+            {
+                throw new System.ArgumentNullException(nameof(tree));
+            }
+
             var root = await tree.GetRootAsync(cancellationToken).ConfigureAwait(false);
             return BorrowAndVisit(root, () => new UsingDirectiveWalker());
         }

@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class With
+    public class AssignedWith
     {
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]

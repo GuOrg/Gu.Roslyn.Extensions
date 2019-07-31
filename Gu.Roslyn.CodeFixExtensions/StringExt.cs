@@ -60,7 +60,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     return new Substring(start, end);
                 }
 
-                if (leadingWhitespace == string.Empty)
+                if (string.IsNullOrEmpty(leadingWhitespace))
                 {
                     return new Substring(text.CountWhile(x => x == ' ', start, end), end);
                 }
