@@ -1,5 +1,6 @@
 #pragma warning disable CA1034 // Nested types should not be visible
 #pragma warning disable CA1720 // Identifier contains type name
+#pragma warning disable CA1724 // Type names should not match namespaces
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
@@ -45,7 +46,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="fullName">For example 'System.String'.</param>
         /// <param name="alias">For example 'string'.</param>
         public QualifiedType(string fullName, string alias = null)
-            : this(fullName, NamespaceParts.Create(fullName), fullName.Substring(fullName.LastIndexOf('.') + 1), alias)
+            : this(
+                  fullName ?? throw new ArgumentNullException(nameof(fullName)),
+                  NamespaceParts.Create(fullName),
+                  fullName.Substring(fullName.LastIndexOf('.') + 1),
+                  alias)
         {
         }
 
@@ -136,6 +141,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A <see cref="QualifiedType"/>.</returns>
         public static QualifiedType FromType(Type type)
         {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             if (type.IsArray)
             {
                 return new QualifiedArrayType(FromType(type.GetElementType()));
@@ -156,7 +166,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="compilation">The <see cref="Compilation"/>.</param>
         /// <returns>The <see cref="INamedTypeSymbol"/>.</returns>
-        public virtual ITypeSymbol GetTypeSymbol(Compilation compilation) => compilation.GetTypeByMetadataName(this.FullName);
+        public virtual ITypeSymbol GetTypeSymbol(Compilation compilation)
+        {
+            if (compilation == null)
+            {
+                throw new ArgumentNullException(nameof(compilation));
+            }
+
+            return compilation.GetTypeByMetadataName(this.FullName);
+        }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
@@ -192,7 +210,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if equal.</returns>
         protected virtual bool Equals(QualifiedType other)
         {
-            return string.Equals(this.FullName, other.FullName);
+#pragma warning disable CA1062 // Validate arguments of public methods
+            return string.Equals(this.FullName, other.FullName, StringComparison.Ordinal);
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
 
         /// <summary>

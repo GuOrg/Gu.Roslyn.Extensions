@@ -18,6 +18,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a backing field was found.</returns>
         public static bool TryGetBackingField(this PropertyDeclarationSyntax property, out FieldDeclarationSyntax backingField)
         {
+            if (property is null)
+            {
+                backingField = null;
+                return false;
+            }
+
             if (TrySingleReturned(property, out var returned) &&
                 property.Parent is TypeDeclarationSyntax type)
             {

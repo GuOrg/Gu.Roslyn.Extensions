@@ -69,6 +69,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetSymbol(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, QualifiedType expected, CancellationToken cancellationToken, out IMethodSymbol symbol)
         {
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
+            if (node == null)
+            {
+                symbol = null;
+                return false;
+            }
+
             if (node.Type is SimpleNameSyntax typeName &&
                 (typeName.Identifier.ValueText == expected.Type ||
                  AliasWalker.TryGet(node.SyntaxTree, typeName.Identifier.ValueText, out _)))
@@ -130,6 +146,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetSymbol(this SemanticModel semanticModel, InvocationExpressionSyntax node, QualifiedMethod expected, CancellationToken cancellationToken, out IMethodSymbol symbol)
         {
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
             symbol = null;
             if (node == null)
             {
@@ -162,7 +183,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="ISymbol"/> or null.</returns>
         public static ISymbol GetSymbolSafe(this SemanticModel semanticModel, AwaitExpressionSyntax node, CancellationToken cancellationToken)
         {
-            return semanticModel.GetSymbolSafe(node.Expression, cancellationToken);
+            return semanticModel.GetSymbolSafe(node?.Expression, cancellationToken);
         }
 
         /// <summary>

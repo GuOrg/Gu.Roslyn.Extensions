@@ -61,6 +61,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one or more were found.</returns>
         public static bool TryFindParams(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
         {
+            if (parameter == null)
+            {
+                throw new System.ArgumentNullException(nameof(parameter));
+            }
+
+            if (argumentList is null)
+            {
+                return false;
+            }
+
             if (parameter.IsParams)
             {
                 var builder = ImmutableArray.CreateBuilder<ArgumentSyntax>(argumentList.Arguments.Count - parameter.Ordinal);

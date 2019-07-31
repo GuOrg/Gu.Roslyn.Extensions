@@ -34,7 +34,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(context));
             }
 
+#pragma warning disable RS1013 // Start action has no registered non-end actions.
             context.RegisterCompilationStartAction(x =>
+#pragma warning restore RS1013 // Start action has no registered non-end actions.
             {
                 Cache<TKey, TValue>.Begin();
                 x.RegisterCompilationEndAction(_ => Cache<TKey, TValue>.End());

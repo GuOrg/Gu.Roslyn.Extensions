@@ -18,9 +18,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="fullName">For example 'System.String'.</param>
         /// <param name="typeArguments">The type arguments.</param>
         public QualifiedGenericType(string fullName, ImmutableArray<QualifiedType> typeArguments)
-            : base(fullName, NamespaceParts.Create(fullName), TypeName(fullName), null)
+            : base(
+                  fullName ?? throw new ArgumentNullException(nameof(fullName)),
+                  NamespaceParts.Create(fullName),
+                  TypeName(fullName),
+                  null)
         {
-            if (fullName?.IndexOf("[") is int i &&
+            if (fullName.IndexOf("[", StringComparison.Ordinal) is int i &&
                 i > 0)
             {
                 this.metaDataName = fullName.Substring(0, i);
@@ -42,6 +46,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override ITypeSymbol GetTypeSymbol(Compilation compilation)
         {
+            if (compilation == null)
+            {
+                throw new ArgumentNullException(nameof(compilation));
+            }
+
             return compilation.GetTypeByMetadataName(this.metaDataName).Construct(this.TypeArguments.Select(x => x.GetTypeSymbol(compilation)).ToArray());
         }
 

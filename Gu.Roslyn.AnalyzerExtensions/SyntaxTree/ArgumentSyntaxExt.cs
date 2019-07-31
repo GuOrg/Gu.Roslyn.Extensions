@@ -21,7 +21,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the argument expression was a constant string.</returns>
         public static bool TryGetStringValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string result)
         {
-            return TryGetStringValue(argument.Expression, out result) ||
+            return TryGetStringValue(argument?.Expression, out result) ||
                    semanticModel.TryGetConstantValue(argument.Expression, cancellationToken, out result);
 
             bool TryGetStringValue(ExpressionSyntax expression, out string text)

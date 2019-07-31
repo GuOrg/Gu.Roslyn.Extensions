@@ -28,8 +28,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         protected override bool Equals(IMethodSymbol symbol)
         {
-            return this.Equals(symbol.Parameters) &&
-                   base.Equals(symbol);
+            return base.Equals(symbol) &&
+#pragma warning disable CA1062 // Validate arguments of public methods
+                   this.Equals(symbol.Parameters);
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
 
         private bool Equals(ImmutableArray<IParameterSymbol> parameters)

@@ -153,6 +153,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>Null if the execution order could not be figured out.</returns>
         public static ExecutedBefore IsExecutedBefore(this StatementSyntax statement, ExpressionSyntax other)
         {
+            if (statement == null)
+            {
+                throw new System.ArgumentNullException(nameof(statement));
+            }
+
+            if (other == null)
+            {
+                throw new System.ArgumentNullException(nameof(other));
+            }
+
             if (SyntaxExecutionContext.IsInLambda(statement, other, out var executedBefore))
             {
                 return executedBefore;

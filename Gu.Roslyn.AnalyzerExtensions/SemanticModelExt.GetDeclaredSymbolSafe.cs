@@ -468,7 +468,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="ILocalSymbol"/> or null.</returns>
         public static ISymbol GetDeclaredSymbolSafe(this SemanticModel semanticModel, DeclarationPatternSyntax node, CancellationToken cancellationToken)
         {
-            return GetDeclaredSymbolSafe(semanticModel, node.Designation, cancellationToken);
+            return GetDeclaredSymbolSafe(semanticModel, node?.Designation, cancellationToken);
         }
 
         /// <summary>

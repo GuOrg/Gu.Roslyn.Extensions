@@ -18,6 +18,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="FileLinePositionSpan"/> for the token in the containing document.</returns>
         public static FileLinePositionSpan FileLinePositionSpan(this SyntaxNode node, CancellationToken cancellationToken)
         {
+            if (node == null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             return node.SyntaxTree.GetLineSpan(node.Span, cancellationToken);
         }
 
@@ -54,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFirstAncestorOrSelf<T>(this SyntaxNode node, out T result)
             where T : SyntaxNode
         {
-            result = node.FirstAncestorOrSelf<T>();
+            result = node?.FirstAncestorOrSelf<T>();
             return result != null;
         }
 
@@ -89,6 +94,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the node is in an expression tree.</returns>
         public static bool IsInExpressionTree(this SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
+            if (semanticModel == null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             if (node == null)
             {
                 return false;

@@ -53,6 +53,16 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <returns>True if the using directive is not needed.</returns>
         public static bool IsSameOrContained(NamespaceDeclarationSyntax namespaceDeclarationSyntax, UsingDirectiveSyntax usingDirective)
         {
+            if (namespaceDeclarationSyntax == null)
+            {
+                throw new ArgumentNullException(nameof(namespaceDeclarationSyntax));
+            }
+
+            if (usingDirective == null)
+            {
+                throw new ArgumentNullException(nameof(usingDirective));
+            }
+
             if (TryGetRoot(namespaceDeclarationSyntax.Name, out var nameSpaceName) &&
                 TryGetRoot(usingDirective.Name, out var usingName))
             {

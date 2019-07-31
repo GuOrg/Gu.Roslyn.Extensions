@@ -17,6 +17,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a single <see cref="DocumentationCommentTriviaSyntax"/> was found.</returns>
         public static bool TryGetDocumentationComment(this MemberDeclarationSyntax member, out DocumentationCommentTriviaSyntax comment)
         {
+            if (member is null)
+            {
+                comment = null;
+                return false;
+            }
+
             if (member.HasLeadingTrivia &&
                 member.GetLeadingTrivia() is SyntaxTriviaList triviaList &&
                 triviaList.TrySingle(x => x.HasStructure && x.GetStructure() is DocumentationCommentTriviaSyntax, out var commentTrivia) &&
@@ -37,6 +43,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The string with the leading whitespace.</returns>
         public static string LeadingWhitespace(this MemberDeclarationSyntax member)
         {
+            if (member == null)
+            {
+                throw new System.ArgumentNullException(nameof(member));
+            }
+
             if (member.HasLeadingTrivia &&
                 member.GetLeadingTrivia() is var triviaList &&
                 triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
@@ -54,6 +65,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The string with the leading whitespace.</returns>
         public static string LeadingWhitespace(this AccessorDeclarationSyntax accessor)
         {
+            if (accessor == null)
+            {
+                throw new System.ArgumentNullException(nameof(accessor));
+            }
+
             if (accessor.HasLeadingTrivia &&
                 accessor.GetLeadingTrivia() is var triviaList &&
                 triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))

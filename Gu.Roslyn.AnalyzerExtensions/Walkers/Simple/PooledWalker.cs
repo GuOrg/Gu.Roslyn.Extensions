@@ -7,11 +7,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
 
+#pragma warning disable CA1063 // Implement IDisposable Correctly
     /// <summary>
     /// A silly optimization for pooling syntax walkers.
     /// </summary>
     /// <typeparam name="T">The inheriting type.</typeparam>
     public abstract class PooledWalker<T> : CSharpSyntaxWalker, IDisposable
+#pragma warning restore CA1063 // Implement IDisposable Correctly
         where T : PooledWalker<T>
     {
         private static readonly ConcurrentQueue<PooledWalker<T>> Cache = new ConcurrentQueue<PooledWalker<T>>();

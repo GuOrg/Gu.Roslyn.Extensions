@@ -81,7 +81,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public bool Equals(QualifiedParameter other)
         {
-            return string.Equals(this.Name, other.Name) && Equals(this.Type, other.Type);
+            return string.Equals(this.Name, other.Name, StringComparison.Ordinal) && Equals(this.Type, other.Type);
         }
 
         /// <inheritdoc />

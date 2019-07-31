@@ -52,7 +52,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
             if (this.Scope != Scope.Member &&
-                node.Initializer == null &&
+                node?.Initializer == null &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
                 ctor.ContainingType is INamedTypeSymbol containingType &&
                 Constructor.TryFindDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
@@ -175,10 +175,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
-            this.Visit(node.Right);
-            this.Visit(node.Left);
+            this.Visit(node?.Right);
+            this.Visit(node?.Left);
         }
 
+#pragma warning disable CA1068 // CancellationToken parameters must come last
         /// <summary>
         /// Returns a walker that have visited <paramref name="node"/>.
         /// </summary>
@@ -189,6 +190,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="create">The factory for creating a walker if not found in cache.</param>
         /// <returns>The walker that have visited <paramref name="node"/>.</returns>
         protected static T BorrowAndVisit(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
+#pragma warning restore CA1068 // CancellationToken parameters must come last
         {
             var walker = Borrow(create);
 
@@ -227,6 +229,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="TypeDeclarationSyntax"/>.</param>
         protected virtual void VisitTypeDeclaration(TypeDeclarationSyntax node)
         {
+            if (node == null)
+            {
+                return;
+            }
+
             using (var walker = TypeDeclarationWalker.Borrow(node))
             {
                 foreach (var initializer in walker.Initializers)
@@ -293,7 +300,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TSymbol : class, ISymbol
         {
             symbol = null;
-            if (this.Scope == Scope.Member)
+            if (node == null ||
+                this.Scope == Scope.Member)
             {
                 return false;
             }

@@ -18,6 +18,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, out IParameterSymbol parameter)
         {
+            if (method is null ||
+                argument is null)
+            {
+                parameter = null;
+                return false;
+            }
+
             if (argument.NameColon is NameColonSyntax nameColon &&
                 nameColon.Name is IdentifierNameSyntax name)
             {

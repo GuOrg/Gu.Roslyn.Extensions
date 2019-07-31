@@ -214,7 +214,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         {
-            switch (node.Kind())
+            switch (node?.Kind())
             {
                 case SyntaxKind.LogicalNotExpression:
                     break;
@@ -236,8 +236,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitArgument(ArgumentSyntax node)
         {
-            if (node.RefOrOutKeyword.IsKind(SyntaxKind.RefKeyword) ||
-                node.RefOrOutKeyword.IsKind(SyntaxKind.OutKeyword))
+            if (node?.RefOrOutKeyword.IsEither(SyntaxKind.RefKeyword, SyntaxKind.OutKeyword) ?? false)
             {
                 this.refOrOutArguments.Add(node);
             }

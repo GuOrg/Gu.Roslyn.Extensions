@@ -20,8 +20,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
         public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IFieldSymbol target)
         {
+            if (candidate == null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
             target = null;
-            return candidate?.Identifier.ValueText == expected.Name &&
+            return candidate.Identifier.ValueText == expected.Name &&
                    semanticModel.TryGetSymbol(candidate, cancellationToken, out target) &&
                    target == expected;
         }
@@ -37,8 +47,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
         public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IPropertySymbol target)
         {
+            if (candidate == null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
             target = null;
-            return candidate?.Identifier.ValueText == expected.Name &&
+            return candidate.Identifier.ValueText == expected.Name &&
                    semanticModel.TryGetSymbol(candidate, cancellationToken, out target) &&
                    target == expected;
         }
@@ -54,7 +74,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
         public static bool IsSymbol(this IdentifierNameSyntax candidate, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            return candidate?.Identifier.ValueText == symbol.Name &&
+            if (candidate == null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (symbol == null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return candidate.Identifier.ValueText == symbol.Name &&
                    semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol candidateSymbol) &&
                    candidateSymbol.IsEquivalentTo(symbol);
         }

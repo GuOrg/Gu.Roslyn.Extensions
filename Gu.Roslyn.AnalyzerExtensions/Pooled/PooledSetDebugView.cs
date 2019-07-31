@@ -4,11 +4,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Diagnostics;
     using System.Linq;
 
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes
     /// <summary>
     /// Debug view for <see cref="PooledSet{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of items in the set.</typeparam>
     internal class PooledSetDebugView<T>
+#pragma warning restore CA1812 // Avoid uninstantiated internal classes
     {
         private readonly PooledSet<T> set;
 

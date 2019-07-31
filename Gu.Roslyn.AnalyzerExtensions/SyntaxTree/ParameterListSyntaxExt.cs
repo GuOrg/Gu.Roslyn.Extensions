@@ -16,6 +16,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFind(this ParameterListSyntax parameterList, string name, out ParameterSyntax parameter)
         {
+            if (parameterList == null ||
+                string.IsNullOrEmpty(name))
+            {
+                parameter = null;
+                return false;
+            }
+
             foreach (var candidate in parameterList.Parameters)
             {
                 if (candidate.Identifier.ValueText == name)

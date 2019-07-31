@@ -84,6 +84,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (destination == null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            if (compilation == null)
+            {
+                throw new ArgumentNullException(nameof(compilation));
+            }
+
             return IsAssignableTo(source, destination.GetTypeSymbol(compilation), compilation);
         }
 

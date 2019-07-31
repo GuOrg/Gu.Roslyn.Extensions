@@ -21,7 +21,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetTarget(this MemberAccessExpressionSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IFieldSymbol target)
         {
             target = null;
-            return candidate.Name is IdentifierNameSyntax identifierName &&
+            return candidate?.Name is IdentifierNameSyntax identifierName &&
                    identifierName.TryGetTarget(expected, semanticModel, cancellationToken, out target);
         }
 
@@ -37,7 +37,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetTarget(this MemberAccessExpressionSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IPropertySymbol target)
         {
             target = null;
-            return candidate.Name is IdentifierNameSyntax identifierName &&
+            return candidate?.Name is IdentifierNameSyntax identifierName &&
                    identifierName.TryGetTarget(expected, semanticModel, cancellationToken, out target);
         }
     }

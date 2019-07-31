@@ -25,6 +25,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public QualifiedType ElementType { get; }
 
         /// <inheritdoc />
-        public override ITypeSymbol GetTypeSymbol(Compilation compilation) => compilation.CreateArrayTypeSymbol(this.ElementType.GetTypeSymbol(compilation));
+        public override ITypeSymbol GetTypeSymbol(Compilation compilation)
+        {
+            if (compilation == null)
+            {
+                throw new global::System.ArgumentNullException(nameof(compilation));
+            }
+
+            return compilation.CreateArrayTypeSymbol(this.ElementType.GetTypeSymbol(compilation));
+        }
     }
 }

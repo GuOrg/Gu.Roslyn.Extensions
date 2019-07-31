@@ -69,6 +69,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The created instance.</returns>
         public static NamespaceParts Create(string fullName)
         {
+            if (fullName == null)
+            {
+                throw new System.ArgumentNullException(nameof(fullName));
+            }
+
             if (fullName.IndexOf('`') is var i &&
                 i > 0)
             {

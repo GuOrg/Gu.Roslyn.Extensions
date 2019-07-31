@@ -23,8 +23,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return IsGenerated(context.ContainingSymbol) ||
-                   context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.i.cs") ||
-                   context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.cs");
+                   context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.i.cs", System.StringComparison.Ordinal) ||
+                   context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.cs", System.StringComparison.Ordinal);
 
             bool IsGenerated(ISymbol symbol)
             {

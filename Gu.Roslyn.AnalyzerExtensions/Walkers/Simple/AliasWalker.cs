@@ -64,7 +64,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
         {
-            if (node.Alias != null)
+            if (node?.Alias != null)
             {
                 this.aliases.Add(node.Alias);
             }
