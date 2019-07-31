@@ -2,8 +2,11 @@ namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CodeStyle;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -20,6 +23,82 @@ namespace Gu.Roslyn.CodeFixExtensions
             Yes,
             No,
             Maybe,
+        }
+
+        /// <summary>
+        /// Figuring out if field access should be prefixed with this.
+        /// 1. Check CodeStyleOptions.QualifyFieldAccess if present.
+        /// 2. Walk current <paramref name="document"/>.
+        /// 3. Walk current project.
+        /// </summary>
+        /// <param name="document">The <see cref="Document"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static async Task<bool> QualifyFieldAccessAsync(this Document document, CancellationToken cancellationToken)
+        {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
+            if (optionSet.GetOption(CodeStyleOptions.QualifyFieldAccess, document.Project.Language) is CodeStyleOption<bool> option &&
+                !ReferenceEquals(option, CodeStyleOptions.QualifyFieldAccess.DefaultValue))
+            {
+                return option.Value;
+            }
+
+            using (var walker = QualifyFieldAccessWalker.Borrow())
+            {
+                var tree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+                switch (QualifiesFieldAccess(tree, walker))
+                {
+                    case Result.Unknown:
+                        break;
+                    case Result.Maybe:
+                    case Result.Yes:
+                        return true;
+                    case Result.No:
+                        return false;
+                    default:
+                        throw new InvalidOperationException("Not handling member.");
+                }
+
+                var compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+                foreach (var syntaxTree in compilation.SyntaxTrees)
+                {
+                    switch (QualifiesFieldAccess(syntaxTree, walker))
+                    {
+                        case Result.Unknown:
+                            break;
+                        case Result.Maybe:
+                        case Result.Yes:
+                            return true;
+                        case Result.No:
+                            return false;
+                        default:
+                            throw new InvalidOperationException("Not handling member.");
+                    }
+                }
+            }
+
+            return true;
+
+            Result QualifiesFieldAccess(SyntaxTree tree, QualifyFieldAccessWalker walker)
+            {
+                if (IsExcluded(tree))
+                {
+                    return Result.Unknown;
+                }
+
+                if (tree.TryGetRoot(out var root))
+                {
+                    walker.Visit(root);
+                    return walker.QualifiesAccess;
+                }
+
+                return Result.Unknown;
+            }
         }
 
         /// <summary>
@@ -226,6 +305,93 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             return syntaxTree.FilePath.EndsWith(".g.i.cs", StringComparison.Ordinal) ||
                    syntaxTree.FilePath.EndsWith(".g.cs", StringComparison.Ordinal);
+        }
+
+        private sealed class QualifyFieldAccessWalker : PooledWalker<QualifyFieldAccessWalker>
+        {
+            private QualifyFieldAccessWalker()
+            {
+            }
+
+            internal Result QualifiesAccess { get; private set; }
+
+            public override void VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                switch (node.Parent)
+                {
+                    case AssignmentExpressionSyntax assignment when assignment.Left.Contains(node) &&
+                                                                    !assignment.Parent.IsKind(SyntaxKind.ObjectInitializerExpression) &&
+                                                                    IsMemberField():
+                    case ArrowExpressionClauseSyntax _ when IsMemberField():
+                    case ReturnStatementSyntax _ when IsMemberField():
+                        switch (this.QualifiesAccess)
+                        {
+                            case Result.Unknown:
+                                this.QualifiesAccess = Result.No;
+                                break;
+                            case Result.Yes:
+                                this.QualifiesAccess = Result.Maybe;
+                                break;
+                            case Result.No:
+                                break;
+                            case Result.Maybe:
+                                break;
+                            default:
+                                throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
+                        }
+
+                        break;
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
+                                                                        memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
+                                                                        IsMemberField():
+                        switch (this.QualifiesAccess)
+                        {
+                            case Result.Unknown:
+                                this.QualifiesAccess = Result.Yes;
+                                break;
+                            case Result.Yes:
+                                break;
+                            case Result.No:
+                                this.QualifiesAccess = Result.Maybe;
+                                break;
+                            case Result.Maybe:
+                                break;
+                            default:
+                                throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
+                        }
+
+                        break;
+                }
+
+                bool IsMemberField()
+                {
+                    return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
+                           !IsStatic(containingMember) &&
+                           containingMember.Parent is TypeDeclarationSyntax containingType &&
+                           containingType.TryFindField(node.Identifier.ValueText, out var field) &&
+                           !field.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);
+
+                    bool IsStatic(MemberDeclarationSyntax candidate)
+                    {
+                        switch (candidate)
+                        {
+                            case BaseMethodDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            case BasePropertyDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            default:
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            internal static QualifyFieldAccessWalker Borrow() => Borrow(() => new QualifyFieldAccessWalker());
+
+            protected override void Clear()
+            {
+                this.QualifiesAccess = Result.Unknown;
+            }
         }
 
         private sealed class UnderscoreFieldWalker : PooledWalker<UnderscoreFieldWalker>
