@@ -2,6 +2,13 @@
 Extensions for analyzers &amp; code fixes.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ipk8pqx4n4m7y8u8/branch/master?svg=true)](https://ci.appveyor.com/project/JohanLarsson/gu-roslyn-extensions/branch/master)
+[![NuGet](https://img.shields.io/nuget/v/Gu.Roslyn.Extensions.svg)](https://www.nuget.org/packages/Gu.Roslyn.Extensions/)
+[![NuGet](https://img.shields.io/nuget/v/Gu.Roslyn.AnalyzerExtensions.svg)](https://www.nuget.org/packages/Gu.Roslyn.AnalyzerExtensions/)
+[![NuGet](https://img.shields.io/nuget/v/Gu.Roslyn.CodeFixExtensions.svg)](https://www.nuget.org/packages/Gu.Roslyn.CodeFixExtensions/)
+
+Reason there are three packages is if analyzer author writes analyzers and fixes in separate projetcs. In that case the separate `Gu.Roslyn.AnalyzerExtensions` and `Gu.Roslyn.CodeFixExtensions` should be used.
+
+The `Gu.Roslyn.Extensions` package is a merge of `Gu.Roslyn.AnalyzerExtensions` and `Gu.Roslyn.CodeFixExtensions`.
 
 - [Pooled](#pooled)
   - [PooledSet<T>](#pooledset-t)
