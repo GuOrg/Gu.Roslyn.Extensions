@@ -50,8 +50,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             using (var walker = QualifyFieldAccessWalker.Borrow())
             {
-                var tree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-                switch (QualifiesFieldAccess(tree, walker))
+                switch (await QualifiesFieldAccess(document, walker).ConfigureAwait(false))
                 {
                     case Result.Unknown:
                         break;
@@ -64,10 +63,9 @@ namespace Gu.Roslyn.CodeFixExtensions
                         throw new InvalidOperationException("Not handling member.");
                 }
 
-                var compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
-                foreach (var syntaxTree in compilation.SyntaxTrees)
+                foreach (var doc in document.Project.Documents)
                 {
-                    switch (QualifiesFieldAccess(syntaxTree, walker))
+                    switch (await QualifiesFieldAccess(doc, walker).ConfigureAwait(false))
                     {
                         case Result.Unknown:
                             break;
@@ -84,8 +82,9 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             return true;
 
-            Result QualifiesFieldAccess(SyntaxTree tree, QualifyFieldAccessWalker walker)
+            async Task<Result> QualifiesFieldAccess(Document candidate, QualifyFieldAccessWalker walker)
             {
+                var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
                 if (IsExcluded(tree))
                 {
                     return Result.Unknown;
@@ -95,6 +94,81 @@ namespace Gu.Roslyn.CodeFixExtensions
                 {
                     walker.Visit(root);
                     return walker.QualifiesAccess;
+                }
+
+                return Result.Unknown;
+            }
+        }
+
+        /// <summary>
+        /// Figuring out if field names should be prefixed with _.
+        /// 1. Walk current <paramref name="document"/>.
+        /// 2. Walk current project.
+        /// </summary>
+        /// <param name="document">The <see cref="Document"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static async Task<bool> UnderscoreFieldsAsync(this Document document, CancellationToken cancellationToken)
+        {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
+            if (optionSet.GetOption(CodeStyleOptions.QualifyFieldAccess, document.Project.Language) is CodeStyleOption<bool> option &&
+                !ReferenceEquals(option, CodeStyleOptions.QualifyFieldAccess.DefaultValue))
+            {
+                return option.Value;
+            }
+
+            using (var walker = UnderscoreFieldWalker.Borrow())
+            {
+                switch (await UnderscoreFields(document, walker).ConfigureAwait(false))
+                {
+                    case Result.Unknown:
+                        break;
+                    case Result.Maybe:
+                    case Result.Yes:
+                        return true;
+                    case Result.No:
+                        return false;
+                    default:
+                        throw new InvalidOperationException("Not handling member.");
+                }
+
+                foreach (var doc in document.Project.Documents)
+                {
+                    switch (await UnderscoreFields(doc, walker).ConfigureAwait(false))
+                    {
+                        case Result.Unknown:
+                            break;
+                        case Result.Maybe:
+                        case Result.Yes:
+                            return true;
+                        case Result.No:
+                            return false;
+                        default:
+                            throw new InvalidOperationException("Not handling member.");
+                    }
+                }
+            }
+
+            return true;
+
+            async Task<Result> UnderscoreFields(Document candidate, UnderscoreFieldWalker walker)
+            {
+                var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+
+                if (IsExcluded(tree))
+                {
+                    return Result.Unknown;
+                }
+
+                if (tree.TryGetRoot(out var root))
+                {
+                    walker.Visit(root);
+                    return walker.UsesUnderScore;
                 }
 
                 return Result.Unknown;

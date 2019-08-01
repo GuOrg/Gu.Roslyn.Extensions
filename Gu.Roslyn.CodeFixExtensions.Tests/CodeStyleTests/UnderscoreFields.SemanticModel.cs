@@ -4,7 +4,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public static class UnderscoreFields
+    public static partial class UnderscoreFields
     {
         [Test]
         public static void DefaultsToFalse()
@@ -55,7 +55,7 @@ namespace N
         [TestCase("private readonly int _f = 1", true)]
         [TestCase("private int f",               false)]
         [TestCase("private readonly int f",      false)]
-        public static void FiguresOutFromOtherClass(string declaration, bool expected)
+        public static void FiguresOutFromOtherTree(string declaration, bool expected)
         {
             var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N
