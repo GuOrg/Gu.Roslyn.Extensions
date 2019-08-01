@@ -1,3 +1,10 @@
+#### 0.5.3
+* FEATURE: QuyalifyFieldAccess, QuyalifyPropertyAccess and QuyalifyMethodAccess.
+* BREAKING: UnderscoreFields checks only field declarations.
+* FEATURE: More walkers.
+* FIX: AddMember when directives.
+* BUGFIX: TryFindArgument when multiple optional.
+
 #### 0.5.1
 * BUGFIX: Ignore object initializer when figuring out underscore names.
 
