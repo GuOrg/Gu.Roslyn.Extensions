@@ -14,13 +14,13 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
             var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
-    internal class C
+    class C
     {
-        internal C(int i, double d)
+        C(int i, double d)
         {
         }
 
-        internal void M()
+        void M()
         {
         }
     }

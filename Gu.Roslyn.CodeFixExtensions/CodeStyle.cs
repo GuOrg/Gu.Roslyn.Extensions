@@ -176,6 +176,81 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
+        /// Figuring out if field access should be prefixed with this.
+        /// 1. Check CodeStyleOptions.QualifyMethodAccess if present.
+        /// 2. Walk current <paramref name="document"/>.
+        /// 3. Walk current project.
+        /// </summary>
+        /// <param name="document">The <see cref="Document"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static async Task<bool> QualifyMethodAccessAsync(this Document document, CancellationToken cancellationToken)
+        {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
+            if (optionSet.GetOption(CodeStyleOptions.QualifyMethodAccess, document.Project.Language) is CodeStyleOption<bool> option &&
+                !ReferenceEquals(option, CodeStyleOptions.QualifyMethodAccess.DefaultValue))
+            {
+                return option.Value;
+            }
+
+            using (var walker = QualifyMethodAccessWalker.Borrow())
+            {
+                switch (await QualifiesMethodAccess(document, walker).ConfigureAwait(false))
+                {
+                    case Result.Unknown:
+                        break;
+                    case Result.Maybe:
+                    case Result.Yes:
+                        return true;
+                    case Result.No:
+                        return false;
+                    default:
+                        throw new InvalidOperationException("Not handling member.");
+                }
+
+                foreach (var doc in document.Project.Documents)
+                {
+                    switch (await QualifiesMethodAccess(doc, walker).ConfigureAwait(false))
+                    {
+                        case Result.Unknown:
+                            break;
+                        case Result.Maybe:
+                        case Result.Yes:
+                            return true;
+                        case Result.No:
+                            return false;
+                        default:
+                            throw new InvalidOperationException("Not handling member.");
+                    }
+                }
+            }
+
+            return true;
+
+            async Task<Result> QualifiesMethodAccess(Document candidate, QualifyMethodAccessWalker walker)
+            {
+                var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+                if (IsExcluded(tree))
+                {
+                    return Result.Unknown;
+                }
+
+                if (tree.TryGetRoot(out var root))
+                {
+                    walker.Visit(root);
+                    return walker.QualifiesAccess;
+                }
+
+                return Result.Unknown;
+            }
+        }
+
+        /// <summary>
         /// Figuring out if field names should be prefixed with _.
         /// 1. Walk current <paramref name="document"/>.
         /// 2. Walk current project.
@@ -604,7 +679,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                            !IsStatic(containingMember) &&
                            containingMember.Parent is TypeDeclarationSyntax containingType &&
                            containingType.TryFindProperty(node.Identifier.ValueText, out var property) &&
-                           !property.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);
+                           !property.Modifiers.Any(SyntaxKind.StaticKeyword);
 
                     bool IsStatic(MemberDeclarationSyntax candidate)
                     {
@@ -622,6 +697,97 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             internal static QualifyPropertyAccessWalker Borrow() => Borrow(() => new QualifyPropertyAccessWalker());
+
+            protected override void Clear()
+            {
+                this.QualifiesAccess = Result.Unknown;
+            }
+        }
+
+        private sealed class QualifyMethodAccessWalker : PooledWalker<QualifyMethodAccessWalker>
+        {
+            private QualifyMethodAccessWalker()
+            {
+            }
+
+            internal Result QualifiesAccess { get; private set; }
+
+            public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+            {
+                if (node.Expression is IdentifierNameSyntax identifierName)
+                {
+                    switch (node.Parent)
+                    {
+                        case ArgumentSyntax _ when IsMemberMethod():
+                        case AssignmentExpressionSyntax _ when IsMemberMethod():
+                        case ArrowExpressionClauseSyntax _ when IsMemberMethod():
+                        case StatementSyntax _ when IsMemberMethod():
+                            switch (this.QualifiesAccess)
+                            {
+                                case Result.Unknown:
+                                    this.QualifiesAccess = Result.No;
+                                    break;
+                                case Result.Yes:
+                                    this.QualifiesAccess = Result.Maybe;
+                                    break;
+                                case Result.No:
+                                    break;
+                                case Result.Maybe:
+                                    break;
+                                default:
+                                    throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
+                            }
+
+                            break;
+                        case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
+                                                          memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
+                                                          IsMemberMethod():
+                            switch (this.QualifiesAccess)
+                            {
+                                case Result.Unknown:
+                                    this.QualifiesAccess = Result.Yes;
+                                    break;
+                                case Result.Yes:
+                                    break;
+                                case Result.No:
+                                    this.QualifiesAccess = Result.Maybe;
+                                    break;
+                                case Result.Maybe:
+                                    break;
+                                default:
+                                    throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
+                            }
+
+                            break;
+                    }
+                }
+
+                bool IsMemberMethod()
+                {
+                    return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
+                           !IsStatic(containingMember) &&
+                           containingMember.Parent is TypeDeclarationSyntax containingType &&
+                           containingType.TryFindMethod(identifierName.Identifier.ValueText, out var method) &&
+                           !method.Modifiers.Any(SyntaxKind.StaticKeyword);
+
+                    bool IsStatic(MemberDeclarationSyntax candidate)
+                    {
+                        switch (candidate)
+                        {
+                            case BaseMethodDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            case BasePropertyDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            default:
+                                return true;
+                        }
+                    }
+                }
+
+                base.VisitInvocationExpression(node);
+            }
+
+            internal static QualifyMethodAccessWalker Borrow() => Borrow(() => new QualifyMethodAccessWalker());
 
             protected override void Clear()
             {
