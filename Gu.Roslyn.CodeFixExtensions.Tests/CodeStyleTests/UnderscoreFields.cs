@@ -12,15 +12,18 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
-    internal class C
+    class C
     {
-        internal C(int i, double d)
+        C(int p)
+        {
+            this.P = i;
+        }
+
+        void M()
         {
         }
 
-        internal void M()
-        {
-        }
+        public int P { get; }
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
@@ -28,157 +31,31 @@ namespace N
             Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
         }
 
-        [Test]
-        public static void WhenFieldIsNamedWithUnderscore()
+        [TestCase("private int _f", true)]
+        [TestCase("private readonly int _f = 1", true)]
+        [TestCase("private int f", false)]
+        [TestCase("private readonly int f", false)]
+        public static void WhenField(string declaration, bool expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C
     {
-        int _f;
-        public int P => _f = 1;
+        private int _f;
     }
-}");
+}".AssertReplace("private int _f", declaration));
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
+            Assert.AreEqual(expected, CodeStyle.UnderscoreFields(semanticModel));
         }
 
-        [Test]
-        public static void WhenPropertyIsAssignedWithThis()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        public C(int bar)
-        {
-            this.P = bar;
-        }
-
-        public int P { get; set; }
-    }
-}");
-
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
-        }
-
-        [Test]
-        public static void WhenPropertyIsAssignedWithoutThis()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        public C(int p)
-        {
-            P = p;
-        }
-
-        public int P { get; set; }
-    }
-}");
-
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
-        }
-
-        [Test]
-        public static void WhenPropertyIsAssignedInObjectInitializer()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        public int P { get; set; }
-
-        public static C Create(int i) => new C { P = i };
-    }
-}");
-
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
-        }
-
-        [Test]
-        public static void WhenObjectInitializerInCollectionInitializer()
-        {
-            var c = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    public class C1
-    {
-        public int Value { get; set; }
-    }
-}");
-
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    using System.Collections.Generic;
-
-    public class C2
-    {
-        public List<C1> Items { get; } = new List<C1>
-        {
-            new C1 { Value = 2 },
-        };
-    }
-}");
-
-            var compilation = CSharpCompilation.Create("test", new[] { c, syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
-        }
-
-        [Test]
-        public static void WhenFieldIsNotNamedWithUnderscore()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        int value;
-        public int M() => value = 1;
-    }
-}");
-
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
-        }
-
-        [Test]
-        public static void WhenUsingThis()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        public int Value { get; private set; }
-
-        public int M() => this.Value = 1;
-    }
-}");
-
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
-        }
-
-        [Test]
-        public static void FiguresOutFromOtherClass()
+        [TestCase("private int _f",              true)]
+        [TestCase("private readonly int _f = 1", true)]
+        [TestCase("private int f",               false)]
+        [TestCase("private readonly int f",      false)]
+        public static void FiguresOutFromOtherClass(string declaration, bool expected)
         {
             var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -186,10 +63,8 @@ namespace N
     class C1
     {
         private int _f;
-
-        public int M() => _f = 1;
     }
-}");
+}".AssertReplace("private int _f", declaration));
 
             var c2 = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -203,7 +78,7 @@ namespace N
             foreach (var tree in compilation.SyntaxTrees)
             {
                 var semanticModel = compilation.GetSemanticModel(tree);
-                Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
+                Assert.AreEqual(expected, CodeStyle.UnderscoreFields(semanticModel));
             }
         }
 
@@ -216,8 +91,6 @@ namespace N
     class C1
     {
         private int _f;
-
-        public int M() => _f = 1;
     }
 }");
 

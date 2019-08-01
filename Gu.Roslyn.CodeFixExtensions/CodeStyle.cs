@@ -254,14 +254,13 @@ namespace Gu.Roslyn.CodeFixExtensions
             if (tree.TryGetRoot(out var root))
             {
                 walker.Visit(root);
-                if (walker.UsesThis == Result.Yes ||
-                    walker.UsesUnderScore == Result.No)
+                if (walker.UsesUnderScore == Result.No ||
+                    walker.UsesUnderScore == Result.Maybe)
                 {
                     return Result.No;
                 }
 
-                if (walker.UsesUnderScore == Result.Yes ||
-                    walker.UsesThis == Result.No)
+                if (walker.UsesUnderScore == Result.Yes)
                 {
                     return Result.Yes;
                 }
@@ -400,191 +399,60 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
             }
 
-            internal Result UsesThis { get; private set; }
-
             internal Result UsesUnderScore { get; private set; }
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
-                if (node.IsMissing ||
-                    node.Modifiers.Any(SyntaxKind.StaticKeyword) ||
-                    node.Modifiers.Any(SyntaxKind.ConstKeyword) ||
-                    node.Modifiers.Any(SyntaxKind.PublicKeyword) ||
-                    node.Modifiers.Any(SyntaxKind.ProtectedKeyword) ||
-                    node.Modifiers.Any(SyntaxKind.InternalKeyword))
+                if (node.Modifiers.Any(SyntaxKind.PrivateKeyword) && !node.Modifiers.Any(SyntaxKind.ConstKeyword, SyntaxKind.StaticKeyword))
                 {
-                    return;
-                }
-
-                foreach (var variable in node.Declaration.Variables)
-                {
-                    var name = variable.Identifier.ValueText;
-                    if (name.StartsWith("_", StringComparison.Ordinal))
+                    foreach (var variable in node.Declaration.Variables)
                     {
-                        switch (this.UsesUnderScore)
+                        var name = variable.Identifier.ValueText;
+                        if (name.StartsWith("_", StringComparison.Ordinal))
                         {
-                            case Result.Unknown:
-                                this.UsesUnderScore = Result.Yes;
-                                break;
-                            case Result.Yes:
-                                break;
-                            case Result.No:
-                                this.UsesUnderScore = Result.Maybe;
-                                break;
-                            case Result.Maybe:
-                                break;
-                            default:
-                                throw new InvalidOperationException("Not handling member.");
+                            switch (this.UsesUnderScore)
+                            {
+                                case Result.Unknown:
+                                    this.UsesUnderScore = Result.Yes;
+                                    break;
+                                case Result.Yes:
+                                    break;
+                                case Result.No:
+                                    this.UsesUnderScore = Result.Maybe;
+                                    break;
+                                case Result.Maybe:
+                                    break;
+                                default:
+                                    throw new InvalidOperationException("Not handling member.");
+                            }
                         }
-                    }
-                    else
-                    {
-                        switch (this.UsesUnderScore)
+                        else
                         {
-                            case Result.Unknown:
-                                this.UsesUnderScore = Result.No;
-                                break;
-                            case Result.Yes:
-                                this.UsesUnderScore = Result.Maybe;
-                                break;
-                            case Result.No:
-                                break;
-                            case Result.Maybe:
-                                break;
-                            default:
-                                throw new InvalidOperationException("Not handling member.");
+                            switch (this.UsesUnderScore)
+                            {
+                                case Result.Unknown:
+                                    this.UsesUnderScore = Result.No;
+                                    break;
+                                case Result.Yes:
+                                    this.UsesUnderScore = Result.Maybe;
+                                    break;
+                                case Result.No:
+                                    break;
+                                case Result.Maybe:
+                                    break;
+                                default:
+                                    throw new InvalidOperationException("Not handling member.");
+                            }
                         }
                     }
                 }
-            }
-
-            public override void VisitThisExpression(ThisExpressionSyntax node)
-            {
-                switch (node.Parent.Kind())
-                {
-                    case SyntaxKind.Argument:
-                        return;
-                }
-
-                switch (this.UsesThis)
-                {
-                    case Result.Unknown:
-                        this.UsesThis = Result.Yes;
-                        break;
-                    case Result.Yes:
-                        break;
-                    case Result.No:
-                        this.UsesThis = Result.Maybe;
-                        break;
-                    case Result.Maybe:
-                        break;
-                    default:
-                        throw new InvalidOperationException("Not handling member.");
-                }
-            }
-
-            public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
-            {
-                if (node.Parent is InitializerExpressionSyntax)
-                {
-                    return;
-                }
-
-                this.CheckUsesThis(node.Left);
-                base.VisitAssignmentExpression(node);
-            }
-
-            public override void VisitInvocationExpression(InvocationExpressionSyntax node)
-            {
-                this.CheckUsesThis(node.Expression);
-                base.VisitInvocationExpression(node);
-            }
-
-            public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
-            {
-                this.CheckUsesThis(node);
-                base.VisitMemberAccessExpression(node);
-            }
-
-            public override void VisitConditionalAccessExpression(ConditionalAccessExpressionSyntax node)
-            {
-                this.CheckUsesThis(node.Expression);
-                base.VisitConditionalAccessExpression(node);
             }
 
             internal static UnderscoreFieldWalker Borrow() => Borrow(() => new UnderscoreFieldWalker());
 
             protected override void Clear()
             {
-                this.UsesThis = Result.Unknown;
                 this.UsesUnderScore = Result.Unknown;
-            }
-
-            private void CheckUsesThis(ExpressionSyntax expression)
-            {
-                if (expression == null ||
-                    this.UsesThis != Result.Unknown)
-                {
-                    return;
-                }
-
-                if (expression is MemberAccessExpressionSyntax memberAccess &&
-                    memberAccess.Expression is ThisExpressionSyntax)
-                {
-                    switch (this.UsesThis)
-                    {
-                        case Result.Unknown:
-                            this.UsesThis = Result.Yes;
-                            break;
-                        case Result.Yes:
-                            break;
-                        case Result.No:
-                            this.UsesThis = Result.Maybe;
-                            break;
-                        case Result.Maybe:
-                            break;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
-
-                if (expression is IdentifierNameSyntax identifierName &&
-                    expression.FirstAncestor<TypeDeclarationSyntax>() is TypeDeclarationSyntax typeDeclaration)
-                {
-                    if (typeDeclaration.TryFindField(identifierName.Identifier.ValueText, out var field) &&
-                        (field.Modifiers.Any(SyntaxKind.StaticKeyword) || field.Modifiers.Any(SyntaxKind.ConstKeyword)))
-                    {
-                        return;
-                    }
-
-                    if (typeDeclaration.TryFindProperty(identifierName.Identifier.ValueText, out var property) &&
-                        property.Modifiers.Any(SyntaxKind.StaticKeyword))
-                    {
-                        return;
-                    }
-
-                    if (typeDeclaration.TryFindMethod(identifierName.Identifier.ValueText, out var method) &&
-                        method.Modifiers.Any(SyntaxKind.StaticKeyword))
-                    {
-                        return;
-                    }
-
-                    switch (this.UsesThis)
-                    {
-                        case Result.Unknown:
-                            this.UsesThis = Result.No;
-                            break;
-                        case Result.Yes:
-                            this.UsesThis = Result.Maybe;
-                            break;
-                        case Result.No:
-                            break;
-                        case Result.Maybe:
-                            break;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
             }
         }
 
