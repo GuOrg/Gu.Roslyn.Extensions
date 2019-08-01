@@ -29,44 +29,32 @@ namespace N
             Assert.AreEqual(true, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [Test]
-        public static async Task AssigningUnderscoreInCtor()
+        [TestCase("_f1 = 1", false)]
+        [TestCase("this._f1 = 1", true)]
+        [TestCase("f2 = 1",      false)]
+        [TestCase("this.f2 = 1", true)]
+        [TestCase("F3 = 1",      false)]
+        [TestCase("this.F3 = 1", true)]
+        public static async Task AssigningInCtor(string expression, bool expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     class C
     {
-        int _f;
+        private int _f1;
+        private int f2;
+        public int F3;
+
         C()
         {
-            _f = 1;
+            _f1 = 1;
         }
     }
-}");
+}".AssertReplace("_f1 = 1", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(false, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
-        }
-
-        [Test]
-        public static async Task AssigningQualifiedInCtor()
-        {
-            var sln = CodeFactory.CreateSolution(@"
-namespace N
-{
-    class C
-    {
-        int f;
-        C()
-        {
-            this.f = 1;
-        }
-    }
-}");
-
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(true, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
         [Test]
@@ -89,7 +77,7 @@ namespace N
 
         [TestCase("this.f", true)]
         [TestCase("f", false)]
-        public static async Task Arrow(string expression, bool expected)
+        public static async Task ReturningInMethodExpressionBody(string expression, bool expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -99,6 +87,69 @@ namespace N
         private int f;
 
         public int M() => this.f;
+    }
+}".AssertReplace("this.f", expression));
+
+            var document = sln.Projects.Single().Documents.Single();
+            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [TestCase("this.f", true)]
+        [TestCase("f",      false)]
+        public static async Task ReturningInPropertyExpressionBody(string expression, bool expected)
+        {
+            var sln = CodeFactory.CreateSolution(@"
+namespace N
+{
+    class C
+    {
+        private int f;
+
+        public int P => this.f;
+    }
+}".AssertReplace("this.f", expression));
+
+            var document = sln.Projects.Single().Documents.Single();
+            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [TestCase("this.f", true)]
+        [TestCase("f",      false)]
+        public static async Task ReturningInPropertyGetterExpressionBody(string expression, bool expected)
+        {
+            var sln = CodeFactory.CreateSolution(@"
+namespace N
+{
+    class C
+    {
+        private int f;
+
+        public int P
+        {
+            get => this.f;
+        }
+    }
+}".AssertReplace("this.f", expression));
+
+            var document = sln.Projects.Single().Documents.Single();
+            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [TestCase("this.f", true)]
+        [TestCase("f",      false)]
+        public static async Task ReturningInPropertyGetterStatementBody(string expression, bool expected)
+        {
+            var sln = CodeFactory.CreateSolution(@"
+namespace N
+{
+    class C
+    {
+        private int f;
+
+        public int P
+        {
+            get { return this.f; }
+        }
     }
 }".AssertReplace("this.f", expression));
 

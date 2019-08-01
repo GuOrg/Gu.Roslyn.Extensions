@@ -101,6 +101,81 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
+        /// Figuring out if field access should be prefixed with this.
+        /// 1. Check CodeStyleOptions.QualifyPropertyAccess if present.
+        /// 2. Walk current <paramref name="document"/>.
+        /// 3. Walk current project.
+        /// </summary>
+        /// <param name="document">The <see cref="Document"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static async Task<bool> QualifyPropertyAccessAsync(this Document document, CancellationToken cancellationToken)
+        {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
+            if (optionSet.GetOption(CodeStyleOptions.QualifyPropertyAccess, document.Project.Language) is CodeStyleOption<bool> option &&
+                !ReferenceEquals(option, CodeStyleOptions.QualifyPropertyAccess.DefaultValue))
+            {
+                return option.Value;
+            }
+
+            using (var walker = QualifyPropertyAccessWalker.Borrow())
+            {
+                switch (await QualifiesPropertyAccess(document, walker).ConfigureAwait(false))
+                {
+                    case Result.Unknown:
+                        break;
+                    case Result.Maybe:
+                    case Result.Yes:
+                        return true;
+                    case Result.No:
+                        return false;
+                    default:
+                        throw new InvalidOperationException("Not handling member.");
+                }
+
+                foreach (var doc in document.Project.Documents)
+                {
+                    switch (await QualifiesPropertyAccess(doc, walker).ConfigureAwait(false))
+                    {
+                        case Result.Unknown:
+                            break;
+                        case Result.Maybe:
+                        case Result.Yes:
+                            return true;
+                        case Result.No:
+                            return false;
+                        default:
+                            throw new InvalidOperationException("Not handling member.");
+                    }
+                }
+            }
+
+            return true;
+
+            async Task<Result> QualifiesPropertyAccess(Document candidate, QualifyPropertyAccessWalker walker)
+            {
+                var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+                if (IsExcluded(tree))
+                {
+                    return Result.Unknown;
+                }
+
+                if (tree.TryGetRoot(out var root))
+                {
+                    walker.Visit(root);
+                    return walker.QualifiesAccess;
+                }
+
+                return Result.Unknown;
+            }
+        }
+
+        /// <summary>
         /// Figuring out if field names should be prefixed with _.
         /// 1. Walk current <paramref name="document"/>.
         /// 2. Walk current project.
@@ -460,6 +535,93 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             internal static QualifyFieldAccessWalker Borrow() => Borrow(() => new QualifyFieldAccessWalker());
+
+            protected override void Clear()
+            {
+                this.QualifiesAccess = Result.Unknown;
+            }
+        }
+
+        private sealed class QualifyPropertyAccessWalker : PooledWalker<QualifyPropertyAccessWalker>
+        {
+            private QualifyPropertyAccessWalker()
+            {
+            }
+
+            internal Result QualifiesAccess { get; private set; }
+
+            public override void VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                switch (node.Parent)
+                {
+                    case AssignmentExpressionSyntax assignment when assignment.Left.Contains(node) &&
+                                                                    !assignment.Parent.IsKind(SyntaxKind.ObjectInitializerExpression) &&
+                                                                    IsMemberProperty():
+                    case ArrowExpressionClauseSyntax _ when IsMemberProperty():
+                    case ReturnStatementSyntax _ when IsMemberProperty():
+                        switch (this.QualifiesAccess)
+                        {
+                            case Result.Unknown:
+                                this.QualifiesAccess = Result.No;
+                                break;
+                            case Result.Yes:
+                                this.QualifiesAccess = Result.Maybe;
+                                break;
+                            case Result.No:
+                                break;
+                            case Result.Maybe:
+                                break;
+                            default:
+                                throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
+                        }
+
+                        break;
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
+                                                                        memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
+                                                                        IsMemberProperty():
+                        switch (this.QualifiesAccess)
+                        {
+                            case Result.Unknown:
+                                this.QualifiesAccess = Result.Yes;
+                                break;
+                            case Result.Yes:
+                                break;
+                            case Result.No:
+                                this.QualifiesAccess = Result.Maybe;
+                                break;
+                            case Result.Maybe:
+                                break;
+                            default:
+                                throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
+                        }
+
+                        break;
+                }
+
+                bool IsMemberProperty()
+                {
+                    return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
+                           !IsStatic(containingMember) &&
+                           containingMember.Parent is TypeDeclarationSyntax containingType &&
+                           containingType.TryFindProperty(node.Identifier.ValueText, out var property) &&
+                           !property.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);
+
+                    bool IsStatic(MemberDeclarationSyntax candidate)
+                    {
+                        switch (candidate)
+                        {
+                            case BaseMethodDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            case BasePropertyDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            default:
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            internal static QualifyPropertyAccessWalker Borrow() => Borrow(() => new QualifyPropertyAccessWalker());
 
             protected override void Clear()
             {
