@@ -1,3 +1,7 @@
+#### 0.5.4
+* FEATURE: SealRewriter
+* FEATURE: SortRewriter
+
 #### 0.5.3
 * FEATURE: QuyalifyFieldAccess, QuyalifyPropertyAccess and QuyalifyMethodAccess.
 * BREAKING: UnderscoreFields checks only field declarations.

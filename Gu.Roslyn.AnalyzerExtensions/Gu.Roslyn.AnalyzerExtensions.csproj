@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.5.3-dev</Version>
+    <Version>0.5.4-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -18,11 +18,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer</PackageTags>
     <PackageReleaseNotes>
-      FEATURE: QuyalifyFieldAccess, QuyalifyPropertyAccess and QuyalifyMethodAccess.
-      BREAKING: UnderscoreFields checks only field declarations.
-      FEATURE: More walkers.
-      FIX: AddMember when directives.
-      BUGFIX: TryFindArgument when multiple optional.
+      FEATURE: SealRewriter
+      FEATURE: SortRewriter
     </PackageReleaseNotes>
   </PropertyGroup>
 
