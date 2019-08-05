@@ -38,16 +38,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             return 0;
         }
 
-        /// <inheritdoc/>
-        int IComparer<MemberDeclarationSyntax>.Compare(MemberDeclarationSyntax x, MemberDeclarationSyntax y) => Compare(x, y);
-
         /// <summary>
         /// Compare const &lt; static &lt; member.
         /// </summary>
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
-        internal static int CompareScope(SyntaxTokenList x, SyntaxTokenList y)
+        public static int CompareScope(SyntaxTokenList x, SyntaxTokenList y)
         {
             return Index(x).CompareTo(Index(y));
 
@@ -74,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <param name="y">The other modifiers.</param>
         /// <param name="default">The default value when missing.</param>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
-        internal static int CompareAccessibility(SyntaxTokenList x, SyntaxTokenList y, Accessibility @default)
+        public static int CompareAccessibility(SyntaxTokenList x, SyntaxTokenList y, Accessibility @default)
         {
             return CompareAccessibility(
                 x.Accessibility(@default),
@@ -129,14 +126,22 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         }
 
         /// <summary>
-        /// 
+        /// Compare using <paramref name="compare"/> if <paramref name="x"/> and <paramref name="y"/> are of type <typeparamref name="T"/>.
+        /// Return -1 if <paramref name="x"/> is of type <typeparamref name="T"/> and <paramref name="y"/> is not.
+        /// Return +1 if <paramref name="y"/> is of type <typeparamref name="T"/> and <paramref name="x"/> is not.
+        /// Return 0 if neither of <paramref name="x"/> nor <paramref name="y"/> is of type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="compare"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <param name="x">The first <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="y">The other <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="compare">The Func{T, T, int}.</param>
+        /// <param name="result">The <see cref="int"/>.</param>
+        /// <returns>
+        /// <paramref name="compare"/> if <paramref name="x"/> and <paramref name="y"/> are of type <typeparamref name="T"/>.
+        /// Return -1 if <paramref name="x"/> is of type <typeparamref name="T"/> and <paramref name="y"/> is not.
+        /// Return +1 if <paramref name="y"/> is of type <typeparamref name="T"/> and <paramref name="x"/> is not.
+        /// Return 0 if neither of <paramref name="x"/> nor <paramref name="y"/> is of type <typeparamref name="T"/>.
+        /// </returns>
         public static bool TryCompare<T>(MemberDeclarationSyntax x, MemberDeclarationSyntax y, Func<T, T, int> compare, out int result)
             where T : MemberDeclarationSyntax
         {
@@ -161,6 +166,21 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             return false;
         }
 
+        /// <summary>
+        /// Compare using StyleCop rules if <paramref name="x"/> and <paramref name="y"/> are event declarations.
+        /// Return -1 if <paramref name="x"/> is an event declaration and <paramref name="y"/> is not.
+        /// Return +1 if <paramref name="y"/> is an event declaration and <paramref name="x"/> is not.
+        /// Return 0 if neither of <paramref name="x"/> nor <paramref name="y"/> is an event declaration.
+        /// </summary>
+        /// <param name="x">The first <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="y">The other <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="result">The <see cref="int"/>.</param>
+        /// <returns>
+        /// StyleCop rules if <paramref name="x"/> and <paramref name="y"/> are an event declaration.
+        /// Return -1 if <paramref name="x"/> is an event declaration and <paramref name="y"/> is not.
+        /// Return +1 if <paramref name="y"/> is an event declaration and <paramref name="x"/> is not.
+        /// Return 0 if neither of <paramref name="x"/> nor <paramref name="y"/> is an event declaration.
+        /// </returns>
         public static bool TryCompareEvent(MemberDeclarationSyntax x, MemberDeclarationSyntax y, out int result)
         {
             if (IsEvent(x))
@@ -230,5 +250,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 }
             }
         }
+
+        /// <inheritdoc/>
+        int IComparer<MemberDeclarationSyntax>.Compare(MemberDeclarationSyntax x, MemberDeclarationSyntax y) => Compare(x, y);
     }
 }
