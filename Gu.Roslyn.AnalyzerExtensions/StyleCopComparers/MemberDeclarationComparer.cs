@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -8,8 +9,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
     /// <summary>
     /// For comparing order according to StyleCop.
     /// </summary>
-    public sealed class MemberDeclarationComparer
+    public sealed class MemberDeclarationComparer : IComparer<MemberDeclarationSyntax>
     {
+        /// <summary>
+        /// The default instance.
+        /// </summary>
+        public static readonly MemberDeclarationComparer Default = new MemberDeclarationComparer();
+
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
@@ -19,15 +25,21 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             if (TryCompare<FieldDeclarationSyntax>(x, y, FieldDeclarationComparer.Compare, out var result) ||
                 TryCompare<ConstructorDeclarationSyntax>(x, y, ConstructorDeclarationComparer.Compare, out result) ||
                 TryCompareEvent(x, y, out result) ||
+                TryCompare<EnumDeclarationSyntax>(x, y, EnumDeclarationComparer.Compare, out result) ||
                 TryCompare<PropertyDeclarationSyntax>(x, y, PropertyDeclarationComparer.Compare, out result) ||
                 TryCompare<IndexerDeclarationSyntax>(x, y, IndexerDeclarationComparer.Compare, out result) ||
-                TryCompare<MethodDeclarationSyntax>(x, y, MethodDeclarationComparer.Compare, out result))
+                TryCompare<MethodDeclarationSyntax>(x, y, MethodDeclarationComparer.Compare, out result) ||
+                TryCompare<StructDeclarationSyntax>(x, y, StructDeclarationComparer.Compare, out result) ||
+                TryCompare<ClassDeclarationSyntax>(x, y, ClassDeclarationComparer.Compare, out result))
             {
                 return result;
             }
 
             return 0;
         }
+
+        /// <inheritdoc/>
+        int IComparer<MemberDeclarationSyntax>.Compare(MemberDeclarationSyntax x, MemberDeclarationSyntax y) => Compare(x, y);
 
         /// <summary>
         /// Compare const &lt; static &lt; member.
@@ -62,9 +74,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <param name="y">The other modifiers.</param>
         /// <param name="default">The default value when missing.</param>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
-        internal static int CompareAccessability(SyntaxTokenList x, SyntaxTokenList y, Accessibility @default)
+        internal static int CompareAccessibility(SyntaxTokenList x, SyntaxTokenList y, Accessibility @default)
         {
-            return CompareAccessability(
+            return CompareAccessibility(
                 x.Accessibility(@default),
                 y.Accessibility(@default));
         }
@@ -75,7 +87,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
-        internal static int CompareAccessability(Accessibility x, Accessibility y)
+        public static int CompareAccessibility(Accessibility x, Accessibility y)
         {
             return Index(x).CompareTo(Index(y));
 
@@ -106,7 +118,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>
         /// <returns>A signed integer that indicates if the node is before or after the other in the document.</returns>
-        internal static int CompareSpanStart(int x, int y)
+        public static int CompareSpanStart(int x, int y)
         {
             if (x == 0 || y == 0)
             {
@@ -116,9 +128,23 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             return x.CompareTo(y);
         }
 
-        private static bool TryCompare<T>(MemberDeclarationSyntax x, MemberDeclarationSyntax y, Func<T, T, int> compare, out int result)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="compare"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static bool TryCompare<T>(MemberDeclarationSyntax x, MemberDeclarationSyntax y, Func<T, T, int> compare, out int result)
             where T : MemberDeclarationSyntax
         {
+            if (compare == null)
+            {
+                throw new ArgumentNullException(nameof(compare));
+            }
+
             if (x is T xt)
             {
                 result = y is T yt ? compare(xt, yt) : -1;
@@ -135,13 +161,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             return false;
         }
 
-        private static bool TryCompareEvent(MemberDeclarationSyntax x, MemberDeclarationSyntax y, out int result)
+        public static bool TryCompareEvent(MemberDeclarationSyntax x, MemberDeclarationSyntax y, out int result)
         {
             if (IsEvent(x))
             {
                 if (IsEvent(y))
                 {
-                    result = CompareAccessability(Accessibility(x), Accessibility(y));
+                    result = CompareAccessibility(Accessibility(x), Accessibility(y));
                     if (result != 0)
                     {
                         return true;

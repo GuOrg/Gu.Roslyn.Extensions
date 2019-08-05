@@ -31,7 +31,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 return 1;
             }
 
-            var compare = MemberDeclarationComparer.CompareAccessability(Accessibility(x), Accessibility(y));
+            var compare = MemberDeclarationComparer.CompareAccessibility(Accessibility(x), Accessibility(y));
             if (compare != 0)
             {
                 return compare;

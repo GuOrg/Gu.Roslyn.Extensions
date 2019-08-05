@@ -42,7 +42,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 return -1;
             }
 
-            var compare = MemberDeclarationComparer.CompareAccessability(Accessibility(x), Accessibility(y));
+            var compare = MemberDeclarationComparer.CompareAccessibility(Accessibility(x), Accessibility(y));
             if (compare != 0)
             {
                 return compare;
@@ -105,7 +105,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             {
                 if (y.TryGetSetter(out var ySetter))
                 {
-                    return MemberDeclarationComparer.CompareAccessability(
+                    return MemberDeclarationComparer.CompareAccessibility(
                         ySetter.Modifiers.Accessibility(Accessibility(y)),
                         xSetter.Modifiers.Accessibility(Accessibility(x)));
                 }

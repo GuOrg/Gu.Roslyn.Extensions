@@ -42,7 +42,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 return -1;
             }
 
-            var compare = MemberDeclarationComparer.CompareAccessability(x.Modifiers, y.Modifiers, Accessibility.Private);
+            var compare = MemberDeclarationComparer.CompareAccessibility(x.Modifiers, y.Modifiers, Accessibility.Private);
             if (compare != 0)
             {
                 return compare;

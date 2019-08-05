@@ -5,16 +5,16 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <inheritdoc />
-    public sealed class MethodDeclarationComparer : IComparer<MethodDeclarationSyntax>
+    public sealed class EnumDeclarationComparer : IComparer<EnumDeclarationSyntax>
     {
         /// <summary> The default instance. </summary>
-        public static readonly MethodDeclarationComparer Default = new MethodDeclarationComparer();
+        public static readonly EnumDeclarationComparer Default = new EnumDeclarationComparer();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
         /// <param name="y">The second node to compare.</param>
-        public static int Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+        public static int Compare(EnumDeclarationSyntax x, EnumDeclarationSyntax y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -47,16 +47,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         }
 
         /// <inheritdoc />
-        int IComparer<MethodDeclarationSyntax>.Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y) => Compare(x, y);
+        int IComparer<EnumDeclarationSyntax>.Compare(EnumDeclarationSyntax x, EnumDeclarationSyntax y) => Compare(x, y);
 
-        private static Accessibility Accessibility(MethodDeclarationSyntax declaration)
+        private static Accessibility Accessibility(EnumDeclarationSyntax method)
         {
-            if (declaration.ExplicitInterfaceSpecifier != null)
-            {
-                return Microsoft.CodeAnalysis.Accessibility.Public;
-            }
-
-            return declaration.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
+            return method.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
         }
     }
 }

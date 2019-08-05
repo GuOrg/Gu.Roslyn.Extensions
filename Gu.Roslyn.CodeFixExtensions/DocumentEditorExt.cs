@@ -1,6 +1,8 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
+    using System.Collections.Generic;
+    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -108,6 +110,31 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             editor.ReplaceNode(classDeclaration, x => SealRewriter.Seal(x));
+            return editor;
+        }
+
+        /// <summary>
+        /// Rewrite <paramref name="classDeclaration"/> to sealed.
+        /// Change protected -> private
+        /// Remove virtual.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="classDeclaration">The <see cref="ClassDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
+        /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
+        public static DocumentEditor SortMembers(this DocumentEditor editor, TypeDeclarationSyntax classDeclaration, IComparer<MemberDeclarationSyntax> comparer = null)
+        {
+            if (editor == null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            if (classDeclaration == null)
+            {
+                throw new ArgumentNullException(nameof(classDeclaration));
+            }
+
+            editor.ReplaceNode(classDeclaration, x => SortMembersRewriter.Sort(x, comparer));
             return editor;
         }
     }

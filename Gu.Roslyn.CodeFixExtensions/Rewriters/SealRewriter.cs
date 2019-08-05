@@ -10,7 +10,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     /// Change protected -> private
     /// Remove virtual.
     /// </summary>
-    public class SealRewriter : CSharpSyntaxRewriter
+    public sealed class SealRewriter : CSharpSyntaxRewriter
     {
         private static readonly SealRewriter Default = new SealRewriter();
 
