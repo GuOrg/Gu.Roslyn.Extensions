@@ -30,7 +30,7 @@ namespace N
     {
     }
 }".AssertReplace("sealed class C", after);
-            _ = editor.MakeSealed(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
+            _ = editor.Seal(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
 
@@ -61,7 +61,7 @@ namespace N
         private int f;
     }
 }".AssertReplace("private int f;", after);
-            _ = editor.MakeSealed(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
+            _ = editor.Seal(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
     }
