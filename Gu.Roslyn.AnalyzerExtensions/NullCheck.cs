@@ -78,7 +78,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                     value = null;
                     return false;
-
                 case IsPatternExpressionSyntax node when node.Pattern is ConstantPatternSyntax constantPattern &&
                                                          constantPattern.Expression.IsKind(SyntaxKind.NullLiteralExpression):
                     value = node.Expression;

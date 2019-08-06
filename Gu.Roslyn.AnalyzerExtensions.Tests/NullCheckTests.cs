@@ -11,6 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         [TestCase("text == null")]
         [TestCase("text != null")]
         [TestCase("text is null")]
+        //// [TestCase("text is { }")]
         [TestCase("Equals(text, null)")]
         [TestCase("Equals(null, text)")]
         [TestCase("ReferenceEquals(text, null)")]
@@ -68,8 +69,7 @@ namespace N
             this.text = text;
         }
     }
-}";
-            code = code.AssertReplace("text == null", check);
+}".AssertReplace("text == null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);

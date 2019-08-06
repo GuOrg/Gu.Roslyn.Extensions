@@ -181,6 +181,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// Return +1 if <paramref name="y"/> is an event declaration and <paramref name="x"/> is not.
         /// Return 0 if neither of <paramref name="x"/> nor <paramref name="y"/> is an event declaration.
         /// </returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Analysis wrong here.")]
         public static bool TryCompareEvent(MemberDeclarationSyntax x, MemberDeclarationSyntax y, out int result)
         {
             if (IsEvent(x))
