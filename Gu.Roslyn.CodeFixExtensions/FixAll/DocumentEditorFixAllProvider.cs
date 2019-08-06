@@ -62,7 +62,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             if (fixAllContext.Scope == FixAllScope.Project)
             {
-                var docActions = new Dictionary<Document, List<DocumentEditorAction>>();
+                var docActions = new Dictionary<Document, List<CodeAction>>();
                 foreach (var document in fixAllContext.Project.Documents)
                 {
                     var actions = await GetDocumentEditorActionsAsync(fixAllContext, document).ConfigureAwait(false);
@@ -84,7 +84,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             if (fixAllContext.Scope == FixAllScope.Solution)
             {
-                var docActions = new Dictionary<Document, List<DocumentEditorAction>>();
+                var docActions = new Dictionary<Document, List<CodeAction>>();
                 foreach (var project in fixAllContext.Solution.Projects)
                 {
                     foreach (var document in project.Documents)
@@ -110,11 +110,11 @@ namespace Gu.Roslyn.CodeFixExtensions
             return null;
         }
 
-        private static async Task<List<DocumentEditorAction>> GetDocumentEditorActionsAsync(FixAllContext fixAllContext, Document document)
+        private static async Task<List<CodeAction>> GetDocumentEditorActionsAsync(FixAllContext fixAllContext, Document document)
         {
             var diagnostics = await fixAllContext.GetDocumentDiagnosticsAsync(document)
                                                  .ConfigureAwait(false);
-            var actions = new List<DocumentEditorAction>();
+            var actions = new List<CodeAction>();
             foreach (var diagnostic in diagnostics)
             {
                 var codeFixContext = new CodeFixContext(
@@ -124,7 +124,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     {
                         if (a.EquivalenceKey == fixAllContext.CodeActionEquivalenceKey)
                         {
-                            actions.Add((DocumentEditorAction)a);
+                            actions.Add(a);
                         }
                     },
                     fixAllContext.CancellationToken);
@@ -135,19 +135,27 @@ namespace Gu.Roslyn.CodeFixExtensions
             return actions;
         }
 
-        private static async Task<Document> FixDocumentAsync(Document document, IReadOnlyList<DocumentEditorAction> actions, CancellationToken cancellationToken)
+        private static async Task<Document> FixDocumentAsync(Document document, IReadOnlyList<CodeAction> actions, CancellationToken cancellationToken)
         {
             var editor = await DocumentEditor.CreateAsync(document, cancellationToken)
                                              .ConfigureAwait(false);
             foreach (var action in actions)
             {
-                action.Action(editor, cancellationToken);
+                switch (action)
+                {
+                    case DocumentEditorAction docAction:
+                        docAction.Action(editor, cancellationToken);
+                        break;
+                    case AsyncDocumentEditorAction docAction:
+                        await docAction.Action(editor, cancellationToken).ConfigureAwait(false);
+                        break;
+                }
             }
 
             return editor.GetChangedDocument();
         }
 
-        private static async Task<Solution> FixDocumentsAsync(Solution solution, Dictionary<Document, List<DocumentEditorAction>> docActions, CancellationToken cancellationToken)
+        private static async Task<Solution> FixDocumentsAsync(Solution solution, Dictionary<Document, List<CodeAction>> docActions, CancellationToken cancellationToken)
         {
             foreach (var docAction in docActions)
             {

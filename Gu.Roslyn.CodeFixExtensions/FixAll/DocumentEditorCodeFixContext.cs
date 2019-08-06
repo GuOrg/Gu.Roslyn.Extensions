@@ -4,6 +4,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using System;
     using System.Collections.Immutable;
     using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.Editing;
@@ -95,6 +96,21 @@ namespace Gu.Roslyn.CodeFixExtensions
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey),
+                diagnostic);
+        }
+
+        /// <summary>
+        /// Add supplied <paramref name="action" /> to the list of fixes that will be offered to the user.
+        /// </summary>
+        /// <param name="title">Title of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />.</param>
+        /// <param name="action">The <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
+        /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
+        /// <param name="diagnostic">The subset of <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
+        public void RegisterCodeFix(string title, Func<DocumentEditor, CancellationToken, Task> action, string equivalenceKey, Diagnostic diagnostic)
+        {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
+            this.context.RegisterCodeFix(
+                new AsyncDocumentEditorAction(title, this.context.Document, action, equivalenceKey),
                 diagnostic);
         }
 
