@@ -9,9 +9,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     public class SyntaxNodeExtTests
     {
         [TestCase("1", true)]
-        [TestCase("2", false)]
         [TestCase("M", false)]
-        public void IsInExpressionTree(string text, bool expected)
+        public void WhenReturningExpression(string text, bool expected)
         {
             var code = @"
 namespace N
@@ -21,15 +20,83 @@ namespace N
 
     public class C
     {
-        public Expression<Func<int>> M() => () => 1;
-        public Func<int> M() => () => 2;
+        public static Expression<Func<int>> M() => () => 1;
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var expression = syntaxTree.Find<SyntaxNode>(text);
-            Assert.AreEqual(expected, expression.IsInExpressionTree(semanticModel, CancellationToken.None));
+            var node = syntaxTree.Find<SyntaxNode>(text);
+            Assert.AreEqual(expected, node.IsInExpressionTree(semanticModel, CancellationToken.None));
+        }
+
+        [TestCase("1", true)]
+        [TestCase("M", false)]
+        public void WhenExpressionArgument(string text, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+    using System.Linq.Expressions;
+
+    public class C
+    {
+        public static void M() => M(() => 1);
+
+        public static void M(Expression<Func<int>> _) { }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.Find<SyntaxNode>(text);
+            Assert.AreEqual(expected, node.IsInExpressionTree(semanticModel, CancellationToken.None));
+        }
+
+        [TestCase("1")]
+        [TestCase("M")]
+        public void WhenFunc(string text)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    public class C
+    {
+        public static Func<int> M() => () => 1;
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.Find<SyntaxNode>(text);
+            Assert.AreEqual(false, node.IsInExpressionTree(semanticModel, CancellationToken.None));
+        }
+
+        [TestCase("1")]
+        [TestCase("\abc\".Length")]
+        public void WhenOtherKindArgument(string expression)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+    using System.Linq.Expressions;
+
+    public class C
+    {
+        public static void M() => M(1);
+
+        public static void M(int _) { }
+    }
+}".AssertReplace("1", expression);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.Find<SyntaxNode>(expression);
+            Assert.AreEqual(false, node.IsInExpressionTree(semanticModel, CancellationToken.None));
         }
     }
 }
