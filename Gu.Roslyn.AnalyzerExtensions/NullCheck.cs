@@ -2,6 +2,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Threading;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -52,6 +53,70 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
                        location.TryFirstAncestorOrSelf(out ExpressionSyntax expression) &&
                        check.IsExecutedBefore(expression) == ExecutedBefore.Yes;
+            }
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is a nullcheck.
+        /// </summary>
+        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="value">The nullchecked value.</param>
+        /// <returns>True if <paramref name="candidate"/> is a nullcheck.</returns>
+        public static bool IsNullCheck(ExpressionSyntax candidate, out ExpressionSyntax value)
+        {
+            switch (candidate)
+            {
+                case InvocationExpressionSyntax invocation:
+                    if (invocation.ArgumentList is ArgumentListSyntax argumentList &&
+                        argumentList.Arguments.Count == 2 &&
+                        IsNullAndExpression(argumentList.Arguments[0].Expression, argumentList.Arguments[1].Expression, out value) &&
+                        invocation.TryGetMethodName(out var name) &&
+                        (name == "Equals" || name == "ReferenceEquals"))
+                    {
+                        return true;
+                    }
+
+                    value = null;
+                    return false;
+
+                case IsPatternExpressionSyntax node when node.Pattern is ConstantPatternSyntax constantPattern &&
+                                                         constantPattern.Expression.IsKind(SyntaxKind.NullLiteralExpression):
+                    value = node.Expression;
+                    return true;
+                case BinaryExpressionSyntax node:
+                    switch (node.Kind())
+                    {
+                        case SyntaxKind.EqualsExpression when IsNullAndExpression(node.Left, node.Right, out value):
+                        case SyntaxKind.NotEqualsExpression when IsNullAndExpression(node.Left, node.Right, out value):
+                            return true;
+                        case SyntaxKind.CoalesceExpression when node.Left is ExpressionSyntax expression:
+                            value = expression;
+                            return true;
+                    }
+
+                    value = null;
+                    return false;
+                default:
+                    value = null;
+                    return false;
+            }
+
+            bool IsNullAndExpression(ExpressionSyntax x, ExpressionSyntax y, out ExpressionSyntax result)
+            {
+                if (x.IsKind(SyntaxKind.NullLiteralExpression) && !y.IsKind(SyntaxKind.NullLiteralExpression))
+                {
+                    result = y;
+                    return true;
+                }
+
+                if (!x.IsKind(SyntaxKind.NullLiteralExpression) && y.IsKind(SyntaxKind.NullLiteralExpression))
+                {
+                    result = x;
+                    return true;
+                }
+
+                result = null;
+                return false;
             }
         }
 

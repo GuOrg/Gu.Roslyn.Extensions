@@ -4,7 +4,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using System.Threading;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <inheritdoc />
@@ -28,15 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitBinaryExpression(BinaryExpressionSyntax node)
         {
-            if (node.IsEither(SyntaxKind.EqualsExpression, SyntaxKind.NotEqualsExpression) &&
-                (node.Left.IsKind(SyntaxKind.NullLiteralExpression) ||
-                 node.Right.IsKind(SyntaxKind.NullLiteralExpression)))
-            {
-                this.binaryExpressions.Add(node);
-            }
-
-            if (node.IsKind(SyntaxKind.CoalesceExpression) &&
-                node.Left.IsKind(SyntaxKind.IdentifierName))
+            if (NullCheck.IsNullCheck(node, out _))
             {
                 this.binaryExpressions.Add(node);
             }
@@ -47,8 +38,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitIsPatternExpression(IsPatternExpressionSyntax node)
         {
-            if (node.Pattern is ConstantPatternSyntax constantPattern &&
-                constantPattern.Expression.IsKind(SyntaxKind.NullLiteralExpression))
+            if (NullCheck.IsNullCheck(node, out _))
             {
                 this.isPatterns.Add(node);
             }
@@ -59,10 +49,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
-            if (node.ArgumentList?.Arguments.Count == 2 &&
-                node.ArgumentList.Arguments.TrySingle(x => x.Expression.IsKind(SyntaxKind.NullLiteralExpression), out _) &&
-                node.TryGetMethodName(out var name) &&
-                (name == "Equals" || name == "ReferenceEquals"))
+            if (NullCheck.IsNullCheck(node, out _))
             {
                 this.invocations.Add(node);
             }

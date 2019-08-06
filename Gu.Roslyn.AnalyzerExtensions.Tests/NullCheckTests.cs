@@ -10,6 +10,41 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     {
         [TestCase("text == null")]
         [TestCase("text != null")]
+        [TestCase("text is null")]
+        [TestCase("Equals(text, null)")]
+        [TestCase("Equals(null, text)")]
+        [TestCase("ReferenceEquals(text, null)")]
+        [TestCase("ReferenceEquals(null, text)")]
+        public void IsNullCheck(string check)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    public class C
+    {
+        private readonly string text;
+
+        public C(string text, string other)
+        {
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            this.text = text;
+        }
+    }
+}".AssertReplace("text == null", check);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var expression = syntaxTree.Find<ExpressionSyntax>(check);
+            Assert.AreEqual(true, NullCheck.IsNullCheck(expression, out var value));
+            Assert.AreEqual("text", value.ToString());
+        }
+
+        [TestCase("text == null")]
+        [TestCase("text != null")]
         [TestCase("text == null && other == null")]
         [TestCase("text is null")]
         public void IsCheckedWhenOldStyleNullCheck(string check)
