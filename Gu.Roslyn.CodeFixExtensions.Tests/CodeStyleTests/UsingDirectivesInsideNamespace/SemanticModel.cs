@@ -4,7 +4,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public static class UsingDirectivesInsideNamespace
+    public static class SemanticModel
     {
         [Test]
         public static void UsingDirectiveInsideNamespace()
@@ -21,7 +21,7 @@ namespace N
         }
 
         [Test]
-        public static void NoDirective()
+        public static void DefaultsToNull()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -30,7 +30,7 @@ namespace N
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
+            Assert.AreEqual(null, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
         }
 
         [Test]
@@ -54,6 +54,7 @@ namespace N
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 using System;
+
 namespace N
 {
 }");

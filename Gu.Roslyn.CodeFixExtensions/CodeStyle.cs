@@ -177,12 +177,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Figuring out if the code uses underscore prefix in field names.
         /// </summary>
-        /// <param name="DocumentEditor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool? UnderscoreFields(DocumentEditor editor)
-        {
-            return UnderscoreFields(editor.SemanticModel);
-        }
+        public static bool? UnderscoreFields(DocumentEditor editor) => UnderscoreFields(editor?.SemanticModel);
 
         /// <summary>
         /// Figuring out if the code uses underscore prefix in field names.
@@ -257,6 +254,13 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             return null;
         }
+
+        /// <summary>
+        /// Figuring out if the code uses using directives inside namespaces.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static bool? UsingDirectivesInsideNamespace(DocumentEditor editor) => UsingDirectivesInsideNamespace(editor?.SemanticModel);
 
         /// <summary>
         /// Figuring out if backing fields are adjacent to their properties.
