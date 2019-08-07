@@ -3,8 +3,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Diagnostics;
-    using System.Threading;
 
     /// <summary> A cache. </summary>
     /// <typeparam name="TKey">The key type.</typeparam>
@@ -14,35 +12,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning restore CA1724
     {
         private static readonly ConcurrentDictionary<TKey, TValue> Inner = new ConcurrentDictionary<TKey, TValue>();
-        //// ReSharper disable once StaticMemberInGenericType
-        private static int refCount;
 
         /// <summary>
         /// Start a cache transaction.
         /// </summary>
-        public static void Begin()
+        public static Transaction Begin()
         {
-            _ = Interlocked.Increment(ref refCount);
+            Inner.Clear();
+            return new Transaction();
         }
 
         /// <summary>
         /// End a cache transaction, the cache is purged when ref count is zero.
         /// </summary>
+        [Obsolete("Dispose the transaction returned by Begin()")]
         public static void End()
         {
-            _ = Interlocked.Exchange(ref refCount, 0);
             Inner.Clear();
-        }
-
-        /// <summary>
-        /// Start a cache transaction and end it when disposing.
-        /// </summary>
-        /// <returns>A <see cref="Transaction_"/>.</returns>
-        public static Transaction_ Transaction()
-        {
-            var current = Interlocked.Increment(ref refCount);
-            Debug.Assert(current > 0, "refCount > 0");
-            return default;
         }
 
         /// <summary>
@@ -58,7 +44,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(valueFactory));
             }
 
-            return refCount == 0 ? valueFactory(key) : Inner.GetOrAdd(key, valueFactory);
+            return Inner.GetOrAdd(key, valueFactory);
         }
 
         /// <summary>
@@ -66,16 +52,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         // ReSharper disable once InconsistentNaming
 #pragma warning disable CA1034, CA1707, CA1815
-        public struct Transaction_ : IDisposable
+        public sealed class Transaction : IDisposable
 #pragma warning restore CA1034, CA1707, CA1815
         {
+            ~Transaction()
+            {
+#pragma warning disable IDISP023 // Don't use reference types in finalizer context.
+                Inner.Clear();
+#pragma warning restore IDISP023 // Don't use reference types in finalizer context.
+            }
+
             /// <inheritdoc />
             public void Dispose()
             {
-                if (Interlocked.Decrement(ref refCount) <= 0)
-                {
-                    Inner.Clear();
-                }
+                Inner.Clear();
+                GC.SuppressFinalize(this);
             }
         }
     }

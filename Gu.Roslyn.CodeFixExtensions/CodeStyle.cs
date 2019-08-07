@@ -177,7 +177,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="newLineBetween">If there is a new line between the field and the property.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static CodeStyleResult BackingFieldsAdjacent(this DocumentEditor editor, out bool newLineBetween) => BackingFieldsAdjacent(editor.SemanticModel, out newLineBetween);
+        public static CodeStyleResult BackingFieldsAdjacent(this DocumentEditor editor, out bool newLineBetween) => BackingFieldsAdjacent(editor?.SemanticModel, out newLineBetween);
 
         /// <summary>
         /// Find the <see cref="CodeStyleOption{T}"/> for <paramref name="key"/>.
