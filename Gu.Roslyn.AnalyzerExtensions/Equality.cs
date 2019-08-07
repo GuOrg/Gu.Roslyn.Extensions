@@ -5,12 +5,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Helper methods for equality.
+    /// </summary>
     public static class Equality
     {
         /// <summary>
         /// Check if <paramref name="candidate"/> is a check for equality.
         /// Operators == and !=
-        /// Equals, ReferenceEquals
+        /// Equals, ReferenceEquals.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
@@ -38,7 +41,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="candidate"/> is a check for equality.
         /// Operators == and !=
-        /// Equals, ReferenceEquals
+        /// Equals, ReferenceEquals.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
@@ -81,7 +84,56 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="candidate"/> is a check for equality.
         /// Operators == and !=
-        /// Equals, ReferenceEquals
+        /// Equals, ReferenceEquals.
+        /// </summary>
+        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <param name="left">The left value.</param>
+        /// <param name="right">The right value.</param>
+        /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
+        public static bool IsInstanceEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax left, out ExpressionSyntax right)
+        {
+            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+                argumentList.Arguments.Count == 1 &&
+                candidate.TryGetMethodName(out var name) &&
+                name == "Equals" &&
+                IsCorrectSymbol(out left) != false)
+            {
+                right = argumentList.Arguments[0].Expression;
+                return true;
+            }
+
+            left = null;
+            right = null;
+            return false;
+
+            bool? IsCorrectSymbol(out ExpressionSyntax result)
+            {
+                switch (candidate.Expression)
+                {
+                    case MemberAccessExpressionSyntax memberAccess:
+                        result = memberAccess.Expression;
+                        break;
+                    default:
+                        result = null;
+                        return false;
+                }
+
+                if (semanticModel != null)
+                {
+                    return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
+                           !method.IsStatic;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is a check for equality.
+        /// Operators == and !=
+        /// Equals, ReferenceEquals.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
@@ -124,7 +176,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="candidate"/> is a check for equality.
         /// Operators == and !=
-        /// Equals, ReferenceEquals
+        /// Equals, ReferenceEquals.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="left">The left value.</param>
@@ -149,7 +201,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="candidate"/> is a check for equality.
         /// Operators == and !=
-        /// Equals, ReferenceEquals
+        /// Equals, ReferenceEquals.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="left">The left value.</param>
@@ -178,6 +230,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="type"/> has op_Equality defined.</returns>
         public static bool HasEqualityOperator(ITypeSymbol type)
         {
+            if (type == null)
+            {
+                return false;
+            }
+
             switch (type.SpecialType)
             {
                 case SpecialType.System_Enum:

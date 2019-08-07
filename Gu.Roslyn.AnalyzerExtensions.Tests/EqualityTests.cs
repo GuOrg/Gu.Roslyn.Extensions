@@ -30,13 +30,13 @@ namespace N
 }".AssertReplace("text == null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var expression = syntaxTree.Find<ExpressionSyntax>(check);
-            Assert.AreEqual(true, Equality.IsEqualsCheck(expression, default, default, out var left, out var right));
+            Assert.AreEqual(true,   Equality.IsEqualsCheck(expression, default, default, out var left, out var right));
             Assert.AreEqual("text", left.ToString());
             Assert.AreEqual("null", right.ToString());
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, Equality.IsEqualsCheck(expression, semanticModel, CancellationToken.None, out left, out right));
+            Assert.AreEqual(true,   Equality.IsEqualsCheck(expression, semanticModel, CancellationToken.None, out left, out right));
             Assert.AreEqual("text", left.ToString());
             Assert.AreEqual("null", right.ToString());
         }
@@ -57,6 +57,7 @@ namespace N
         [TestCase("System.Nullable.Equals(text, MISSING)", "text",    "MISSING", true,  false)]
         [TestCase("object.ReferenceEquals(text, null)",    null,      null,      false, false)]
         [TestCase("Object.ReferenceEquals(text, null)",    null,      null,      false, false)]
+        [TestCase("text.Equals(null)",                     "text",    "null",    false, false)]
         public void IsObjectEquals(string check, string expectedLeft, string expectedRight, bool syntaxExpected, bool symbolExpected)
         {
             var code = @"
@@ -88,10 +89,44 @@ namespace N
             }
         }
 
-        [TestCase("Equals(text, null)", false)]
-        [TestCase("object.Equals(text, null)", false)]
-        [TestCase("Object.Equals(text, null)", false)]
-        [TestCase("ReferenceEquals(text, null)", true)]
+        [TestCase("text.Equals(null)",         "text", "null", true,  true)]
+        [TestCase("Equals(text, null)",        null,   null,   false, false)]
+        [TestCase("object.Equals(text, null)", null,   null,   false, false)]
+        public void IsInstanceEquals(string check, string expectedLeft, string expectedRight, bool syntaxExpected, bool symbolExpected)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    class C
+    {
+        bool M(string text) => text.Equals(null);
+    }
+}".AssertReplace("text.Equals(null)", check);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var expression = syntaxTree.FindInvocation(check);
+            Assert.AreEqual(syntaxExpected, Equality.IsInstanceEquals(expression, default, default, out var left, out var right));
+            if (syntaxExpected)
+            {
+                Assert.AreEqual(expectedLeft,  left.ToString());
+                Assert.AreEqual(expectedRight, right.ToString());
+            }
+
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(symbolExpected, Equality.IsInstanceEquals(expression, semanticModel, CancellationToken.None, out left, out right));
+            if (symbolExpected)
+            {
+                Assert.AreEqual(expectedLeft,  left.ToString());
+                Assert.AreEqual(expectedRight, right.ToString());
+            }
+        }
+
+        [TestCase("Equals(text, null)",                 false)]
+        [TestCase("object.Equals(text, null)",          false)]
+        [TestCase("Object.Equals(text, null)",          false)]
+        [TestCase("ReferenceEquals(text, null)",        true)]
         [TestCase("object.ReferenceEquals(text, null)", true)]
         [TestCase("Object.ReferenceEquals(text, null)", true)]
         public void IsObjectReferenceEquals(string check, bool expected)
