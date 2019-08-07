@@ -9,7 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     public static class QualifyFieldAccess
     {
         [Test]
-        public static async Task DefaultsToTrue()
+        public static async Task DefaultsToNull()
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -26,7 +26,7 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(true, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(null, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("_f1 = 1", false)]
@@ -72,7 +72,7 @@ namespace N
 }");
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(true, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(null, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("this.f", true)]
@@ -157,8 +157,10 @@ namespace N
             Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [Test]
-        public static async Task FiguresOutFromOtherClass()
+        [TestCase("this.f = 1", true)]
+        [TestCase("f = 1", false)]
+        [TestCase("", null)]
+        public static async Task FiguresOutFromOtherClass(string expression, bool? expected)
         {
             var sln = CodeFactory.CreateSolution(
                 new[]
@@ -168,11 +170,14 @@ namespace N
 {
     class C1
     {
-        private int _f;
+        private int f;
 
-        public int M() => _f = 1;
+        C1()
+        {
+            this.f = 1;
+        }
     }
-}",
+}".AssertReplace("this.f = 1", expression),
                     @"
 namespace N
 {
@@ -184,7 +189,7 @@ namespace N
 
             foreach (var document in sln.Projects.Single().Documents)
             {
-                Assert.AreEqual(false, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+                Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
             }
         }
     }

@@ -6,7 +6,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     public static class BackingFieldsAdjacent
     {
         [Test]
-        public static void DefaultsToStyleCopEmptyClass()
+        public static void DefaultsToNullEmptyClass()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -17,11 +17,11 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.BackingFieldsAdjacent(semanticModel, out _));
+            Assert.AreEqual(null, CodeStyle.BackingFieldsAdjacent(semanticModel, out _));
         }
 
         [Test]
-        public static void DefaultsToStyleCopWhenOneProperty()
+        public static void DefaultsToNullWhenOneProperty()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -39,7 +39,7 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.BackingFieldsAdjacent(semanticModel, out _));
+            Assert.AreEqual(null, CodeStyle.BackingFieldsAdjacent(semanticModel, out _));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace N
         }
 
         [Test]
-        public static void FindsStyleCopInCompilation()
+        public static void FindsInOtherDocument()
         {
             var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -107,8 +107,31 @@ namespace N
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree1, syntaxTree2 });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree1);
-            Assert.AreEqual(false, CodeStyle.BackingFieldsAdjacent(semanticModel, out _));
+            Assert.AreEqual(false, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree1), out _));
+            Assert.AreEqual(false, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree2), out _));
+        }
+
+        [Test]
+        public static void TwoDocumentsWithNoProperties()
+        {
+            var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public class C1
+    {
+    }
+}");
+
+            var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public class C2
+    {
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree1, syntaxTree2 });
+            Assert.AreEqual(null, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree1), out _));
+            Assert.AreEqual(null, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree2), out _));
         }
 
         [Test]
@@ -185,8 +208,7 @@ namespace N
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, CodeStyle.BackingFieldsAdjacent(semanticModel, out var newLineBetween));
+            Assert.AreEqual(true, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree), out var newLineBetween));
             Assert.AreEqual(true, newLineBetween);
         }
     }

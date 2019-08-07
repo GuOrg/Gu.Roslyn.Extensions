@@ -23,33 +23,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public IReadOnlyList<UsingDirectiveSyntax> UsingDirectives => this.usingDirectives;
 
-        //public static bool TryGet(SyntaxTree tree, ITypeSymbol type, out UsingDirectiveSyntax result)
-        //{
-        //    result = null;
-        //    if (tree == null ||
-        //        type == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    if (tree.TryGetRoot(out var root))
-        //    {
-        //        using (var walker = Borrow(root))
-        //        {
-        //            foreach (var candidate in walker.usingDirectives)
-        //            {
-        //                if (candidate.Alias.)
-        //                {
-        //                    result = candidate;
-        //                    return true;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return false;
-        //}
-
         /// <summary>
         /// Get a walker that has visited <paramref name="tree"/>.
         /// </summary>
@@ -57,6 +30,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
         public static UsingStaticWalker Borrow(SyntaxTree tree)
         {
+            if (tree == null)
+            {
+                throw new System.ArgumentNullException(nameof(tree));
+            }
+
             if (tree.TryGetRoot(out var root))
             {
                 return BorrowAndVisit(root, () => new UsingStaticWalker());

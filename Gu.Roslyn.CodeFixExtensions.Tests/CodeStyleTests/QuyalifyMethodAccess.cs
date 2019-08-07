@@ -26,13 +26,13 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(true, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(null, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("M1()", false)]
         [TestCase("this.M1()", true)]
-        [TestCase("M2()", true)]
-        public static async Task CallInCtor(string expression, bool expected)
+        [TestCase("M2()", null)]
+        public static async Task CallInCtor(string expression, bool? expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -56,8 +56,8 @@ namespace N
 
         [TestCase("M1()", false)]
         [TestCase("this.M1()", true)]
-        [TestCase("M2()", true)]
-        public static async Task ExpressionBody(string expression, bool expected)
+        [TestCase("M2()", null)]
+        public static async Task ExpressionBody(string expression, bool? expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -78,8 +78,8 @@ namespace N
 
         [TestCase("M1()",      false)]
         [TestCase("this.M1()", true)]
-        [TestCase("M2()",      true)]
-        public static async Task Assignment(string expression, bool expected)
+        [TestCase("M2()",      null)]
+        public static async Task Assignment(string expression, bool? expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -103,8 +103,8 @@ namespace N
 
         [TestCase("M1()",      false)]
         [TestCase("this.M1()", true)]
-        [TestCase("M2()",      true)]
-        public static async Task Argument(string expression, bool expected)
+        [TestCase("M2()",      null)]
+        public static async Task Argument(string expression, bool? expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N

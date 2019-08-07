@@ -85,7 +85,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 {
                     if (walker.NamespaceDeclarations.TryFirst(out var namespaceDeclaration))
                     {
-                        if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel))
+                        if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel) ?? true)
                         {
                             return compilationUnit.ReplaceNode(namespaceDeclaration, namespaceDeclaration.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
                         }

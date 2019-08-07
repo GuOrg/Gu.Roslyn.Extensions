@@ -147,7 +147,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             var property = editor.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
-            var name = editor.SemanticModel.UnderscoreFields()
+            var name = editor.SemanticModel.UnderscoreFields() ?? false
                 ? $"_{property.Name.ToFirstCharLower()}"
                 : property.Name.ToFirstCharLower();
             while (property.ContainingType.MemberNames.Any(x => x == name))
@@ -323,7 +323,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             if (type.TryFindProperty(propertyName, out var property))
             {
-                if (editor.SemanticModel.BackingFieldsAdjacent(out var newLine))
+                if (editor.SemanticModel.BackingFieldsAdjacent(out var newLine) ?? false)
                 {
                     if (newLine ||
                         !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))

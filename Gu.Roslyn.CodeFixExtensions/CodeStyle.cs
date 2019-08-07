@@ -22,7 +22,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             Unknown,
             Yes,
             No,
-            Maybe,
+            Mixed,
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static async Task<bool> QualifyFieldAccessAsync(this Document document, CancellationToken cancellationToken)
+        public static async Task<bool?> QualifyFieldAccessAsync(this Document document, CancellationToken cancellationToken)
         {
             if (document == null)
             {
@@ -48,55 +48,19 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return option.Value;
             }
 
-            using (var walker = QualifyFieldAccessWalker.Borrow())
+            var result = await QualifyFieldAccessWalker.CheckAsync(document, cancellationToken)
+                                                       .ConfigureAwait(false);
+            switch (result)
             {
-                switch (await QualifiesFieldAccess(document, walker).ConfigureAwait(false))
-                {
-                    case Result.Unknown:
-                        break;
-                    case Result.Maybe:
-                    case Result.Yes:
-                        return true;
-                    case Result.No:
-                        return false;
-                    default:
-                        throw new InvalidOperationException("Not handling member.");
-                }
-
-                foreach (var doc in document.Project.Documents)
-                {
-                    switch (await QualifiesFieldAccess(doc, walker).ConfigureAwait(false))
-                    {
-                        case Result.Unknown:
-                            break;
-                        case Result.Maybe:
-                        case Result.Yes:
-                            return true;
-                        case Result.No:
-                            return false;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
-            }
-
-            return true;
-
-            async Task<Result> QualifiesFieldAccess(Document candidate, QualifyFieldAccessWalker walker)
-            {
-                var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-                if (IsExcluded(tree))
-                {
-                    return Result.Unknown;
-                }
-
-                if (tree.TryGetRoot(out var root))
-                {
-                    walker.Visit(root);
-                    return walker.QualifiesAccess;
-                }
-
-                return Result.Unknown;
+                case Result.Unknown:
+                    return null;
+                case Result.Mixed:
+                case Result.Yes:
+                    return true;
+                case Result.No:
+                    return false;
+                default:
+                    throw new InvalidOperationException($"Not handling {result}");
             }
         }
 
@@ -109,7 +73,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static async Task<bool> QualifyPropertyAccessAsync(this Document document, CancellationToken cancellationToken)
+        public static async Task<bool?> QualifyPropertyAccessAsync(this Document document, CancellationToken cancellationToken)
         {
             if (document == null)
             {
@@ -123,55 +87,19 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return option.Value;
             }
 
-            using (var walker = QualifyPropertyAccessWalker.Borrow())
+            var result = await QualifyPropertyAccessWalker.CheckAsync(document, cancellationToken)
+                                                       .ConfigureAwait(false);
+            switch (result)
             {
-                switch (await QualifiesPropertyAccess(document, walker).ConfigureAwait(false))
-                {
-                    case Result.Unknown:
-                        break;
-                    case Result.Maybe:
-                    case Result.Yes:
-                        return true;
-                    case Result.No:
-                        return false;
-                    default:
-                        throw new InvalidOperationException("Not handling member.");
-                }
-
-                foreach (var doc in document.Project.Documents)
-                {
-                    switch (await QualifiesPropertyAccess(doc, walker).ConfigureAwait(false))
-                    {
-                        case Result.Unknown:
-                            break;
-                        case Result.Maybe:
-                        case Result.Yes:
-                            return true;
-                        case Result.No:
-                            return false;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
-            }
-
-            return true;
-
-            async Task<Result> QualifiesPropertyAccess(Document candidate, QualifyPropertyAccessWalker walker)
-            {
-                var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-                if (IsExcluded(tree))
-                {
-                    return Result.Unknown;
-                }
-
-                if (tree.TryGetRoot(out var root))
-                {
-                    walker.Visit(root);
-                    return walker.QualifiesAccess;
-                }
-
-                return Result.Unknown;
+                case Result.Unknown:
+                    return null;
+                case Result.Mixed:
+                case Result.Yes:
+                    return true;
+                case Result.No:
+                    return false;
+                default:
+                    throw new InvalidOperationException($"Not handling {result}");
             }
         }
 
@@ -184,7 +112,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static async Task<bool> QualifyMethodAccessAsync(this Document document, CancellationToken cancellationToken)
+        public static async Task<bool?> QualifyMethodAccessAsync(this Document document, CancellationToken cancellationToken)
         {
             if (document == null)
             {
@@ -198,55 +126,19 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return option.Value;
             }
 
-            using (var walker = QualifyMethodAccessWalker.Borrow())
+            var result = await QualifyMethodAccessWalker.CheckAsync(document, cancellationToken)
+                                                          .ConfigureAwait(false);
+            switch (result)
             {
-                switch (await QualifiesMethodAccess(document, walker).ConfigureAwait(false))
-                {
-                    case Result.Unknown:
-                        break;
-                    case Result.Maybe:
-                    case Result.Yes:
-                        return true;
-                    case Result.No:
-                        return false;
-                    default:
-                        throw new InvalidOperationException("Not handling member.");
-                }
-
-                foreach (var doc in document.Project.Documents)
-                {
-                    switch (await QualifiesMethodAccess(doc, walker).ConfigureAwait(false))
-                    {
-                        case Result.Unknown:
-                            break;
-                        case Result.Maybe:
-                        case Result.Yes:
-                            return true;
-                        case Result.No:
-                            return false;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
-            }
-
-            return true;
-
-            async Task<Result> QualifiesMethodAccess(Document candidate, QualifyMethodAccessWalker walker)
-            {
-                var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-                if (IsExcluded(tree))
-                {
-                    return Result.Unknown;
-                }
-
-                if (tree.TryGetRoot(out var root))
-                {
-                    walker.Visit(root);
-                    return walker.QualifiesAccess;
-                }
-
-                return Result.Unknown;
+                case Result.Unknown:
+                    return null;
+                case Result.Mixed:
+                case Result.Yes:
+                    return true;
+                case Result.No:
+                    return false;
+                default:
+                    throw new InvalidOperationException($"Not handling {result}");
             }
         }
 
@@ -258,7 +150,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static async Task<bool> UnderscoreFieldsAsync(this Document document, CancellationToken cancellationToken)
+        public static async Task<bool?> UnderscoreFieldsAsync(this Document document, CancellationToken cancellationToken)
         {
             if (document == null)
             {
@@ -278,7 +170,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 {
                     case Result.Unknown:
                         break;
-                    case Result.Maybe:
+                    case Result.Mixed:
                     case Result.Yes:
                         return true;
                     case Result.No:
@@ -293,7 +185,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     {
                         case Result.Unknown:
                             break;
-                        case Result.Maybe:
+                        case Result.Mixed:
                         case Result.Yes:
                             return true;
                         case Result.No:
@@ -304,7 +196,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            return true;
+            return null;
 
             async Task<Result> UnderscoreFields(Document candidate, UnderscoreFieldWalker walker)
             {
@@ -330,7 +222,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool UnderscoreFields(this SemanticModel semanticModel)
+        public static bool? UnderscoreFields(this SemanticModel semanticModel)
         {
             if (semanticModel == null)
             {
@@ -342,7 +234,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 switch (UnderscoreFields(semanticModel.SyntaxTree, walker))
                 {
                     case Result.Unknown:
-                    case Result.Maybe:
+                    case Result.Mixed:
                         break;
                     case Result.Yes:
                         return true;
@@ -357,7 +249,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     switch (UnderscoreFields(tree, walker))
                     {
                         case Result.Unknown:
-                        case Result.Maybe:
+                        case Result.Mixed:
                             break;
                         case Result.Yes:
                             return true;
@@ -369,7 +261,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            return false;
+            return null;
         }
 
         /// <summary>
@@ -377,7 +269,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool UsingDirectivesInsideNamespace(SemanticModel semanticModel)
+        public static bool? UsingDirectivesInsideNamespace(SemanticModel semanticModel)
         {
             if (semanticModel == null)
             {
@@ -389,8 +281,8 @@ namespace Gu.Roslyn.CodeFixExtensions
                 switch (UsingDirectivesInsideNamespace(semanticModel.SyntaxTree, walker))
                 {
                     case Result.Unknown:
-                    case Result.Maybe:
                         break;
+                    case Result.Mixed:
                     case Result.Yes:
                         return true;
                     case Result.No:
@@ -404,8 +296,8 @@ namespace Gu.Roslyn.CodeFixExtensions
                     switch (UsingDirectivesInsideNamespace(tree, walker))
                     {
                         case Result.Unknown:
-                        case Result.Maybe:
                             break;
+                        case Result.Mixed:
                         case Result.Yes:
                             return true;
                         case Result.No:
@@ -416,7 +308,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            return true;
+            return null;
         }
 
         /// <summary>
@@ -425,7 +317,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="newLineBetween">If there is a new line between the field and the property.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)
+        public static bool? BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)
         {
             if (semanticModel == null)
             {
@@ -437,7 +329,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 switch (BackingFieldsAdjacent(semanticModel.SyntaxTree, walker, out newLineBetween))
                 {
                     case Result.Unknown:
-                    case Result.Maybe:
+                    case Result.Mixed:
                         break;
                     case Result.Yes:
                         return true;
@@ -452,7 +344,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     switch (BackingFieldsAdjacent(tree, walker, out newLineBetween))
                     {
                         case Result.Unknown:
-                        case Result.Maybe:
+                        case Result.Mixed:
                             break;
                         case Result.Yes:
                             return true;
@@ -465,7 +357,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             newLineBetween = false;
-            return false;
+            return null;
         }
 
         private static Result UnderscoreFields(this SyntaxTree tree, UnderscoreFieldWalker walker)
@@ -479,7 +371,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 walker.Visit(root);
                 if (walker.UsesUnderScore == Result.No ||
-                    walker.UsesUnderScore == Result.Maybe)
+                    walker.UsesUnderScore == Result.Mixed)
                 {
                     return Result.No;
                 }
@@ -530,13 +422,11 @@ namespace Gu.Roslyn.CodeFixExtensions
                    syntaxTree.FilePath.EndsWith(".g.cs", StringComparison.Ordinal);
         }
 
-        private sealed class QualifyFieldAccessWalker : PooledWalker<QualifyFieldAccessWalker>
+        private sealed class QualifyFieldAccessWalker : TreeWalker<QualifyFieldAccessWalker>
         {
             private QualifyFieldAccessWalker()
             {
             }
-
-            internal Result QualifiesAccess { get; private set; }
 
             public override void VisitIdentifierName(IdentifierNameSyntax node)
             {
@@ -547,42 +437,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                                                                     IsMemberField():
                     case ArrowExpressionClauseSyntax _ when IsMemberField():
                     case ReturnStatementSyntax _ when IsMemberField():
-                        switch (this.QualifiesAccess)
-                        {
-                            case Result.Unknown:
-                                this.QualifiesAccess = Result.No;
-                                break;
-                            case Result.Yes:
-                                this.QualifiesAccess = Result.Maybe;
-                                break;
-                            case Result.No:
-                                break;
-                            case Result.Maybe:
-                                break;
-                            default:
-                                throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
-                        }
-
+                        this.Update(Result.No);
                         break;
                     case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
                                                                         memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
                                                                         IsMemberField():
-                        switch (this.QualifiesAccess)
-                        {
-                            case Result.Unknown:
-                                this.QualifiesAccess = Result.Yes;
-                                break;
-                            case Result.Yes:
-                                break;
-                            case Result.No:
-                                this.QualifiesAccess = Result.Maybe;
-                                break;
-                            case Result.Maybe:
-                                break;
-                            default:
-                                throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
-                        }
-
+                        this.Update(Result.Yes);
                         break;
                 }
 
@@ -609,21 +469,21 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            internal static QualifyFieldAccessWalker Borrow() => Borrow(() => new QualifyFieldAccessWalker());
-
-            protected override void Clear()
+            internal static async Task<Result> CheckAsync(Document containing, CancellationToken cancellationToken)
             {
-                this.QualifiesAccess = Result.Unknown;
+                using (var walker = Borrow(() => new QualifyFieldAccessWalker()))
+                {
+                    return await walker.CheckCoreAsync(containing, cancellationToken)
+                                       .ConfigureAwait(false);
+                }
             }
         }
 
-        private sealed class QualifyPropertyAccessWalker : PooledWalker<QualifyPropertyAccessWalker>
+        private sealed class QualifyPropertyAccessWalker : TreeWalker<QualifyPropertyAccessWalker>
         {
             private QualifyPropertyAccessWalker()
             {
             }
-
-            internal Result QualifiesAccess { get; private set; }
 
             public override void VisitIdentifierName(IdentifierNameSyntax node)
             {
@@ -634,42 +494,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                                                                     IsMemberProperty():
                     case ArrowExpressionClauseSyntax _ when IsMemberProperty():
                     case ReturnStatementSyntax _ when IsMemberProperty():
-                        switch (this.QualifiesAccess)
-                        {
-                            case Result.Unknown:
-                                this.QualifiesAccess = Result.No;
-                                break;
-                            case Result.Yes:
-                                this.QualifiesAccess = Result.Maybe;
-                                break;
-                            case Result.No:
-                                break;
-                            case Result.Maybe:
-                                break;
-                            default:
-                                throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
-                        }
-
+                        this.Update(Result.No);
                         break;
                     case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
                                                                         memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
                                                                         IsMemberProperty():
-                        switch (this.QualifiesAccess)
-                        {
-                            case Result.Unknown:
-                                this.QualifiesAccess = Result.Yes;
-                                break;
-                            case Result.Yes:
-                                break;
-                            case Result.No:
-                                this.QualifiesAccess = Result.Maybe;
-                                break;
-                            case Result.Maybe:
-                                break;
-                            default:
-                                throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
-                        }
-
+                        this.Update(Result.Yes);
                         break;
                 }
 
@@ -696,70 +526,32 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            internal static QualifyPropertyAccessWalker Borrow() => Borrow(() => new QualifyPropertyAccessWalker());
-
-            protected override void Clear()
+            internal static async Task<Result> CheckAsync(Document containing, CancellationToken cancellationToken)
             {
-                this.QualifiesAccess = Result.Unknown;
+                using (var walker = Borrow(() => new QualifyPropertyAccessWalker()))
+                {
+                    return await walker.CheckCoreAsync(containing, cancellationToken)
+                                       .ConfigureAwait(false);
+                }
             }
         }
 
-        private sealed class QualifyMethodAccessWalker : PooledWalker<QualifyMethodAccessWalker>
+        private sealed class QualifyMethodAccessWalker : TreeWalker<QualifyMethodAccessWalker>
         {
             private QualifyMethodAccessWalker()
             {
             }
 
-            internal Result QualifiesAccess { get; private set; }
-
             public override void VisitInvocationExpression(InvocationExpressionSyntax node)
             {
-                if (node.Expression is IdentifierNameSyntax identifierName)
+                switch (node.Expression)
                 {
-                    switch (node.Parent)
-                    {
-                        case ArgumentSyntax _ when IsMemberMethod():
-                        case AssignmentExpressionSyntax _ when IsMemberMethod():
-                        case ArrowExpressionClauseSyntax _ when IsMemberMethod():
-                        case StatementSyntax _ when IsMemberMethod():
-                            switch (this.QualifiesAccess)
-                            {
-                                case Result.Unknown:
-                                    this.QualifiesAccess = Result.No;
-                                    break;
-                                case Result.Yes:
-                                    this.QualifiesAccess = Result.Maybe;
-                                    break;
-                                case Result.No:
-                                    break;
-                                case Result.Maybe:
-                                    break;
-                                default:
-                                    throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
-                            }
-
-                            break;
-                        case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
-                                                          memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
-                                                          IsMemberMethod():
-                            switch (this.QualifiesAccess)
-                            {
-                                case Result.Unknown:
-                                    this.QualifiesAccess = Result.Yes;
-                                    break;
-                                case Result.Yes:
-                                    break;
-                                case Result.No:
-                                    this.QualifiesAccess = Result.Maybe;
-                                    break;
-                                case Result.Maybe:
-                                    break;
-                                default:
-                                    throw new InvalidOperationException($"Not handling {this.QualifiesAccess}");
-                            }
-
-                            break;
-                    }
+                    case IdentifierNameSyntax _ when IsMemberMethod():
+                        this.Update(Result.No);
+                        break;
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression.IsKind(SyntaxKind.ThisExpression):
+                        this.Update(Result.Yes);
+                        break;
                 }
 
                 bool IsMemberMethod()
@@ -767,7 +559,8 @@ namespace Gu.Roslyn.CodeFixExtensions
                     return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
                            !IsStatic(containingMember) &&
                            containingMember.Parent is TypeDeclarationSyntax containingType &&
-                           containingType.TryFindMethod(identifierName.Identifier.ValueText, out var method) &&
+                           node.TryGetMethodName(out var name) &&
+                           containingType.TryFindMethod(name, out var method) &&
                            !method.Modifiers.Any(SyntaxKind.StaticKeyword);
 
                     bool IsStatic(MemberDeclarationSyntax candidate)
@@ -787,11 +580,13 @@ namespace Gu.Roslyn.CodeFixExtensions
                 base.VisitInvocationExpression(node);
             }
 
-            internal static QualifyMethodAccessWalker Borrow() => Borrow(() => new QualifyMethodAccessWalker());
-
-            protected override void Clear()
+            internal static async Task<Result> CheckAsync(Document containing, CancellationToken cancellationToken)
             {
-                this.QualifiesAccess = Result.Unknown;
+                using (var walker = Borrow(() => new QualifyMethodAccessWalker()))
+                {
+                    return await walker.CheckCoreAsync(containing, cancellationToken)
+                                       .ConfigureAwait(false);
+                }
             }
         }
 
@@ -820,9 +615,9 @@ namespace Gu.Roslyn.CodeFixExtensions
                                 case Result.Yes:
                                     break;
                                 case Result.No:
-                                    this.UsesUnderScore = Result.Maybe;
+                                    this.UsesUnderScore = Result.Mixed;
                                     break;
-                                case Result.Maybe:
+                                case Result.Mixed:
                                     break;
                                 default:
                                     throw new InvalidOperationException("Not handling member.");
@@ -836,11 +631,11 @@ namespace Gu.Roslyn.CodeFixExtensions
                                     this.UsesUnderScore = Result.No;
                                     break;
                                 case Result.Yes:
-                                    this.UsesUnderScore = Result.Maybe;
+                                    this.UsesUnderScore = Result.Mixed;
                                     break;
                                 case Result.No:
                                     break;
-                                case Result.Maybe:
+                                case Result.Mixed:
                                     break;
                                 default:
                                     throw new InvalidOperationException("Not handling member.");
@@ -890,7 +685,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 if (this.usingDirectives.TryFirst(x => x.FirstAncestor<NamespaceDeclarationSyntax>() != null, out _))
                 {
                     return this.usingDirectives.TryFirst(x => x.FirstAncestor<NamespaceDeclarationSyntax>() == null, out _)
-                        ? Result.Maybe
+                        ? Result.Mixed
                         : Result.Yes;
                 }
 
@@ -990,6 +785,87 @@ namespace Gu.Roslyn.CodeFixExtensions
                         }
                     }
                 }
+            }
+        }
+
+        private abstract class TreeWalker<T> : PooledWalker<T>
+            where T : TreeWalker<T>
+        {
+            private Result result = Result.Unknown;
+
+            internal async Task<Result> CheckCoreAsync(Document containing, CancellationToken cancellationToken)
+            {
+                if (await Check(containing).ConfigureAwait(false) is Result containingResult &&
+                    containingResult != Result.Unknown)
+                {
+                    return containingResult;
+                }
+
+                foreach (var document in containing.Project.Documents)
+                {
+                    if (document == containing)
+                    {
+                        continue;
+                    }
+
+                    if (await Check(document).ConfigureAwait(false) is Result result &&
+                        result != Result.Unknown)
+                    {
+                        return result;
+                    }
+                }
+
+                return Result.Unknown;
+
+                async Task<Result> Check(Document candidate)
+                {
+                    var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+                    if (IsExcluded(tree))
+                    {
+                        return Result.Unknown;
+                    }
+
+                    if (tree.TryGetRoot(out var root))
+                    {
+                        this.Visit(root);
+                        return this.result;
+                    }
+
+                    return Result.Unknown;
+                }
+            }
+
+            protected void Update(Result newValue)
+            {
+                switch (this.result)
+                {
+                    case Result.Unknown:
+                        this.result = newValue;
+                        break;
+                    case Result.Yes:
+                        if (newValue == Result.No)
+                        {
+                            this.result = Result.Mixed;
+                        }
+
+                        break;
+                    case Result.No:
+                        if (newValue == Result.Yes)
+                        {
+                            this.result = Result.Mixed;
+                        }
+
+                        break;
+                    case Result.Mixed:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(newValue), newValue, null);
+                }
+            }
+
+            protected override void Clear()
+            {
+                this.result = Result.Unknown;
             }
         }
     }

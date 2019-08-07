@@ -9,7 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     public static class QualifyPropertyAccess
     {
         [Test]
-        public static async Task DefaultsToTrue()
+        public static async Task DefaultsToNull()
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -26,7 +26,7 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(true, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(null, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("P = 1", false)]
@@ -66,7 +66,7 @@ namespace N
 }");
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(true, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(null, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("this.P", true)]
@@ -88,9 +88,10 @@ namespace N
             Assert.AreEqual(expected, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("this.P", true)]
-        [TestCase("P",      false)]
-        public static async Task FiguresOutFromOtherClass(string expression, bool expected)
+        [TestCase("this.P = 1", true)]
+        [TestCase("P = 1",      false)]
+        [TestCase("",           null)]
+        public static async Task FiguresOutFromOtherClass(string expression, bool? expected)
         {
             var sln = CodeFactory.CreateSolution(
                 new[]
@@ -100,11 +101,14 @@ namespace N
 {
     class C1
     {
-        public int P { get; }
+        C1()
+        {
+            this.P = 1;
+        }
 
-        public int M() => this.P;
+        public int P { get; }
     }
-}".AssertReplace("this.P", expression),
+}".AssertReplace("this.P = 1", expression),
                     @"
 namespace N
 {
