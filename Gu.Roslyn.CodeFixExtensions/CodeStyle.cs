@@ -172,6 +172,14 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
+        /// Figuring out if backing fields are adjacent to their properties.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="newLineBetween">If there is a new line between the field and the property.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static CodeStyleResult BackingFieldsAdjacent(this DocumentEditor editor, out bool newLineBetween) => BackingFieldsAdjacent(editor.SemanticModel, out newLineBetween);
+
+        /// <summary>
         /// Find the <see cref="CodeStyleOption{T}"/> for <paramref name="key"/>.
         /// </summary>
         /// <typeparam name="T">The type of the value.</typeparam>

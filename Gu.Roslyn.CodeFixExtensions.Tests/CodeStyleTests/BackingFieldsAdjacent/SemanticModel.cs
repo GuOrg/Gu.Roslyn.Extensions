@@ -1,9 +1,9 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.BackingFieldsAdjacent
 {
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public static class BackingFieldsAdjacent
+    public static class SemanticModel
     {
         [Test]
         public static void WhenUnknown()
