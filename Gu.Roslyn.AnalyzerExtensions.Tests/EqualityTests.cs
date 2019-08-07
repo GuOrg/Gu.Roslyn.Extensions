@@ -90,6 +90,7 @@ namespace N
         }
 
         [TestCase("text.Equals(null)",         "text", "null", true,  true)]
+        [TestCase("text?.Equals(null)",        "text", "null", true,  true)]
         [TestCase("Equals(text, null)",        null,   null,   false, false)]
         [TestCase("object.Equals(text, null)", null,   null,   false, false)]
         public void IsInstanceEquals(string check, string expectedLeft, string expectedRight, bool syntaxExpected, bool symbolExpected)

@@ -89,37 +89,44 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
+        /// <param name="instance">The left value.</param>
+        /// <param name="other">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsInstanceEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax left, out ExpressionSyntax right)
+        public static bool IsInstanceEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax instance, out ExpressionSyntax other)
         {
             if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
                 argumentList.Arguments.Count == 1 &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
-                IsCorrectSymbol(out left) != false)
+                TryGetInstance(out instance) &&
+                IsCorrectSymbol() != false)
             {
-                right = argumentList.Arguments[0].Expression;
+                other = argumentList.Arguments[0].Expression;
                 return true;
             }
 
-            left = null;
-            right = null;
+            instance = null;
+            other = null;
             return false;
 
-            bool? IsCorrectSymbol(out ExpressionSyntax result)
+            bool TryGetInstance(out ExpressionSyntax result)
             {
                 switch (candidate.Expression)
                 {
                     case MemberAccessExpressionSyntax memberAccess:
                         result = memberAccess.Expression;
-                        break;
+                        return true;
+                    case MemberBindingExpressionSyntax _ when candidate.Parent is ConditionalAccessExpressionSyntax conditionalAccess:
+                        result = conditionalAccess.Expression;
+                        return true;
                     default:
                         result = null;
                         return false;
                 }
+            }
 
+            bool? IsCorrectSymbol()
+            {
                 if (semanticModel != null)
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
