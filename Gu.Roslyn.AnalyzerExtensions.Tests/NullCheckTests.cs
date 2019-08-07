@@ -35,7 +35,12 @@ namespace N
 }".AssertReplace("text == null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var expression = syntaxTree.Find<ExpressionSyntax>(check);
-            Assert.AreEqual(true, NullCheck.IsNullCheck(expression, out var value));
+            Assert.AreEqual(true, NullCheck.IsNullCheck(expression, default, default, out var value));
+            Assert.AreEqual("text", value.ToString());
+
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true,   NullCheck.IsNullCheck(expression, semanticModel, CancellationToken.None, out value));
             Assert.AreEqual("text", value.ToString());
         }
 
@@ -66,7 +71,7 @@ namespace N
     }
 }".AssertReplace("text == null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var parameter = syntaxTree.FindParameter("text");
             var symbol = semanticModel.GetDeclaredSymbol(parameter);
@@ -92,7 +97,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var parameter = syntaxTree.FindParameter("text");
             var symbol = semanticModel.GetDeclaredSymbol(parameter);

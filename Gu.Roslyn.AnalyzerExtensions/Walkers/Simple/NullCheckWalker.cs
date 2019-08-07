@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitBinaryExpression(BinaryExpressionSyntax node)
         {
-            if (NullCheck.IsNullCheck(node, out _))
+            if (NullCheck.IsNullCheck(node, null, default, out _))
             {
                 this.binaryExpressions.Add(node);
             }
@@ -38,7 +38,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitIsPatternExpression(IsPatternExpressionSyntax node)
         {
-            if (NullCheck.IsNullCheck(node, out _))
+            if (NullCheck.IsNullCheck(node, default, default, out _))
             {
                 this.isPatterns.Add(node);
             }
@@ -49,7 +49,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
-            if (NullCheck.IsNullCheck(node, out _))
+            if (NullCheck.IsNullCheck(node, default, default, out _))
             {
                 this.invocations.Add(node);
             }

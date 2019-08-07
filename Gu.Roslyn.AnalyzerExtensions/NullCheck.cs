@@ -60,11 +60,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Check if <paramref name="candidate"/> is a nullcheck.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="value">The nullchecked value.</param>
         /// <returns>True if <paramref name="candidate"/> is a nullcheck.</returns>
-        public static bool IsNullCheck(ExpressionSyntax candidate, out ExpressionSyntax value)
+        public static bool IsNullCheck(ExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax value)
         {
-            if (EqualsCheck.IsEqualsCheck(candidate, out var left, out var right) &&
+            if (Equality.IsEqualsCheck(candidate, semanticModel, cancellationToken, out var left, out var right) &&
                 IsNullAndExpression(left, right, out value))
             {
                 return true;
