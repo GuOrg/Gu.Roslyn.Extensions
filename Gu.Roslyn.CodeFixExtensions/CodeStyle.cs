@@ -9,6 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CodeStyle;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using Microsoft.CodeAnalysis.Editing;
 
 #pragma warning disable CA1724 // Type names should not match namespaces
     /// <summary>
@@ -157,64 +158,30 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(document));
             }
 
-            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
-            if (optionSet.GetOption(CodeStyleOptions.QualifyFieldAccess, document.Project.Language) is CodeStyleOption<bool> option &&
-                !ReferenceEquals(option, CodeStyleOptions.QualifyFieldAccess.DefaultValue))
+            var result = await UnderscoreFieldWalker.CheckAsync(document, cancellationToken)
+                                                    .ConfigureAwait(false);
+            switch (result)
             {
-                return option.Value;
+                case Result.Unknown:
+                    return null;
+                case Result.Mixed:
+                case Result.Yes:
+                    return true;
+                case Result.No:
+                    return false;
+                default:
+                    throw new InvalidOperationException($"Not handling {result}");
             }
+        }
 
-            using (var walker = UnderscoreFieldWalker.Borrow())
-            {
-                switch (await UnderscoreFields(document, walker).ConfigureAwait(false))
-                {
-                    case Result.Unknown:
-                        break;
-                    case Result.Mixed:
-                    case Result.Yes:
-                        return true;
-                    case Result.No:
-                        return false;
-                    default:
-                        throw new InvalidOperationException("Not handling member.");
-                }
-
-                foreach (var doc in document.Project.Documents)
-                {
-                    switch (await UnderscoreFields(doc, walker).ConfigureAwait(false))
-                    {
-                        case Result.Unknown:
-                            break;
-                        case Result.Mixed:
-                        case Result.Yes:
-                            return true;
-                        case Result.No:
-                            return false;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
-            }
-
-            return null;
-
-            async Task<Result> UnderscoreFields(Document candidate, UnderscoreFieldWalker walker)
-            {
-                var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-
-                if (IsExcluded(tree))
-                {
-                    return Result.Unknown;
-                }
-
-                if (tree.TryGetRoot(out var root))
-                {
-                    walker.Visit(root);
-                    return walker.UsesUnderScore;
-                }
-
-                return Result.Unknown;
-            }
+        /// <summary>
+        /// Figuring out if the code uses underscore prefix in field names.
+        /// </summary>
+        /// <param name="DocumentEditor">The <see cref="DocumentEditor"/>.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static bool? UnderscoreFields(DocumentEditor editor)
+        {
+            return UnderscoreFields(editor.SemanticModel);
         }
 
         /// <summary>
@@ -229,39 +196,19 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(semanticModel));
             }
 
-            using (var walker = UnderscoreFieldWalker.Borrow())
+            var result = UnderscoreFieldWalker.Check(semanticModel.SyntaxTree, semanticModel.Compilation);
+            switch (result)
             {
-                switch (UnderscoreFields(semanticModel.SyntaxTree, walker))
-                {
-                    case Result.Unknown:
-                    case Result.Mixed:
-                        break;
-                    case Result.Yes:
-                        return true;
-                    case Result.No:
-                        return false;
-                    default:
-                        throw new InvalidOperationException("Not handling member.");
-                }
-
-                foreach (var tree in semanticModel.Compilation.SyntaxTrees)
-                {
-                    switch (UnderscoreFields(tree, walker))
-                    {
-                        case Result.Unknown:
-                        case Result.Mixed:
-                            break;
-                        case Result.Yes:
-                            return true;
-                        case Result.No:
-                            return false;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
+                case Result.Unknown:
+                    return null;
+                case Result.Mixed:
+                case Result.Yes:
+                    return true;
+                case Result.No:
+                    return false;
+                default:
+                    throw new InvalidOperationException($"Not handling {result}");
             }
-
-            return null;
         }
 
         /// <summary>
@@ -358,31 +305,6 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             newLineBetween = false;
             return null;
-        }
-
-        private static Result UnderscoreFields(this SyntaxTree tree, UnderscoreFieldWalker walker)
-        {
-            if (IsExcluded(tree))
-            {
-                return Result.Unknown;
-            }
-
-            if (tree.TryGetRoot(out var root))
-            {
-                walker.Visit(root);
-                if (walker.UsesUnderScore == Result.No ||
-                    walker.UsesUnderScore == Result.Mixed)
-                {
-                    return Result.No;
-                }
-
-                if (walker.UsesUnderScore == Result.Yes)
-                {
-                    return Result.Yes;
-                }
-            }
-
-            return Result.Unknown;
         }
 
         private static Result UsingDirectivesInsideNamespace(this SyntaxTree tree, UsingDirectiveWalker walker)
@@ -590,13 +512,11 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private sealed class UnderscoreFieldWalker : PooledWalker<UnderscoreFieldWalker>
+        private sealed class UnderscoreFieldWalker : TreeWalker<UnderscoreFieldWalker>
         {
             private UnderscoreFieldWalker()
             {
             }
-
-            internal Result UsesUnderScore { get; private set; }
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
@@ -605,51 +525,26 @@ namespace Gu.Roslyn.CodeFixExtensions
                     foreach (var variable in node.Declaration.Variables)
                     {
                         var name = variable.Identifier.ValueText;
-                        if (name.StartsWith("_", StringComparison.Ordinal))
-                        {
-                            switch (this.UsesUnderScore)
-                            {
-                                case Result.Unknown:
-                                    this.UsesUnderScore = Result.Yes;
-                                    break;
-                                case Result.Yes:
-                                    break;
-                                case Result.No:
-                                    this.UsesUnderScore = Result.Mixed;
-                                    break;
-                                case Result.Mixed:
-                                    break;
-                                default:
-                                    throw new InvalidOperationException("Not handling member.");
-                            }
-                        }
-                        else
-                        {
-                            switch (this.UsesUnderScore)
-                            {
-                                case Result.Unknown:
-                                    this.UsesUnderScore = Result.No;
-                                    break;
-                                case Result.Yes:
-                                    this.UsesUnderScore = Result.Mixed;
-                                    break;
-                                case Result.No:
-                                    break;
-                                case Result.Mixed:
-                                    break;
-                                default:
-                                    throw new InvalidOperationException("Not handling member.");
-                            }
-                        }
+                        this.Update(name.StartsWith("_", StringComparison.Ordinal) ? Result.Yes : Result.No);
                     }
                 }
             }
 
-            internal static UnderscoreFieldWalker Borrow() => Borrow(() => new UnderscoreFieldWalker());
-
-            protected override void Clear()
+            internal static async Task<Result> CheckAsync(Document containing, CancellationToken cancellationToken)
             {
-                this.UsesUnderScore = Result.Unknown;
+                using (var walker = Borrow(() => new UnderscoreFieldWalker()))
+                {
+                    return await walker.CheckCoreAsync(containing, cancellationToken)
+                                       .ConfigureAwait(false);
+                }
+            }
+
+            internal static Result Check(SyntaxTree containing, Compilation compilation)
+            {
+                using (var walker = Borrow(() => new UnderscoreFieldWalker()))
+                {
+                    return walker.CheckCore(containing, compilation);
+                }
             }
         }
 
@@ -793,7 +688,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             private Result result = Result.Unknown;
 
-            internal async Task<Result> CheckCoreAsync(Document containing, CancellationToken cancellationToken)
+            protected async Task<Result> CheckCoreAsync(Document containing, CancellationToken cancellationToken)
             {
                 if (await Check(containing).ConfigureAwait(false) is Result containingResult &&
                     containingResult != Result.Unknown)
@@ -808,10 +703,10 @@ namespace Gu.Roslyn.CodeFixExtensions
                         continue;
                     }
 
-                    if (await Check(document).ConfigureAwait(false) is Result result &&
-                        result != Result.Unknown)
+                    if (await Check(document).ConfigureAwait(false) is Result documentResult &&
+                        documentResult != Result.Unknown)
                     {
-                        return result;
+                        return documentResult;
                     }
                 }
 
@@ -820,6 +715,47 @@ namespace Gu.Roslyn.CodeFixExtensions
                 async Task<Result> Check(Document candidate)
                 {
                     var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+                    if (IsExcluded(tree))
+                    {
+                        return Result.Unknown;
+                    }
+
+                    if (tree.TryGetRoot(out var root))
+                    {
+                        this.Visit(root);
+                        return this.result;
+                    }
+
+                    return Result.Unknown;
+                }
+            }
+
+            protected Result CheckCore(SyntaxTree containing, Compilation compilation)
+            {
+                if (Check(containing) is Result containingResult &&
+                    containingResult != Result.Unknown)
+                {
+                    return containingResult;
+                }
+
+                foreach (var syntaxTree in compilation.SyntaxTrees)
+                {
+                    if (syntaxTree == containing)
+                    {
+                        continue;
+                    }
+
+                    if (Check(syntaxTree) is Result syntaxTreeResult &&
+                        syntaxTreeResult != Result.Unknown)
+                    {
+                        return syntaxTreeResult;
+                    }
+                }
+
+                return Result.Unknown;
+
+                Result Check(SyntaxTree tree)
+                {
                     if (IsExcluded(tree))
                     {
                         return Result.Unknown;

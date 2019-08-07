@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UnderscoreFields
 {
     using System.Linq;
     using System.Threading;
@@ -6,10 +6,10 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     using Gu.Roslyn.Asserts;
     using NUnit.Framework;
 
-    public static partial class UnderscoreFields
+    public static class Document
     {
         [Test]
-        public static async Task DefaultsToTrue()
+        public static async Task DefaultsToNull()
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -26,13 +26,13 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(true, await CodeStyle.UnderscoreFieldsAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(null, await CodeStyle.UnderscoreFieldsAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("private int _f",              true)]
+        [TestCase("private int _f", true)]
         [TestCase("private readonly int _f = 1", true)]
-        [TestCase("private int f",               false)]
-        [TestCase("private readonly int f",      false)]
+        [TestCase("private int f", false)]
+        [TestCase("private readonly int f", false)]
         public static async Task FiguresOutFromDocument(string declaration, bool expected)
         {
             var sln = CodeFactory.CreateSolution(

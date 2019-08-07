@@ -1,13 +1,13 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UnderscoreFields
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public static partial class UnderscoreFields
+    public static class SemanticModel
     {
         [Test]
-        public static void DefaultsToFalse()
+        public static void DefaultsToNull()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -28,7 +28,7 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
+            Assert.AreEqual(null, CodeStyle.UnderscoreFields(semanticModel));
         }
 
         [TestCase("private int _f", true)]

@@ -34,6 +34,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
         public static AliasWalker Borrow(SyntaxTree tree)
         {
+            if (tree == null)
+            {
+                throw new System.ArgumentNullException(nameof(tree));
+            }
+
             if (tree.TryGetRoot(out var root))
             {
                 return BorrowAndVisit(root, () => new AliasWalker());
