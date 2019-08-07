@@ -11,17 +11,23 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         [TestCase("text == null")]
         [TestCase("text != null")]
         [TestCase("Equals(text, null)")]
+        [TestCase("text.Equals(null)")]
+        [TestCase("text?.Equals(null)")]
         [TestCase("object.Equals(text, null)")]
         [TestCase("Object.Equals(text, null)")]
+        [TestCase("System.Object.Equals(text, null)")]
         [TestCase("ReferenceEquals(text, null)")]
         [TestCase("object.ReferenceEquals(text, null)")]
         [TestCase("Object.ReferenceEquals(text, null)")]
+        [TestCase("RuntimeHelpers.Equals(text, null)")]
+        [TestCase("System.Runtime.CompilerServices.RuntimeHelpers.Equals(text, null)")]
         public void IsEqualsCheck(string check)
         {
             var code = @"
 namespace N
 {
     using System;
+    using System.Runtime.CompilerServices;
 
     class C
     {
@@ -41,29 +47,33 @@ namespace N
             Assert.AreEqual("null", right.ToString());
         }
 
-        [TestCase("Equals(null, text)",                    "null",    "text",    true,  true)]
-        [TestCase("Equals(text, null)",                    "text",    "null",    true,  true)]
-        [TestCase("object.Equals(text, null)",             "text",    "null",    true,  true)]
-        [TestCase("Object.Equals(text, null)",             "text",    "null",    true,  true)]
-        [TestCase("System.Object.Equals(text, null)",      "text",    "null",    true,  true)]
-        [TestCase("Equals(text, MISSING)",                 "text",    "MISSING", true,  false)]
-        [TestCase("object.Equals(text, MISSING)",          "text",    "MISSING", true,  false)]
-        [TestCase("Object.Equals(text, MISSING)",          "text",    "MISSING", true,  false)]
-        [TestCase("Nullable.Equals(text, null)",           "text",    "null",    true,  true)]
-        [TestCase("Nullable.Equals(1, null)",              "1",       "null",    true,  true)]
-        [TestCase("Nullable.Equals(1, 1)",                 "1",       "1",       true,  true)]
-        [TestCase("Nullable.Equals((int?)1, 1)",           "(int?)1", "1",       true,  false)]
-        [TestCase("System.Nullable.Equals(text, null)",    "text",    "null",    true,  true)]
-        [TestCase("System.Nullable.Equals(text, MISSING)", "text",    "MISSING", true,  false)]
-        [TestCase("object.ReferenceEquals(text, null)",    null,      null,      false, false)]
-        [TestCase("Object.ReferenceEquals(text, null)",    null,      null,      false, false)]
-        [TestCase("text.Equals(null)",                     "text",    "null",    false, false)]
+        [TestCase("Equals(null, text)",                                                "null",    "text",    true,  true)]
+        [TestCase("Equals(text, null)",                                                "text",    "null",    true,  true)]
+        [TestCase("object.Equals(text, null)",                                         "text",    "null",    true,  true)]
+        [TestCase("Object.Equals(text, null)",                                         "text",    "null",    true,  true)]
+        [TestCase("System.Object.Equals(text, null)",                                  "text",    "null",    true,  true)]
+        [TestCase("Equals(text, MISSING)",                                             "text",    "MISSING", true,  false)]
+        [TestCase("object.Equals(text, MISSING)",                                      "text",    "MISSING", true,  false)]
+        [TestCase("Object.Equals(text, MISSING)",                                      "text",    "MISSING", true,  false)]
+        [TestCase("Nullable.Equals(text, null)",                                       "text",    "null",    true,  true)]
+        [TestCase("Nullable.Equals(1, null)",                                          "1",       "null",    true,  true)]
+        [TestCase("Nullable.Equals(1, 1)",                                             "1",       "1",       true,  true)]
+        [TestCase("Nullable.Equals((int?)1, 1)",                                       "(int?)1", "1",       true,  false)]
+        [TestCase("System.Nullable.Equals(text, null)",                                "text",    "null",    true,  true)]
+        [TestCase("System.Nullable.Equals(text, MISSING)",                             "text",    "MISSING", true,  false)]
+        [TestCase("object.ReferenceEquals(text, null)",                                null,      null,      false, false)]
+        [TestCase("Object.ReferenceEquals(text, null)",                                null,      null,      false, false)]
+        [TestCase("System.Object.ReferenceEquals(text, null)",                         null,      null,      false, false)]
+        [TestCase("RuntimeHelpers.Equals(text, null)",                                 null,      null,      false, false)]
+        [TestCase("System.Runtime.CompilerServices.RuntimeHelpers.Equals(text, null)", null,      null,      false, false)]
+        [TestCase("text.Equals(null)",                                                 "text",    "null",    false, false)]
         public void IsObjectEquals(string check, string expectedLeft, string expectedRight, bool syntaxExpected, bool symbolExpected)
         {
             var code = @"
 namespace N
 {
     using System;
+    using System.Runtime.CompilerServices;
 
     class C
     {
@@ -136,6 +146,7 @@ namespace N
 namespace N
 {
     using System;
+    using System.Runtime.CompilerServices;
 
     class C
     {
@@ -154,6 +165,46 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(expected, Equality.IsObjectReferenceEquals(expression, semanticModel, CancellationToken.None, out left, out right));
+            if (expected)
+            {
+                Assert.AreEqual("text", left.ToString());
+                Assert.AreEqual("null", right.ToString());
+            }
+        }
+
+        [TestCase("RuntimeHelpers.Equals(text, null)",                                 true)]
+        [TestCase("System.Runtime.CompilerServices.RuntimeHelpers.Equals(text, null)", true)]
+        [TestCase("object.Equals(text, null)",                                         false)]
+        [TestCase("Object.Equals(text, null)",                                         false)]
+        [TestCase("System.Object.Equals(text, null)",                                  false)]
+        [TestCase("ReferenceEquals(text, null)",                                       false)]
+        [TestCase("object.ReferenceEquals(text, null)",                                false)]
+        [TestCase("Object.ReferenceEquals(text, null)",                                false)]
+        public void IsRuntimeHelpersEquals(string check, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+    using System.Runtime.CompilerServices;
+
+    class C
+    {
+        bool M(string text) => RuntimeHelpers.Equals(text, null);
+    }
+}".AssertReplace("RuntimeHelpers.Equals(text, null)", check);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var expression = syntaxTree.FindInvocation(check);
+            Assert.AreEqual(expected, Equality.IsRuntimeHelpersEquals(expression, default, default, out var left, out var right));
+            if (expected)
+            {
+                Assert.AreEqual("text", left.ToString());
+                Assert.AreEqual("null", right.ToString());
+            }
+
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(expected, Equality.IsRuntimeHelpersEquals(expression, semanticModel, CancellationToken.None, out left, out right));
             if (expected)
             {
                 Assert.AreEqual("text", left.ToString());

@@ -324,6 +324,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 /// <summary> System.Runtime.CompilerServices. </summary>
                 public static class CompilerServices
                 {
+                    /// <summary> System.Runtime.CompilerServices.RuntimeHelpers. </summary>
+                    public static readonly QualifiedType RuntimeHelpers = new QualifiedType("System.Runtime.CompilerServices.RuntimeHelpers");
+
                     /// <summary> System.Runtime.CompilerServices.CallerMemberNameAttribute. </summary>
                     public static readonly QualifiedType CallerMemberNameAttribute = new QualifiedType("System.Runtime.CompilerServices.CallerMemberNameAttribute");
 
