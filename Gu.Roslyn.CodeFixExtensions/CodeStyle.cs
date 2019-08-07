@@ -45,6 +45,17 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         /// <summary>
         /// Figuring out if field access should be prefixed with this.
+        /// 1. Check CodeStyleOptions.QualifyFieldAccess if present.
+        /// 2. Walk current <see cref="Document"/>.
+        /// 3. Walk current project.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static Task<CodeStyleResult> QualifyFieldAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken) => QualifyFieldAccessAsync(editor?.OriginalDocument, cancellationToken);
+
+        /// <summary>
+        /// Figuring out if field access should be prefixed with this.
         /// 1. Check CodeStyleOptions.QualifyPropertyAccess if present.
         /// 2. Walk current <paramref name="document"/>.
         /// 3. Walk current project.
@@ -70,6 +81,17 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         /// <summary>
         /// Figuring out if field access should be prefixed with this.
+        /// 1. Check CodeStyleOptions.QualifyPropertyAccess if present.
+        /// 2. Walk current <see cref="Document"/>.
+        /// 3. Walk current project.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static Task<CodeStyleResult> QualifyPropertyAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken) => QualifyPropertyAccessAsync(editor?.OriginalDocument, cancellationToken);
+
+        /// <summary>
+        /// Figuring out if field access should be prefixed with this.
         /// 1. Check CodeStyleOptions.QualifyMethodAccess if present.
         /// 2. Walk current <paramref name="document"/>.
         /// 3. Walk current project.
@@ -91,6 +113,17 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             return await QualifyMethodAccessWalker.CheckAsync(document, cancellationToken).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Figuring out if field access should be prefixed with this.
+        /// 1. Check CodeStyleOptions.QualifyPropertyAccess if present.
+        /// 2. Walk current <see cref="Document"/>.
+        /// 3. Walk current project.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static Task<CodeStyleResult> QualifyMethodAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken) => QualifyMethodAccessAsync(editor?.OriginalDocument, cancellationToken);
 
         /// <summary>
         /// Figuring out if field names should be prefixed with _.
@@ -577,15 +610,6 @@ namespace Gu.Roslyn.CodeFixExtensions
             public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
             {
                 // Stop walking here
-            }
-
-            internal static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
-            {
-                using (var walker = Borrow(() => new UsingDirectivesInsideNamespaceWalker()))
-                {
-                    return await walker.CheckCoreAsync(containing, cancellationToken)
-                                       .ConfigureAwait(false);
-                }
             }
 
             internal static CodeStyleResult Check(SyntaxTree containing, Compilation compilation)
