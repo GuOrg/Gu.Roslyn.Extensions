@@ -105,8 +105,7 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.No, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
-            Assert.AreEqual(true,                newLineBetween);
+            Assert.AreEqual(CodeStyleResult.No, CodeStyle.BackingFieldsAdjacent(editor, out _));
         }
 
         [Test]
