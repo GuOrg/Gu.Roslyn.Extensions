@@ -4,40 +4,65 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
-    /// Find all <see cref="UsingDirectiveSyntax"/> in the scope.
+    /// Find all <see cref="UsingStatementSyntax"/> in the scope.
     /// </summary>
-    public sealed class UsingDirectiveWalker : PooledWalker<UsingDirectiveWalker>
+    public sealed class UsingStaticWalker : PooledWalker<UsingStaticWalker>
     {
         private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
+
+        private UsingStaticWalker()
+        {
+        }
 
         /// <summary>
         /// Gets a collection with the <see cref="UsingDirectiveSyntax"/> found when walking.
         /// </summary>
         public IReadOnlyList<UsingDirectiveSyntax> UsingDirectives => this.usingDirectives;
 
-        /// <summary>
-        /// Get a walker that has visited <paramref name="node"/>.
-        /// </summary>
-        /// <param name="node">The scope.</param>
-        /// <returns>A walker that has visited <paramref name="node"/>.</returns>
-        public static UsingDirectiveWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new UsingDirectiveWalker());
+        //public static bool TryGet(SyntaxTree tree, ITypeSymbol type, out UsingDirectiveSyntax result)
+        //{
+        //    result = null;
+        //    if (tree == null ||
+        //        type == null)
+        //    {
+        //        return false;
+        //    }
+
+        //    if (tree.TryGetRoot(out var root))
+        //    {
+        //        using (var walker = Borrow(root))
+        //        {
+        //            foreach (var candidate in walker.usingDirectives)
+        //            {
+        //                if (candidate.Alias.)
+        //                {
+        //                    result = candidate;
+        //                    return true;
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return false;
+        //}
 
         /// <summary>
         /// Get a walker that has visited <paramref name="tree"/>.
         /// </summary>
         /// <param name="tree">The scope.</param>
         /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
-        public static UsingDirectiveWalker Borrow(SyntaxTree tree)
+        public static UsingStaticWalker Borrow(SyntaxTree tree)
         {
             if (tree.TryGetRoot(out var root))
             {
-                return BorrowAndVisit(root, () => new UsingDirectiveWalker());
+                return BorrowAndVisit(root, () => new UsingStaticWalker());
             }
 
-            return Borrow(() => new UsingDirectiveWalker());
+            return Borrow(() => new UsingStaticWalker());
         }
 
         /// <summary>
@@ -46,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="tree">The scope.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
-        public static async Task<UsingDirectiveWalker> BorrowAsync(SyntaxTree tree, CancellationToken cancellationToken)
+        public static async Task<UsingStaticWalker> BorrowAsync(SyntaxTree tree, CancellationToken cancellationToken)
         {
             if (tree == null)
             {
@@ -54,13 +79,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             var root = await tree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            return BorrowAndVisit(root, () => new UsingDirectiveWalker());
+            return BorrowAndVisit(root, () => new UsingStaticWalker());
         }
+
+        /// <summary>
+        /// Get a walker that has visited <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The scope.</param>
+        /// <returns>A walker that has visited <paramref name="node"/>.</returns>
+        public static UsingStaticWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new UsingStaticWalker());
 
         /// <inheritdoc />
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
         {
-            this.usingDirectives.Add(node);
+            if (node?.StaticKeyword.IsKind(SyntaxKind.StaticKeyword) == true)
+            {
+                this.usingDirectives.Add(node);
+            }
+
             base.VisitUsingDirective(node);
         }
 
@@ -82,7 +118,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             // Stop walking here
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected override void Clear()
         {
             this.usingDirectives.Clear();
