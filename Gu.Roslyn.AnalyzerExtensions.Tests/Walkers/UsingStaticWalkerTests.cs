@@ -33,5 +33,25 @@ namespace N
                 CollectionAssert.AreEqual(new[] { "using static NUnit.Framework.Assert;" }, walker.UsingDirectives.Select(x => x.ToString()));
             }
         }
+
+        [Test]
+        public void TryGetForType()
+        {
+            var tree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    using static NUnit.Framework.Assert;
+
+    public class C
+    {
+        public C()
+        {
+            A.AreEqual(1, 1);
+        }
+    }
+}");
+            Assert.AreEqual(true, UsingStaticWalker.TryGet(tree, new QualifiedType("NUnit.Framework.Assert"), out var directive));
+            Assert.AreEqual("using static NUnit.Framework.Assert;", directive.ToString());
+        }
     }
 }

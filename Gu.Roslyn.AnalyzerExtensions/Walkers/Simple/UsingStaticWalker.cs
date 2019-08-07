@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Find all <see cref="UsingStatementSyntax"/> in the scope.
     /// </summary>
-    public sealed class UsingStaticWalker : PooledWalker<UsingStaticWalker>
+    public sealed class UsingStaticWalker : AbstractUsingDirectiveWalker<UsingStaticWalker>
     {
         private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
 
@@ -89,6 +89,40 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="node"/>.</returns>
         public static UsingStaticWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new UsingStaticWalker());
 
+        /// <summary>
+        /// Try to get the type alias for the type name.
+        /// </summary>
+        /// <param name="tree">The <see cref="SyntaxTree"/>.</param>
+        /// <param name="type">The type name. using Name = System.Type.</param>
+        /// <param name="result">The alias if found.</param>
+        /// <returns>True if an alias was found.</returns>
+        public static bool TryGet(SyntaxTree tree, QualifiedType type, out UsingDirectiveSyntax result)
+        {
+            result = null;
+            if (tree == null ||
+                type == null)
+            {
+                return false;
+            }
+
+            if (tree.TryGetRoot(out var root))
+            {
+                using (var walker = Borrow(root))
+                {
+                    foreach (var candidate in walker.usingDirectives)
+                    {
+                        if (candidate.Name == type)
+                        {
+                            result = candidate;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
         /// <inheritdoc />
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
         {
@@ -98,24 +132,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             base.VisitUsingDirective(node);
-        }
-
-        /// <inheritdoc />
-        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
-        {
-            // Stop walking here
-        }
-
-        /// <inheritdoc />
-        public override void VisitStructDeclaration(StructDeclarationSyntax node)
-        {
-            // Stop walking here
-        }
-
-        /// <inheritdoc/>
-        public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
-        {
-            // Stop walking here
         }
 
         /// <inheritdoc/>

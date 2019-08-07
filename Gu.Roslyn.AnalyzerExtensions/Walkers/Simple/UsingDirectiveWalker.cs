@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Find all <see cref="UsingDirectiveSyntax"/> in the scope.
     /// </summary>
-    public sealed class UsingDirectiveWalker : PooledWalker<UsingDirectiveWalker>
+    public sealed class UsingDirectiveWalker : AbstractUsingDirectiveWalker<UsingDirectiveWalker>
     {
         private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
 
@@ -62,24 +62,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             this.usingDirectives.Add(node);
             base.VisitUsingDirective(node);
-        }
-
-        /// <inheritdoc />
-        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
-        {
-            // Stop walking here
-        }
-
-        /// <inheritdoc />
-        public override void VisitStructDeclaration(StructDeclarationSyntax node)
-        {
-            // Stop walking here
-        }
-
-        /// <inheritdoc/>
-        public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
-        {
-            // Stop walking here
         }
 
         /// <inheritdoc />

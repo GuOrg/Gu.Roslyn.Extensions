@@ -7,9 +7,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// A walker that looks for type aliases.
     /// </summary>
-    public sealed class AliasWalker : PooledWalker<AliasWalker>
+    public sealed class AliasWalker : AbstractUsingDirectiveWalker<AliasWalker>
     {
-        private readonly List<NameEqualsSyntax> aliases = new List<NameEqualsSyntax>();
+        private readonly List<UsingDirectiveSyntax> aliases = new List<UsingDirectiveSyntax>();
 
         private AliasWalker()
         {
@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets the aliases found in the scope.
         /// </summary>
-        public IReadOnlyList<NameEqualsSyntax> Aliases => this.aliases;
+        public IReadOnlyList<UsingDirectiveSyntax> Aliases => this.aliases;
 
         /// <summary>
         /// Get a walker that has visited <paramref name="node"/>.
@@ -28,17 +28,32 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static AliasWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new AliasWalker());
 
         /// <summary>
+        /// Get a walker that has visited <paramref name="tree"/>.
+        /// </summary>
+        /// <param name="tree">The scope.</param>
+        /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
+        public static AliasWalker Borrow(SyntaxTree tree)
+        {
+            if (tree.TryGetRoot(out var root))
+            {
+                return BorrowAndVisit(root, () => new AliasWalker());
+            }
+
+            return Borrow(() => new AliasWalker());
+        }
+
+        /// <summary>
         /// Try to get the type alias for the type name.
         /// </summary>
         /// <param name="tree">The <see cref="SyntaxTree"/>.</param>
-        /// <param name="typeName">The type name.</param>
+        /// <param name="name">The type name. using Name = System.String.</param>
         /// <param name="result">The alias if found.</param>
         /// <returns>True if an alias was found.</returns>
-        public static bool TryGet(SyntaxTree tree, string typeName, out NameEqualsSyntax result)
+        public static bool TryGet(SyntaxTree tree, string name, out UsingDirectiveSyntax result)
         {
             result = null;
             if (tree == null ||
-                typeName == null)
+                name == null)
             {
                 return false;
             }
@@ -49,7 +64,41 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     foreach (var candidate in walker.aliases)
                     {
-                        if (candidate.Name.Identifier.ValueText == typeName)
+                        if (candidate.Alias.Name.Identifier.ValueText == name)
+                        {
+                            result = candidate;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try to get the type alias for the type name.
+        /// </summary>
+        /// <param name="tree">The <see cref="SyntaxTree"/>.</param>
+        /// <param name="type">The type name. using Name = System.Type.</param>
+        /// <param name="result">The alias if found.</param>
+        /// <returns>True if an alias was found.</returns>
+        public static bool TryGet(SyntaxTree tree, QualifiedType type, out UsingDirectiveSyntax result)
+        {
+            result = null;
+            if (tree == null ||
+                type == null)
+            {
+                return false;
+            }
+
+            if (tree.TryGetRoot(out var root))
+            {
+                using (var walker = Borrow(root))
+                {
+                    foreach (var candidate in walker.aliases)
+                    {
+                        if (candidate.Name == type)
                         {
                             result = candidate;
                             return true;
@@ -66,7 +115,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (node?.Alias != null)
             {
-                this.aliases.Add(node.Alias);
+                this.aliases.Add(node);
             }
         }
 
