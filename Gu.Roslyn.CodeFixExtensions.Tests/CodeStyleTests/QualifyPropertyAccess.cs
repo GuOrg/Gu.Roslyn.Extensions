@@ -9,7 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     public static class QualifyPropertyAccess
     {
         [Test]
-        public static async Task DefaultsToNull()
+        public static async Task WhenUnknown()
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -26,12 +26,12 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(null, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("P = 1", false)]
-        [TestCase("this.P = 1", true)]
-        public static async Task AssigningInCtor(string expression, bool expected)
+        [TestCase("P = 1",      CodeStyleResult.No)]
+        [TestCase("this.P = 1", CodeStyleResult.Yes)]
+        public static async Task AssigningInCtor(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -66,12 +66,12 @@ namespace N
 }");
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(null, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("this.P", true)]
-        [TestCase("P",      false)]
-        public static async Task Arrow(string expression, bool expected)
+        [TestCase("this.P", CodeStyleResult.Yes)]
+        [TestCase("P",      CodeStyleResult.No)]
+        public static async Task Arrow(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -88,15 +88,14 @@ namespace N
             Assert.AreEqual(expected, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("this.P = 1", true)]
-        [TestCase("P = 1",      false)]
-        [TestCase("",           null)]
-        public static async Task FiguresOutFromOtherClass(string expression, bool? expected)
+        [TestCase("this.P = 1", CodeStyleResult.Yes)]
+        [TestCase("P = 1",      CodeStyleResult.No)]
+        [TestCase("",           CodeStyleResult.NotFound)]
+        public static async Task FiguresOutFromOtherClass(string expression, CodeStyleResult expected)
         {
-            var sln = CodeFactory.CreateSolution(
-                new[]
-                {
-                    @"
+            var sln = CodeFactory.CreateSolution(new[]
+            {
+                @"
 namespace N
 {
     class C1
@@ -109,14 +108,14 @@ namespace N
         public int P { get; }
     }
 }".AssertReplace("this.P = 1", expression),
-                    @"
+                @"
 namespace N
 {
     class C2
     {
     }
 }",
-                });
+            });
 
             foreach (var document in sln.Projects.Single().Documents)
             {

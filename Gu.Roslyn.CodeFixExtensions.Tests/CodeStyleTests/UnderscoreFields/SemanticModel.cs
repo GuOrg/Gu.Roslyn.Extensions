@@ -7,7 +7,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UnderscoreFields
     public static class SemanticModel
     {
         [Test]
-        public static void DefaultsToNull()
+        public static void WhenUnknown()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -28,14 +28,14 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(null, CodeStyle.UnderscoreFields(semanticModel));
+            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.UnderscoreFields(semanticModel));
         }
 
-        [TestCase("private int _f", true)]
-        [TestCase("private readonly int _f = 1", true)]
-        [TestCase("private int f", false)]
-        [TestCase("private readonly int f", false)]
-        public static void WhenField(string declaration, bool expected)
+        [TestCase("private int _f",              CodeStyleResult.Yes)]
+        [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
+        [TestCase("private int f",               CodeStyleResult.No)]
+        [TestCase("private readonly int f",      CodeStyleResult.No)]
+        public static void WhenField(string declaration, CodeStyleResult expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -51,11 +51,11 @@ namespace N
             Assert.AreEqual(expected, CodeStyle.UnderscoreFields(semanticModel));
         }
 
-        [TestCase("private int _f",              true)]
-        [TestCase("private readonly int _f = 1", true)]
-        [TestCase("private int f",               false)]
-        [TestCase("private readonly int f",      false)]
-        public static void FiguresOutFromOtherTree(string declaration, bool expected)
+        [TestCase("private int _f",              CodeStyleResult.Yes)]
+        [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
+        [TestCase("private int f",               CodeStyleResult.No)]
+        [TestCase("private readonly int f",      CodeStyleResult.No)]
+        public static void FiguresOutFromOtherTree(string declaration, CodeStyleResult expected)
         {
             var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -104,10 +104,10 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[0]);
-            Assert.AreEqual(true, CodeStyle.UnderscoreFields(semanticModel));
+            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.UnderscoreFields(semanticModel));
 
             semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[1]);
-            Assert.AreEqual(false, CodeStyle.UnderscoreFields(semanticModel));
+            Assert.AreEqual(CodeStyleResult.No, CodeStyle.UnderscoreFields(semanticModel));
         }
     }
 }

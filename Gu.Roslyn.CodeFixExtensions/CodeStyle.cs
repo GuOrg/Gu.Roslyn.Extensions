@@ -1,7 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Gu.Roslyn.AnalyzerExtensions;
@@ -10,6 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Editing;
+    using Microsoft.CodeAnalysis.Options;
 
 #pragma warning disable CA1724 // Type names should not match namespaces
     /// <summary>
@@ -18,14 +18,6 @@ namespace Gu.Roslyn.CodeFixExtensions
     public static class CodeStyle
 #pragma warning restore CA1724 // Type names should not match namespaces
     {
-        private enum Result
-        {
-            Unknown,
-            Yes,
-            No,
-            Mixed,
-        }
-
         /// <summary>
         /// Figuring out if field access should be prefixed with this.
         /// 1. Check CodeStyleOptions.QualifyFieldAccess if present.
@@ -35,34 +27,20 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static async Task<bool?> QualifyFieldAccessAsync(this Document document, CancellationToken cancellationToken)
+        public static async Task<CodeStyleResult> QualifyFieldAccessAsync(this Document document, CancellationToken cancellationToken)
         {
             if (document == null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
-            if (optionSet.GetOption(CodeStyleOptions.QualifyFieldAccess, document.Project.Language) is CodeStyleOption<bool> option &&
-                !ReferenceEquals(option, CodeStyleOptions.QualifyFieldAccess.DefaultValue))
+            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyFieldAccess, cancellationToken).ConfigureAwait(false) is CodeStyleOption<bool> option)
             {
-                return option.Value;
+                return option.Value ? CodeStyleResult.Yes : CodeStyleResult.No;
             }
 
-            var result = await QualifyFieldAccessWalker.CheckAsync(document, cancellationToken)
-                                                       .ConfigureAwait(false);
-            switch (result)
-            {
-                case Result.Unknown:
-                    return null;
-                case Result.Mixed:
-                case Result.Yes:
-                    return true;
-                case Result.No:
-                    return false;
-                default:
-                    throw new InvalidOperationException($"Not handling {result}");
-            }
+            return await QualifyFieldAccessWalker.CheckAsync(document, cancellationToken)
+                                                 .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -74,34 +52,20 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static async Task<bool?> QualifyPropertyAccessAsync(this Document document, CancellationToken cancellationToken)
+        public static async Task<CodeStyleResult> QualifyPropertyAccessAsync(this Document document, CancellationToken cancellationToken)
         {
             if (document == null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
-            if (optionSet.GetOption(CodeStyleOptions.QualifyPropertyAccess, document.Project.Language) is CodeStyleOption<bool> option &&
-                !ReferenceEquals(option, CodeStyleOptions.QualifyPropertyAccess.DefaultValue))
+            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyPropertyAccess, cancellationToken).ConfigureAwait(false) is CodeStyleOption<bool> option)
             {
-                return option.Value;
+                return option.Value ? CodeStyleResult.Yes : CodeStyleResult.No;
             }
 
-            var result = await QualifyPropertyAccessWalker.CheckAsync(document, cancellationToken)
-                                                       .ConfigureAwait(false);
-            switch (result)
-            {
-                case Result.Unknown:
-                    return null;
-                case Result.Mixed:
-                case Result.Yes:
-                    return true;
-                case Result.No:
-                    return false;
-                default:
-                    throw new InvalidOperationException($"Not handling {result}");
-            }
+            return await QualifyPropertyAccessWalker.CheckAsync(document, cancellationToken)
+                                                    .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -113,34 +77,19 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static async Task<bool?> QualifyMethodAccessAsync(this Document document, CancellationToken cancellationToken)
+        public static async Task<CodeStyleResult> QualifyMethodAccessAsync(this Document document, CancellationToken cancellationToken)
         {
             if (document == null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
-            if (optionSet.GetOption(CodeStyleOptions.QualifyMethodAccess, document.Project.Language) is CodeStyleOption<bool> option &&
-                !ReferenceEquals(option, CodeStyleOptions.QualifyMethodAccess.DefaultValue))
+            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyMethodAccess, cancellationToken).ConfigureAwait(false) is CodeStyleOption<bool> option)
             {
-                return option.Value;
+                return option.Value ? CodeStyleResult.Yes : CodeStyleResult.No;
             }
 
-            var result = await QualifyMethodAccessWalker.CheckAsync(document, cancellationToken)
-                                                          .ConfigureAwait(false);
-            switch (result)
-            {
-                case Result.Unknown:
-                    return null;
-                case Result.Mixed:
-                case Result.Yes:
-                    return true;
-                case Result.No:
-                    return false;
-                default:
-                    throw new InvalidOperationException($"Not handling {result}");
-            }
+            return await QualifyMethodAccessWalker.CheckAsync(document, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -151,27 +100,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static async Task<bool?> UnderscoreFieldsAsync(this Document document, CancellationToken cancellationToken)
+        public static async Task<CodeStyleResult> UnderscoreFieldsAsync(this Document document, CancellationToken cancellationToken)
         {
             if (document == null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            var result = await UnderscoreFieldWalker.CheckAsync(document, cancellationToken)
+            return await UnderscoreFieldWalker.CheckAsync(document, cancellationToken)
                                                     .ConfigureAwait(false);
-            switch (result)
-            {
-                case Result.Unknown:
-                    return null;
-                case Result.Mixed:
-                case Result.Yes:
-                    return true;
-                case Result.No:
-                    return false;
-                default:
-                    throw new InvalidOperationException($"Not handling {result}");
-            }
         }
 
         /// <summary>
@@ -179,33 +116,21 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool? UnderscoreFields(DocumentEditor editor) => UnderscoreFields(editor?.SemanticModel);
+        public static CodeStyleResult UnderscoreFields(DocumentEditor editor) => UnderscoreFields(editor?.SemanticModel);
 
         /// <summary>
         /// Figuring out if the code uses underscore prefix in field names.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool? UnderscoreFields(this SemanticModel semanticModel)
+        public static CodeStyleResult UnderscoreFields(this SemanticModel semanticModel)
         {
             if (semanticModel == null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
 
-            var result = UnderscoreFieldWalker.Check(semanticModel.SyntaxTree, semanticModel.Compilation);
-            switch (result)
-            {
-                case Result.Unknown:
-                    return null;
-                case Result.Mixed:
-                case Result.Yes:
-                    return true;
-                case Result.No:
-                    return false;
-                default:
-                    throw new InvalidOperationException($"Not handling {result}");
-            }
+            return UnderscoreFieldWalker.Check(semanticModel.SyntaxTree, semanticModel.Compilation);
         }
 
         /// <summary>
@@ -213,46 +138,14 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool? UsingDirectivesInsideNamespace(SemanticModel semanticModel)
+        public static CodeStyleResult UsingDirectivesInsideNamespace(SemanticModel semanticModel)
         {
             if (semanticModel == null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
 
-            using (var walker = UsingDirectiveWalker.Borrow())
-            {
-                switch (UsingDirectivesInsideNamespace(semanticModel.SyntaxTree, walker))
-                {
-                    case Result.Unknown:
-                        break;
-                    case Result.Mixed:
-                    case Result.Yes:
-                        return true;
-                    case Result.No:
-                        return false;
-                    default:
-                        throw new InvalidOperationException("Not handling member.");
-                }
-
-                foreach (var tree in semanticModel.Compilation.SyntaxTrees)
-                {
-                    switch (UsingDirectivesInsideNamespace(tree, walker))
-                    {
-                        case Result.Unknown:
-                            break;
-                        case Result.Mixed:
-                        case Result.Yes:
-                            return true;
-                        case Result.No:
-                            return false;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
-            }
-
-            return null;
+            return UsingDirectivesInsideNamespaceWalker.Check(semanticModel.SyntaxTree, semanticModel.Compilation);
         }
 
         /// <summary>
@@ -260,7 +153,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool? UsingDirectivesInsideNamespace(DocumentEditor editor) => UsingDirectivesInsideNamespace(editor?.SemanticModel);
+        public static CodeStyleResult UsingDirectivesInsideNamespace(DocumentEditor editor) => UsingDirectivesInsideNamespace(editor?.SemanticModel);
 
         /// <summary>
         /// Figuring out if backing fields are adjacent to their properties.
@@ -268,78 +161,39 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="newLineBetween">If there is a new line between the field and the property.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static bool? BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)
+        public static CodeStyleResult BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)
         {
             if (semanticModel == null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
 
-            using (var walker = BackingFieldsAdjacentWalker.Borrow())
-            {
-                switch (BackingFieldsAdjacent(semanticModel.SyntaxTree, walker, out newLineBetween))
-                {
-                    case Result.Unknown:
-                    case Result.Mixed:
-                        break;
-                    case Result.Yes:
-                        return true;
-                    case Result.No:
-                        return false;
-                    default:
-                        throw new InvalidOperationException("Not handling member.");
-                }
+            return BackingFieldsAdjacentWalker.Check(semanticModel.SyntaxTree, semanticModel.Compilation, out newLineBetween);
+        }
 
-                foreach (var tree in semanticModel.Compilation.SyntaxTrees)
-                {
-                    switch (BackingFieldsAdjacent(tree, walker, out newLineBetween))
-                    {
-                        case Result.Unknown:
-                        case Result.Mixed:
-                            break;
-                        case Result.Yes:
-                            return true;
-                        case Result.No:
-                            return false;
-                        default:
-                            throw new InvalidOperationException("Not handling member.");
-                    }
-                }
+        /// <summary>
+        /// Find the <see cref="CodeStyleOption{T}"/> for <paramref name="key"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <param name="document">The <see cref="Document"/>.</param>
+        /// <param name="key">The <see cref="PerLanguageOption{T}"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns><see cref="CodeStyleOption{T}"/> or null if not found.</returns>
+        public static async Task<CodeStyleOption<T>> FindInEditorConfigAsync<T>(Document document, PerLanguageOption<CodeStyleOption<T>> key, CancellationToken cancellationToken)
+        {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
             }
 
-            newLineBetween = false;
+            var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
+            if (optionSet.GetOption(key, document.Project.Language) is CodeStyleOption<T> option &&
+                !ReferenceEquals(option, key.DefaultValue))
+            {
+                return option;
+            }
+
             return null;
-        }
-
-        private static Result UsingDirectivesInsideNamespace(this SyntaxTree tree, UsingDirectiveWalker walker)
-        {
-            if (IsExcluded(tree))
-            {
-                return Result.Unknown;
-            }
-
-            if (tree.TryGetRoot(out var root))
-            {
-                walker.Visit(root);
-            }
-
-            return walker.UsingDirectivesInside();
-        }
-
-        private static Result BackingFieldsAdjacent(this SyntaxTree tree, BackingFieldsAdjacentWalker walker, out bool newLineBetween)
-        {
-            if (IsExcluded(tree))
-            {
-                newLineBetween = false;
-                return Result.Unknown;
-            }
-
-            if (tree.TryGetRoot(out var root))
-            {
-                walker.Visit(root);
-            }
-
-            return walker.Adjacent(out newLineBetween);
         }
 
         private static bool IsExcluded(SyntaxTree syntaxTree)
@@ -348,7 +202,150 @@ namespace Gu.Roslyn.CodeFixExtensions
                    syntaxTree.FilePath.EndsWith(".g.cs", StringComparison.Ordinal);
         }
 
-        private sealed class QualifyFieldAccessWalker : TreeWalker<QualifyFieldAccessWalker>
+        /// <summary>
+        /// Base class for walking trees in a compilation.
+        /// </summary>
+        /// <typeparam name="T">The walker type.</typeparam>
+        public abstract class CompilationWalker<T> : PooledWalker<T>
+            where T : CompilationWalker<T>
+        {
+            private CodeStyleResult result = CodeStyleResult.NotFound;
+
+            /// <summary>
+            /// Walk <paramref name="containing"/> then all documents in project.
+            /// </summary>
+            /// <param name="containing">The <see cref="Document"/>.</param>
+            /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+            /// <returns>The <see cref="CodeStyleResult"/> found.</returns>
+            protected async Task<CodeStyleResult> CheckCoreAsync(Document containing, CancellationToken cancellationToken)
+            {
+                if (await Check(containing).ConfigureAwait(false) is CodeStyleResult containingResult &&
+                    containingResult != CodeStyleResult.NotFound)
+                {
+                    return containingResult;
+                }
+
+                foreach (var document in containing.Project.Documents)
+                {
+                    if (document == containing)
+                    {
+                        continue;
+                    }
+
+                    if (await Check(document).ConfigureAwait(false) is CodeStyleResult documentResult &&
+                        documentResult != CodeStyleResult.NotFound)
+                    {
+                        return documentResult;
+                    }
+                }
+
+                return CodeStyleResult.NotFound;
+
+                async Task<CodeStyleResult> Check(Document candidate)
+                {
+                    var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+                    if (IsExcluded(tree))
+                    {
+                        return CodeStyleResult.NotFound;
+                    }
+
+                    if (tree.TryGetRoot(out var root))
+                    {
+                        this.Visit(root);
+                        return this.result;
+                    }
+
+                    return CodeStyleResult.NotFound;
+                }
+            }
+
+            /// <summary>
+            /// Walk <paramref name="containing"/> then trees in <paramref name="compilation"/>.
+            /// </summary>
+            /// <param name="containing">The <see cref="Document"/>.</param>
+            /// <param name="compilation">The <see cref="Compilation"/>.</param>
+            /// <returns>The <see cref="CodeStyleResult"/> found.</returns>
+            protected CodeStyleResult CheckCore(SyntaxTree containing, Compilation compilation)
+            {
+                if (Check(containing) is CodeStyleResult containingResult &&
+                    containingResult != CodeStyleResult.NotFound)
+                {
+                    return containingResult;
+                }
+
+                foreach (var syntaxTree in compilation.SyntaxTrees)
+                {
+                    if (syntaxTree == containing)
+                    {
+                        continue;
+                    }
+
+                    if (Check(syntaxTree) is CodeStyleResult syntaxTreeResult &&
+                        syntaxTreeResult != CodeStyleResult.NotFound)
+                    {
+                        return syntaxTreeResult;
+                    }
+                }
+
+                return CodeStyleResult.NotFound;
+
+                CodeStyleResult Check(SyntaxTree tree)
+                {
+                    if (IsExcluded(tree))
+                    {
+                        return CodeStyleResult.NotFound;
+                    }
+
+                    if (tree.TryGetRoot(out var root))
+                    {
+                        this.Visit(root);
+                        return this.result;
+                    }
+
+                    return CodeStyleResult.NotFound;
+                }
+            }
+
+            /// <summary>
+            /// Update the result field.
+            /// </summary>
+            /// <param name="newValue">The <see cref="CodeStyleResult"/>.</param>
+            protected void Update(CodeStyleResult newValue)
+            {
+                switch (this.result)
+                {
+                    case CodeStyleResult.NotFound:
+                        this.result = newValue;
+                        break;
+                    case CodeStyleResult.Yes:
+                        if (newValue == CodeStyleResult.No)
+                        {
+                            this.result = CodeStyleResult.Mixed;
+                        }
+
+                        break;
+                    case CodeStyleResult.No:
+                        if (newValue == CodeStyleResult.Yes)
+                        {
+                            this.result = CodeStyleResult.Mixed;
+                        }
+
+                        break;
+                    case CodeStyleResult.Mixed:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(newValue), newValue, null);
+                }
+            }
+
+            /// <inheritdoc />
+            protected override void Clear()
+            {
+                this.result = CodeStyleResult.NotFound;
+            }
+        }
+
+        private sealed class QualifyFieldAccessWalker : CompilationWalker<QualifyFieldAccessWalker>
         {
             private QualifyFieldAccessWalker()
             {
@@ -363,12 +360,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                                                                     IsMemberField():
                     case ArrowExpressionClauseSyntax _ when IsMemberField():
                     case ReturnStatementSyntax _ when IsMemberField():
-                        this.Update(Result.No);
+                        this.Update(CodeStyleResult.No);
                         break;
                     case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
                                                                         memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
                                                                         IsMemberField():
-                        this.Update(Result.Yes);
+                        this.Update(CodeStyleResult.Yes);
                         break;
                 }
 
@@ -395,7 +392,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            internal static async Task<Result> CheckAsync(Document containing, CancellationToken cancellationToken)
+            internal static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
             {
                 using (var walker = Borrow(() => new QualifyFieldAccessWalker()))
                 {
@@ -405,7 +402,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private sealed class QualifyPropertyAccessWalker : TreeWalker<QualifyPropertyAccessWalker>
+        private sealed class QualifyPropertyAccessWalker : CompilationWalker<QualifyPropertyAccessWalker>
         {
             private QualifyPropertyAccessWalker()
             {
@@ -420,12 +417,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                                                                     IsMemberProperty():
                     case ArrowExpressionClauseSyntax _ when IsMemberProperty():
                     case ReturnStatementSyntax _ when IsMemberProperty():
-                        this.Update(Result.No);
+                        this.Update(CodeStyleResult.No);
                         break;
                     case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
                                                                         memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
                                                                         IsMemberProperty():
-                        this.Update(Result.Yes);
+                        this.Update(CodeStyleResult.Yes);
                         break;
                 }
 
@@ -452,7 +449,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            internal static async Task<Result> CheckAsync(Document containing, CancellationToken cancellationToken)
+            internal static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
             {
                 using (var walker = Borrow(() => new QualifyPropertyAccessWalker()))
                 {
@@ -462,7 +459,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private sealed class QualifyMethodAccessWalker : TreeWalker<QualifyMethodAccessWalker>
+        private sealed class QualifyMethodAccessWalker : CompilationWalker<QualifyMethodAccessWalker>
         {
             private QualifyMethodAccessWalker()
             {
@@ -473,10 +470,10 @@ namespace Gu.Roslyn.CodeFixExtensions
                 switch (node.Expression)
                 {
                     case IdentifierNameSyntax _ when IsMemberMethod():
-                        this.Update(Result.No);
+                        this.Update(CodeStyleResult.No);
                         break;
                     case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression.IsKind(SyntaxKind.ThisExpression):
-                        this.Update(Result.Yes);
+                        this.Update(CodeStyleResult.Yes);
                         break;
                 }
 
@@ -506,7 +503,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 base.VisitInvocationExpression(node);
             }
 
-            internal static async Task<Result> CheckAsync(Document containing, CancellationToken cancellationToken)
+            internal static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
             {
                 using (var walker = Borrow(() => new QualifyMethodAccessWalker()))
                 {
@@ -516,7 +513,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private sealed class UnderscoreFieldWalker : TreeWalker<UnderscoreFieldWalker>
+        private sealed class UnderscoreFieldWalker : CompilationWalker<UnderscoreFieldWalker>
         {
             private UnderscoreFieldWalker()
             {
@@ -529,12 +526,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                     foreach (var variable in node.Declaration.Variables)
                     {
                         var name = variable.Identifier.ValueText;
-                        this.Update(name.StartsWith("_", StringComparison.Ordinal) ? Result.Yes : Result.No);
+                        this.Update(name.StartsWith("_", StringComparison.Ordinal) ? CodeStyleResult.Yes : CodeStyleResult.No);
                     }
                 }
             }
 
-            internal static async Task<Result> CheckAsync(Document containing, CancellationToken cancellationToken)
+            internal static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
             {
                 using (var walker = Borrow(() => new UnderscoreFieldWalker()))
                 {
@@ -543,7 +540,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
 
-            internal static Result Check(SyntaxTree containing, Compilation compilation)
+            internal static CodeStyleResult Check(SyntaxTree containing, Compilation compilation)
             {
                 using (var walker = Borrow(() => new UnderscoreFieldWalker()))
                 {
@@ -552,14 +549,11 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private sealed class UsingDirectiveWalker : PooledWalker<UsingDirectiveWalker>
+        private sealed class UsingDirectivesInsideNamespaceWalker : CompilationWalker<UsingDirectivesInsideNamespaceWalker>
         {
-            private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
-
             public override void VisitUsingDirective(UsingDirectiveSyntax node)
             {
-                this.usingDirectives.Add(node);
-                base.VisitUsingDirective(node);
+                this.Update(node.TryFirstAncestor<NamespaceDeclarationSyntax>(out _) ? CodeStyleResult.Yes : CodeStyleResult.No);
             }
 
             public override void VisitClassDeclaration(ClassDeclarationSyntax node)
@@ -572,240 +566,82 @@ namespace Gu.Roslyn.CodeFixExtensions
                 // Stop walking here
             }
 
-            internal static UsingDirectiveWalker Borrow() => Borrow(() => new UsingDirectiveWalker());
-
-            internal Result UsingDirectivesInside()
+            public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
             {
-                if (this.usingDirectives.Count == 0)
+                // Stop walking here
+            }
+
+            internal static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
+            {
+                using (var walker = Borrow(() => new UsingDirectivesInsideNamespaceWalker()))
                 {
-                    return Result.Unknown;
-                }
-
-                if (this.usingDirectives.TryFirst(x => x.FirstAncestor<NamespaceDeclarationSyntax>() != null, out _))
-                {
-                    return this.usingDirectives.TryFirst(x => x.FirstAncestor<NamespaceDeclarationSyntax>() == null, out _)
-                        ? Result.Mixed
-                        : Result.Yes;
-                }
-
-                return Result.No;
-            }
-
-            protected override void Clear()
-            {
-                this.usingDirectives.Clear();
-            }
-        }
-
-        private sealed class BackingFieldsAdjacentWalker : PooledWalker<BackingFieldsAdjacentWalker>
-        {
-            private Result result;
-            private bool newLine;
-
-            public override void VisitReturnStatement(ReturnStatementSyntax node)
-            {
-                if (node.Parent is BlockSyntax block &&
-                    block.Parent is AccessorDeclarationSyntax accessor &&
-                    accessor.Parent is AccessorListSyntax accessorList &&
-                    accessorList.Parent is PropertyDeclarationSyntax property)
-                {
-                    this.TryUpdateAdjacent(property, node.Expression);
-                }
-
-                base.VisitReturnStatement(node);
-            }
-
-            public override void VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
-            {
-                switch (node.Parent)
-                {
-                    case AccessorDeclarationSyntax accessor when accessor.Parent is AccessorListSyntax accessorList &&
-                                                                 accessorList.Parent is PropertyDeclarationSyntax property:
-                        this.TryUpdateAdjacent(property, node.Expression);
-                        break;
-                    case PropertyDeclarationSyntax property:
-                        this.TryUpdateAdjacent(property, node.Expression);
-                        break;
-                }
-
-                base.VisitArrowExpressionClause(node);
-            }
-
-            internal static BackingFieldsAdjacentWalker Borrow() => Borrow(() => new BackingFieldsAdjacentWalker());
-
-            internal Result Adjacent(out bool newLineBetween)
-            {
-                newLineBetween = this.newLine;
-                return this.result;
-            }
-
-            protected override void Clear()
-            {
-                this.result = Result.Unknown;
-            }
-
-            private void TryUpdateAdjacent(PropertyDeclarationSyntax property, ExpressionSyntax returnValue)
-            {
-                switch (returnValue)
-                {
-                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is ThisExpressionSyntax:
-                        this.TryUpdateAdjacent(property, memberAccess.Name.Identifier.ValueText);
-                        break;
-                    case IdentifierNameSyntax identifierName:
-                        this.TryUpdateAdjacent(property, identifierName.Identifier.ValueText);
-                        break;
+                    return await walker.CheckCoreAsync(containing, cancellationToken)
+                                       .ConfigureAwait(false);
                 }
             }
 
-            private void TryUpdateAdjacent(PropertyDeclarationSyntax property, string candidate)
+            internal static CodeStyleResult Check(SyntaxTree containing, Compilation compilation)
             {
-                if (property.Parent is TypeDeclarationSyntax typeDeclaration &&
-                    typeDeclaration.TryFindField(candidate, out var field))
+                using (var walker = Borrow(() => new UsingDirectivesInsideNamespaceWalker()))
                 {
-                    var index = typeDeclaration.Members.IndexOf(property);
-                    if (index > 0 &&
-                        typeDeclaration.Members[index - 1] == field)
-                    {
-                        for (var i = index - 2; i >= 0; i--)
-                        {
-                            if (!(typeDeclaration.Members[index] is FieldDeclarationSyntax))
-                            {
-                                this.result = Result.Yes;
-                                this.newLine = property.HasLeadingTrivia &&
-                                               property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia);
-                            }
-                        }
-
-                        if (!property.HasLeadingTrivia ||
-                            !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))
-                        {
-                            this.result = Result.Yes;
-                            this.newLine = false;
-                        }
-                    }
+                    return walker.CheckCore(containing, compilation);
                 }
             }
         }
 
-        private abstract class TreeWalker<T> : PooledWalker<T>
-            where T : TreeWalker<T>
+        private sealed class BackingFieldsAdjacentWalker : CompilationWalker<BackingFieldsAdjacentWalker>
         {
-            private Result result = Result.Unknown;
+            private bool newLineBetween;
 
-            protected async Task<Result> CheckCoreAsync(Document containing, CancellationToken cancellationToken)
+            public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
             {
-                if (await Check(containing).ConfigureAwait(false) is Result containingResult &&
-                    containingResult != Result.Unknown)
+                // Don't walk, optimization.
+            }
+
+            public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                // Don't walk, optimization.
+            }
+
+            public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+            {
+                if (node.TryGetBackingField(out var field) &&
+                    node.Parent is TypeDeclarationSyntax containingType)
                 {
-                    return containingResult;
-                }
-
-                foreach (var document in containing.Project.Documents)
-                {
-                    if (document == containing)
+                    if (containingType.Members.IndexOf(node) is int pi &&
+                        containingType.Members.IndexOf(field) is int fi &&
+                        fi == pi - 1)
                     {
-                        continue;
-                    }
+                        if (fi == 0 ||
+                            containingType.Members[fi - 1].IsKind(SyntaxKind.FieldDeclaration))
+                        {
+                            return;
+                        }
 
-                    if (await Check(document).ConfigureAwait(false) is Result documentResult &&
-                        documentResult != Result.Unknown)
+                        this.newLineBetween = node.HasLeadingTrivia && node.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia);
+                        this.Update(CodeStyleResult.Yes);
+                    }
+                    else
                     {
-                        return documentResult;
+                        this.Update(CodeStyleResult.No);
                     }
-                }
-
-                return Result.Unknown;
-
-                async Task<Result> Check(Document candidate)
-                {
-                    var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-                    if (IsExcluded(tree))
-                    {
-                        return Result.Unknown;
-                    }
-
-                    if (tree.TryGetRoot(out var root))
-                    {
-                        this.Visit(root);
-                        return this.result;
-                    }
-
-                    return Result.Unknown;
                 }
             }
 
-            protected Result CheckCore(SyntaxTree containing, Compilation compilation)
+            internal static CodeStyleResult Check(SyntaxTree containing, Compilation compilation, out bool newLineBetween)
             {
-                if (Check(containing) is Result containingResult &&
-                    containingResult != Result.Unknown)
+                using (var walker = Borrow(() => new BackingFieldsAdjacentWalker()))
                 {
-                    return containingResult;
-                }
-
-                foreach (var syntaxTree in compilation.SyntaxTrees)
-                {
-                    if (syntaxTree == containing)
-                    {
-                        continue;
-                    }
-
-                    if (Check(syntaxTree) is Result syntaxTreeResult &&
-                        syntaxTreeResult != Result.Unknown)
-                    {
-                        return syntaxTreeResult;
-                    }
-                }
-
-                return Result.Unknown;
-
-                Result Check(SyntaxTree tree)
-                {
-                    if (IsExcluded(tree))
-                    {
-                        return Result.Unknown;
-                    }
-
-                    if (tree.TryGetRoot(out var root))
-                    {
-                        this.Visit(root);
-                        return this.result;
-                    }
-
-                    return Result.Unknown;
-                }
-            }
-
-            protected void Update(Result newValue)
-            {
-                switch (this.result)
-                {
-                    case Result.Unknown:
-                        this.result = newValue;
-                        break;
-                    case Result.Yes:
-                        if (newValue == Result.No)
-                        {
-                            this.result = Result.Mixed;
-                        }
-
-                        break;
-                    case Result.No:
-                        if (newValue == Result.Yes)
-                        {
-                            this.result = Result.Mixed;
-                        }
-
-                        break;
-                    case Result.Mixed:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(newValue), newValue, null);
+                    var result = walker.CheckCore(containing, compilation);
+                    newLineBetween = walker.newLineBetween;
+                    return result;
                 }
             }
 
             protected override void Clear()
             {
-                this.result = Result.Unknown;
+                this.newLineBetween = false;
+                base.Clear();
             }
         }
     }

@@ -6,10 +6,10 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     using Gu.Roslyn.Asserts;
     using NUnit.Framework;
 
-    public static class QuyalifyMethodAccess
+    public static class QualifyMethodAccess
     {
         [Test]
-        public static async Task DefaultsToTrue()
+        public static async Task WhenUnknown()
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -26,13 +26,13 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(null, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("M1()", false)]
-        [TestCase("this.M1()", true)]
-        [TestCase("M2()", null)]
-        public static async Task CallInCtor(string expression, bool? expected)
+        [TestCase("M1()",      CodeStyleResult.No)]
+        [TestCase("this.M1()", CodeStyleResult.Yes)]
+        [TestCase("M2()",      CodeStyleResult.NotFound)]
+        public static async Task CallInCtor(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -54,10 +54,10 @@ namespace N
             Assert.AreEqual(expected, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("M1()", false)]
-        [TestCase("this.M1()", true)]
-        [TestCase("M2()", null)]
-        public static async Task ExpressionBody(string expression, bool? expected)
+        [TestCase("M1()",      CodeStyleResult.No)]
+        [TestCase("this.M1()", CodeStyleResult.Yes)]
+        [TestCase("M2()",      CodeStyleResult.NotFound)]
+        public static async Task ExpressionBody(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -76,10 +76,10 @@ namespace N
             Assert.AreEqual(expected, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("M1()",      false)]
-        [TestCase("this.M1()", true)]
-        [TestCase("M2()",      null)]
-        public static async Task Assignment(string expression, bool? expected)
+        [TestCase("M1()",      CodeStyleResult.No)]
+        [TestCase("this.M1()", CodeStyleResult.Yes)]
+        [TestCase("M2()",      CodeStyleResult.NotFound)]
+        public static async Task Assignment(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -101,10 +101,10 @@ namespace N
             Assert.AreEqual(expected, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("M1()",      false)]
-        [TestCase("this.M1()", true)]
-        [TestCase("M2()",      null)]
-        public static async Task Argument(string expression, bool? expected)
+        [TestCase("M1()",      CodeStyleResult.No)]
+        [TestCase("this.M1()", CodeStyleResult.Yes)]
+        [TestCase("M2()",      CodeStyleResult.NotFound)]
+        public static async Task Argument(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N

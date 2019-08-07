@@ -1,12 +1,22 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UsingDirectivesInsideNamespace
 {
     using System.Linq;
     using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
     public static class DocumentEditor
     {
+        [Test]
+        public static void WhenUnknown()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+}");
+
+            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.UsingDirectivesInsideNamespace(editor));
+        }
+
         [Test]
         public static void UsingDirectiveInsideNamespace()
         {
@@ -16,18 +26,7 @@ namespace N
     using System;
 }");
 
-            Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(editor));
-        }
-
-        [Test]
-        public static void DefaultsToNull()
-        {
-            var editor = CreateDocumentEditor(@"
-namespace N
-{
-}");
-
-            Assert.AreEqual(null, CodeStyle.UsingDirectivesInsideNamespace(editor));
+            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.UsingDirectivesInsideNamespace(editor));
         }
 
         [Test]
@@ -41,7 +40,7 @@ namespace N
     using System.Collections;
 }");
 
-            Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(editor));
+            Assert.AreEqual(CodeStyleResult.Mixed, CodeStyle.UsingDirectivesInsideNamespace(editor));
         }
 
         [Test]
@@ -54,7 +53,7 @@ namespace N
 {
 }");
 
-            Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(editor));
+            Assert.AreEqual(CodeStyleResult.No, CodeStyle.UsingDirectivesInsideNamespace(editor));
         }
 
         private static Microsoft.CodeAnalysis.Editing.DocumentEditor CreateDocumentEditor(string code)

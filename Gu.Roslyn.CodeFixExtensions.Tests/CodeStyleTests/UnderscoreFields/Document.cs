@@ -9,7 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UnderscoreFields
     public static class Document
     {
         [Test]
-        public static async Task DefaultsToNull()
+        public static async Task WhenUnknown()
         {
             var sln = CodeFactory.CreateSolution(@"
 namespace N
@@ -26,14 +26,14 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(null, await CodeStyle.UnderscoreFieldsAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.UnderscoreFieldsAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("private int _f", true)]
-        [TestCase("private readonly int _f = 1", true)]
-        [TestCase("private int f", false)]
-        [TestCase("private readonly int f", false)]
-        public static async Task FiguresOutFromDocument(string declaration, bool expected)
+        [TestCase("private int _f", CodeStyleResult.Yes)]
+        [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
+        [TestCase("private int f", CodeStyleResult.No)]
+        [TestCase("private readonly int f", CodeStyleResult.No)]
+        public static async Task FiguresOutFromDocument(string declaration, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(
                 new[]
@@ -53,11 +53,11 @@ namespace N
             }
         }
 
-        [TestCase("private int _f", true)]
-        [TestCase("private readonly int _f = 1", true)]
-        [TestCase("private int f", false)]
-        [TestCase("private readonly int f", false)]
-        public static async Task FiguresOutFromOtherDocument(string declaration, bool expected)
+        [TestCase("private int _f", CodeStyleResult.Yes)]
+        [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
+        [TestCase("private int f", CodeStyleResult.No)]
+        [TestCase("private readonly int f", CodeStyleResult.No)]
+        public static async Task FiguresOutFromOtherDocument(string declaration, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(
                 new[]

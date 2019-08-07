@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UsingDirectivesInsideNamespace
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -6,6 +6,20 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
 
     public static class SemanticModel
     {
+
+        [Test]
+        public static void WhenUnknown()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+}");
+
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
+        }
+
         [Test]
         public static void UsingDirectiveInsideNamespace()
         {
@@ -17,20 +31,7 @@ namespace N
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
-        }
-
-        [Test]
-        public static void DefaultsToNull()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-}");
-
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(null, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
+            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
         }
 
         [Test]
@@ -46,7 +47,7 @@ namespace N
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
+            Assert.AreEqual(CodeStyleResult.Mixed, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
         }
 
         [Test]
@@ -61,7 +62,7 @@ namespace N
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(false, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
+            Assert.AreEqual(CodeStyleResult.No, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
         }
     }
 }
