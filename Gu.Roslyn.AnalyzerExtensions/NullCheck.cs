@@ -5,6 +5,40 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    public static class EqualsCheck
+    {
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is a check for equality.
+        /// Operators == and !=
+        /// Equals, ReferenceEquals
+        /// </summary>
+        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="left">The left value.</param>
+        /// <param name="right">The right value.</param>
+        /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
+        public static bool IsEqualsCheck(ExpressionSyntax candidate, out ExpressionSyntax left, out ExpressionSyntax right)
+        {
+            switch (candidate)
+            {
+                case InvocationExpressionSyntax invocation when invocation.ArgumentList is ArgumentListSyntax argumentList &&
+                                                                argumentList.Arguments.Count == 2 &&
+                                                                invocation.TryGetMethodName(out var name) &&
+                                                                (name == "Equals" || name == "ReferenceEquals"):
+                    left = argumentList.Arguments[0].Expression;
+                    right = argumentList.Arguments[1].Expression;
+                    return true;
+                case BinaryExpressionSyntax node when node.IsEither(SyntaxKind.EqualsExpression, SyntaxKind.NotEqualsExpression):
+                    left = node.Left;
+                    right = node.Right;
+                    return true;
+                default:
+                    left = null;
+                    right = null;
+                    return true;
+            }
+        }
+    }
+
     /// <summary>
     /// Helper for determining if parameters are checked for null.
     /// </summary>
@@ -64,37 +98,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> is a nullcheck.</returns>
         public static bool IsNullCheck(ExpressionSyntax candidate, out ExpressionSyntax value)
         {
+            if (EqualsCheck.IsEqualsCheck(candidate, out var left, out var right) &&
+                IsNullAndExpression(left, right, out value))
+            {
+                return true;
+            }
+
             switch (candidate)
             {
-                case InvocationExpressionSyntax invocation:
-                    if (invocation.ArgumentList is ArgumentListSyntax argumentList &&
-                        argumentList.Arguments.Count == 2 &&
-                        IsNullAndExpression(argumentList.Arguments[0].Expression, argumentList.Arguments[1].Expression, out value) &&
-                        invocation.TryGetMethodName(out var name) &&
-                        (name == "Equals" || name == "ReferenceEquals"))
-                    {
-                        return true;
-                    }
-
-                    value = null;
-                    return false;
                 case IsPatternExpressionSyntax node when node.Pattern is ConstantPatternSyntax constantPattern &&
                                                          constantPattern.Expression.IsKind(SyntaxKind.NullLiteralExpression):
                     value = node.Expression;
                     return true;
-                case BinaryExpressionSyntax node:
-                    switch (node.Kind())
-                    {
-                        case SyntaxKind.EqualsExpression when IsNullAndExpression(node.Left, node.Right, out value):
-                        case SyntaxKind.NotEqualsExpression when IsNullAndExpression(node.Left, node.Right, out value):
-                            return true;
-                        case SyntaxKind.CoalesceExpression when node.Left is ExpressionSyntax expression:
-                            value = expression;
-                            return true;
-                    }
-
-                    value = null;
-                    return false;
+                case BinaryExpressionSyntax node when node.IsKind(SyntaxKind.CoalesceExpression):
+                    value = node.Left;
+                    return true;
                 default:
                     value = null;
                     return false;

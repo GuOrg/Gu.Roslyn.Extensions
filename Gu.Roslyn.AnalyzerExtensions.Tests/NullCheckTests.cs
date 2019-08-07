@@ -9,11 +9,16 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     public class NullCheckTests
     {
         [TestCase("text == null")]
+        [TestCase("null == text")]
         [TestCase("text != null")]
         [TestCase("text is null")]
         //// [TestCase("text is { }")]
         [TestCase("Equals(text, null)")]
         [TestCase("Equals(null, text)")]
+        [TestCase("object.Equals(text, null)")]
+        [TestCase("object.Equals(null, text)")]
+        [TestCase("Object.Equals(text, null)")]
+        [TestCase("Object.Equals(null, text)")]
         [TestCase("ReferenceEquals(text, null)")]
         [TestCase("ReferenceEquals(null, text)")]
         public void IsNullCheck(string check)
@@ -23,19 +28,9 @@ namespace N
 {
     using System;
 
-    public class C
+    class C
     {
-        private readonly string text;
-
-        public C(string text, string other)
-        {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            this.text = text;
-        }
+        bool M(string text) => text == null;
     }
 }".AssertReplace("text == null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
