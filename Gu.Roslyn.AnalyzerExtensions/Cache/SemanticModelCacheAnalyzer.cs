@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             title: "Controls if Semantic models should be cached for syntax trees.",
             messageFormat: "Cache<SyntaxTree, SemanticModel>",
             category: "SemanticModelCacheAnalyzer",
-            defaultSeverity: DiagnosticSeverity.Hidden,
+            defaultSeverity: DiagnosticSeverity.Info,
             isEnabledByDefault: true,
 #pragma warning disable SA1118 // Parameter should not span multiple lines
             description: "Controls if Semantic models should be cached for syntax trees.\r\n" +
@@ -25,7 +25,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)
         {
-            context.CacheToCompilationEnd<SyntaxTree, SemanticModel>();
+            context.RegisterCompilationStartAction(x => Cache<SemanticModel>.Begin(x.Compilation));
         }
     }
 }

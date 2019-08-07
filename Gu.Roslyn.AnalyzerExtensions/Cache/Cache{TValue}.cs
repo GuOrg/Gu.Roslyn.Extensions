@@ -3,24 +3,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Concurrent;
+    using Microsoft.CodeAnalysis;
 
     /// <summary> A cache. </summary>
-    /// <typeparam name="TKey">The key type.</typeparam>
     /// <typeparam name="TValue">The value type.</typeparam>
 #pragma warning disable CA1724
-    public static class Cache<TKey, TValue>
+    public static class Cache<TValue>
 #pragma warning restore CA1724
     {
-        private static readonly ConcurrentDictionary<TKey, TValue> Inner = new ConcurrentDictionary<TKey, TValue>();
+        private static readonly ConcurrentDictionary<SyntaxTree, TValue> Inner = new ConcurrentDictionary<SyntaxTree, TValue>();
 
         /// <summary>
         /// Start a cache transaction.
         /// </summary>
+        /// <param name="compilation">The <see cref="Compilation"/>.</param>
         /// <returns>A <see cref="Transaction"/> that clears the cache when disposed.</returns>
-        public static Transaction Begin()
+        public static Transaction Begin(Compilation compilation)
         {
-            Inner.Clear();
-            return new Transaction();
+            return new Transaction(compilation);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="key">The cache key.</param>
         /// <param name="valueFactory">The factory for new items.</param>
         /// <returns>The cached value.</returns>
-        public static TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
+        public static TValue GetOrAdd(SyntaxTree key, Func<SyntaxTree, TValue> valueFactory)
         {
             if (valueFactory == null)
             {
@@ -56,21 +56,36 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public sealed class Transaction : IDisposable
 #pragma warning restore CA1034, CA1707, CA1815
         {
+            private readonly Compilation compilation;
+
+            public Transaction(Compilation compilation)
+            {
+                this.compilation = compilation;
+            }
+
             /// <summary>
             /// Finalizes an instance of the <see cref="Transaction"/> class.
             /// </summary>
             ~Transaction()
             {
 #pragma warning disable IDISP023 // Don't use reference types in finalizer context.
-                Inner.Clear();
+                this.Purge();
 #pragma warning restore IDISP023 // Don't use reference types in finalizer context.
             }
 
             /// <inheritdoc />
             public void Dispose()
             {
-                Inner.Clear();
+                this.Purge();
                 GC.SuppressFinalize(this);
+            }
+
+            private void Purge()
+            {
+                foreach (var tree in this.compilation.SyntaxTrees)
+                {
+                    Inner.TryRemove(tree, out _);
+                }
             }
         }
     }

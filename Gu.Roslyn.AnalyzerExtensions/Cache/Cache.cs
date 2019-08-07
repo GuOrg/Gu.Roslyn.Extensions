@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Diagnostics;
 
     /// <summary>
@@ -13,12 +14,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get an item from cache or create and add and return.
         /// </summary>
-        /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="key">The cache key.</param>
         /// <param name="valueFactory">The factory for new items.</param>
         /// <returns>The cached value.</returns>
-        public static TValue GetOrAdd<TKey, TValue>(TKey key, Func<TKey, TValue> valueFactory) => Cache<TKey, TValue>.GetOrAdd(key, valueFactory);
+        public static TValue GetOrAdd<TValue>(SyntaxTree key, Func<SyntaxTree, TValue> valueFactory) => Cache<TValue>.GetOrAdd(key, valueFactory);
 
         /// <summary>
         /// Controls if Semantic models should be cached for syntax trees.
@@ -27,10 +27,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="context">The <see cref="AnalysisContext"/>.</param>
-        public static void CacheToCompilationEnd<TKey, TValue>(this AnalysisContext context)
+        [Obsolete("No guarantee compilation end runs.")]
+        public static void CacheToCompilationEnd<TValue>(this AnalysisContext context)
         {
 #pragma warning disable CA1062 // Validate arguments of public methods
-            context.RegisterCompilationStartAction(_ => Cache<TKey, TValue>.Begin());
+            context.RegisterCompilationStartAction(x => Cache<TValue>.Begin(x.Compilation));
 #pragma warning restore CA1062 // Validate arguments of public methods
         }
     }
