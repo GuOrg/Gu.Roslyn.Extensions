@@ -29,7 +29,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="context">The <see cref="AnalysisContext"/>.</param>
         public static void CacheToCompilationEnd<TKey, TValue>(this AnalysisContext context)
         {
-            context.RegisterCompilationStartAction(x => Cache<TKey, TValue>.Begin());
+#pragma warning disable CA1062 // Validate arguments of public methods
+            context.RegisterCompilationStartAction(_ => Cache<TKey, TValue>.Begin());
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
     }
 }

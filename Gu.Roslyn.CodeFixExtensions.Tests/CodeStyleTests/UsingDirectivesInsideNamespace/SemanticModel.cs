@@ -6,7 +6,6 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UsingDirectivesInside
 
     public static class SemanticModel
     {
-
         [Test]
         public static void WhenUnknown()
         {

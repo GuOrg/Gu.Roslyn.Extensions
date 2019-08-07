@@ -16,6 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Start a cache transaction.
         /// </summary>
+        /// <returns>A <see cref="Transaction"/> that clears the cache when disposed.</returns>
         public static Transaction Begin()
         {
             Inner.Clear();
@@ -55,6 +56,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public sealed class Transaction : IDisposable
 #pragma warning restore CA1034, CA1707, CA1815
         {
+            /// <summary>
+            /// Finalizes an instance of the <see cref="Transaction"/> class.
+            /// </summary>
             ~Transaction()
             {
 #pragma warning disable IDISP023 // Don't use reference types in finalizer context.
