@@ -24,7 +24,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Controls if Semantic models should be cached for syntax trees.
         /// This can speed up analysis significantly but means Visual Studio uses more memory during compilation.
         /// </summary>
-        /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="context">The <see cref="AnalysisContext"/>.</param>
         [Obsolete("No guarantee compilation end runs.")]

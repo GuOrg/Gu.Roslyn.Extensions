@@ -3,6 +3,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Runtime.InteropServices.ComTypes;
+    using System.Threading;
     using Microsoft.CodeAnalysis;
 
     /// <summary> A cache. </summary>
@@ -18,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="compilation">The <see cref="Compilation"/>.</param>
         /// <returns>A <see cref="Transaction"/> that clears the cache when disposed.</returns>
-        public static Transaction Begin(Compilation compilation)
+        public static IDisposable Begin(Compilation compilation)
         {
             return new Transaction(compilation);
         }
@@ -51,16 +53,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// A transaction that decrements ref count when disposed.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
-#pragma warning disable CA1034, CA1707, CA1815
-        public sealed class Transaction : IDisposable
-#pragma warning restore CA1034, CA1707, CA1815
+        private sealed class Transaction : IDisposable
         {
-            private readonly Compilation compilation;
+            private static int refCount;
+            private readonly object gate = new object();
+            private Compilation compilation;
 
-            public Transaction(Compilation compilation)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Transaction"/> class.
+            /// </summary>
+            /// <param name="compilation">The <see cref="Compilation"/>.</param>
+            internal Transaction(Compilation compilation)
             {
                 this.compilation = compilation;
+                _ = Interlocked.Increment(ref refCount);
             }
 
             /// <summary>
@@ -82,9 +88,31 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             private void Purge()
             {
-                foreach (var tree in this.compilation.SyntaxTrees)
+                if (this.compilation == null)
                 {
-                    Inner.TryRemove(tree, out _);
+                    return;
+                }
+
+                lock (this.gate)
+                {
+                    if (this.compilation == null)
+                    {
+                        return;
+                    }
+
+                    if (Interlocked.Decrement(ref refCount) > 0)
+                    {
+                        foreach (var tree in this.compilation.SyntaxTrees)
+                        {
+                            Inner.TryRemove(tree, out _);
+                        }
+                    }
+                    else
+                    {
+                        Inner.Clear();
+                    }
+
+                    this.compilation = null;
                 }
             }
         }
