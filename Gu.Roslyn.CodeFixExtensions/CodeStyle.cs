@@ -56,6 +56,42 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         /// <summary>
         /// Figuring out if field access should be prefixed with this.
+        /// 1. Check CodeStyleOptions.QualifyEventAccess if present.
+        /// 2. Walk current <paramref name="document"/>.
+        /// 3. Walk current project.
+        /// </summary>
+        /// <param name="document">The <see cref="Document"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static async Task<CodeStyleResult> QualifyEventAccessAsync(this Document document, CancellationToken cancellationToken)
+        {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyEventAccess, cancellationToken).ConfigureAwait(false) is CodeStyleOption<bool> option)
+            {
+                return option.Value ? CodeStyleResult.Yes : CodeStyleResult.No;
+            }
+
+            return await QualifyEventAccessWalker.CheckAsync(document, cancellationToken)
+                                                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Figuring out if field access should be prefixed with this.
+        /// 1. Check CodeStyleOptions.QualifyEventAccess if present.
+        /// 2. Walk current <see cref="Document"/>.
+        /// 3. Walk current project.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>True if the code is found to prefix field names with underscore.</returns>
+        public static Task<CodeStyleResult> QualifyEventAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken) => QualifyEventAccessAsync(editor?.OriginalDocument, cancellationToken);
+
+        /// <summary>
+        /// Figuring out if field access should be prefixed with this.
         /// 1. Check CodeStyleOptions.QualifyPropertyAccess if present.
         /// 2. Walk current <paramref name="document"/>.
         /// 3. Walk current project.
@@ -443,6 +479,73 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
+        private sealed class QualifyEventAccessWalker : CompilationWalker<QualifyEventAccessWalker>
+        {
+            private QualifyEventAccessWalker()
+            {
+            }
+
+            public override void VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                switch (node.Parent)
+                {
+                    case ConditionalAccessExpressionSyntax conditionalAccess when conditionalAccess.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
+                                                                                  conditionalAccess.WhenNotNull.IsKind(SyntaxKind.InvocationExpression) &&
+                                                                                  IsMemberEvent():
+                        this.Update(CodeStyleResult.No);
+                        break;
+                    case InvocationExpressionSyntax invocation when invocation.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
+                                                                    IsMemberEvent():
+                        this.Update(CodeStyleResult.No);
+                        break;
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression == node &&
+                                                                        memberAccess.Parent is InvocationExpressionSyntax invocation &&
+                                                                        invocation.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
+                                                                        IsMemberEvent():
+                        this.Update(CodeStyleResult.No);
+                        break;
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Name == node &&
+                                                                        memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
+                                                                        IsMemberEvent():
+                        this.Update(CodeStyleResult.Yes);
+                        break;
+                }
+
+                bool IsMemberEvent()
+                {
+                    return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
+                           !IsStatic(containingMember) &&
+                           containingMember.Parent is TypeDeclarationSyntax containingType &&
+                           containingType.TryFindEvent(node.Identifier.ValueText, out var @event) &&
+                           !IsStatic(@event);
+
+                    bool IsStatic(MemberDeclarationSyntax candidate)
+                    {
+                        switch (candidate)
+                        {
+                            case BaseMethodDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            case BasePropertyDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            case EventFieldDeclarationSyntax declaration:
+                                return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+                            default:
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            internal static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
+            {
+                using (var walker = Borrow(() => new QualifyEventAccessWalker()))
+                {
+                    return await walker.CheckCoreAsync(containing, cancellationToken)
+                                       .ConfigureAwait(false);
+                }
+            }
+        }
+
         private sealed class QualifyPropertyAccessWalker : CompilationWalker<QualifyPropertyAccessWalker>
         {
             private QualifyPropertyAccessWalker()
@@ -460,7 +563,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     case ReturnStatementSyntax _ when IsMemberProperty():
                         this.Update(CodeStyleResult.No);
                         break;
-                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
+                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Name == node &&
                                                                         memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
                                                                         IsMemberProperty():
                         this.Update(CodeStyleResult.Yes);
