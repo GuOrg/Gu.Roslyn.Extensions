@@ -49,11 +49,13 @@ namespace N
             var value = syntaxTree.FindExpression(expression);
             using (var walker = MemberPath.PathWalker.Borrow(value))
             {
-                Assert.AreEqual(expected, string.Join(".", walker.IdentifierNames.Select(x => x)));
+                Assert.AreEqual(expected, string.Join(".", walker.Tokens.Select(x => x)));
             }
         }
 
         [TestCase("Equals(1, 1)", "")]
+        [TestCase("Object.Equals(1, 1)", "Object")]
+        [TestCase("object.Equals(1, 1)", "object")]
         [TestCase("ToString()", "")]
         [TestCase("this.ToString()", "")]
         [TestCase("C.Dispose()", "C")]
@@ -111,12 +113,12 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             using (var walker = MemberPath.PathWalker.Borrow(syntaxTree.FindInvocation(expression)))
             {
-                Assert.AreEqual(expected, string.Join(".", walker.IdentifierNames.Select(x => x)));
+                Assert.AreEqual(expected, string.Join(".", walker.Tokens.Select(x => x)));
             }
 
             using (var walker = MemberPath.PathWalker.Borrow(syntaxTree.FindExpression(expression)))
             {
-                Assert.AreEqual(expected, string.Join(".", walker.IdentifierNames.Select(x => x)));
+                Assert.AreEqual(expected, string.Join(".", walker.Tokens.Select(x => x)));
             }
         }
 
@@ -141,7 +143,7 @@ namespace N
             var invocation = syntaxTree.FindMemberAccessExpression("this.Value");
             using (var walker = MemberPath.PathWalker.Borrow(invocation))
             {
-                Assert.AreEqual("Value", string.Join(".", walker.IdentifierNames.Select(x => x)));
+                Assert.AreEqual("Value", string.Join(".", walker.Tokens.Select(x => x)));
             }
         }
     }

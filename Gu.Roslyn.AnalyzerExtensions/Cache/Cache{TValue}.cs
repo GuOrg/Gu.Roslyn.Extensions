@@ -3,7 +3,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Runtime.InteropServices.ComTypes;
     using System.Threading;
     using Microsoft.CodeAnalysis;
 

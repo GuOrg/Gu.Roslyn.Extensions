@@ -48,6 +48,11 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
+            if (node == null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             switch (node.Parent)
             {
                 case AssignmentExpressionSyntax assignment when assignment.Left.Contains(node) &&

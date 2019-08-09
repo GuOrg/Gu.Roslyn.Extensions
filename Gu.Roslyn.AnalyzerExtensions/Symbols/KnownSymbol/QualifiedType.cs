@@ -302,6 +302,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <summary> System.String. </summary>
             public static readonly QualifiedType String = new QualifiedType("System.String", "string");
 
+            /// <summary> System.StringComparison. </summary>
+            public static readonly QualifiedType StringComparison = new QualifiedType("System.StringComparison");
+
             /// <summary> System.CodeDom. </summary>
             public static class CodeDom
             {

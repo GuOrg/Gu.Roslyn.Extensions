@@ -54,8 +54,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            var xs = x.IdentifierNames;
-            var ys = y.IdentifierNames;
+            var xs = x.Tokens;
+            var ys = y.Tokens;
             if (xs.Count == 0 ||
                 xs.Count != ys.Count)
             {
@@ -64,7 +64,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             for (var i = 0; i < xs.Count; i++)
             {
-                if (xs[i].Identifier.ValueText != ys[i].Identifier.ValueText)
+                if (xs[i].ValueText != ys[i].ValueText)
                 {
                     return false;
                 }
@@ -91,13 +91,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Tries to find C in this.C.P1.P2.
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
-        /// <param name="member">The root member.</param>
+        /// <param name="token">The root member.</param>
         /// <returns>True if root was found.</returns>
-        public static bool TryFindRoot(ExpressionSyntax expression, out IdentifierNameSyntax member)
+        public static bool TryFindRoot(ExpressionSyntax expression, out SyntaxToken token)
         {
             using (var walker = PathWalker.Borrow(expression))
             {
-                return walker.IdentifierNames.TryFirst(out member);
+                return walker.TryFirst(out token);
             }
         }
 
@@ -105,13 +105,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Tries to find Baz in this.C.P1.P2.
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
-        /// <param name="member">The leaf member.</param>
+        /// <param name="token">The leaf member.</param>
         /// <returns>True if leaf was found.</returns>
-        public static bool TryFindLast(ExpressionSyntax expression, out IdentifierNameSyntax member)
+        public static bool TryFindLast(ExpressionSyntax expression, out SyntaxToken token)
         {
             using (var walker = PathWalker.Borrow(expression))
             {
-                return walker.IdentifierNames.TryLast(out member);
+                return walker.TryLast(out token);
             }
         }
 
@@ -119,13 +119,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Tries to the single member in the path.
         /// </summary>
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
-        /// <param name="member">The single member.</param>
+        /// <param name="token">The single member.</param>
         /// <returns>True if the path was only one member this.C or C for example.</returns>
-        public static bool TrySingle(ExpressionSyntax expression, out IdentifierNameSyntax member)
+        public static bool TrySingle(ExpressionSyntax expression, out SyntaxToken token)
         {
             using (var walker = PathWalker.Borrow(expression))
             {
-                return walker.IdentifierNames.TrySingle(out member);
+                return walker.TrySingle(out token);
             }
         }
 
@@ -138,7 +138,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             using (var walker = PathWalker.Borrow(expression))
             {
-                return walker.IdentifierNames.Count == 0;
+                return walker.Tokens.Count == 0;
             }
         }
 
@@ -180,7 +180,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public sealed class PathWalker : PooledWalker<PathWalker>
         {
-            private readonly List<IdentifierNameSyntax> identifierNames = new List<IdentifierNameSyntax>();
+            private readonly List<SyntaxToken> tokens = new List<SyntaxToken>();
 
             private PathWalker()
             {
@@ -189,7 +189,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <summary>
             /// Gets the <see cref="IdentifierNameSyntax"/> found in the path.
             /// </summary>
-            public IReadOnlyList<IdentifierNameSyntax> IdentifierNames => this.identifierNames;
+            public IReadOnlyList<SyntaxToken> Tokens => this.tokens;
 
             /// <summary>
             /// <see cref="PooledWalker{T}.Borrow"/>.
@@ -223,7 +223,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     case CastExpressionSyntax cast:
                         base.Visit(cast.Expression);
                         return;
-                    case InvocationExpressionSyntax invocation when invocation.Expression is IdentifierNameSyntax:
+                    case InvocationExpressionSyntax invocation when invocation.Expression.IsEither(SyntaxKind.IdentifierName, SyntaxKind.PredefinedType):
                         return;
                     case InvocationExpressionSyntax invocation when invocation.Expression is MemberAccessExpressionSyntax memberAccess:
                         this.Visit(memberAccess.Expression);
@@ -236,6 +236,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     case SyntaxKind.SimpleMemberAccessExpression:
                     case SyntaxKind.MemberBindingExpression:
                     case SyntaxKind.IdentifierName:
+                    case SyntaxKind.PredefinedType:
                     case SyntaxKind.ParenthesizedExpression:
                         base.Visit(node);
                         return;
@@ -245,8 +246,45 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <inheritdoc />
             public override void VisitIdentifierName(IdentifierNameSyntax node)
             {
-                this.identifierNames.Add(node);
+                if (node == null)
+                {
+                    throw new ArgumentNullException(nameof(node));
+                }
+
+                this.tokens.Add(node.Identifier);
             }
+
+            /// <inheritdoc />
+            public override void VisitPredefinedType(PredefinedTypeSyntax node)
+            {
+                if (node == null)
+                {
+                    throw new ArgumentNullException(nameof(node));
+                }
+
+                this.tokens.Add(node.Keyword);
+            }
+
+            /// <summary>
+            /// Get the first token if any.
+            /// </summary>
+            /// <param name="token">The <see cref="SyntaxToken"/>.</param>
+            /// <returns>True if found.</returns>
+            public bool TryFirst(out SyntaxToken token) => this.tokens.TryFirst(out token);
+
+            /// <summary>
+            /// Get the single token if any.
+            /// </summary>
+            /// <param name="token">The <see cref="SyntaxToken"/>.</param>
+            /// <returns>True if found.</returns>
+            public bool TrySingle(out SyntaxToken token) => this.tokens.TrySingle(out token);
+
+            /// <summary>
+            /// Get the last token if any.
+            /// </summary>
+            /// <param name="token">The <see cref="SyntaxToken"/>.</param>
+            /// <returns>True if found.</returns>
+            public bool TryLast(out SyntaxToken token) => this.tokens.TryLast(out token);
 
             /// <summary>
             /// Check if this path starts with the other or is equal.
@@ -260,15 +298,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     throw new ArgumentNullException(nameof(other));
                 }
 
-                if (other.identifierNames.Count == 0 ||
-                    other.identifierNames.Count > this.identifierNames.Count)
+                if (other.tokens.Count == 0 ||
+                    other.tokens.Count > this.tokens.Count)
                 {
                     return false;
                 }
 
-                for (var i = 0; i < other.identifierNames.Count; i++)
+                for (var i = 0; i < other.tokens.Count; i++)
                 {
-                    if (this.identifierNames[i].Identifier.ValueText != other.identifierNames[i].Identifier.ValueText)
+                    if (this.tokens[i].ValueText != other.tokens[i].ValueText)
                     {
                         return false;
                     }
@@ -293,7 +331,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <inheritdoc />
             protected override void Clear()
             {
-                this.identifierNames.Clear();
+                this.tokens.Clear();
             }
         }
     }

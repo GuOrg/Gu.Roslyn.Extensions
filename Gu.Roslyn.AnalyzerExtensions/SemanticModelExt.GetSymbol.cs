@@ -15,6 +15,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <typeparam name="TSymbol">The symbol.</typeparam>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="token">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="symbol">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetSymbol<TSymbol>(this SemanticModel semanticModel, SyntaxToken token, CancellationToken cancellationToken, out TSymbol symbol)
+            where TSymbol : class, ISymbol
+        {
+            symbol = GetSymbolSafe(semanticModel, token.Parent, cancellationToken) as TSymbol ??
+                     GetDeclaredSymbolSafe(semanticModel, token.Parent, cancellationToken) as TSymbol;
+            return symbol != null;
+        }
+
+        /// <summary>
+        /// Try getting the <see cref="ISymbol"/> for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <typeparam name="TSymbol">The symbol.</typeparam>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="symbol">The symbol if found.</param>
@@ -235,6 +253,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static ISymbol GetSymbolSafe(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken)
         {
             return GetSymbolSafe(semanticModel, (SyntaxNode)node, cancellationToken);
+        }
+
+        /// <summary>
+        /// Same as SemanticModel.GetSymbolInfo().Symbol but works when <paramref name="token"/> is not in the syntax tree.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="token">The <see cref="SyntaxToken"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>An <see cref="ISymbol"/> or null.</returns>
+        public static ISymbol GetSymbolSafe(this SemanticModel semanticModel, SyntaxToken token, CancellationToken cancellationToken)
+        {
+            return GetSymbolSafe(semanticModel, token.Parent, cancellationToken);
         }
 
         /// <summary>
