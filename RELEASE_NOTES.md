@@ -1,3 +1,12 @@
+#### 0.6
+* BREAKING: rename SyntaxTreeCache and SyntaxTreeCacheAnalyzer
+* BREAKING: Remove unused CanecllationToken parameter in IsRepresentationPreservingConversion
+* FEATURE: Equality
+* BUGFIX: Nullcheck
+* BREAKING: MemberPath.Tokens was IdentiferNames. 
+* BREAKING: Cache.Begin returns transaction.
+* BREAKING: return CodeStyleResult
+
 #### 0.5.4
 * FEATURE: SealRewriter
 * FEATURE: SortRewriter

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.5.5-dev</Version>
+    <Version>0.6-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -17,10 +17,13 @@
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer</PackageTags>
-    <PackageReleaseNotes>
-      FEATURE: SealRewriter
-      FEATURE: SortRewriter
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>BREAKING: rename SyntaxTreeCache and SyntaxTreeCacheAnalyzer
+BREAKING: Remove unused CanecllationToken parameter in IsRepresentationPreservingConversion
+FEATURE: Equality
+BUGFIX: Nullcheck
+BREAKING: MemberPath.Tokens was IdentiferNames. 
+BREAKING: Cache.Begin returns transaction.
+BREAKING: return CodeStyleResult</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
