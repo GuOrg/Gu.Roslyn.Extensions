@@ -28,6 +28,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="context">The <see cref="AnalysisContext"/>.</param>
         [Obsolete("No guarantee compilation end runs.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Never null.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("AnalyzerPerformance", "RS1013:Start action has no registered non-end actions.", Justification = "Yes we want it like this.")]
         public static void CacheToCompilationEnd<TValue>(this AnalysisContext context)
         {
             context.RegisterCompilationStartAction(x =>

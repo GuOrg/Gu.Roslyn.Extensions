@@ -23,9 +23,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
         /// <inheritdoc />
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("AnalyzerPerformance", "RS1013:Start action has no registered non-end actions.", Justification = "We want it like this here.")]
         public override void Initialize(AnalysisContext context)
         {
+#pragma warning disable CA1062 // Validate arguments of public methods
             context.RegisterCompilationStartAction(x =>
+#pragma warning restore CA1062 // Validate arguments of public methods
             {
                 var transaction = Cache<SemanticModel>.Begin(x.Compilation);
                 x.RegisterCompilationEndAction(_ => transaction.Dispose());
