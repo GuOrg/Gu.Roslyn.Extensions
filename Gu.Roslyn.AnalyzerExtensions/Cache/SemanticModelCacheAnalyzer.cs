@@ -25,7 +25,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterCompilationStartAction(x => Cache<SemanticModel>.Begin(x.Compilation));
+            context.RegisterCompilationStartAction(x =>
+            {
+                var transaction = Cache<SemanticModel>.Begin(x.Compilation);
+                x.RegisterCompilationEndAction(_ => transaction.Dispose());
+            });
         }
     }
 }

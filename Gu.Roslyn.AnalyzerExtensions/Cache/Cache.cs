@@ -27,11 +27,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="context">The <see cref="AnalysisContext"/>.</param>
         [Obsolete("No guarantee compilation end runs.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Never null.")]
         public static void CacheToCompilationEnd<TValue>(this AnalysisContext context)
         {
-#pragma warning disable CA1062 // Validate arguments of public methods
-            context.RegisterCompilationStartAction(x => Cache<TValue>.Begin(x.Compilation));
-#pragma warning restore CA1062 // Validate arguments of public methods
+            context.RegisterCompilationStartAction(x =>
+            {
+                var transaction = Cache<TValue>.Begin(x.Compilation);
+                x.RegisterCompilationEndAction(_ => transaction.Dispose());
+            });
         }
     }
 }
