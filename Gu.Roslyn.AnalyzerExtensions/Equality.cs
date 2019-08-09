@@ -113,8 +113,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 argumentList.Arguments.Count == 1 &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
-                TryGetInstance(out instance) &&
-                IsCorrectSymbol() != false)
+                TryGetInstance(candidate, out instance) &&
+                IsCorrectSymbol())
             {
                 other = argumentList.Arguments[0].Expression;
                 return true;
@@ -124,23 +124,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             other = null;
             return false;
 
-            bool TryGetInstance(out ExpressionSyntax result)
-            {
-                switch (candidate.Expression)
-                {
-                    case MemberAccessExpressionSyntax memberAccess:
-                        result = memberAccess.Expression;
-                        return true;
-                    case MemberBindingExpressionSyntax _ when candidate.Parent is ConditionalAccessExpressionSyntax conditionalAccess:
-                        result = conditionalAccess.Expression;
-                        return true;
-                    default:
-                        result = null;
-                        return false;
-                }
-            }
-
-            bool? IsCorrectSymbol()
+            bool IsCorrectSymbol()
             {
                 if (semanticModel != null)
                 {
@@ -148,7 +132,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                            !method.IsStatic;
                 }
 
-                return null;
+                return true;
             }
         }
 
@@ -351,6 +335,50 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Check if <paramref name="candidate"/> is Nullable.Equals(left, right).
+        /// Equals, ReferenceEquals.
+        /// </summary>
+        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <param name="comparer">The <see cref="ExpressionSyntax"/> for the <see cref="System.Collections.Generic.EqualityComparer{T}"/>.</param>
+        /// <param name="left">The left value.</param>
+        /// <param name="right">The right value.</param>
+        /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
+        public static bool IsEqualityComparerEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax comparer, out ExpressionSyntax left, out ExpressionSyntax right)
+        {
+            if (semanticModel == null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
+            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+                argumentList.Arguments.Count == 2 &&
+                candidate.TryGetMethodName(out var name) &&
+                name == "Equals" &&
+                TryGetInstance(candidate, out comparer) &&
+                IsCorrectSymbol())
+            {
+                left = argumentList.Arguments[0].Expression;
+                right = argumentList.Arguments[1].Expression;
+                return true;
+            }
+
+            comparer = null;
+            left = null;
+            right = null;
+            return false;
+
+            bool IsCorrectSymbol()
+            {
+                return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
+                       method.ContainingType.Is(QualifiedType.System.Collections.Generic.IEqualityComparerOfT) &&
+                       !method.IsStatic &&
+                       method.Parameters.Length == 2;
+            }
+        }
+
+        /// <summary>
         /// Check if <paramref name="candidate"/> is a check for equality.
         /// Operators == and !=
         /// Equals, ReferenceEquals.
@@ -453,6 +481,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
+        }
+
+        private static bool TryGetInstance(InvocationExpressionSyntax invocation, out ExpressionSyntax result)
+        {
+            switch (invocation.Expression)
+            {
+                case MemberAccessExpressionSyntax memberAccess:
+                    result = memberAccess.Expression;
+                    return true;
+                case MemberBindingExpressionSyntax _ when invocation.Parent is ConditionalAccessExpressionSyntax conditionalAccess:
+                    result = conditionalAccess.Expression;
+                    return true;
+                default:
+                    result = null;
+                    return false;
+            }
         }
     }
 }

@@ -290,6 +290,37 @@ namespace N
             }
         }
 
+        [TestCase("M(string x, string y) => StringComparer.Ordinal.Equals(x, y)",            "StringComparer.Ordinal",        "x",  "y",  true)]
+        [TestCase("M(string x, string y) => System.StringComparer.Ordinal.Equals(x, y)",     "System.StringComparer.Ordinal", "x",  "y",  true)]
+        [TestCase("M(StringComparer comparer, string x, string y) => comparer.Equals(x, y)", "comparer",                      "x",  "y",  true)]
+        [TestCase("M(string x, string y) => Object.Equals(x, y)",                            null,                            null, null, false)]
+        [TestCase("M(string x, int y) => StringComparer.Ordinal.Equals((x, y)",              null,                            null, null, false)]
+        public void IsEqualityComparerEquals(string check, string expectedComparer, string expectedLeft, string expectedRight, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+    using System.Runtime.CompilerServices;
+
+    class C
+    {
+        bool M(string x, string y) => StringComparer.Ordinal.Equals(x, y);
+    }
+}".AssertReplace("M(string x, string y) => StringComparer.Ordinal.Equals(x, y)", check);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var expression = syntaxTree.FindInvocation("Equals");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(expected, Equality.IsEqualityComparerEquals(expression, semanticModel, CancellationToken.None, out var comparer, out var left, out var right));
+            if (expected)
+            {
+                Assert.AreEqual(expectedComparer, comparer.ToString());
+                Assert.AreEqual(expectedLeft,     left.ToString());
+                Assert.AreEqual(expectedRight,    right.ToString());
+            }
+        }
+
         [TestCase("text == null", true)]
         [TestCase("text != null", false)]
         public void IsOperatorEquals(string check, bool expected)

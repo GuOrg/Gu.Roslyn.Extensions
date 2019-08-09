@@ -316,12 +316,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            /// <summary> System.CodeDom. </summary>
+            public static class Collections
+            {
+                /// <summary> System.CodeDom.Compiler. </summary>
+                public static class Generic
+                {
+                    /// <summary> System.Runtime.CompilerServices.GeneratedCodeAttribute. </summary>
+                    public static readonly QualifiedType IEqualityComparerOfT = new QualifiedType("System.Collections.Generic.IEqualityComparer`1");
+                }
+            }
+
             /// <summary> System.Linq. </summary>
             public static class Linq
             {
                 /// <summary> System.Linq.Expressions.Expression. </summary>
-                internal static readonly QualifiedType Expression =
-                    new QualifiedType("System.Linq.Expressions.Expression");
+                internal static readonly QualifiedType Expression = new QualifiedType("System.Linq.Expressions.Expression");
             }
 
             /// <summary> System.Runtime. </summary>
