@@ -212,12 +212,13 @@ namespace N
             }
         }
 
-        [TestCase("M(int? x, int? y) => Nullable.Equals(x, y)",    true,  true)]
-        [TestCase("M(int? x, int y) => Nullable.Equals(x, y)",    true,  true)]
-        [TestCase("M(int? x, string y) => Nullable.Equals(x, y)", true,  false)]
-        [TestCase("M(int? x, int? y) => object.Equals(x, y)",      false, false)]
-        [TestCase("M(int? x, int? y) => Object.Equals(x, y)",      false, false)]
-        public void IsIsNullableEquals(string check, bool expectedSyntax, bool expectedSymbol)
+        [TestCase("M(int? x, int? y) => Nullable.Equals(x, y)",        true,  true)]
+        [TestCase("M(int? x, int? y) => System.Nullable.Equals(x, y)", true,  true)]
+        [TestCase("M(int? x, int y) => Nullable.Equals(x, y)",         true,  true)]
+        [TestCase("M(int? x, string y) => Nullable.Equals(x, y)",      true,  false)]
+        [TestCase("M(int? x, int? y) => object.Equals(x, y)",          false, false)]
+        [TestCase("M(int? x, int? y) => Object.Equals(x, y)",          false, false)]
+        public void IsNullableEquals(string check, bool expectedSyntax, bool expectedSymbol)
         {
             var code = @"
 namespace N
@@ -246,6 +247,46 @@ namespace N
             {
                 Assert.AreEqual("x", left.ToString());
                 Assert.AreEqual("y", right.ToString());
+            }
+        }
+
+        [TestCase("M(string x, string y) => string.Equals(x, y, StringComparison.Ordinal)",               true,  true)]
+        [TestCase("M(string x, string y) => String.Equals(x, y, StringComparison.Ordinal)",               true,  true)]
+        [TestCase("M(string x, string y) => System.String.Equals(x, y, System.StringComparison.Ordinal)", true,  true)]
+        [TestCase("M(string x, string y) => string.Equals(x, y)",                                         false, false)]
+        [TestCase("M(string x, string y) => object.Equals(x, y)",                                         false, false)]
+        [TestCase("M(string x, string y) => Object.Equals(x, y)",                                         false, false)]
+        public void IsStringEquals(string check, bool expectedSyntax, bool expectedSymbol)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+    using System.Runtime.CompilerServices;
+
+    class C
+    {
+        bool M(string x, string y) => string.Equals(x, y,StringComparison.Ordinal);
+    }
+}".AssertReplace("M(string x, string y) => string.Equals(x, y,StringComparison.Ordinal)", check);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var expression = syntaxTree.FindInvocation("Equals");
+            Assert.AreEqual(expectedSyntax, Equality.IsStringEquals(expression, default, default, out var left, out var right, out var stringComparison));
+            if (expectedSyntax)
+            {
+                Assert.AreEqual("x", left.ToString());
+                Assert.AreEqual("y", right.ToString());
+                StringAssert.Contains("StringComparison.Ordinal", stringComparison.ToString());
+            }
+
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(expectedSymbol, Equality.IsStringEquals(expression, semanticModel, CancellationToken.None, out left, out right, out stringComparison));
+            if (expectedSymbol)
+            {
+                Assert.AreEqual("x", left.ToString());
+                Assert.AreEqual("y", right.ToString());
+                StringAssert.Contains("StringComparison.Ordinal", stringComparison.ToString());
             }
         }
 

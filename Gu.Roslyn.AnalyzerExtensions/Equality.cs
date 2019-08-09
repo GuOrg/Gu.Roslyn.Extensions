@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -29,6 +30,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                                                                 IsObjectReferenceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                                                                 IsNullableEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                                                                 IsRuntimeHelpersEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
+                                                                IsStringEquals(invocation, semanticModel, cancellationToken, out left, out right, out _) ||
                                                                 IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
                     return true;
                 case ConditionalAccessExpressionSyntax conditionalAccess when conditionalAccess.WhenNotNull is InvocationExpressionSyntax invocation &&
@@ -77,7 +79,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 switch (candidate.Expression)
                 {
                     case MemberAccessExpressionSyntax memberAccess when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
-                                                                        last.Identifier.ValueText == "RuntimeHelpers":
+                                                                        last.ValueText == "RuntimeHelpers":
                         return false;
                 }
 
@@ -236,7 +238,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 switch (candidate.Expression)
                 {
                     case MemberAccessExpressionSyntax memberAccess when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
-                                                                        last.Identifier.ValueText == "RuntimeHelpers":
+                                                                        last.ValueText == "RuntimeHelpers":
                         return null;
                     default:
                         return false;
@@ -245,8 +247,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Check if <paramref name="candidate"/> is a check for equality.
-        /// Operators == and !=
+        /// Check if <paramref name="candidate"/> is Nullable.Equals(left, right).
         /// Equals, ReferenceEquals.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
@@ -287,8 +288,62 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 switch (candidate.Expression)
                 {
                     case MemberAccessExpressionSyntax memberAccess when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
-                                                                        last.Identifier.ValueText == "Nullable":
+                                                                        last.ValueText == "Nullable":
                         return null;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is Nullable.Equals(left, right).
+        /// Equals, ReferenceEquals.
+        /// </summary>
+        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <param name="left">The left value.</param>
+        /// <param name="right">The right value.</param>
+        /// <param name="stringComparison">The <see cref="ExpressionSyntax"/> with the <see cref="System.StringComparison"/>.</param>
+        /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
+        public static bool IsStringEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax left, out ExpressionSyntax right, out ExpressionSyntax stringComparison)
+        {
+            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+                argumentList.Arguments.Count == 3 &&
+                candidate.TryGetMethodName(out var name) &&
+                name == "Equals" &&
+                IsCorrectSymbol())
+            {
+                left = argumentList.Arguments[0].Expression;
+                right = argumentList.Arguments[1].Expression;
+                stringComparison = argumentList.Arguments[2].Expression;
+                return true;
+            }
+
+            left = null;
+            right = null;
+            stringComparison = null;
+            return false;
+
+            bool IsCorrectSymbol()
+            {
+                if (semanticModel != null)
+                {
+                    return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
+                           method.ContainingType == QualifiedType.System.String &&
+                           method.IsStatic &&
+                           method.Parameters.Length == 3 &&
+                           method.Parameters[0].Type.SpecialType == SpecialType.System_String &&
+                           method.Parameters[1].Type.SpecialType == SpecialType.System_String &&
+                           method.Parameters[2].Type == QualifiedType.System.StringComparison;
+                }
+
+                switch (candidate.Expression)
+                {
+                    case MemberAccessExpressionSyntax memberAccess when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
+                                                                        string.Equals(last.ValueText, "String", StringComparison.OrdinalIgnoreCase):
+                        return true;
                     default:
                         return false;
                 }
