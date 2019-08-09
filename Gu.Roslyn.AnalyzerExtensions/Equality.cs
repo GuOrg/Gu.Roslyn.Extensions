@@ -249,6 +249,57 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Equals, ReferenceEquals.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <param name="left">The left value.</param>
+        /// <param name="right">The right value.</param>
+        /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
+        public static bool IsNullableEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax left, out ExpressionSyntax right)
+        {
+            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+                argumentList.Arguments.Count == 2 &&
+                candidate.TryGetMethodName(out var name) &&
+                name == "Equals" &&
+                IsCorrectSymbol() != false)
+            {
+                left = argumentList.Arguments[0].Expression;
+                right = argumentList.Arguments[1].Expression;
+                return true;
+            }
+
+            left = null;
+            right = null;
+            return false;
+
+            bool? IsCorrectSymbol()
+            {
+                if (semanticModel != null)
+                {
+                    return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
+                           method.ContainingType == QualifiedType.System.Nullable &&
+                           method.IsStatic &&
+                           method.Parameters.Length == 2 &&
+                           method.Parameters[0].Type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T &&
+                           method.Parameters[1].Type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+                }
+
+                switch (candidate.Expression)
+                {
+                    case MemberAccessExpressionSyntax memberAccess when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
+                                                                        last.Identifier.ValueText == "Nullable":
+                        return null;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is a check for equality.
+        /// Operators == and !=
+        /// Equals, ReferenceEquals.
+        /// </summary>
+        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>

@@ -290,6 +290,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <summary> System.Object. </summary>
             public static readonly QualifiedType Object = new QualifiedType("System.Object", "object");
 
+            /// <summary> System.Nullable. </summary>
+            public static readonly QualifiedType Nullable = new QualifiedType("System.Nullable");
+
             /// <summary> System.Nullable`1. </summary>
             public static readonly QualifiedType NullableOfT = new QualifiedType("System.Nullable`1");
 

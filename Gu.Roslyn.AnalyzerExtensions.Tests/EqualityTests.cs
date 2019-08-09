@@ -212,6 +212,43 @@ namespace N
             }
         }
 
+        [TestCase("M(int? x, int? y) => Nullable.Equals(x, y)",    true,  true)]
+        [TestCase("M(int? x, int y) => Nullable.Equals(x, y)",    true,  true)]
+        [TestCase("M(int? x, string y) => Nullable.Equals(x, y)", true,  false)]
+        [TestCase("M(int? x, int? y) => object.Equals(x, y)",      false, false)]
+        [TestCase("M(int? x, int? y) => Object.Equals(x, y)",      false, false)]
+        public void IsIsNullableEquals(string check, bool expectedSyntax, bool expectedSymbol)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+    using System.Runtime.CompilerServices;
+
+    class C
+    {
+        bool M(int? x, int? y) => Nullable.Equals(x, y);
+    }
+}".AssertReplace("M(int? x, int? y) => Nullable.Equals(x, y)", check);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var expression = syntaxTree.FindInvocation("Equals");
+            Assert.AreEqual(expectedSyntax, Equality.IsNullableEquals(expression, default, default, out var left, out var right));
+            if (expectedSyntax)
+            {
+                Assert.AreEqual("x", left.ToString());
+                Assert.AreEqual("y", right.ToString());
+            }
+
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(expectedSymbol, Equality.IsNullableEquals(expression, semanticModel, CancellationToken.None, out left, out right));
+            if (expectedSymbol)
+            {
+                Assert.AreEqual("x", left.ToString());
+                Assert.AreEqual("y", right.ToString());
+            }
+        }
+
         [TestCase("text == null", true)]
         [TestCase("text != null", false)]
         public void IsOperatorEquals(string check, bool expected)
