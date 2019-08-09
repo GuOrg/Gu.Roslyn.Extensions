@@ -5,14 +5,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.Diagnostics;
 
     /// <inheritdoc />
-    public abstract class SemanticModelCacheAnalyzer : DiagnosticAnalyzer
+    public abstract class SyntaxTreeCacheAnalyzer : DiagnosticAnalyzer
     {
         private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            id: "SemanticModelCacheAnalyzer",
-            title: "Controls if Semantic models should be cached for syntax trees.",
-            messageFormat: "Cache<SyntaxTree, SemanticModel>",
-            category: "SemanticModelCacheAnalyzer",
-            defaultSeverity: DiagnosticSeverity.Info,
+            id: "SyntaxTreeCacheAnalyzer",
+            title: "Controls caching of for example Semantic models for syntax trees.",
+            messageFormat: "Controls caching of for example Semantic models for syntax trees.",
+            category: "Caching",
+            defaultSeverity: DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
 #pragma warning disable SA1118 // Parameter should not span multiple lines
             description: "Controls if Semantic models should be cached for syntax trees.\r\n" +
@@ -30,7 +30,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             context.RegisterCompilationStartAction(x =>
 #pragma warning restore CA1062 // Validate arguments of public methods
             {
-                var transaction = Cache<SemanticModel>.Begin(x.Compilation);
+                var transaction = SyntaxTreeCache<SemanticModel>.Begin(x.Compilation);
                 x.RegisterCompilationEndAction(_ => transaction.Dispose());
             });
         }

@@ -1,7 +1,6 @@
 ﻿Gu.Roslyn.AnalyzerExtensions.AbstractUsingDirectiveWalker<T>
 Gu.Roslyn.AnalyzerExtensions.AbstractUsingDirectiveWalker<T>.AbstractUsingDirectiveWalker() -> void
 Gu.Roslyn.AnalyzerExtensions.AliasWalker.Aliases.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax>
-Gu.Roslyn.AnalyzerExtensions.Cache<TValue>
 Gu.Roslyn.AnalyzerExtensions.Equality
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.Equals(Gu.Roslyn.AnalyzerExtensions.FieldOrProperty other) -> bool
 Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.Equals(Gu.Roslyn.AnalyzerExtensions.LocalOrParameter other) -> bool
@@ -17,6 +16,9 @@ Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.EnumDeclarationComparer
 Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.EnumDeclarationComparer.EnumDeclarationComparer() -> void
 Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.StructDeclarationComparer
 Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.StructDeclarationComparer.StructDeclarationComparer() -> void
+Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCache<TValue>
+Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCacheAnalyzer
+Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCacheAnalyzer.SyntaxTreeCacheAnalyzer() -> void
 Gu.Roslyn.AnalyzerExtensions.ThrowWalker.ThrowStatementsAndExpressions.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.SyntaxNode>
 Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker
 Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.UsingDirectives.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax>
@@ -28,15 +30,14 @@ override Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.GetHashCode() -> int
 override Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.Equals(object obj) -> bool
 override Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.GetHashCode() -> int
 override Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.VisitPredefinedType(Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax node) -> void
+override Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCacheAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext context) -> void
+override Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCacheAnalyzer.SupportedDiagnostics.get -> System.Collections.Immutable.ImmutableArray<Microsoft.CodeAnalysis.DiagnosticDescriptor>
 override Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.VisitUsingDirective(Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax node) -> void
 static Gu.Roslyn.AnalyzerExtensions.AliasWalker.Borrow(Microsoft.CodeAnalysis.SyntaxTree tree) -> Gu.Roslyn.AnalyzerExtensions.AliasWalker
 static Gu.Roslyn.AnalyzerExtensions.AliasWalker.TryGet(Microsoft.CodeAnalysis.SyntaxTree tree, Gu.Roslyn.AnalyzerExtensions.QualifiedType type, out Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.AliasWalker.TryGet(Microsoft.CodeAnalysis.SyntaxTree tree, string name, out Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Cache.CacheToCompilationEnd<TValue>(this Microsoft.CodeAnalysis.Diagnostics.AnalysisContext context) -> void
 static Gu.Roslyn.AnalyzerExtensions.Cache.GetOrAdd<TValue>(Microsoft.CodeAnalysis.SyntaxTree key, System.Func<Microsoft.CodeAnalysis.SyntaxTree, TValue> valueFactory) -> TValue
-static Gu.Roslyn.AnalyzerExtensions.Cache<TValue>.Begin(Microsoft.CodeAnalysis.Compilation compilation) -> System.IDisposable
-static Gu.Roslyn.AnalyzerExtensions.Cache<TValue>.End() -> void
-static Gu.Roslyn.AnalyzerExtensions.Cache<TValue>.GetOrAdd(Microsoft.CodeAnalysis.SyntaxTree key, System.Func<Microsoft.CodeAnalysis.SyntaxTree, TValue> valueFactory) -> TValue
 static Gu.Roslyn.AnalyzerExtensions.Equality.HasEqualityOperator(Microsoft.CodeAnalysis.ITypeSymbol type) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsEqualityComparerEquals(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax comparer, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsEqualsCheck(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
@@ -71,6 +72,9 @@ static Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.MemberDeclarationComparer.
 static Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.MemberDeclarationComparer.TryCompare<T>(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax x, Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax y, System.Func<T, T, int> compare, out int result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.MemberDeclarationComparer.TryCompareEvent(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax x, Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax y, out int result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.StructDeclarationComparer.Compare(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax x, Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax y) -> int
+static Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCache<TValue>.Begin(Microsoft.CodeAnalysis.Compilation compilation) -> System.IDisposable
+static Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCache<TValue>.End() -> void
+static Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCache<TValue>.GetOrAdd(Microsoft.CodeAnalysis.SyntaxTree key, System.Func<Microsoft.CodeAnalysis.SyntaxTree, TValue> valueFactory) -> TValue
 static Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker.Borrow(Microsoft.CodeAnalysis.SyntaxTree tree) -> Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker
 static Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.Borrow(Microsoft.CodeAnalysis.SyntaxNode node) -> Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker
 static Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.Borrow(Microsoft.CodeAnalysis.SyntaxTree tree) -> Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker

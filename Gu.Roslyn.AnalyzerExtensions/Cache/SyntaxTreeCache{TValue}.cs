@@ -1,4 +1,4 @@
-#pragma warning disable CA1000 // Do not declare static members on generic types
+﻿#pragma warning disable CA1000 // Do not declare static members on generic types
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary> A cache. </summary>
     /// <typeparam name="TValue">The value type.</typeparam>
 #pragma warning disable CA1724
-    public static class Cache<TValue>
+    public static class SyntaxTreeCache<TValue>
 #pragma warning restore CA1724
     {
         private static readonly ConcurrentDictionary<SyntaxTree, TValue> Inner = new ConcurrentDictionary<SyntaxTree, TValue>();
