@@ -368,5 +368,40 @@ namespace N
                 Assert.AreEqual("null", right.ToString());
             }
         }
+
+        [Test]
+        public void IsOverridenWhenTrue()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            return obj.GetType() == this.GetType();
+        }
+
+        public override int GetHashCode() => 1;
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var declaration = syntaxTree.FindClassDeclaration("C");
+            Assert.AreEqual(true, Equality.IsOverriden(declaration));
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(declaration, CancellationToken.None, out var type));
+            Assert.AreEqual(true, Equality.IsOverriden(type));
+        }
     }
 }

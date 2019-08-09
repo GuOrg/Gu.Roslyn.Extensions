@@ -483,6 +483,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        public static bool IsOverriden(TypeDeclarationSyntax candidate)
+        {
+            foreach (var member in candidate.Members)
+            {
+                if (member is MethodDeclarationSyntax method &&
+                    method.Modifiers.Any(SyntaxKind.OverrideKeyword) &&
+                    method.ParameterList is ParameterListSyntax parameterList)
+                {
+                    if (parameterList.Parameters.Count == 0 &&
+                        method.Identifier.ValueText == nameof(GetHashCode))
+                    {
+                        return true;
+                    }
+
+                    if (parameterList.Parameters.TrySingle(out var parameter) &&
+                        parameter.Type == QualifiedType.System.Object &&
+                        method.Identifier.ValueText == nameof(Equals))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsOverriden(INamedTypeSymbol candidate)
+        {
+            return candidate.TryFindFirstMethod(nameof(Equals), x => x.Parameters.TrySingle(out var parameter) && parameter.Type == QualifiedType.System.Object && x.IsOverride, out _) ||
+                   candidate.TryFindFirstMethod(nameof(GetHashCode), x => x.Parameters.Length == 0 && x.IsOverride, out _);
+        }
+
         private static bool TryGetInstance(InvocationExpressionSyntax invocation, out ExpressionSyntax result)
         {
             switch (invocation.Expression)
