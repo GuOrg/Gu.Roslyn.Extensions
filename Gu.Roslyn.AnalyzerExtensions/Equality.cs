@@ -483,6 +483,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <summary>
+        /// Check if Equals or GetHashCode is overriden.
+        /// </summary>
+        /// <param name="candidate">The <see cref="TypeDeclarationSyntax"/>.</param>
+        /// <returns>True if Equals or GetHashCode is overriden.</returns>
         public static bool IsOverriden(TypeDeclarationSyntax candidate)
         {
             foreach (var member in candidate.Members)
@@ -509,6 +514,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return false;
         }
 
+        /// <summary>
+        /// Check if Equals or GetHashCode is overriden.
+        /// </summary>
+        /// <param name="candidate">The <see cref="INamedTypeSymbol"/>.</param>
+        /// <returns>True if Equals or GetHashCode is overriden.</returns>
         public static bool IsOverriden(INamedTypeSymbol candidate)
         {
             return candidate.TryFindFirstMethod(nameof(Equals), x => x.Parameters.TrySingle(out var parameter) && parameter.Type == QualifiedType.System.Object && x.IsOverride, out _) ||

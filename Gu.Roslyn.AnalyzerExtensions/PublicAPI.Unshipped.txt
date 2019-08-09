@@ -9,6 +9,8 @@ Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.Tokens.get -> System.Collecti
 Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.TryFirst(out Microsoft.CodeAnalysis.SyntaxToken token) -> bool
 Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.TryLast(out Microsoft.CodeAnalysis.SyntaxToken token) -> bool
 Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.TrySingle(out Microsoft.CodeAnalysis.SyntaxToken token) -> bool
+Gu.Roslyn.AnalyzerExtensions.QualifiedType.System.Collections
+Gu.Roslyn.AnalyzerExtensions.QualifiedType.System.Collections.Generic
 Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.ClassDeclarationComparer
 Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.ClassDeclarationComparer.ClassDeclarationComparer() -> void
 Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.EnumDeclarationComparer
@@ -36,6 +38,7 @@ static Gu.Roslyn.AnalyzerExtensions.Cache<TValue>.Begin(Microsoft.CodeAnalysis.C
 static Gu.Roslyn.AnalyzerExtensions.Cache<TValue>.End() -> void
 static Gu.Roslyn.AnalyzerExtensions.Cache<TValue>.GetOrAdd(Microsoft.CodeAnalysis.SyntaxTree key, System.Func<Microsoft.CodeAnalysis.SyntaxTree, TValue> valueFactory) -> TValue
 static Gu.Roslyn.AnalyzerExtensions.Equality.HasEqualityOperator(Microsoft.CodeAnalysis.ITypeSymbol type) -> bool
+static Gu.Roslyn.AnalyzerExtensions.Equality.IsEqualityComparerEquals(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax comparer, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsEqualsCheck(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsInstanceEquals(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax instance, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax other) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsNullableEquals(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
@@ -43,8 +46,11 @@ static Gu.Roslyn.AnalyzerExtensions.Equality.IsObjectEquals(Microsoft.CodeAnalys
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsObjectReferenceEquals(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsOperatorEquals(Microsoft.CodeAnalysis.CSharp.Syntax.BinaryExpressionSyntax candidate, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsOperatorNotEquals(Microsoft.CodeAnalysis.CSharp.Syntax.BinaryExpressionSyntax candidate, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
+static Gu.Roslyn.AnalyzerExtensions.Equality.IsOverriden(Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax candidate) -> bool
+static Gu.Roslyn.AnalyzerExtensions.Equality.IsOverriden(Microsoft.CodeAnalysis.INamedTypeSymbol candidate) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsRuntimeHelpersEquals(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsStringEquals(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax right, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax stringComparison) -> bool
+static Gu.Roslyn.AnalyzerExtensions.ExpressionSyntaxExt.IsRepresentationPreservingConversion(this Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax expression, Microsoft.CodeAnalysis.ITypeSymbol destination, Microsoft.CodeAnalysis.SemanticModel semanticModel) -> bool
 static Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.operator !=(Gu.Roslyn.AnalyzerExtensions.FieldOrProperty left, Gu.Roslyn.AnalyzerExtensions.FieldOrProperty right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.operator ==(Gu.Roslyn.AnalyzerExtensions.FieldOrProperty left, Gu.Roslyn.AnalyzerExtensions.FieldOrProperty right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.operator !=(Gu.Roslyn.AnalyzerExtensions.LocalOrParameter left, Gu.Roslyn.AnalyzerExtensions.LocalOrParameter right) -> bool
@@ -54,6 +60,7 @@ static Gu.Roslyn.AnalyzerExtensions.MemberPath.TryFindRoot(Microsoft.CodeAnalysi
 static Gu.Roslyn.AnalyzerExtensions.MemberPath.TrySingle(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax expression, out Microsoft.CodeAnalysis.SyntaxToken token) -> bool
 static Gu.Roslyn.AnalyzerExtensions.NullCheck.IsNullCheck(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax candidate, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax value) -> bool
 static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.GetSymbolSafe(this Microsoft.CodeAnalysis.SemanticModel semanticModel, Microsoft.CodeAnalysis.SyntaxToken token, System.Threading.CancellationToken cancellationToken) -> Microsoft.CodeAnalysis.ISymbol
+static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.IsRepresentationPreservingConversion(this Microsoft.CodeAnalysis.SemanticModel semanticModel, Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax expression, Microsoft.CodeAnalysis.ITypeSymbol destination) -> bool
 static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.TryGetSymbol<TSymbol>(this Microsoft.CodeAnalysis.SemanticModel semanticModel, Microsoft.CodeAnalysis.SyntaxToken token, System.Threading.CancellationToken cancellationToken, out TSymbol symbol) -> bool
 static Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.ClassDeclarationComparer.Compare(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax x, Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax y) -> int
 static Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.EnumDeclarationComparer.Compare(Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax x, Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax y) -> int
@@ -69,6 +76,7 @@ static Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.Borrow(Microsoft.CodeAnaly
 static Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.Borrow(Microsoft.CodeAnalysis.SyntaxTree tree) -> Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker
 static Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.BorrowAsync(Microsoft.CodeAnalysis.SyntaxTree tree, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker>
 static Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.TryGet(Microsoft.CodeAnalysis.SyntaxTree tree, Gu.Roslyn.AnalyzerExtensions.QualifiedType type, out Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax result) -> bool
+static readonly Gu.Roslyn.AnalyzerExtensions.QualifiedType.System.Collections.Generic.IEqualityComparerOfT -> Gu.Roslyn.AnalyzerExtensions.QualifiedType
 static readonly Gu.Roslyn.AnalyzerExtensions.QualifiedType.System.Nullable -> Gu.Roslyn.AnalyzerExtensions.QualifiedType
 static readonly Gu.Roslyn.AnalyzerExtensions.QualifiedType.System.Runtime.CompilerServices.RuntimeHelpers -> Gu.Roslyn.AnalyzerExtensions.QualifiedType
 static readonly Gu.Roslyn.AnalyzerExtensions.QualifiedType.System.StringComparison -> Gu.Roslyn.AnalyzerExtensions.QualifiedType
