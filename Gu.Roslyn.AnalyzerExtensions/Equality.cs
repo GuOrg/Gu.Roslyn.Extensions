@@ -490,6 +490,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if Equals or GetHashCode is overriden.</returns>
         public static bool IsOverriden(TypeDeclarationSyntax candidate)
         {
+            if (candidate == null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
             foreach (var member in candidate.Members)
             {
                 if (member is MethodDeclarationSyntax method &&
