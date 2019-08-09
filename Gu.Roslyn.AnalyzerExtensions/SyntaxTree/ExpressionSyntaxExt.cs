@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -88,11 +87,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="expression">The expression containing the value.</param>
         /// <param name="destination">The type to cast to.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if a boxed instance can be cast.</returns>
-        public static bool IsRepresentationPreservingConversion(this ExpressionSyntax expression, ITypeSymbol destination, SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static bool IsRepresentationPreservingConversion(this ExpressionSyntax expression, ITypeSymbol destination, SemanticModel semanticModel)
         {
-            return semanticModel.IsRepresentationPreservingConversion(expression, destination, cancellationToken);
+            return semanticModel.IsRepresentationPreservingConversion(expression, destination);
         }
 
         /// <summary>

@@ -91,6 +91,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
+            if (semanticModel.GetDeclaredSymbolSafe(node, cancellationToken) is INamedTypeSymbol declaredTemp)
+            {
+                type = declaredTemp;
+                return true;
+            }
+
             type = null;
             return false;
         }
@@ -101,9 +107,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="expression">The expression containing the value.</param>
         /// <param name="destination">The type to cast to.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if a boxed instance can be cast.</returns>
-        public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax expression, ITypeSymbol destination, CancellationToken cancellationToken)
+        public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax expression, ITypeSymbol destination)
         {
             if (expression == null || destination == null)
             {
@@ -122,7 +127,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return conversion.IsIdentity ||
                        (destination is INamedTypeSymbol namedType &&
                         namedType.TypeArguments.TrySingle(out var typeArg) &&
-                        IsRepresentationPreservingConversion(semanticModel, expression, typeArg, cancellationToken));
+                        IsRepresentationPreservingConversion(semanticModel, expression, typeArg));
             }
 
             if (conversion.IsUnboxing)
@@ -130,9 +135,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 switch (expression)
                 {
                     case CastExpressionSyntax cast:
-                        return IsRepresentationPreservingConversion(semanticModel, cast.Expression, destination, cancellationToken);
+                        return IsRepresentationPreservingConversion(semanticModel, cast.Expression, destination);
                     case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
-                        return IsRepresentationPreservingConversion(semanticModel, binary.Left, destination, cancellationToken);
+                        return IsRepresentationPreservingConversion(semanticModel, binary.Left, destination);
                 }
 
                 return false;

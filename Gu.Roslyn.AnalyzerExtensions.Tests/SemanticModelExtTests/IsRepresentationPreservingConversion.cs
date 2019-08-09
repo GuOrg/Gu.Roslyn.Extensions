@@ -53,7 +53,7 @@ namespace N
             var invocation = syntaxTree.FindInvocation(call);
             var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
             var expressionSyntax = invocation.ArgumentList.Arguments[0].Expression;
-            Assert.AreEqual(true, semanticModel.IsRepresentationPreservingConversion(expressionSyntax, method.ReturnType, CancellationToken.None));
+            Assert.AreEqual(true, semanticModel.IsRepresentationPreservingConversion(expressionSyntax, method.ReturnType));
         }
 
         [TestCase("Cast<int?>(1)")]
@@ -83,7 +83,7 @@ namespace N
             var invocation = syntaxTree.FindInvocation(call);
             var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
             var expressionSyntax = invocation.ArgumentList.Arguments[0].Expression;
-            Assert.AreEqual(true, semanticModel.IsRepresentationPreservingConversion(expressionSyntax, method.ReturnType, CancellationToken.None));
+            Assert.AreEqual(true, semanticModel.IsRepresentationPreservingConversion(expressionSyntax, method.ReturnType));
         }
 
         [TestCase("Cast<int>(1.0)")]
@@ -115,7 +115,7 @@ namespace N
             var invocation = syntaxTree.FindInvocation(call);
             var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
             var expressionSyntax = invocation.ArgumentList.Arguments[0].Expression;
-            Assert.AreEqual(false, semanticModel.IsRepresentationPreservingConversion(expressionSyntax, method.ReturnType, CancellationToken.None));
+            Assert.AreEqual(false, semanticModel.IsRepresentationPreservingConversion(expressionSyntax, method.ReturnType));
         }
     }
 }
