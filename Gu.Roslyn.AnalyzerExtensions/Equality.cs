@@ -27,6 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 case InvocationExpressionSyntax invocation when IsObjectEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                                                                 IsObjectReferenceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
+                                                                IsNullableEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                                                                 IsRuntimeHelpersEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                                                                 IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
                     return true;
