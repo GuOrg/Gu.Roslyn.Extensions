@@ -31,7 +31,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                                                                 IsNullableEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                                                                 IsRuntimeHelpersEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                                                                 IsStringEquals(invocation, semanticModel, cancellationToken, out left, out right, out _) ||
-                                                                IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
+                                                                IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
+                                                                (semanticModel != null && IsEqualityComparerEquals(invocation, semanticModel, cancellationToken, out _, out left, out right)):
                     return true;
                 case ConditionalAccessExpressionSyntax conditionalAccess when conditionalAccess.WhenNotNull is InvocationExpressionSyntax invocation &&
                                                                               IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
