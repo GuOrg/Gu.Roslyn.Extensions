@@ -1,1 +1,4 @@
-﻿
+﻿Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter
+Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter.SimplifyNamesRewriter() -> void
+override Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter.VisitQualifiedName(Microsoft.CodeAnalysis.CSharp.Syntax.QualifiedNameSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+static readonly Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter.Default -> Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter

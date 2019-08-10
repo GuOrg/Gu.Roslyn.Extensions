@@ -1,9 +1,7 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Simplification;
 
     /// <summary>
     /// Helper for simplifying qualified type names.
@@ -20,16 +18,6 @@ namespace Gu.Roslyn.CodeFixExtensions
             where T : SyntaxNode
         {
             return (T)SimplifyNamesRewriter.Default.Visit(node);
-        }
-
-        private class SimplifyNamesRewriter : CSharpSyntaxRewriter
-        {
-            internal static readonly SimplifyNamesRewriter Default = new SimplifyNamesRewriter();
-
-            public override SyntaxNode VisitQualifiedName(QualifiedNameSyntax node)
-            {
-                return base.VisitQualifiedName(node).WithAdditionalAnnotations(Simplifier.Annotation);
-            }
         }
     }
 }
