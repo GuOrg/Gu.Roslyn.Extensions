@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// End a cache transaction, the cache is purged when ref count is zero.
         /// </summary>
-        [Obsolete("Dispose the transaction returned by Begin()")]
+        [Obsolete("Dispose the transaction returned by Begin() instead.")]
         public static void End()
         {
             Inner.Clear();
