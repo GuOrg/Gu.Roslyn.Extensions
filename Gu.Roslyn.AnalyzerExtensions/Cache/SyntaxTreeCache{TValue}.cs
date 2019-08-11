@@ -46,6 +46,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(valueFactory));
             }
 
+            if (Transaction.RefCount == 0)
+            {
+                return valueFactory(key);
+            }
+
             return Inner.GetOrAdd(key, valueFactory);
         }
 
@@ -54,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         private sealed class Transaction : IDisposable
         {
-            private static int refCount;
+            internal static int RefCount;
             private readonly object gate = new object();
             private Compilation compilation;
 
@@ -65,7 +70,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             internal Transaction(Compilation compilation)
             {
                 this.compilation = compilation;
-                _ = Interlocked.Increment(ref refCount);
+                _ = Interlocked.Increment(ref RefCount);
             }
 
             /// <summary>
@@ -89,6 +94,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 if (this.compilation == null)
                 {
+                    if (RefCount == 0)
+                    {
+                        Inner.Clear();
+                    }
+
                     return;
                 }
 
@@ -99,7 +109,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         return;
                     }
 
-                    if (Interlocked.Decrement(ref refCount) > 0)
+                    if (Interlocked.Decrement(ref RefCount) > 0)
                     {
                         foreach (var tree in this.compilation.SyntaxTrees)
                         {
