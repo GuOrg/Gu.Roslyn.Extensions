@@ -8,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class GetDeclaredSymbolSafe
+    public static class TryGetSymbol
     {
         private static readonly SyntaxTree OtherTree = CSharpSyntaxTree.ParseText(
             @"
@@ -21,7 +21,7 @@ namespace N
 }");
 
         [Test]
-        public void ClassDeclaration()
+        public static void ClassDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -44,7 +44,7 @@ namespace N
         }
 
         [Test]
-        public void FieldDeclaration()
+        public static void FieldDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -67,7 +67,7 @@ namespace N
         }
 
         [Test]
-        public void ConstructorDeclaration()
+        public static void ConstructorDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -92,7 +92,7 @@ namespace N
         }
 
         [Test]
-        public void EventDeclaration()
+        public static void EventDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -121,7 +121,7 @@ namespace N
         }
 
         [Test]
-        public void EventFieldDeclaration()
+        public static void EventFieldDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -146,7 +146,7 @@ namespace N
         }
 
         [Test]
-        public void PropertyDeclaration()
+        public static void PropertyDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -170,7 +170,7 @@ namespace N
         }
 
         [Test]
-        public void IndexerDeclaration()
+        public static void IndexerDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -194,7 +194,7 @@ namespace N
         }
 
         [Test]
-        public void IndexerWhenArrayElementAccess()
+        public static void IndexerWhenArrayElementAccess()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -218,7 +218,7 @@ namespace N
         }
 
         [Test]
-        public void IndexerWhenMultidimensionalArrayElementAccess()
+        public static void IndexerWhenMultidimensionalArrayElementAccess()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -242,7 +242,7 @@ namespace N
         }
 
         [Test]
-        public void IndexerWhenListElementAccess()
+        public static void IndexerWhenListElementAccess()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -268,7 +268,7 @@ namespace N
         }
 
         [Test]
-        public void IndexerWhenDictionaryElementAccess()
+        public static void IndexerWhenDictionaryElementAccess()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -294,7 +294,7 @@ namespace N
         }
 
         [Test]
-        public void MethodDeclaration()
+        public static void MethodDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -317,7 +317,7 @@ namespace N
         }
 
         [Test]
-        public void Parameter()
+        public static void Parameter()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -342,7 +342,7 @@ namespace N
         }
 
         [Test]
-        public void VariableDeclaration()
+        public static void VariableDeclaration()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -370,7 +370,7 @@ namespace N
         }
 
         [Test]
-        public void VariableDeclarator()
+        public static void VariableDeclarator()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -398,7 +398,7 @@ namespace N
         }
 
         [Test]
-        public void VariableDesignationOutVar()
+        public static void VariableDesignationOutVar()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -421,7 +421,7 @@ namespace N
         }
 
         [Test]
-        public void DeclarationExpressionSyntaxOutVar()
+        public static void DeclarationExpressionSyntaxOutVar()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -452,7 +452,7 @@ namespace N
         }
 
         [Test]
-        public void DeclarationExpressionSyntaxOutDiscard()
+        public static void DeclarationExpressionSyntaxOutDiscard()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
             @"
@@ -487,7 +487,7 @@ namespace N
         }
 
         [Test]
-        public void DeclarationPatternSyntax()
+        public static void DeclarationPatternSyntax()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -515,7 +515,7 @@ namespace N
         }
 
         [Test]
-        public void DeclarationPatternSyntaxIsPattern()
+        public static void DeclarationPatternSyntaxIsPattern()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -542,7 +542,7 @@ namespace N
         }
 
         [Test]
-        public void DeclarationPatternSyntaxSwitchLabel()
+        public static void DeclarationPatternSyntaxSwitchLabel()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -571,7 +571,7 @@ namespace N
         }
 
         [Test]
-        public void DeclarationPatternSyntaxDiscardSwitchLabel()
+        public static void DeclarationPatternSyntaxDiscardSwitchLabel()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -600,7 +600,7 @@ namespace N
         }
 
         [Test]
-        public void DeclarationPatternSyntaxDiscardIsPattern()
+        public static void DeclarationPatternSyntaxDiscardIsPattern()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -627,7 +627,7 @@ namespace N
         }
 
         [Test]
-        public void DiscardDesignationSyntax()
+        public static void DiscardDesignationSyntax()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
             @"
@@ -655,7 +655,7 @@ namespace N
         }
 
         [Test]
-        public void VariableOutDiscard()
+        public static void VariableOutDiscard()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

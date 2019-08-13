@@ -70,8 +70,59 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
+            if (semanticModel.TryGetSymbol(node, cancellationToken, out ISymbol symbol))
+            {
+                type = symbol as ITypeSymbol;
+                return type != null;
+            }
+
             type = null;
             return false;
+        }
+
+        /// <summary>
+        /// Try getting the GetTypeInfo for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="expected">The expected type.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="type">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetNamedType(this SemanticModel semanticModel, AttributeSyntax node, QualifiedType expected, CancellationToken cancellationToken, out INamedTypeSymbol type)
+        {
+            if (expected == null)
+            {
+                throw new System.ArgumentNullException(nameof(expected));
+            }
+
+            type = null;
+            return node?.Name is TypeSyntax typeSyntax &&
+                   semanticModel.TryGetNamedType(typeSyntax, expected, cancellationToken, out type);
+        }
+
+        /// <summary>
+        /// Try getting the GetTypeInfo for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="expected">The expected type.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="type">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetNamedType(this SemanticModel semanticModel, TypeSyntax node, QualifiedType expected, CancellationToken cancellationToken, out INamedTypeSymbol type)
+        {
+            if (expected == null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            type = null;
+            return node == expected &&
+                   semanticModel.TryGetNamedType(node, cancellationToken, out type) &&
+                   type == expected;
         }
 
         /// <summary>

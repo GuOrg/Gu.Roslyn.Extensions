@@ -21,8 +21,7 @@ namespace N
         }
     }
 }");
-            var compilation =
-                CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("M");
             var typeSymbol = semanticModel.GetDeclaredSymbol(node).ReturnType;
@@ -67,6 +66,29 @@ namespace N
             typeSyntax = syntaxTree.FindMethodDeclaration("Other").ReturnType;
             Assert.AreEqual(false, typeSyntax == qualifiedType);
             Assert.AreEqual(true, typeSyntax != qualifiedType);
+        }
+
+        [TestCase("[Obsolete]")]
+        [TestCase("[ObsoleteAttribute]")]
+        [TestCase("[System.Obsolete]")]
+        [TestCase("[System.ObsoleteAttribute]")]
+        public void TypeSyntaxEqualityAttribute(string attribute)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N
+{
+    using System;
+
+    [Obsolete]
+    internal class C
+    {
+    }
+}".AssertReplace("[Obsolete]", attribute));
+            var typeSyntax = syntaxTree.FindAttribute(attribute).Name;
+            var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
+            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(false, typeSyntax != qualifiedType);
         }
     }
 }

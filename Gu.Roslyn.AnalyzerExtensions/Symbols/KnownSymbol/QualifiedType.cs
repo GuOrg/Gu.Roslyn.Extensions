@@ -66,7 +66,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.FullName = fullName;
             this.Namespace = @namespace;
             this.Type = type;
-            this.Alias = alias;
+            this.Alias = alias ?? (type.EndsWith("Attribute", StringComparison.Ordinal) ? type.Substring(0, type.Length - 9) : (string)null);
         }
 
         /// <summary>
@@ -258,7 +258,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case GenericNameSyntax genericName:
                     return this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString(CultureInfo.InvariantCulture));
                 case SimpleNameSyntax simple:
-                    return this.NameEquals(simple.Identifier.ValueText);
+                    return this.NameEquals(simple.Identifier.ValueText) ||
+                           (AliasWalker.TryGet(type.SyntaxTree, this, out var alias) && alias.Name.IsEquivalentTo(type));
                 case QualifiedNameSyntax qualified:
                     return this.Equals(qualified.Right) &&
                            this.Namespace.Matches(qualified.Left);
@@ -304,6 +305,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             /// <summary> System.StringComparison. </summary>
             public static readonly QualifiedType StringComparison = new QualifiedType("System.StringComparison");
+
+            /// <summary> System.ObsoleteAttribute. </summary>
+            public static readonly QualifiedType ObsoleteAttribute = new QualifiedType("System.ObsoleteAttribute");
 
             /// <summary> System.CodeDom. </summary>
             public static class CodeDom

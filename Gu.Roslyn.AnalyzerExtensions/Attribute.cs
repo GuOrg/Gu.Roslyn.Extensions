@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -185,7 +186,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 foreach (var attribute in attributeList.Attributes)
                 {
-                    if (IsType(attribute, expected, semanticModel, cancellationToken))
+                    if (semanticModel.TryGetNamedType(attribute, expected, cancellationToken, out _))
                     {
                         result = attribute;
                         return true;
@@ -204,44 +205,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if the attribute is of the expected type.</returns>
+        [Obsolete("Prefer semanticModel.TryGetType with QualifiedType specified.")]
         public static bool IsType(AttributeSyntax attribute, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (expected == null)
-            {
-                throw new System.ArgumentNullException(nameof(expected));
-            }
-
-            if (attribute == null)
-            {
-                return false;
-            }
-
-            if (attribute.Name is SimpleNameSyntax simpleName)
-            {
-                if (!IsMatch(simpleName, expected) &&
-                    !AliasWalker.TryGet(attribute.SyntaxTree, simpleName.Identifier.ValueText, out _))
-                {
-                    return false;
-                }
-            }
-            else if (attribute.Name is QualifiedNameSyntax qualifiedName &&
-                     qualifiedName.Right is SimpleNameSyntax typeName)
-            {
-                if (!IsMatch(typeName, expected) &&
-                    !AliasWalker.TryGet(attribute.SyntaxTree, typeName.Identifier.ValueText, out _))
-                {
-                    return false;
-                }
-            }
-
-            return semanticModel.TryGetNamedType(attribute, cancellationToken, out var attributeType) &&
-                   attributeType == expected;
-
-            bool IsMatch(SimpleNameSyntax sn, QualifiedType qt)
-            {
-                return sn.Identifier.ValueText == qt.Type ||
-                       qt.Type.IsParts(sn.Identifier.ValueText, "Attribute");
-            }
+            return semanticModel.TryGetNamedType(attribute, expected, cancellationToken, out _);
         }
 
         /// <summary>
