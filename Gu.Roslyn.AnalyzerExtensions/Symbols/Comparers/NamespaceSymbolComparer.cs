@@ -34,6 +34,41 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return x.MetadataName == y.MetadataName;
         }
 
+        /// <summary> Determines equality by name. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The string.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        public static bool Equals(INamespaceSymbol x, string y)
+        {
+            if (x == null ||
+                y == null)
+            {
+                return false;
+            }
+
+            var index = y.Length - 1;
+            while (true)
+            {
+                index = y.LastIndexOf('.', index) - 1;
+                if (index < 0)
+                {
+                    return y.EqualsAt(x.MetadataName, 0) &&
+                           x.ContainingNamespace.IsGlobalNamespace;
+                }
+
+                if (!y.EqualsAt(x.MetadataName, index + 2))
+                {
+                    return false;
+                }
+
+                x = x.ContainingNamespace;
+                if (x.IsGlobalNamespace)
+                {
+                    return false;
+                }
+            }
+        }
+
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
 #pragma warning disable SA1313 // Parameter names must begin with lower-case letter

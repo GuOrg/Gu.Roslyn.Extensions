@@ -8,6 +8,46 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class StringHelper
     {
         /// <summary>
+        /// Check if <param name="x"></param> equals <paramref name="y"></paramref> starting at <paramref name="position"></paramref>.
+        /// </summary>
+        /// <param name="x">The first string.</param>
+        /// <param name="y">The other string.</param>
+        /// <param name="position">The start index.</param>
+        /// <returns>True if <paramref name="x"></paramref> equals <paramref name="y"></paramref> starting at <paramref name="position"></paramref>.</returns>
+        public static bool EqualsAt(this string x, string y, int position)
+        {
+            if (x == null)
+            {
+                throw new ArgumentNullException(nameof(x));
+            }
+
+            if (y == null)
+            {
+                throw new ArgumentNullException(nameof(y));
+            }
+
+            if (position < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position), position, "Expected greater than or equal to zero.");
+            }
+
+            if (x.Length - position < y.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < y.Length; i++)
+            {
+                if (x[i + position] != y[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Check if <paramref name="text"/> == <paramref name="start"/> + <paramref name="end"/>.
         /// </summary>
         /// <param name="text">The text.</param>
