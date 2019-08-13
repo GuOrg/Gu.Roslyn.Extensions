@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
 {
-    using System;
     using System.Threading;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;

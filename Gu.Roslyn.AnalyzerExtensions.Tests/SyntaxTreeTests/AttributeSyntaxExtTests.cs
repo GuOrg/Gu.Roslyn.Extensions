@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 {
     using Gu.Roslyn.Asserts;
