@@ -13,6 +13,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>The default instance.</summary>
         public static readonly SimplifyNamesRewriter Default = new SimplifyNamesRewriter();
 
+        public static T Simplify<T>(T node)
+            where T : SyntaxNode
+        {
+            return (T)Default.Visit(node);
+        }
+
         /// <inheritdoc />
         public override SyntaxNode VisitQualifiedName(QualifiedNameSyntax node)
         {

@@ -92,6 +92,7 @@ static Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.CheckAsync(Microsof
 static Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
 static Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
 static Gu.Roslyn.CodeFixExtensions.SealRewriter.Seal(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax classDeclaration) -> Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax
+static Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter.Simplify<T>(T node) -> T
 static Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.Sort<T>(T typeDeclaration, System.Collections.Generic.IComparer<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> comparer) -> T
 static Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
 static Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
