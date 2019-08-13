@@ -259,13 +259,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString(CultureInfo.InvariantCulture));
                 case SimpleNameSyntax simple:
                     return this.NameEquals(simple.Identifier.ValueText) ||
-                           (AliasWalker.TryGet(type.SyntaxTree, this, out var alias) && alias.Name.IsEquivalentTo(type));
+                           Aliased(simple.Identifier.Text);
                 case QualifiedNameSyntax qualified:
                     return this.Equals(qualified.Right) &&
                            this.Namespace.Matches(qualified.Left);
             }
 
             return false;
+
+            bool Aliased(string name)
+            {
+                if (AliasWalker.TryGet(type.SyntaxTree, this, out var directive))
+                {
+                    return directive.Alias.Name.Identifier.Text == name;
+                }
+
+                return false;
+            }
         }
 
         /// <summary>

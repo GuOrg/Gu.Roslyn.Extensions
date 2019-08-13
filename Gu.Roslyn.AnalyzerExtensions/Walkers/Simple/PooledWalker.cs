@@ -35,7 +35,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             Debug.Assert(!Cache.Contains(this), "!Cache.Contains(this)");
             this.Clear();
             Cache.Enqueue(this);
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>
