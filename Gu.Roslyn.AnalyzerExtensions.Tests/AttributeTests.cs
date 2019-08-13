@@ -22,8 +22,7 @@ namespace N
     public class C
     {
     }
-}";
-            code = code.AssertReplace("[Obsolete]", attribute);
+}".AssertReplace("[Obsolete]", attribute);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var classDeclaration = syntaxTree.FindClassDeclaration("C");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
