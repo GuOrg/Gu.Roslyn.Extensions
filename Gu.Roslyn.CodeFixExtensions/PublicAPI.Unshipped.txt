@@ -1,4 +1,100 @@
-﻿Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter
+﻿Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction
+Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction.Action.get -> System.Func<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken, System.Threading.Tasks.Task>
+Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction.AsyncDocumentEditorAction(string title, Microsoft.CodeAnalysis.Document document, System.Func<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken, System.Threading.Tasks.Task> action, string equivalenceKey) -> void
+Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker
+Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.BackingFieldsAdjacentWalker() -> void
+Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+Gu.Roslyn.CodeFixExtensions.CodeStyleResult.Mixed = 3 -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+Gu.Roslyn.CodeFixExtensions.CodeStyleResult.No = 2 -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+Gu.Roslyn.CodeFixExtensions.CodeStyleResult.NotFound = 0 -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+Gu.Roslyn.CodeFixExtensions.CodeStyleResult.Yes = 1 -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+Gu.Roslyn.CodeFixExtensions.CompilationStyleWalker<T>
+Gu.Roslyn.CodeFixExtensions.CompilationStyleWalker<T>.CheckCore(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+Gu.Roslyn.CodeFixExtensions.CompilationStyleWalker<T>.CheckCoreAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+Gu.Roslyn.CodeFixExtensions.CompilationStyleWalker<T>.CompilationStyleWalker() -> void
+Gu.Roslyn.CodeFixExtensions.CompilationStyleWalker<T>.Update(Gu.Roslyn.CodeFixExtensions.CodeStyleResult newValue) -> void
+Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Equals(Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext other) -> bool
+Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.RegisterCodeFix(string title, System.Func<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken, System.Threading.Tasks.Task> action, string equivalenceKey, Microsoft.CodeAnalysis.Diagnostic diagnostic) -> void
+Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker
+Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker
+Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker
+Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker
+Gu.Roslyn.CodeFixExtensions.SealRewriter
+Gu.Roslyn.CodeFixExtensions.SealRewriter.SealRewriter() -> void
+Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter
 Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter.SimplifyNamesRewriter() -> void
+Gu.Roslyn.CodeFixExtensions.SortMembersRewriter
+Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.SortMembersRewriter() -> void
+Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker
+Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker
+Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.UsingDirectivesInsideNamespaceWalker() -> void
+override Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction.GetChangedDocumentAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.CodeAnalysis.Document>
+override Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.VisitConstructorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.CompilationStyleWalker<T>.Clear() -> void
+override Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Equals(object obj) -> bool
+override Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.GetHashCode() -> int
+override Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitInvocationExpression(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitAccessorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitEventDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
 override Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter.VisitQualifiedName(Microsoft.CodeAnalysis.CSharp.Syntax.QualifiedNameSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitConstructorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitEnumDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitEventDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitEventFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.VisitEnumDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.VisitUsingDirective(Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax node) -> void
+override sealed Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction.EquivalenceKey.get -> string
+override sealed Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction.Title.get -> string
+static Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation, out bool newLineBetween) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.BackingFieldsAdjacent(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, out bool newLineBetween) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.BackingFieldsAdjacent(this Microsoft.CodeAnalysis.SemanticModel semanticModel, out bool newLineBetween) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.FindInEditorConfigAsync<T>(Microsoft.CodeAnalysis.Document document, Microsoft.CodeAnalysis.Options.PerLanguageOption<Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption<T>> key, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption<T>>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.QualifyEventAccessAsync(this Microsoft.CodeAnalysis.Document document, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.QualifyEventAccessAsync(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.QualifyFieldAccessAsync(this Microsoft.CodeAnalysis.Document document, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.QualifyFieldAccessAsync(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.QualifyMethodAccessAsync(this Microsoft.CodeAnalysis.Document document, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.QualifyMethodAccessAsync(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.QualifyPropertyAccessAsync(this Microsoft.CodeAnalysis.Document document, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.QualifyPropertyAccessAsync(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.UnderscoreFields(Microsoft.CodeAnalysis.Editing.DocumentEditor editor) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.UnderscoreFields(this Microsoft.CodeAnalysis.SemanticModel semanticModel) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.UnderscoreFieldsAsync(this Microsoft.CodeAnalysis.Document document, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.UsingDirectivesInsideNamespace(Microsoft.CodeAnalysis.Editing.DocumentEditor editor) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.CodeStyle.UsingDirectivesInsideNamespace(Microsoft.CodeAnalysis.SemanticModel semanticModel) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.operator !=(Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext left, Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext right) -> bool
+static Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.operator ==(Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext left, Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext right) -> bool
+static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.Seal(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax classDeclaration) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
+static Gu.Roslyn.CodeFixExtensions.DocumentEditorExt.SortMembers(this Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax classDeclaration, System.Collections.Generic.IComparer<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> comparer = null) -> Microsoft.CodeAnalysis.Editing.DocumentEditor
+static Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.SealRewriter.Seal(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax classDeclaration) -> Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax
+static Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.Sort<T>(T typeDeclaration, System.Collections.Generic.IComparer<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> comparer) -> T
+static Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
+static Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
+static Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
 static readonly Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter.Default -> Gu.Roslyn.CodeFixExtensions.SimplifyNamesRewriter
