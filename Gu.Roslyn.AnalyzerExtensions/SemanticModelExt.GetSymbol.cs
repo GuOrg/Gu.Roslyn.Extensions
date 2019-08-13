@@ -138,21 +138,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try getting the <see cref="IPropertySymbol"/> or <see cref="IArrayTypeSymbol"/> for the node.
-        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
-        /// </summary>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-        /// <param name="node">The <see cref="InvocationExpressionSyntax"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="symbol">The symbol if found.</param>
-        /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetSymbol(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken, out ISymbol symbol)
-        {
-            symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
-        }
-
-        /// <summary>
         /// Try getting the <see cref="IMethodSymbol"/> for the node.
         /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
         /// </summary>
@@ -189,6 +174,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Try getting the <see cref="IPropertySymbol"/> or <see cref="IArrayTypeSymbol"/> for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="symbol">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetSymbol(this SemanticModel semanticModel, ElementAccessExpressionSyntax node, CancellationToken cancellationToken, out ISymbol symbol)
+        {
+            symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
+            return symbol != null;
         }
 
         /// <summary>
