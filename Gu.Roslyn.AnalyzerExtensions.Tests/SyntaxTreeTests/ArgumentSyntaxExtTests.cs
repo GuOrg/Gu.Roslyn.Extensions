@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class ArgumentSyntaxExtTests
+    public static class ArgumentSyntaxExtTests
     {
         [TestCase("\"text\"", "text")]
         [TestCase("Const", "const text")]
@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         [TestCase("nameof(M)", "M")]
         [TestCase("nameof(this.M)", "M")]
         [TestCase("(string)null", null)]
-        public void TryGetStringValue(string expression, string expected)
+        public static void TryGetStringValue(string expression, string expected)
         {
             var code = @"
 namespace N
@@ -52,7 +52,7 @@ namespace N
         }
 
         [Test]
-        public void TryGetTypeofValue()
+        public static void TryGetTypeofValue()
         {
             var code = @"
 namespace N

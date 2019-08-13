@@ -4,10 +4,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.MemberDeclarationSy
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class LeadingWhitespace
+    public static class LeadingWhitespace
     {
         [Test]
-        public void Class()
+        public static void Class()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -21,7 +21,7 @@ namespace N
         }
 
         [Test]
-        public void ClassWithPragmaAndDocs()
+        public static void ClassWithPragmaAndDocs()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -39,7 +39,7 @@ namespace N
         }
 
         [Test]
-        public void ClassWithDocs()
+        public static void ClassWithDocs()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -56,7 +56,7 @@ namespace N
         }
 
         [Test]
-        public void Constructor()
+        public static void Constructor()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -74,7 +74,7 @@ namespace N
         }
 
         [Test]
-        public void ConstructorWithDocs()
+        public static void ConstructorWithDocs()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -91,7 +91,7 @@ namespace N
         }
 
         [Test]
-        public void Property()
+        public static void Property()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -109,7 +109,7 @@ namespace N
         }
 
         [Test]
-        public void Method()
+        public static void Method()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -124,7 +124,7 @@ namespace N
         }
 
         [Test]
-        public void MethodWithDocs()
+        public static void MethodWithDocs()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

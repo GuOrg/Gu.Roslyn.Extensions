@@ -5,10 +5,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class IdentifierTokenWalkerTests
+    public static class IdentifierTokenWalkerTests
     {
         [Test]
-        public void Test()
+        public static void Test()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

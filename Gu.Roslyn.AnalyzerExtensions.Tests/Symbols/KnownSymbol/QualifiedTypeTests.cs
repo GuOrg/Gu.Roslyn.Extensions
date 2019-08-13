@@ -5,10 +5,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class QualifiedTypeTests
+    public static class QualifiedTypeTests
     {
         [Test]
-        public void SymbolEquality()
+        public static void SymbolEquality()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -43,7 +43,7 @@ namespace N
         [TestCase(typeof(int[]), "int[]", "double")]
         [TestCase(typeof(IComparable<int>), "IComparable<int>", "string")]
         [TestCase(typeof(IComparable<int>), "System.IComparable<int>", "string")]
-        public void TypeSyntaxEquality(Type type, string typeText, string otherTypeText)
+        public static void TypeSyntaxEquality(Type type, string typeText, string otherTypeText)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -72,7 +72,7 @@ namespace N
         [TestCase("[ObsoleteAttribute]")]
         [TestCase("[System.Obsolete]")]
         [TestCase("[System.ObsoleteAttribute]")]
-        public void TypeSyntaxEqualityAttribute(string attribute)
+        public static void TypeSyntaxEqualityAttribute(string attribute)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -87,14 +87,14 @@ namespace N
 }".AssertReplace("[Obsolete]", attribute));
             var typeSyntax = syntaxTree.FindAttribute(attribute).Name;
             var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
-            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(true, typeSyntax == qualifiedType);
             Assert.AreEqual(false, typeSyntax != qualifiedType);
-            Assert.AreEqual(true,  typeSyntax == QualifiedType.System.ObsoleteAttribute);
+            Assert.AreEqual(true, typeSyntax == QualifiedType.System.ObsoleteAttribute);
             Assert.AreEqual(false, typeSyntax != QualifiedType.System.ObsoleteAttribute);
         }
 
         [Test]
-        public void TypeSyntaxEqualityWhenAlias()
+        public static void TypeSyntaxEqualityWhenAlias()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -109,7 +109,7 @@ namespace N
 }");
             var typeSyntax = syntaxTree.FindAttribute("Aliased").Name;
             var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
-            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(true, typeSyntax == qualifiedType);
             Assert.AreEqual(false, typeSyntax != qualifiedType);
         }
     }

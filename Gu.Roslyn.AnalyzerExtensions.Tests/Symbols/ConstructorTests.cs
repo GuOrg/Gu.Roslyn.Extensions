@@ -4,11 +4,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class ConstructorTests
+    public static class ConstructorTests
     {
         [TestCase(Search.TopLevel)]
         [TestCase(Search.Recursive)]
-        public void TryFindDefaultSimple(Search search)
+        public static void TryFindDefaultSimple(Search search)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -40,7 +40,7 @@ namespace N
 
         [TestCase(Search.TopLevel)]
         [TestCase(Search.Recursive)]
-        public void TryFindDefaultWithBaseAndDefault(Search search)
+        public static void TryFindDefaultWithBaseAndDefault(Search search)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -83,7 +83,7 @@ namespace N
 
         [TestCase(Search.TopLevel, null)]
         [TestCase(Search.Recursive, "N.CBase.CBase()")]
-        public void TryFindDefaultWithBase(Search search, string expected)
+        public static void TryFindDefaultWithBase(Search search, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -118,7 +118,7 @@ namespace N
 
         [TestCase(Search.TopLevel, null)]
         [TestCase(Search.Recursive, "N.CBaseBase.CBaseBase()")]
-        public void TryFindDefaultWithBaseWithGap(Search search, string expected)
+        public static void TryFindDefaultWithBaseWithGap(Search search, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

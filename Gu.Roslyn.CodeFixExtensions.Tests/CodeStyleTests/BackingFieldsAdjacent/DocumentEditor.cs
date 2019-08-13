@@ -130,7 +130,7 @@ namespace N
     }
 }");
             Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
-            Assert.AreEqual(true,                newLineBetween);
+            Assert.AreEqual(true, newLineBetween);
         }
 
         [Test]

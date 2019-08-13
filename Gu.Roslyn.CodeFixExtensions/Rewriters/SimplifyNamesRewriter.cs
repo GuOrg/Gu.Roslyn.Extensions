@@ -10,6 +10,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     /// </summary>
     public class SimplifyNamesRewriter : CSharpSyntaxRewriter
     {
+        /// <summary>The default instance.</summary>
         public static readonly SimplifyNamesRewriter Default = new SimplifyNamesRewriter();
 
         /// <inheritdoc />

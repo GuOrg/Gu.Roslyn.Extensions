@@ -6,11 +6,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class SyntaxNodeExtTests
+    public static class SyntaxNodeExtTests
     {
         [TestCase("1", true)]
         [TestCase("M", false)]
-        public void WhenReturningExpression(string text, bool expected)
+        public static void WhenReturningExpression(string text, bool expected)
         {
             var code = @"
 namespace N
@@ -32,7 +32,7 @@ namespace N
 
         [TestCase("1", true)]
         [TestCase("M", false)]
-        public void WhenExpressionArgument(string text, bool expected)
+        public static void WhenExpressionArgument(string text, bool expected)
         {
             var code = @"
 namespace N
@@ -56,7 +56,7 @@ namespace N
 
         [TestCase("1")]
         [TestCase("M")]
-        public void WhenFunc(string text)
+        public static void WhenFunc(string text)
         {
             var code = @"
 namespace N
@@ -77,7 +77,7 @@ namespace N
 
         [TestCase("1")]
         [TestCase("\abc\".Length")]
-        public void WhenOtherKindArgument(string expression)
+        public static void WhenOtherKindArgument(string expression)
         {
             var code = @"
 namespace N

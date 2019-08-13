@@ -5,10 +5,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ArgumentListSyntaxE
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class TryFindArgumentParams
+    public static class TryFindArgumentParams
     {
         [Test]
-        public void Ordinal()
+        public static void Ordinal()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -30,10 +30,10 @@ namespace N
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation("M(1, 2, 3)");
             var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-            Assert.AreEqual(true,   invocation.TryFindArgumentParams(method.Parameters[1], out var arguments));
+            Assert.AreEqual(true, invocation.TryFindArgumentParams(method.Parameters[1], out var arguments));
             Assert.AreEqual("2, 3", string.Join(", ", arguments));
 
-            Assert.AreEqual(true,   invocation.ArgumentList.TryFindParams(method.Parameters[1], out arguments));
+            Assert.AreEqual(true, invocation.ArgumentList.TryFindParams(method.Parameters[1], out arguments));
             Assert.AreEqual("2, 3", string.Join(", ", arguments));
         }
     }

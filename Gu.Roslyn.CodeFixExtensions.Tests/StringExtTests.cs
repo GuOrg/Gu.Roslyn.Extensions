@@ -2,7 +2,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
     using NUnit.Framework;
 
-    public class StringExtTests
+    public static class StringExtTests
     {
         [TestCase("abc", null, "abc")]
         [TestCase("  abc", "", "abc")]
@@ -15,21 +15,21 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
         [TestCase("  abc\r\n  cde", "  ", "  abc\r\n  cde")]
         [TestCase("    abc\r\n    cde", "  ", "  abc\r\n  cde")]
         [TestCase("abc\r\ncde\r\n", "  ", "  abc\r\n  cde\r\n")]
-        public void WithLeadingWhiteSpace(string text, string whitespace, string expected)
+        public static void WithLeadingWhiteSpace(string text, string whitespace, string expected)
         {
             Assert.AreEqual(expected, text.WithLeadingWhiteSpace(whitespace));
         }
 
         [TestCase("abc", "Abc")]
         [TestCase("Abc", "Abc")]
-        public void ToFirstCharUpper(string text, string expected)
+        public static void ToFirstCharUpper(string text, string expected)
         {
             Assert.AreEqual(expected, text.ToFirstCharUpper());
         }
 
         [TestCase("abc", "abc")]
         [TestCase("Abc", "abc")]
-        public void ToFirstCharLower(string text, string expected)
+        public static void ToFirstCharLower(string text, string expected)
         {
             Assert.AreEqual(expected, text.ToFirstCharLower());
         }

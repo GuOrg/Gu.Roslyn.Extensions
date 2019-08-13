@@ -5,12 +5,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ArgumentListSyntaxE
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class TryFindArgument
+    public static class TryFindArgument
     {
         [TestCase(0, "1")]
         [TestCase(1, "2")]
         [TestCase(2, "3")]
-        public void Ordinal(int index, string expected)
+        public static void Ordinal(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -41,7 +41,7 @@ namespace N
 
         [TestCase(0, "2")]
         [TestCase(1, "3")]
-        public void OrdinalExtensionMethod(int index, string expected)
+        public static void OrdinalExtensionMethod(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -73,7 +73,7 @@ namespace N
         [TestCase(0, "1")]
         [TestCase(1, "2")]
         [TestCase(2, "3")]
-        public void OrdinalExtensionMethodStaticInvocation(int index, string expected)
+        public static void OrdinalExtensionMethodStaticInvocation(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -105,7 +105,7 @@ namespace N
         [TestCase(0, "i1: 1")]
         [TestCase(1, "i2: 2")]
         [TestCase(2, "i3: 3")]
-        public void NamedAtOrdinalPositions(int index, string expected)
+        public static void NamedAtOrdinalPositions(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -137,7 +137,7 @@ namespace N
         [TestCase(0, "i1: 1")]
         [TestCase(1, "i2: 2")]
         [TestCase(2, "i3: 3")]
-        public void Named(int index, string expected)
+        public static void Named(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -169,7 +169,7 @@ namespace N
         [TestCase(0, "i1: 1")]
         [TestCase(1, "i2: 2")]
         [TestCase(2, "i3: 3")]
-        public void NamedOptionalWhenPassingAll(int index, string expected)
+        public static void NamedOptionalWhenPassingAll(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -201,7 +201,7 @@ namespace N
         [TestCase(0, "1")]
         [TestCase(1, null)]
         [TestCase(2, "i3: 3")]
-        public void NamedOptionalWhenNotPassingAll(int index, string expected)
+        public static void NamedOptionalWhenNotPassingAll(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -231,7 +231,7 @@ namespace N
         }
 
         [Test]
-        public void ParamsExplicitArray()
+        public static void ParamsExplicitArray()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -261,7 +261,7 @@ namespace N
         }
 
         [Test]
-        public void ParamsReturnsFalse()
+        public static void ParamsReturnsFalse()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

@@ -4,12 +4,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.BaseMethodDeclarati
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class TryFindParameter
+    public static class TryFindParameter
     {
         [TestCase(0, "int v1")]
         [TestCase(1, "int v2")]
         [TestCase(2, "int v3")]
-        public void Ordinal(int index, string expected)
+        public static void Ordinal(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -41,7 +41,7 @@ namespace N
         [TestCase(0, "int v1")]
         [TestCase(1, "int v2")]
         [TestCase(2, "int v3")]
-        public void NamedAtOrdinalPositions(int index, string expected)
+        public static void NamedAtOrdinalPositions(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -73,7 +73,7 @@ namespace N
         [TestCase(0, "int v2")]
         [TestCase(1, "int v1")]
         [TestCase(2, "int v3")]
-        public void Named(int index, string expected)
+        public static void Named(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -105,7 +105,7 @@ namespace N
         [TestCase(0, "params int[] values")]
         [TestCase(1, "params int[] values")]
         [TestCase(2, "params int[] values")]
-        public void Params(int index, string expected)
+        public static void Params(int index, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

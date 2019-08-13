@@ -4,12 +4,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.StatementSyntaxExtT
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class IsExecutedBefore
+    public static class IsExecutedBefore
     {
         [TestCase("1", "2", ExecutedBefore.Yes)]
         [TestCase("2", "1", ExecutedBefore.No)]
         [TestCase("1", "1", ExecutedBefore.No)]
-        public void SameBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void SameBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -31,7 +31,7 @@ namespace N
         [TestCase("1", "2", ExecutedBefore.Yes)]
         [TestCase("2", "1", ExecutedBefore.Maybe)]
         [TestCase("1", "1", ExecutedBefore.Maybe)]
-        public void DeclaredInWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void DeclaredInWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -61,7 +61,7 @@ namespace N
         [TestCase("2", "1", ExecutedBefore.Maybe)]
         [TestCase("1", "3", ExecutedBefore.Yes)]
         [TestCase("3", "1", ExecutedBefore.No)]
-        public void DeclaredBeforeWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void DeclaredBeforeWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -89,7 +89,7 @@ namespace N
         [TestCase("1", "2", ExecutedBefore.Yes)]
         [TestCase("2", "1", ExecutedBefore.Maybe)]
         [TestCase("1", "1", ExecutedBefore.Maybe)]
-        public void DeclaredInForeachLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void DeclaredInForeachLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -114,7 +114,7 @@ namespace N
         [TestCase("1", "2", ExecutedBefore.Yes)]
         [TestCase("2", "1", ExecutedBefore.Maybe)]
         [TestCase("1", "1", ExecutedBefore.Maybe)]
-        public void DeclaredInForLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void DeclaredInForLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -143,7 +143,7 @@ namespace N
         [TestCase("3", "1", ExecutedBefore.No)]
         [TestCase("2", "3", ExecutedBefore.Maybe)]
         [TestCase("3", "2", ExecutedBefore.No)]
-        public void IfBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void IfBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -178,7 +178,7 @@ namespace N
         [TestCase("3", "4", ExecutedBefore.Maybe)]
         [TestCase("4", "2", ExecutedBefore.No)]
         [TestCase("4", "3", ExecutedBefore.No)]
-        public void IfElseBlocks(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void IfElseBlocks(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -217,7 +217,7 @@ namespace N
         [TestCase("3", "4", ExecutedBefore.Maybe)]
         [TestCase("4", "2", ExecutedBefore.No)]
         [TestCase("4", "3", ExecutedBefore.No)]
-        public void IfElseStatements(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void IfElseStatements(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -247,7 +247,7 @@ namespace N
         [TestCase("3", "1", ExecutedBefore.No)]
         [TestCase("3", "2", ExecutedBefore.No)]
         [TestCase("2", "3", ExecutedBefore.No)]
-        public void InsideIfBlockCurlyElse(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void InsideIfBlockCurlyElse(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -280,7 +280,7 @@ namespace N
         [TestCase("3", "1", ExecutedBefore.No)]
         [TestCase("3", "2", ExecutedBefore.No)]
         [TestCase("2", "3", ExecutedBefore.No)]
-        public void InsideIfSingleStatement(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void InsideIfSingleStatement(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -312,7 +312,7 @@ namespace N
         [TestCase("6", "2", ExecutedBefore.No)]
         [TestCase("4", "5", ExecutedBefore.Yes)]
         [TestCase("6", "5", ExecutedBefore.No)]
-        public void IfReturnBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void IfReturnBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -351,7 +351,7 @@ namespace N
         [TestCase("3", "4", ExecutedBefore.Maybe)]
         [TestCase("4", "2", ExecutedBefore.Maybe)]
         [TestCase("4", "3", ExecutedBefore.Maybe)]
-        public void IfReturnBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void IfReturnBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -391,7 +391,7 @@ namespace N
         [TestCase("3", "4", ExecutedBefore.No)]
         [TestCase("4", "2", ExecutedBefore.No)]
         [TestCase("4", "3", ExecutedBefore.No)]
-        public void IfThrowBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void IfThrowBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -430,7 +430,7 @@ namespace N
         [TestCase("3", "4", ExecutedBefore.Maybe)]
         [TestCase("4", "2", ExecutedBefore.Maybe)]
         [TestCase("4", "3", ExecutedBefore.Maybe)]
-        public void IfThrowBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void IfThrowBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -467,7 +467,7 @@ namespace N
 
         [TestCase("1", "2", ExecutedBefore.Yes)]
         [TestCase("2", "1", ExecutedBefore.No)]
-        public void LambdaLocal(string firstInt, string otherInt, ExecutedBefore expected)
+        public static void LambdaLocal(string firstInt, string otherInt, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -503,7 +503,7 @@ namespace N
         [TestCase("5", "4", ExecutedBefore.No)]
         [TestCase("3", "4", ExecutedBefore.Maybe)]
         [TestCase("4", "3", ExecutedBefore.Maybe)]
-        public void LambdaLocalClosure(string firstInt, string otherInt, ExecutedBefore expected)
+        public static void LambdaLocalClosure(string firstInt, string otherInt, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -545,7 +545,7 @@ namespace N
         [TestCase("5", "4", ExecutedBefore.No)]
         [TestCase("3", "4", ExecutedBefore.Maybe)]
         [TestCase("4", "3", ExecutedBefore.Maybe)]
-        public void LambdaParameterClosure(string firstInt, string otherInt, ExecutedBefore expected)
+        public static void LambdaParameterClosure(string firstInt, string otherInt, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -589,7 +589,7 @@ namespace N
         [TestCase("2", "5", ExecutedBefore.Yes)]
         [TestCase("1", "5", ExecutedBefore.Yes)]
         [TestCase("5", "6", ExecutedBefore.Yes)]
-        public void TryCatchCatchFinally(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void TryCatchCatchFinally(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -637,7 +637,7 @@ namespace N
         [TestCase("3", "5", ExecutedBefore.Maybe)]
         [TestCase("4", "5", ExecutedBefore.Maybe)]
         [TestCase("1", "5", ExecutedBefore.Yes)]
-        public void Switch(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void Switch(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -681,7 +681,7 @@ namespace N
         [TestCase("3", "5", ExecutedBefore.Maybe)]
         [TestCase("4", "5", ExecutedBefore.Maybe)]
         [TestCase("1", "5", ExecutedBefore.Yes)]
-        public void SwitchPattern(string firstStatement, string otherStatement, ExecutedBefore expected)
+        public static void SwitchPattern(string firstStatement, string otherStatement, ExecutedBefore expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

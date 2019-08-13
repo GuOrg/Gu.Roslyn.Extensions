@@ -2,6 +2,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Extension methods for <see cref="AttributeSyntax"/>.
+    /// </summary>
     public static class AttributeSyntaxExt
     {
         /// <summary>

@@ -8,10 +8,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class TypeSymbolComparerTests
+    public static class TypeSymbolComparerTests
     {
         [Test]
-        public void Equals()
+        public static void Equals()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -40,7 +40,7 @@ namespace N
         }
 
         [Test]
-        public void GenericPropertiesTypeParameterEquals()
+        public static void GenericPropertiesTypeParameterEquals()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -67,7 +67,7 @@ namespace N
         }
 
         [Test]
-        public void GenericMethodsArgumentTypeParameterEquals()
+        public static void GenericMethodsArgumentTypeParameterEquals()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

@@ -6,17 +6,17 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using NUnit.Framework;
 
     // ReSharper disable once InconsistentNaming
-    public class IMethodSymbolExtTests
+    public static class IMethodSymbolExtTests
     {
-        [TestCase("new C(1, 2)",       "1",    "n")]
-        [TestCase("new C(1, m: 2)",    "1",    "n")]
+        [TestCase("new C(1, 2)", "1", "n")]
+        [TestCase("new C(1, m: 2)", "1", "n")]
         [TestCase("new C(n: 1, m: 2)", "n: 1", "n")]
         [TestCase("new C(m: 2, n: 1)", "n: 1", "n")]
-        [TestCase("new C(1, 2)",       "2",    "m")]
-        [TestCase("new C(1, m: 2)",    "m: 2", "m")]
+        [TestCase("new C(1, 2)", "2", "m")]
+        [TestCase("new C(1, m: 2)", "m: 2", "m")]
         [TestCase("new C(n: 1, m: 2)", "m: 2", "m")]
         [TestCase("new C(m: 2, n: 1)", "m: 2", "m")]
-        public void TryFindParameter(string objectCreation, string arg, string expected)
+        public static void TryFindParameter(string objectCreation, string arg, string expected)
         {
             var code = @"
 namespace N
@@ -38,13 +38,13 @@ namespace N
             Assert.AreEqual(expected, parameter.Name);
         }
 
-        [TestCase("new C(1)",       "1", "n")]
-        [TestCase("new C(1, 2)",    "1", "n")]
+        [TestCase("new C(1)", "1", "n")]
+        [TestCase("new C(1, 2)", "1", "n")]
         [TestCase("new C(1, 2, 3)", "1", "n")]
-        [TestCase("new C(1, 2)",    "2", "ms")]
+        [TestCase("new C(1, 2)", "2", "ms")]
         [TestCase("new C(1, 2, 3)", "2", "ms")]
         [TestCase("new C(1, 2, 3)", "3", "ms")]
-        public void TryFindParameterWhenParams(string objectCreation, string arg, string expected)
+        public static void TryFindParameterWhenParams(string objectCreation, string arg, string expected)
         {
             var code = @"
 namespace N

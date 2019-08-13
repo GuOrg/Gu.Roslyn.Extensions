@@ -29,12 +29,12 @@ namespace N
             Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("_f1 = 1",      CodeStyleResult.No)]
+        [TestCase("_f1 = 1", CodeStyleResult.No)]
         [TestCase("this._f1 = 1", CodeStyleResult.Yes)]
-        [TestCase("f2 = 1",       CodeStyleResult.No)]
-        [TestCase("this.f2 = 1",  CodeStyleResult.Yes)]
-        [TestCase("F3 = 1",       CodeStyleResult.No)]
-        [TestCase("this.F3 = 1",  CodeStyleResult.Yes)]
+        [TestCase("f2 = 1", CodeStyleResult.No)]
+        [TestCase("this.f2 = 1", CodeStyleResult.Yes)]
+        [TestCase("F3 = 1", CodeStyleResult.No)]
+        [TestCase("this.F3 = 1", CodeStyleResult.Yes)]
         public static async Task AssigningInCtor(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -76,7 +76,7 @@ namespace N
         }
 
         [TestCase("this.f", CodeStyleResult.Yes)]
-        [TestCase("f",      CodeStyleResult.No)]
+        [TestCase("f", CodeStyleResult.No)]
         public static async Task ReturningInMethodExpressionBody(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -95,7 +95,7 @@ namespace N
         }
 
         [TestCase("this.f", CodeStyleResult.Yes)]
-        [TestCase("f",      CodeStyleResult.No)]
+        [TestCase("f", CodeStyleResult.No)]
         public static async Task ReturningInPropertyExpressionBody(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -114,7 +114,7 @@ namespace N
         }
 
         [TestCase("this.f", CodeStyleResult.Yes)]
-        [TestCase("f",      CodeStyleResult.No)]
+        [TestCase("f", CodeStyleResult.No)]
         public static async Task ReturningInPropertyGetterExpressionBody(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -136,7 +136,7 @@ namespace N
         }
 
         [TestCase("this.f", CodeStyleResult.Yes)]
-        [TestCase("f",      CodeStyleResult.No)]
+        [TestCase("f", CodeStyleResult.No)]
         public static async Task ReturningInPropertyGetterStatementBody(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -158,8 +158,8 @@ namespace N
         }
 
         [TestCase("this.f = 1", CodeStyleResult.Yes)]
-        [TestCase("f = 1",      CodeStyleResult.No)]
-        [TestCase("",           CodeStyleResult.NotFound)]
+        [TestCase("f = 1", CodeStyleResult.No)]
+        [TestCase("", CodeStyleResult.NotFound)]
         public static async Task FiguresOutFromOtherClass(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(new[]

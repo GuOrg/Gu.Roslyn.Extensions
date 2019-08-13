@@ -29,7 +29,7 @@ namespace N
             Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyPropertyAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("P = 1",      CodeStyleResult.No)]
+        [TestCase("P = 1", CodeStyleResult.No)]
         [TestCase("this.P = 1", CodeStyleResult.Yes)]
         public static async Task AssigningInCtor(string expression, CodeStyleResult expected)
         {
@@ -70,7 +70,7 @@ namespace N
         }
 
         [TestCase("this.P", CodeStyleResult.Yes)]
-        [TestCase("P",      CodeStyleResult.No)]
+        [TestCase("P", CodeStyleResult.No)]
         public static async Task Arrow(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -89,8 +89,8 @@ namespace N
         }
 
         [TestCase("this.P = 1", CodeStyleResult.Yes)]
-        [TestCase("P = 1",      CodeStyleResult.No)]
-        [TestCase("",           CodeStyleResult.NotFound)]
+        [TestCase("P = 1", CodeStyleResult.No)]
+        [TestCase("", CodeStyleResult.NotFound)]
         public static async Task FiguresOutFromOtherClass(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(new[]

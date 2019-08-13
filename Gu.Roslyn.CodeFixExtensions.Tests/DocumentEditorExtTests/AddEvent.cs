@@ -9,10 +9,10 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
     using Microsoft.CodeAnalysis.Editing;
     using NUnit.Framework;
 
-    public class AddEvent
+    public static class AddEvent
     {
         [Test]
-        public async Task AddEventFieldDeclarationSyntax()
+        public static async Task AddEventFieldDeclarationSyntax()
         {
             var code = @"
 namespace N
@@ -71,7 +71,7 @@ namespace N
         }
 
         [Test]
-        public async Task AddEventDeclarationSyntax()
+        public static async Task AddEventDeclarationSyntax()
         {
             var code = @"
 namespace N

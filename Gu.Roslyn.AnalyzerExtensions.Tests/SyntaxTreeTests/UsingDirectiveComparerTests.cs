@@ -5,12 +5,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class UsingDirectiveComparerTests
+    public static class UsingDirectiveComparerTests
     {
         [TestCase("System", "System", 0)]
         [TestCase("System", "System.Collections", -1)]
         [TestCase("A", "B", -1)]
-        public void Simple(string s1, string s2, int expected)
+        public static void Simple(string s1, string s2, int expected)
         {
             var ud1 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s1));
             var ud2 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s2));
@@ -20,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
         }
 
         [TestCase("System", "B", -1)]
-        public void SystemFirst(string s1, string s2, int expected)
+        public static void SystemFirst(string s1, string s2, int expected)
         {
             var ud1 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s1));
             var ud2 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s2));

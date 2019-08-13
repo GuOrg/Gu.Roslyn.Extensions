@@ -5,12 +5,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using NUnit.Framework;
 
     // ReSharper disable once InconsistentNaming
-    public class IPropertySymbolExtTests
+    public static class IPropertySymbolExtTests
     {
         [TestCase("GetOnly", true)]
         [TestCase("AutoGetSet", true)]
         [TestCase("ExpressionBody", false)]
-        public void IsAutoProperty(string name, bool expected)
+        public static void IsAutoProperty(string name, bool expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -34,7 +34,7 @@ namespace N
         [TestCase("GetOnly", true)]
         [TestCase("AutoGetSet", false)]
         [TestCase("ExpressionBody", false)]
-        public void IsGetOnly(string name, bool expected)
+        public static void IsGetOnly(string name, bool expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

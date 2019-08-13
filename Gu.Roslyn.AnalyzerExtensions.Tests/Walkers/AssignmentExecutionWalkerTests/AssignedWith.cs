@@ -9,12 +9,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class AssignedWith
+    public static class AssignedWith
     {
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void FieldCtorArg(Scope scope)
+        public static void FieldCtorArg(Scope scope)
         {
             var code = @"
 namespace N
@@ -46,7 +46,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void GenericFieldCtorArg(Scope scope)
+        public static void GenericFieldCtorArg(Scope scope)
         {
             var code = @"
 namespace N
@@ -78,7 +78,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void GenericFieldTypedCtorArg(Scope scope)
+        public static void GenericFieldTypedCtorArg(Scope scope)
         {
             var code = @"
 namespace N
@@ -113,7 +113,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void FieldCtorArgViaLocal(Scope scope)
+        public static void FieldCtorArgViaLocal(Scope scope)
         {
             var code = @"
 namespace N
@@ -145,7 +145,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void FieldCtorArgInNested(Scope scope)
+        public static void FieldCtorArgInNested(Scope scope)
         {
             var code = @"
 namespace N
@@ -179,7 +179,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void ChainedCtorArg(Scope scope)
+        public static void ChainedCtorArg(Scope scope)
         {
             var code = @"
 namespace N
@@ -226,7 +226,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void FieldWithCtorArgViaProperty(Scope scope)
+        public static void FieldWithCtorArgViaProperty(Scope scope)
         {
             var code = @"
 namespace N

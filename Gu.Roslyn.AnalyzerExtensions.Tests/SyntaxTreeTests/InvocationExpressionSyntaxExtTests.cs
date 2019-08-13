@@ -6,13 +6,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class InvocationExpressionSyntaxExtTests
+    public static class InvocationExpressionSyntaxExtTests
     {
         [TestCase("Method1()", "Method1")]
         [TestCase("this.Method1()", "Method1")]
         [TestCase("new C()?.Method1()", "Method1")]
         [TestCase("this.Method2<int>()", "Method2")]
-        public void TryGetInvokedMethodName(string expression, string expected)
+        public static void TryGetInvokedMethodName(string expression, string expected)
         {
             var code = @"
 namespace N
@@ -38,7 +38,7 @@ namespace N
         }
 
         [Test]
-        public void TryGetTargetAssemblyGetType()
+        public static void TryGetTargetAssemblyGetType()
         {
             var code = @"
 namespace N
@@ -63,7 +63,7 @@ namespace N
         }
 
         [Test]
-        public void TryGetTargetAssemblyGetTypeWithParameterByName()
+        public static void TryGetTargetAssemblyGetTypeWithParameterByName()
         {
             var code = @"
 namespace N
@@ -89,7 +89,7 @@ namespace N
         }
 
         [Test]
-        public void TryGetTargetAssemblyGetTypeWithParameterByType()
+        public static void TryGetTargetAssemblyGetTypeWithParameterByType()
         {
             var code = @"
 namespace N
@@ -115,7 +115,7 @@ namespace N
         }
 
         [Test]
-        public void TryGetTargetAssemblyGetTypeWithParameterByNameAndType()
+        public static void TryGetTargetAssemblyGetTypeWithParameterByNameAndType()
         {
             var code = @"
 namespace N

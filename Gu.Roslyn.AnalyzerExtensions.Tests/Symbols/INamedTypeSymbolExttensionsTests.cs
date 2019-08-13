@@ -12,7 +12,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using NUnit.Framework;
 
     // ReSharper disable once InconsistentNaming
+#pragma warning disable GURA07 // Test class should be internal static.
     public class INamedTypeSymbolExtensionsTests
+#pragma warning restore GURA07 // Test class should be internal static.
     {
         [TestCase(typeof(int))]
         [TestCase(typeof(Nullable<>))]
@@ -21,7 +23,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
         [TestCase(typeof(List<>))]
         [TestCase(typeof(Dictionary<,>))]
         [TestCase(typeof(Nested))]
-        public void FullName(Type type)
+        public static void FullName(Type type)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -74,9 +76,9 @@ namespace N
             }
         }
 
-#pragma warning disable CA1812 // Avoid uninstantiated internal classes
+#pragma warning disable CA1812, GURA07 // Avoid uninstantiated internal classes
         private class Nested
-#pragma warning restore CA1812 // Avoid uninstantiated internal classes
+#pragma warning restore CA1812, GURA07 // Avoid uninstantiated internal classes
         {
         }
     }

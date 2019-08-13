@@ -33,7 +33,7 @@ namespace N
             using (var walker = MutationWalker.For(symbol, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual(mutation, walker.All().Single().ToString());
-                Assert.AreEqual(true,     walker.TrySingle(out var single));
+                Assert.AreEqual(true, walker.TrySingle(out var single));
                 Assert.AreEqual(mutation, single.ToString());
             }
         }

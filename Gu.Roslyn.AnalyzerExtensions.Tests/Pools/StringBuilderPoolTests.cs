@@ -2,10 +2,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
 {
     using NUnit.Framework;
 
-    public class StringBuilderPoolTests
+    public static class StringBuilderPoolTests
     {
         [Test]
-        public void BorrowAppendLineReturn()
+        public static void BorrowAppendLineReturn()
         {
             var text = StringBuilderPool.Borrow()
                                         .AppendLine("a")

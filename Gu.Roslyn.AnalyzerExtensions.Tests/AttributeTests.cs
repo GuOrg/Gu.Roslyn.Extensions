@@ -5,13 +5,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class AttributeTests
+    public static class AttributeTests
     {
         [TestCase("[System.Obsolete]")]
         [TestCase("[Obsolete]")]
         [TestCase("[ObsoleteAttribute]")]
         [TestCase("[System.ObsoleteAttribute]")]
-        public void Test(string attribute)
+        public static void Test(string attribute)
         {
             string code = @"
 namespace N

@@ -6,10 +6,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class FieldSymbolComparerTests
+    public static class FieldSymbolComparerTests
     {
         [Test]
-        public void Equals()
+        public static void Equals()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -36,7 +36,7 @@ namespace N
         }
 
         [Test]
-        public void Inherited()
+        public static void Inherited()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

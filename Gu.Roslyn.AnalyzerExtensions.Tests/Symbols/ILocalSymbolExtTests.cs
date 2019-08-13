@@ -7,10 +7,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using NUnit.Framework;
 
     // ReSharper disable once InconsistentNaming
-    public class ILocalSymbolExtTests
+    public static class ILocalSymbolExtTests
     {
         [Test]
-        public void LocalInCtor()
+        public static void LocalInCtor()
         {
             var code = @"
 namespace N
@@ -33,7 +33,7 @@ namespace N
         }
 
         [Test]
-        public void LocalInMethod()
+        public static void LocalInMethod()
         {
             var code = @"
 namespace N
@@ -56,7 +56,7 @@ namespace N
         }
 
         [Test]
-        public void LocalInLocalFunction()
+        public static void LocalInLocalFunction()
         {
             var code = @"
 namespace N
@@ -82,7 +82,7 @@ namespace N
         }
 
         [Test]
-        public void LocalInLambda()
+        public static void LocalInLambda()
         {
             var code = @"
 namespace N

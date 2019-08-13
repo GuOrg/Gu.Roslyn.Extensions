@@ -2,7 +2,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
     using NUnit.Framework;
 
-    public class StringHelperTests
+    public static class StringHelperTests
     {
         [TestCase("ab", "a", "b", true)]
         [TestCase("ab", "ab", "", true)]
@@ -16,13 +16,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         [TestCase("ab", "", "abc", false)]
         [TestCase("ab", null, "abc", false)]
         [TestCase("ab", "cd", "ab", false)]
-        public void IsTwoParts(string text, string part1, string part2, bool expected)
+        public static void IsTwoParts(string text, string part1, string part2, bool expected)
         {
             Assert.AreEqual(expected, text.IsParts(part1, part2));
         }
 
         [TestCase("<summary>Identifies the <see cref=\"P\"/> dependency property.</summary>", "<summary>Identifies the <see cref=\"", "P", "\"/> dependency property.</summary>", true)]
-        public void IsThreeParts(string text, string part1, string part2, string part3, bool expected)
+        public static void IsThreeParts(string text, string part1, string part2, string part3, bool expected)
         {
             Assert.AreEqual(expected, text.IsParts(part1, part2, part3));
         }
@@ -32,7 +32,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         [TestCase("abc", "a", null, "b", "c", true)]
         [TestCase("abc", null, "a", "b", "c", true)]
         [TestCase("abcd", "a", "b", "c", "d", true)]
-        public void IsFourParts(string text, string part1, string part2, string part3, string part4, bool expected)
+        public static void IsFourParts(string text, string part1, string part2, string part3, string part4, bool expected)
         {
             Assert.AreEqual(expected, text.IsParts(part1, part2, part3, part4));
         }
@@ -43,7 +43,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         [TestCase("abcd", "a", null, "b", "c", "d", true)]
         [TestCase("abcd", null, "a", "b", "c", "d", true)]
         [TestCase("abcde", "a", "b", "c", "d", "e", true)]
-        public void IsFiveParts(string text, string part1, string part2, string part3, string part4, string part5, bool expected)
+        public static void IsFiveParts(string text, string part1, string part2, string part3, string part4, string part5, bool expected)
         {
             Assert.AreEqual(expected, text.IsParts(part1, part2, part3, part4, part5));
         }

@@ -5,10 +5,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class QualifiedOverloadTests
+    public static class QualifiedOverloadTests
     {
         [Test]
-        public void SymbolEquality()
+        public static void SymbolEquality()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -25,7 +25,7 @@ namespace N
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindMethodDeclaration("M"));
             var qualifiedMethod = new QualifiedOverload(new QualifiedType("N.C"), "M", ImmutableArray<QualifiedParameter>.Empty);
-            Assert.AreEqual(true,  symbol == qualifiedMethod);
+            Assert.AreEqual(true, symbol == qualifiedMethod);
             Assert.AreEqual(false, symbol != qualifiedMethod);
         }
     }

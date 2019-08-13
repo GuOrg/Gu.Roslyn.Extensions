@@ -7,21 +7,21 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.MemberPathTests
 
     public static class TryFindLast
     {
-        [TestCase("this.C",                  "C")]
-        [TestCase("C",                       "C")]
-        [TestCase("C.Inner",                 "Inner")]
-        [TestCase("this.C.Inner",            "Inner")]
-        [TestCase("C.Inner.C",               "C")]
-        [TestCase("C.Inner.C.Inner",         "Inner")]
-        [TestCase("this.C.Inner.C.Inner",    "Inner")]
-        [TestCase("this.C?.Inner.C.Inner",   "Inner")]
-        [TestCase("this.C?.Inner?.C.Inner",  "Inner")]
+        [TestCase("this.C", "C")]
+        [TestCase("C", "C")]
+        [TestCase("C.Inner", "Inner")]
+        [TestCase("this.C.Inner", "Inner")]
+        [TestCase("C.Inner.C", "C")]
+        [TestCase("C.Inner.C.Inner", "Inner")]
+        [TestCase("this.C.Inner.C.Inner", "Inner")]
+        [TestCase("this.C?.Inner.C.Inner", "Inner")]
+        [TestCase("this.C?.Inner?.C.Inner", "Inner")]
         [TestCase("this.C?.Inner?.C?.Inner", "Inner")]
-        [TestCase("this.C.Inner?.C.Inner",   "Inner")]
-        [TestCase("this.C.Inner?.C?.Inner",  "Inner")]
-        [TestCase("this.C.Inner.C?.Inner",   "Inner")]
-        [TestCase("(meh as C)?.Inner",       "Inner")]
-        [TestCase("((C)meh)?.Inner",         "Inner")]
+        [TestCase("this.C.Inner?.C.Inner", "Inner")]
+        [TestCase("this.C.Inner?.C?.Inner", "Inner")]
+        [TestCase("this.C.Inner.C?.Inner", "Inner")]
+        [TestCase("(meh as C)?.Inner", "Inner")]
+        [TestCase("((C)meh)?.Inner", "Inner")]
         public static void PropertyOrField(string expression, string expected)
         {
             var code = @"
@@ -44,7 +44,7 @@ namespace N
 }".AssertReplace("C.Inner", expression);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var value = syntaxTree.FindExpression(expression);
-            Assert.AreEqual(true,     MemberPath.TryFindLast(value, out var member));
+            Assert.AreEqual(true, MemberPath.TryFindLast(value, out var member));
             Assert.AreEqual(expected, member.ToString());
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());

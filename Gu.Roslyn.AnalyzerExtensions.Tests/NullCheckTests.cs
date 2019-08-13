@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class NullCheckTests
+    public static class NullCheckTests
     {
         [TestCase("text == null")]
         [TestCase("null == text")]
@@ -21,7 +21,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
         [TestCase("Object.Equals(null, text)")]
         [TestCase("ReferenceEquals(text, null)")]
         [TestCase("ReferenceEquals(null, text)")]
-        public void IsNullCheck(string check)
+        public static void IsNullCheck(string check)
         {
             var code = @"
 namespace N
@@ -40,7 +40,7 @@ namespace N
 
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true,   NullCheck.IsNullCheck(expression, semanticModel, CancellationToken.None, out value));
+            Assert.AreEqual(true, NullCheck.IsNullCheck(expression, semanticModel, CancellationToken.None, out value));
             Assert.AreEqual("text", value.ToString());
         }
 
@@ -48,7 +48,7 @@ namespace N
         [TestCase("text != null")]
         [TestCase("text == null && other == null")]
         [TestCase("text is null")]
-        public void IsCheckedWhenOldStyleNullCheck(string check)
+        public static void IsCheckedWhenOldStyleNullCheck(string check)
         {
             var code = @"
 namespace N
@@ -79,7 +79,7 @@ namespace N
         }
 
         [Test]
-        public void IsCheckedWhenCoalesceThrow()
+        public static void IsCheckedWhenCoalesceThrow()
         {
             var code = @"
 namespace N
@@ -105,7 +105,7 @@ namespace N
         }
 
         [Test]
-        public void IsCheckedWhenOldStyleNullCheckOrOtherCheck()
+        public static void IsCheckedWhenOldStyleNullCheckOrOtherCheck()
         {
             var code = @"
 namespace N

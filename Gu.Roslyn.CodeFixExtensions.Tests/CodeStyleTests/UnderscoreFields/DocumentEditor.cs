@@ -27,10 +27,10 @@ namespace N
             Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.UnderscoreFields(editor));
         }
 
-        [TestCase("private int _f",              CodeStyleResult.Yes)]
+        [TestCase("private int _f", CodeStyleResult.Yes)]
         [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
-        [TestCase("private int f",               CodeStyleResult.No)]
-        [TestCase("private readonly int f",      CodeStyleResult.No)]
+        [TestCase("private int f", CodeStyleResult.No)]
+        [TestCase("private readonly int f", CodeStyleResult.No)]
         public static void FiguresOutFromDocument(string declaration, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(new[]
@@ -51,10 +51,10 @@ namespace N
             }
         }
 
-        [TestCase("private int _f",              CodeStyleResult.Yes)]
+        [TestCase("private int _f", CodeStyleResult.Yes)]
         [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
-        [TestCase("private int f",               CodeStyleResult.No)]
-        [TestCase("private readonly int f",      CodeStyleResult.No)]
+        [TestCase("private int f", CodeStyleResult.No)]
+        [TestCase("private readonly int f", CodeStyleResult.No)]
         public static void FiguresOutFromOtherDocument(string declaration, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(new[]

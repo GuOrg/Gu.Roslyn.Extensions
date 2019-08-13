@@ -219,7 +219,7 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree1, syntaxTree2 });
             var semanticModel = compilation.GetSemanticModel(syntaxTree1);
             Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(semanticModel, out var newLine));
-            Assert.AreEqual(true,                newLine);
+            Assert.AreEqual(true, newLine);
         }
 
         [Test]

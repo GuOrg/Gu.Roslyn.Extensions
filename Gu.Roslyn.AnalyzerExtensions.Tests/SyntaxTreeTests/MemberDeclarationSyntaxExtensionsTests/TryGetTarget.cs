@@ -5,10 +5,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.MemberDeclarationSy
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class TryGetTarget
+    public static class TryGetTarget
     {
         [Test]
-        public void TryGetTargetProperty()
+        public static void TryGetTargetProperty()
         {
             var code = @"
 namespace N

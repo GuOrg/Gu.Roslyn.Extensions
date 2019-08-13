@@ -5,10 +5,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class UsingStaticWalkerTests
+    public static class UsingStaticWalkerTests
     {
         [Test]
-        public void Borrow()
+        public static void Borrow()
         {
             var tree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -35,7 +35,7 @@ namespace N
         }
 
         [Test]
-        public void TryGetForType()
+        public static void TryGetForType()
         {
             var tree = CSharpSyntaxTree.ParseText(@"
 namespace N

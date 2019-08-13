@@ -4,10 +4,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class DocumentationCommentTriviaSyntaxExtensionsTests
+    public static class DocumentationCommentTriviaSyntaxExtensionsTests
     {
         [Test]
-        public void Summary()
+        public static void Summary()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -30,7 +30,7 @@ namespace N
         }
 
         [Test]
-        public void SummaryWithPragma()
+        public static void SummaryWithPragma()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -54,7 +54,7 @@ namespace N
         }
 
         [Test]
-        public void TypeParam()
+        public static void TypeParam()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -78,7 +78,7 @@ namespace N
         }
 
         [Test]
-        public void Param()
+        public static void Param()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -102,7 +102,7 @@ namespace N
         }
 
         [Test]
-        public void Returns()
+        public static void Returns()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

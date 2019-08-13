@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class PropertyDeclarationComparerTests
+    public static class PropertyDeclarationComparerTests
     {
         private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -80,7 +80,7 @@ namespace N
         private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases().ToArray();
 
         [TestCaseSource(nameof(TestCaseSource))]
-        public void Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+        public static void Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
         {
             Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
@@ -89,7 +89,7 @@ namespace N
         }
 
         [TestCaseSource(nameof(TestCaseSource))]
-        public void MemberDeclarationComparerCompare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+        public static void MemberDeclarationComparerCompare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
         {
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
@@ -100,7 +100,7 @@ namespace N
         [TestCase("public int Value { get; }", "public int Value => 1;")]
         [TestCase("public int Value => 1;", "public int Value { get; set; }")]
         [TestCase("public int Value { get; private set; }", "public int Value { get; set; }")]
-        public void NoSpan(string code1, string code2)
+        public static void NoSpan(string code1, string code2)
         {
             var x = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code1).Members.Single();
             var y = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code2).Members.Single();
@@ -109,7 +109,7 @@ namespace N
         }
 
         [Test]
-        public void InitializedWithOther()
+        public static void InitializedWithOther()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -128,7 +128,7 @@ namespace N
             Assert.AreEqual(0, PropertyDeclarationComparer.Compare(y, y));
         }
 
-        private static IEnumerable<TestCaseData> CreateTestCases()
+        public static IEnumerable<TestCaseData> CreateTestCases()
         {
             var c = SyntaxTree.FindClassDeclaration("C");
             foreach (var member1 in c.Members)

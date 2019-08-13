@@ -7,10 +7,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class IdentifierNameWalkerTests
+    public static class IdentifierNameWalkerTests
     {
         [Test]
-        public void TryFindWhenParameter()
+        public static void TryFindWhenParameter()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -34,7 +34,7 @@ namespace N
         }
 
         [Test]
-        public void ForWhenParameter()
+        public static void ForWhenParameter()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -53,14 +53,14 @@ namespace N
             using (var walker = IdentifierNameWalker.For(parameter, semanticModel, CancellationToken.None))
             {
                 CollectionAssert.AreEqual(new[] { "i" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
-                Assert.AreEqual(true,  walker.TryFind("i", out var match));
-                Assert.AreEqual("i",   match.Identifier.ValueText);
+                Assert.AreEqual(true, walker.TryFind("i", out var match));
+                Assert.AreEqual("i", match.Identifier.ValueText);
                 Assert.AreEqual(false, walker.TryFind("missing", out _));
             }
         }
 
         [Test]
-        public void ForWhenLocal()
+        public static void ForWhenLocal()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -80,14 +80,14 @@ namespace N
             using (var walker = IdentifierNameWalker.For(local, semanticModel, CancellationToken.None))
             {
                 CollectionAssert.AreEqual(new[] { "i" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
-                Assert.AreEqual(true,  walker.TryFind("i", out var match));
-                Assert.AreEqual("i",   match.Identifier.ValueText);
+                Assert.AreEqual(true, walker.TryFind("i", out var match));
+                Assert.AreEqual("i", match.Identifier.ValueText);
                 Assert.AreEqual(false, walker.TryFind("missing", out _));
             }
         }
 
         [Test]
-        public void TryFindWhenProperty()
+        public static void TryFindWhenProperty()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -115,7 +115,7 @@ namespace N
         }
 
         [Test]
-        public void TryFindFirst()
+        public static void TryFindFirst()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -145,7 +145,7 @@ namespace N
         }
 
         [Test]
-        public void TryFindLast()
+        public static void TryFindLast()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

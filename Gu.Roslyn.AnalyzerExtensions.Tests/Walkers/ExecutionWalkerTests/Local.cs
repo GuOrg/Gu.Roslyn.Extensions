@@ -7,9 +7,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
 
     public static class Local
     {
-        [TestCase(Scope.Member,    "2")]
-        [TestCase(Scope.Instance,  "1, 2")]
-        [TestCase(Scope.Type,      "1, 2")]
+        [TestCase(Scope.Member, "2")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public static void LocalDeclarationWithExpressionBody(Scope scope, string expected)
         {
@@ -36,9 +36,9 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member,    "2")]
-        [TestCase(Scope.Instance,  "1, 2")]
-        [TestCase(Scope.Type,      "1, 2")]
+        [TestCase(Scope.Member, "2")]
+        [TestCase(Scope.Instance, "1, 2")]
+        [TestCase(Scope.Type, "1, 2")]
         [TestCase(Scope.Recursive, "1, 2")]
         public static void LocalDeclarationWithCastExpressionBody(Scope scope, string expected)
         {

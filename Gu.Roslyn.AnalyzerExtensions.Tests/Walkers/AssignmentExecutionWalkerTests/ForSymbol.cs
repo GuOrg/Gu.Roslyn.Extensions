@@ -8,12 +8,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class ForSymbol
+    public static class ForSymbol
     {
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void FieldWithCtorArg(Scope scope)
+        public static void FieldWithCtorArg(Scope scope)
         {
             var code = @"
 namespace N
@@ -47,7 +47,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void FieldWithChainedCtorArg(Scope scope)
+        public static void FieldWithChainedCtorArg(Scope scope)
         {
             var code = @"
 namespace N
@@ -94,7 +94,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void FieldPrivateCtorCalledByInitializer(Scope scope)
+        public static void FieldPrivateCtorCalledByInitializer(Scope scope)
         {
             var code = @"
 namespace N
@@ -128,7 +128,7 @@ namespace N
         [TestCase(Scope.Member)]
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Recursive)]
-        public void FieldWithCtorArgViaProperty(Scope scope)
+        public static void FieldWithCtorArgViaProperty(Scope scope)
         {
             var code = @"
 namespace N
@@ -177,7 +177,7 @@ namespace N
         [TestCase(Scope.Instance)]
         [TestCase(Scope.Type)]
         [TestCase(Scope.Recursive)]
-        public void FieldInPropertyExpressionBody(Scope scope)
+        public static void FieldInPropertyExpressionBody(Scope scope)
         {
             var code = @"
 namespace N

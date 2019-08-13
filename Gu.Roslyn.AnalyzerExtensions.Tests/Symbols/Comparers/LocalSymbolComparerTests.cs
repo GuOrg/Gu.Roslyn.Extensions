@@ -6,10 +6,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class LocalSymbolComparerTests
+    public static class LocalSymbolComparerTests
     {
         [Test]
-        public void Equals()
+        public static void Equals()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

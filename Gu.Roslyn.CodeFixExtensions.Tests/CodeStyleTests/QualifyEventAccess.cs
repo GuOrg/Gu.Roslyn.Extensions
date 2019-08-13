@@ -29,12 +29,12 @@ namespace N
             Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyEventAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("E?.Invoke();",      CodeStyleResult.No)]
-        [TestCase("E.Invoke();",       CodeStyleResult.No)]
-        [TestCase("E();",              CodeStyleResult.No)]
+        [TestCase("E?.Invoke();", CodeStyleResult.No)]
+        [TestCase("E.Invoke();", CodeStyleResult.No)]
+        [TestCase("E();", CodeStyleResult.No)]
         [TestCase("this.E?.Invoke();", CodeStyleResult.Yes)]
-        [TestCase("this.E.Invoke();",  CodeStyleResult.Yes)]
-        [TestCase("this.E();",         CodeStyleResult.Yes)]
+        [TestCase("this.E.Invoke();", CodeStyleResult.Yes)]
+        [TestCase("this.E();", CodeStyleResult.Yes)]
         public static async Task RaisingInMethod(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"

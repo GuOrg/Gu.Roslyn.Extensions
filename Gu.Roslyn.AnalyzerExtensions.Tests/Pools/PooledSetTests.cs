@@ -3,10 +3,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
 {
     using NUnit.Framework;
 
-    public class PooledSetTests
+    public static class PooledSetTests
     {
         [Test]
-        public void UsingBorrow()
+        public static void UsingBorrow()
         {
             using (PooledSet<int>.Borrow())
             {
@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         }
 
         [Test]
-        public void UsingBorrowBorrowOrIncrementUsage()
+        public static void UsingBorrowBorrowOrIncrementUsage()
         {
             using (var set = PooledSet<int>.Borrow())
             {
@@ -28,7 +28,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         }
 
         [TestCase(null)]
-        public void UsingBorrowOrIncrementUsageNull(PooledSet<int> arg)
+        public static void UsingBorrowOrIncrementUsageNull(PooledSet<int> arg)
         {
             using (var set = arg.IncrementUsage())
             {
@@ -42,7 +42,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         }
 
         [Test]
-        public void UseSet()
+        public static void UseSet()
         {
             using (var set = ((PooledSet<int>)null).IncrementUsage())
             {
@@ -52,7 +52,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         }
 
         [Test]
-        public void UsingBorrowAddForeach()
+        public static void UsingBorrowAddForeach()
         {
             using (var set = PooledSet<int>.Borrow())
             {
@@ -64,7 +64,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         }
 
         [Test]
-        public void UsingBorrowAddForeachCallId()
+        public static void UsingBorrowAddForeachCallId()
         {
             using (var set = PooledSet<int>.Borrow())
             {
@@ -76,9 +76,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
             }
         }
 
-        private static int Id(int n) => n;
+        public static int Id(int n) => n;
 
-        private static void UseSet(PooledSet<int> set)
+        public static void UseSet(PooledSet<int> set)
         {
             using (set = set.IncrementUsage())
             {

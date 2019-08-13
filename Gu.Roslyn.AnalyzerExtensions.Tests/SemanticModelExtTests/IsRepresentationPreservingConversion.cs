@@ -5,7 +5,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class IsRepresentationPreservingConversion
+    public static class IsRepresentationPreservingConversion
     {
         [TestCase("Cast<int>(1)")]
         [TestCase("Cast<int?>(1)")]
@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
         [TestCase("Cast<E>(E.M1)")]
         [TestCase("Cast<object>(new object())")]
         [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")")]
-        public void TrueWhen(string call)
+        public static void TrueWhen(string call)
         {
             var e = @"
 namespace N
@@ -61,7 +61,7 @@ namespace N
         [TestCase("Cast<int?>(null)")]
         [TestCase("Cast<int?>((object)null)")]
         [TestCase("Cast<int?>(arg)")]
-        public void TrueWhenNullable(string call)
+        public static void TrueWhenNullable(string call)
         {
             var code = @"
 namespace N
@@ -93,7 +93,7 @@ namespace N
         [TestCase("Cast<int?>((object)1.0)")]
         [TestCase("Cast<double>(1)")]
         [TestCase("Cast<double?>(1)")]
-        public void FalseWhen(string call)
+        public static void FalseWhen(string call)
         {
             var code = @"
 namespace N

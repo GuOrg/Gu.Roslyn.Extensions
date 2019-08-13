@@ -4,11 +4,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class PropertyDeclarationSyntaxExtTests
+    public static class PropertyDeclarationSyntaxExtTests
     {
         [TestCase("Value1", "get { return this.value1; }")]
         [TestCase("Value2", "private get { return value2; }")]
-        public void TryGetGetter(string propertyName, string getter)
+        public static void TryGetGetter(string propertyName, string getter)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -38,7 +38,7 @@ namespace N
 
         [TestCase("Value1", "set { this.value1 = value; }")]
         [TestCase("Value2", "private set { value2 = value; }")]
-        public void TryGetSetter(string propertyName, string setter)
+        public static void TryGetSetter(string propertyName, string setter)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -73,7 +73,7 @@ namespace N
         [TestCase("AutoGetSet", true)]
         [TestCase("ExpressionBodyBackingField", false)]
         [TestCase("StatementBodyBackingField", false)]
-        public void IsAutoProperty(string name, bool expected)
+        public static void IsAutoProperty(string name, bool expected)
         {
             var code = @"
 namespace N
@@ -121,7 +121,7 @@ namespace N
         [TestCase("AutoGetSet", false)]
         [TestCase("ExpressionBodyBackingField", false)]
         [TestCase("StatementBodyBackingField", false)]
-        public void IsGetOnly(string name, bool expected)
+        public static void IsGetOnly(string name, bool expected)
         {
             var code = @"
 namespace N
@@ -167,7 +167,7 @@ namespace N
         [TestCase("StatementBodyGetter")]
         [TestCase("ExpressionBodyBackingField")]
         [TestCase("StatementBodyBackingField")]
-        public void TryGetBackingFieldWhenTrue(string name)
+        public static void TryGetBackingFieldWhenTrue(string name)
         {
             var code = @"
 namespace N
@@ -214,7 +214,7 @@ namespace N
         [TestCase("AutoGetSet")]
         [TestCase("ExpressionBodyBackingField")]
         [TestCase("StatementBodyBackingField")]
-        public void TryGetBackingFieldWhenFalse(string name)
+        public static void TryGetBackingFieldWhenFalse(string name)
         {
             var code = @"
 namespace N

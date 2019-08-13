@@ -31,10 +31,10 @@ namespace N
             Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.UnderscoreFields(semanticModel));
         }
 
-        [TestCase("private int _f",              CodeStyleResult.Yes)]
+        [TestCase("private int _f", CodeStyleResult.Yes)]
         [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
-        [TestCase("private int f",               CodeStyleResult.No)]
-        [TestCase("private readonly int f",      CodeStyleResult.No)]
+        [TestCase("private int f", CodeStyleResult.No)]
+        [TestCase("private readonly int f", CodeStyleResult.No)]
         public static void WhenField(string declaration, CodeStyleResult expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -51,10 +51,10 @@ namespace N
             Assert.AreEqual(expected, CodeStyle.UnderscoreFields(semanticModel));
         }
 
-        [TestCase("private int _f",              CodeStyleResult.Yes)]
+        [TestCase("private int _f", CodeStyleResult.Yes)]
         [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
-        [TestCase("private int f",               CodeStyleResult.No)]
-        [TestCase("private readonly int f",      CodeStyleResult.No)]
+        [TestCase("private int f", CodeStyleResult.No)]
+        [TestCase("private readonly int f", CodeStyleResult.No)]
         public static void FiguresOutFromOtherTree(string declaration, CodeStyleResult expected)
         {
             var c1 = CSharpSyntaxTree.ParseText(@"

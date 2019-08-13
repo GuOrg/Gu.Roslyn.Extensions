@@ -6,10 +6,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class IdentifierNameSyntaxExtensionsTests
+    public static class IdentifierNameSyntaxExtensionsTests
     {
         [Test]
-        public void TryGetTargetProperty()
+        public static void TryGetTargetProperty()
         {
             var code = @"
 namespace N
@@ -30,7 +30,7 @@ namespace N
 
         [TestCase("Length")]
         [TestCase("text")]
-        public void IsSymbol(string identifier)
+        public static void IsSymbol(string identifier)
         {
             var code = @"
 namespace N
@@ -53,7 +53,7 @@ namespace N
         [TestCase("text")]
         [TestCase("number")]
         [TestCase("M")]
-        public void IsSymbolExtensionMethod1(string identifier)
+        public static void IsSymbolExtensionMethod1(string identifier)
         {
             var code = @"
 namespace N
@@ -75,7 +75,7 @@ namespace N
         }
 
         [Test]
-        public void IsSymbolExtensionMethod2()
+        public static void IsSymbolExtensionMethod2()
         {
             var code = @"
 namespace N
@@ -97,7 +97,7 @@ namespace N
         }
 
         [Test]
-        public void IsSymbolExtensionMethodParameter()
+        public static void IsSymbolExtensionMethodParameter()
         {
             var code = @"
 namespace N

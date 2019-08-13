@@ -5,10 +5,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class UsingDirectiveWalkerTests
+    public static class UsingDirectiveWalkerTests
     {
         [Test]
-        public void Borrow()
+        public static void Borrow()
         {
             var tree = CSharpSyntaxTree.ParseText(@"
 namespace N

@@ -74,7 +74,7 @@ namespace N
             Assert.AreEqual(true, compilation.GetSemanticModel(syntaxTree).TryGetNamedType(node, CancellationToken.None, out var namedType));
             Assert.AreEqual(namedType, type);
 
-            Assert.AreEqual(true,      compilation.GetSemanticModel(syntaxTree).TryGetNamedType(node, QualifiedType.System.ObsoleteAttribute, CancellationToken.None, out namedType));
+            Assert.AreEqual(true, compilation.GetSemanticModel(syntaxTree).TryGetNamedType(node, QualifiedType.System.ObsoleteAttribute, CancellationToken.None, out namedType));
             Assert.AreEqual(namedType, type);
 
             Assert.AreEqual(true, compilation.GetSemanticModel(OtherTree).TryGetType(node, CancellationToken.None, out type));

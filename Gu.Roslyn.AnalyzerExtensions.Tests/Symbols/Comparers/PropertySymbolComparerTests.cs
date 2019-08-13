@@ -8,10 +8,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public class PropertySymbolComparerTests
+    public static class PropertySymbolComparerTests
     {
         [Test]
-        public void Equals()
+        public static void Equals()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

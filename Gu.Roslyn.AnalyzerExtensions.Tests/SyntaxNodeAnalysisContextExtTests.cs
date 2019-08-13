@@ -6,10 +6,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
     using Microsoft.CodeAnalysis.Diagnostics;
     using NUnit.Framework;
 
-    public class SyntaxNodeAnalysisContextExtTests
+    public static class SyntaxNodeAnalysisContextExtTests
     {
         [Test]
-        public void PropertiesResourcesCompilerGeneratedAttribute()
+        public static void PropertiesResourcesCompilerGeneratedAttribute()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -81,7 +81,7 @@ namespace N.Properties {
         }
 
         [Test]
-        public void PropertiesResourcesGeneratedCodeAttribute()
+        public static void PropertiesResourcesGeneratedCodeAttribute()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"

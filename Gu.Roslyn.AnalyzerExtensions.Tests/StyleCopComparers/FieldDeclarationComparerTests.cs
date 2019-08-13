@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
-    public class FieldDeclarationComparerTests
+    public static class FieldDeclarationComparerTests
     {
         private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -40,7 +40,7 @@ namespace N
         private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases().ToArray();
 
         [TestCaseSource(nameof(TestCaseSource))]
-        public void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1, FieldDeclarationComparer.Compare(y, x));
@@ -49,7 +49,7 @@ namespace N
         }
 
         [TestCaseSource(nameof(TestCaseSource))]
-        public void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        public static void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
@@ -58,7 +58,7 @@ namespace N
         }
 
         [Test]
-        public void InitializedWithOther()
+        public static void InitializedWithOther()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -78,7 +78,7 @@ namespace N
         }
 
         [Test]
-        public void BackingField()
+        public static void BackingField()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -109,7 +109,7 @@ namespace N
             Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
         }
 
-        private static IEnumerable<TestCaseData> CreateTestCases()
+        public static IEnumerable<TestCaseData> CreateTestCases()
         {
             var c = SyntaxTree.FindClassDeclaration("C");
             foreach (var member1 in c.Members)

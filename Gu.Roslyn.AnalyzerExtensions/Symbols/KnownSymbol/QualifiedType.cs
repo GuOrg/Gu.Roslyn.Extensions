@@ -65,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             this.FullName = fullName;
             this.Namespace = @namespace;
-            this.Type = type;
+            this.Type = type ?? throw new ArgumentNullException(nameof(type));
             this.Alias = alias ?? (type.EndsWith("Attribute", StringComparison.Ordinal) ? type.Substring(0, type.Length - 9) : (string)null);
         }
 
