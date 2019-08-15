@@ -17,7 +17,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithSimplifiedNames<T>(this T node)
             where T : SyntaxNode
         {
-            return (T)SimplifyNamesRewriter.Default.Visit(node);
+            return (T)SimplifyNamesRewriter.Simplify(node);
         }
     }
 }

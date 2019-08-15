@@ -21,9 +21,9 @@ namespace N
     {
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
+            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public)
+            var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("E", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public)
                                                                       .WithSimplifiedNames();
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             _ = editor.AddEvent(containingType, eventDeclaration);
@@ -32,7 +32,7 @@ namespace N
 {
     class C
     {
-        public event System.EventHandler SomeEvent;
+        public event System.EventHandler E;
     }
 }";
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
@@ -50,9 +50,9 @@ namespace N
     {
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
+            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public)
+            var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("E", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public)
                                                                       .WithSimplifiedNames();
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             _ = editor.AddEvent(containingType, eventDeclaration);
@@ -63,7 +63,7 @@ namespace N
 
     class C
     {
-        public event EventHandler SomeEvent;
+        public event EventHandler E;
     }
 }";
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
