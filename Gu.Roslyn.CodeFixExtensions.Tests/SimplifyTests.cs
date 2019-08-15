@@ -68,5 +68,41 @@ namespace N
 }";
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
+
+        [Test]
+        public static async Task Simplify()
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    class C
+    {
+        /// <summary>
+        /// <see cref=""System.EventHandler""/>
+        /// </summary>
+        public event System.EventHandler E;
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+            _ = editor.ReplaceNode(containingType, x => x.WithSimplifiedNames());
+            var expected = @"
+namespace N
+{
+    using System;
+
+    class C
+    {
+        /// <summary>
+        /// <see cref=""EventHandler""/>
+        /// </summary>
+        public event EventHandler E;
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
     }
 }
