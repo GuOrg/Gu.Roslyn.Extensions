@@ -1,3 +1,10 @@
+#### 0.6.2
+FEATURE: DocumentEditor.MoveBefore and MoveAfter.
+BUGFIX: Simplify in doc comments.
+BUGFIX: AttributeSyntaxExt.TryFindArgument when name.
+BREAKING: Move TryFindArgument to AttributeSyntaxExt.
+FEATURE: QualifiedType.Equals handle alias.
+
 #### 0.6
 * BREAKING: rename SyntaxTreeCache and SyntaxTreeCacheAnalyzer
 * BREAKING: Remove unused CanecllationToken parameter in IsRepresentationPreservingConversion

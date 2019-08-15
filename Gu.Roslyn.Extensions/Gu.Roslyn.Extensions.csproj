@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.6.1-dev</Version>
+    <Version>0.6.2-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -18,13 +18,11 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer codefix</PackageTags>
     <PackageReleaseNotes>
-      BREAKING: rename SyntaxTreeCache and SyntaxTreeCacheAnalyzer
-      BREAKING: Remove unused CanecllationToken parameter in IsRepresentationPreservingConversion
-      FEATURE: Equality
-      BUGFIX: Nullcheck
-      BREAKING: MemberPath.Tokens was IdentiferNames.
-      BREAKING: Cache.Begin returns transaction.
-      BREAKING: return CodeStyleResult
+      FEATURE: DocumentEditor.MoveBefore and MoveAfter.
+      BUGFIX: Simplify in doc comments.
+      BUGFIX: AttributeSyntaxExt.TryFindArgument when name.
+      BREAKING: Move TryFindArgument to AttributeSyntaxExt.
+      FEATURE: QualifiedType.Equals handle alias.
     </PackageReleaseNotes>
   </PropertyGroup>
 
