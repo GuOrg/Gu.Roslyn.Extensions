@@ -142,5 +142,139 @@ namespace N
 }";
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
+
+        [Test]
+        public static async Task MovePropertyAfterFirst()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        public int P1 { get; set; }
+
+        public int P2 { get; set; }
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        public int P2 { get; set; }
+
+        public int P1 { get; set; }
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task MovePropertyAfterSecond()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        public int P1 { get; set; }
+
+        public int P2 { get; set; }
+
+        public int P3 { get; set; }
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P3"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        public int P1 { get; set; }
+
+        public int P3 { get; set; }
+
+        public int P2 { get; set; }
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task MoveStatementAfterFirst()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        C()
+        {
+            var a = 1;
+            var b = 1;
+        }
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        C()
+        {
+            var b = 1;
+            var a = 1;
+        }
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task MoveStatementAfterSecond()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        C()
+        {
+            var a = 1;
+            var b = 1;
+            var c = 1;
+        }
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var c = 1;"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        C()
+        {
+            var a = 1;
+            var c = 1;
+            var b = 1;
+        }
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
     }
 }

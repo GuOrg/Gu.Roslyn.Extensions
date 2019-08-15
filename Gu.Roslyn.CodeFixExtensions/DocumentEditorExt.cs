@@ -102,6 +102,45 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
+        /// Move <paramref name="toMove"></paramref> before <paramref name="member">.</paramref>.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="toMove">The <see cref="MemberDeclarationSyntax"/> to move.</param>
+        /// <param name="member">The new <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
+        public static DocumentEditor MoveAfter(this DocumentEditor editor, MemberDeclarationSyntax toMove, MemberDeclarationSyntax member)
+        {
+            if (editor == null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            if (toMove == null)
+            {
+                throw new ArgumentNullException(nameof(toMove));
+            }
+
+            if (member == null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            editor.RemoveNode(toMove);
+            if (toMove.Parent is TypeDeclarationSyntax typeDeclaration &&
+                typeDeclaration.Members.IndexOf(toMove) == 0)
+            {
+                editor.InsertAfter(member, new[] { toMove.WithLeadingElasticLineFeed() });
+                editor.ReplaceNode(member, member.WithLeadingElasticLineFeed());
+            }
+            else
+            {
+                editor.InsertAfter(member, new[] { toMove });
+            }
+
+            return editor;
+        }
+
+        /// <summary>
         /// Move <paramref name="toMove"></paramref> before <paramref name="statement">.</paramref>.
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
@@ -127,6 +166,35 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             editor.RemoveNode(toMove);
             editor.InsertBefore(statement, new[] { toMove });
+            return editor;
+        }
+
+        /// <summary>
+        /// Move <paramref name="toMove"></paramref> before <paramref name="statement">.</paramref>.
+        /// </summary>
+        /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
+        /// <param name="toMove">The <see cref="StatementSyntax"/> to move.</param>
+        /// <param name="statement">The new <see cref="StatementSyntax"/>.</param>
+        /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
+        public static DocumentEditor MoveAfter(this DocumentEditor editor, StatementSyntax toMove, StatementSyntax statement)
+        {
+            if (editor == null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            if (toMove == null)
+            {
+                throw new ArgumentNullException(nameof(toMove));
+            }
+
+            if (statement == null)
+            {
+                throw new ArgumentNullException(nameof(statement));
+            }
+
+            editor.RemoveNode(toMove);
+            editor.InsertAfter(statement, new[] { toMove });
             return editor;
         }
 
