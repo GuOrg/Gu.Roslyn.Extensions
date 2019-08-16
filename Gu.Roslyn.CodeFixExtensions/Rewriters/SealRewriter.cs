@@ -142,7 +142,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             if (!classDeclaration.Modifiers.Any(SyntaxKind.SealedKeyword))
             {
-                classDeclaration = classDeclaration.WithModifiers(classDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.SealedKeyword)));
+                if (classDeclaration.Modifiers.IndexOf(SyntaxKind.PartialKeyword) is var index &&
+                    index >= 0)
+                {
+                    classDeclaration = classDeclaration.WithModifiers(classDeclaration.Modifiers.Insert(index, SyntaxFactory.Token(SyntaxKind.SealedKeyword)));
+                }
+                else
+                {
+                    classDeclaration = classDeclaration.WithModifiers(classDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.SealedKeyword)));
+                }
             }
 
             return (ClassDeclarationSyntax)base.VisitClassDeclaration(classDeclaration);
