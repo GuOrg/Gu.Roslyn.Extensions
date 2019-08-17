@@ -52,6 +52,27 @@ namespace N
 }");
             Assert.AreEqual(true, AliasWalker.TryGet(tree, "A", out var directive));
             Assert.AreEqual("using A = NUnit.Framework.Assert;", directive.ToString());
+            Assert.AreEqual(false, AliasWalker.TryGet(tree, "C", out _));
+        }
+
+        [Test]
+        public static void TryGetForNameWhenAliasedWithSameName()
+        {
+            var tree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    using String = System.String;
+
+    public class C
+    {
+        public C(String s)
+        {
+        }
+    }
+}");
+            Assert.AreEqual(true,                                AliasWalker.TryGet(tree, "String", out var directive));
+            Assert.AreEqual("using String = System.String;", directive.ToString());
+            Assert.AreEqual(false,                               AliasWalker.TryGet(tree, "string", out _));
         }
 
         [Test]
@@ -74,6 +95,27 @@ namespace N
             Assert.AreEqual("using A = NUnit.Framework.Assert;", directive.ToString());
 
             Assert.AreEqual(false,                                AliasWalker.TryGet(tree, new QualifiedType("System.String"), out _));
+        }
+
+        [Test]
+        public static void TryGetForTypeWhenAliasedWithSameName()
+        {
+            var tree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    using String = System.String;
+
+    public class C
+    {
+        public C(String s)
+        {
+        }
+    }
+}");
+            Assert.AreEqual(true,                                AliasWalker.TryGet(tree, new QualifiedType("System.String"), out var directive));
+            Assert.AreEqual("using String = System.String;", directive.ToString());
+
+            Assert.AreEqual(false, AliasWalker.TryGet(tree, new QualifiedType("System.Int32"), out _));
         }
     }
 }
