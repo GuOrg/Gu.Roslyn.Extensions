@@ -4,6 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public static class TryGetType
@@ -81,6 +82,32 @@ namespace N
 
             Assert.AreEqual(true, compilation.GetSemanticModel(OtherTree).TryGetNamedType(node, CancellationToken.None, out namedType));
             Assert.AreEqual(namedType, type);
+        }
+
+        [TestCase("ObsoleteAttribute")]
+        [TestCase("System.ObsoleteAttribute")]
+        public static void TryGetNamedTypeWhenAliasWithSameName(string typeName)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    using System;
+    using Window = System.Windows.Window;
+
+    [ObsoleteAttribute]
+    internal class C
+    {
+    }
+}".AssertReplace("ObsoleteAttribute", typeName));
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var qualifiedType = QualifiedType.FromType(typeof(System.ObsoleteAttribute));
+            var attribute = syntaxTree.Find<AttributeSyntax>(typeName);
+            Assert.AreEqual(true,                semanticModel.TryGetNamedType(attribute, qualifiedType, CancellationToken.None, out var type));
+            Assert.AreEqual("ObsoleteAttribute", type.Name);
+
+            qualifiedType = QualifiedType.FromType(typeof(System.Attribute));
+            Assert.AreEqual(false,                semanticModel.TryGetNamedType(attribute, qualifiedType, CancellationToken.None, out _));
         }
     }
 }

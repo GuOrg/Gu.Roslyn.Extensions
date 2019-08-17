@@ -72,6 +72,8 @@ namespace N
 }");
             Assert.AreEqual(true, AliasWalker.TryGet(tree, new QualifiedType("NUnit.Framework.Assert"), out var directive));
             Assert.AreEqual("using A = NUnit.Framework.Assert;", directive.ToString());
+
+            Assert.AreEqual(false,                                AliasWalker.TryGet(tree, new QualifiedType("System.String"), out _));
         }
     }
 }

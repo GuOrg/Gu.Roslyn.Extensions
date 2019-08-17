@@ -22,7 +22,7 @@ namespace N
 }".AssertReplace("[Obsolete(\"abc\")]", attributeText);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var attribute = syntaxTree.FindAttribute(attributeText);
-            Assert.AreEqual(true, attribute.TrySingleArgument(out var argument));
+            Assert.AreEqual(true,      attribute.TrySingleArgument(out var argument));
             Assert.AreEqual("\"abc\"", argument.Expression.ToString());
         }
 
@@ -42,7 +42,7 @@ namespace N
 }".AssertReplace("[Obsolete(\"abc\")]", attributeText);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var attribute = syntaxTree.FindAttribute(attributeText);
-            Assert.AreEqual(true, attribute.TryFindArgument(0, "message", out var argument));
+            Assert.AreEqual(true,      attribute.TryFindArgument(0, "message", out var argument));
             Assert.AreEqual("\"abc\"", argument.Expression.ToString());
         }
 
@@ -62,7 +62,7 @@ namespace N
 }".AssertReplace("[Obsolete(\"abc\", true)]", attributeText);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var attribute = syntaxTree.FindAttribute(attributeText);
-            Assert.AreEqual(true,      attribute.TryFindArgument(1, "error", out var argument));
+            Assert.AreEqual(true,   attribute.TryFindArgument(1, "error", out var argument));
             Assert.AreEqual("true", argument.Expression.ToString());
         }
 
@@ -71,10 +71,10 @@ namespace N
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(attributeText);
             var attribute = syntaxTree.FindAttribute(attributeText);
-            Assert.AreEqual(true,   attribute.TryFindArgument(0, "assemblyName", out var argument));
+            Assert.AreEqual(true,      attribute.TryFindArgument(0, "assemblyName", out var argument));
             Assert.AreEqual("\"abc\"", argument.Expression.ToString());
-            Assert.AreEqual(true,   attribute.TryFindArgument(1, "AllInternalsVisible", out argument));
-            Assert.AreEqual("true", argument.Expression.ToString());
+            Assert.AreEqual(true,      attribute.TryFindArgument(1, "AllInternalsVisible", out argument));
+            Assert.AreEqual("true",    argument.Expression.ToString());
         }
 
         [TestCase("[Obsolete(\"abc\")]")]
@@ -93,7 +93,7 @@ namespace N
 }".AssertReplace("[Obsolete(\"abc\")]", attributeText);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var attribute = syntaxTree.FindAttribute(attributeText);
-            Assert.AreEqual(false,      attribute.TryFindArgument(1, "error", out _));
+            Assert.AreEqual(false, attribute.TryFindArgument(1, "error", out _));
         }
 
         [TestCase("[assembly:InternalsVisibleTo(\"abc\")]")]
@@ -103,7 +103,7 @@ namespace N
             var attribute = syntaxTree.FindAttribute(attributeText);
             Assert.AreEqual(true,      attribute.TryFindArgument(0, "assemblyName", out var argument));
             Assert.AreEqual("\"abc\"", argument.Expression.ToString());
-            Assert.AreEqual(false,   attribute.TryFindArgument(1, "AllInternalsVisible", out _));
+            Assert.AreEqual(false,     attribute.TryFindArgument(1, "AllInternalsVisible", out _));
         }
     }
 }

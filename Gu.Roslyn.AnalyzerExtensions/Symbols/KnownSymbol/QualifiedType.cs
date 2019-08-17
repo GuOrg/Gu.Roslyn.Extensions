@@ -9,6 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Globalization;
     using System.Linq;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -259,7 +260,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString(CultureInfo.InvariantCulture));
                 case SimpleNameSyntax simple:
                     return this.NameEquals(simple.Identifier.ValueText) ||
-                           Aliased(simple.Identifier.Text);
+                           Aliased(simple);
                 case QualifiedNameSyntax qualified:
                     return this.Equals(qualified.Right) &&
                            this.Namespace.Matches(qualified.Left);
@@ -267,11 +268,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return false;
 
-            bool Aliased(string name)
+            bool Aliased(SimpleNameSyntax name)
             {
-                if (AliasWalker.TryGet(type.SyntaxTree, this, out var directive))
+                if (!name.Parent.IsKind(SyntaxKind.QualifiedName) &&
+                    AliasWalker.TryGet(type.SyntaxTree, this, out var directive))
                 {
-                    return directive.Alias.Name.Identifier.Text == name;
+                    return directive.Alias.Name.Identifier.Text == name.Identifier.Text;
                 }
 
                 return false;
