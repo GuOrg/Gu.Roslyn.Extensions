@@ -8,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class StringHelper
     {
         /// <summary>
-        /// Check if <param name="x"></param> equals <paramref name="y"></paramref> starting at <paramref name="position"></paramref>.
+        /// Check if <paramref name="x"></paramref> equals <paramref name="y"></paramref> starting at <paramref name="position"></paramref>.
         /// </summary>
         /// <param name="x">The first string.</param>
         /// <param name="y">The other string.</param>

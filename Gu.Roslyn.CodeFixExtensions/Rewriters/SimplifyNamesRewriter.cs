@@ -14,7 +14,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static readonly SimplifyNamesRewriter Default = new SimplifyNamesRewriter();
 
         private SimplifyNamesRewriter()
-            : base(true)
+            : base(visitIntoStructuredTrivia: true)
         {
         }
 
@@ -22,7 +22,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Adds <see cref="Simplifier.Annotation"/> to all <see cref="QualifiedNameSyntax"/> and <see cref="QualifiedCrefSyntax"/>.
         /// </summary>
         /// <typeparam name="T">The node type.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <returns><paramref name="node"/> with <see cref="Simplifier.Annotation"/>.</returns>
         public static T Simplify<T>(T node)
             where T : SyntaxNode
