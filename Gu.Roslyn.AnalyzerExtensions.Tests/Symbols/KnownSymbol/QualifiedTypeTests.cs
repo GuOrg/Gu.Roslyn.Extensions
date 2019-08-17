@@ -135,5 +135,27 @@ namespace N
             Assert.AreEqual(true,  typeSyntax == qualifiedType);
             Assert.AreEqual(false, typeSyntax != qualifiedType);
         }
+
+        [TestCase("ObsoleteAttribute")]
+        [TestCase("System.ObsoleteAttribute")]
+        public static void AliasWithSame(string typeName)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N
+{
+    using System;
+    using ObsoleteAttribute = System.ObsoleteAttribute;
+
+    [ObsoleteAttribute]
+    internal class C
+    {
+    }
+}".AssertReplace("System.ObsoleteAttribute", typeName));
+            var typeSyntax = syntaxTree.Find<TypeSyntax>(typeName);
+            var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
+            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(false, typeSyntax != qualifiedType);
+        }
     }
 }
