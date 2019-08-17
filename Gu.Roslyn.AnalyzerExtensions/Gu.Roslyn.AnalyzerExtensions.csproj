@@ -23,7 +23,7 @@
       BUGFIX: AttributeSyntaxExt.TryFindArgument when name.
       BREAKING: Move TryFindArgument to AttributeSyntaxExt.
       FEATURE: QualifiedType.Equals handle alias.
-      BUGFIX: Infinite requirion in TypeSyntax == QualifiedType when aliased.
+      BUGFIX: Infinite reqursion in TypeSyntax == QualifiedType when aliased.
     </PackageReleaseNotes>
   </PropertyGroup>
 
