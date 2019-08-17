@@ -3,6 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
     using System;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public static class QualifiedTypeTests
@@ -110,6 +111,28 @@ namespace N
             var typeSyntax = syntaxTree.FindAttribute("Aliased").Name;
             var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
             Assert.AreEqual(true, typeSyntax == qualifiedType);
+            Assert.AreEqual(false, typeSyntax != qualifiedType);
+        }
+
+        [TestCase("ObsoleteAttribute")]
+        [TestCase("System.ObsoleteAttribute")]
+        public static void Alias(string typeName)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N
+{
+    using System;
+    using Aliased = System.ObsoleteAttribute;
+
+    [Aliased]
+    internal class C
+    {
+    }
+}".AssertReplace("System.ObsoleteAttribute", typeName));
+            var typeSyntax = syntaxTree.Find<TypeSyntax>(typeName);
+            var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
+            Assert.AreEqual(true,  typeSyntax == qualifiedType);
             Assert.AreEqual(false, typeSyntax != qualifiedType);
         }
     }
