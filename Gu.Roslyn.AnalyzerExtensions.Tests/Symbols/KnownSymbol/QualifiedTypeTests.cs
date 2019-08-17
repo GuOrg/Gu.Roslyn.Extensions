@@ -138,7 +138,7 @@ namespace N
 
         [TestCase("ObsoleteAttribute")]
         [TestCase("System.ObsoleteAttribute")]
-        public static void AliasWithSame(string typeName)
+        public static void AliasWithSameName(string typeName)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -152,8 +152,16 @@ namespace N
     {
     }
 }".AssertReplace("System.ObsoleteAttribute", typeName));
-            var typeSyntax = syntaxTree.Find<TypeSyntax>(typeName);
             var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
+            TypeSyntax typeSyntax = syntaxTree.Find<UsingDirectiveSyntax>("ObsoleteAttribute").Name;
+            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(false, typeSyntax != qualifiedType);
+
+            typeSyntax = syntaxTree.Find<UsingDirectiveSyntax>("ObsoleteAttribute").Alias.Name;
+            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(false, typeSyntax != qualifiedType);
+
+            typeSyntax = syntaxTree.Find<AttributeSyntax>("[ObsoleteAttribute]").Name;
             Assert.AreEqual(true,  typeSyntax == qualifiedType);
             Assert.AreEqual(false, typeSyntax != qualifiedType);
         }
