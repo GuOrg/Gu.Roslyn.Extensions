@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.QualifyMethodAccess
 {
     using System.Linq;
     using System.Threading;
@@ -6,7 +6,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     using Gu.Roslyn.Asserts;
     using NUnit.Framework;
 
-    public static class QualifyMethodAccess
+    public static class Document
     {
         [Test]
         public static async Task WhenUnknown()
@@ -26,7 +26,7 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("M1()", CodeStyleResult.No)]
@@ -51,7 +51,7 @@ namespace N
 }".AssertReplace("this.M1()", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("M1()", CodeStyleResult.No)]
@@ -73,7 +73,7 @@ namespace N
 }".AssertReplace("this.M1()", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("M1()", CodeStyleResult.No)]
@@ -98,7 +98,7 @@ namespace N
 }".AssertReplace("this.M1()", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("M1()", CodeStyleResult.No)]
@@ -123,7 +123,7 @@ namespace N
 }".AssertReplace("this.M1()", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyMethodAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
     }
 }
