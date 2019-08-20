@@ -52,6 +52,69 @@ namespace N
             Assert.AreEqual(expected, await editor.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
+        [TestCase("M",      CodeStyleResult.No)]
+        [TestCase("this.M", CodeStyleResult.Yes)]
+        public static async Task UsedInNameof(string expression, CodeStyleResult expected)
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        public string M() => nameof(this.M);
+    }
+}".AssertReplace("this.M", expression));
+            Assert.AreEqual(expected, await editor.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [TestCase("M",      CodeStyleResult.No)]
+        [TestCase("this.M", CodeStyleResult.Yes)]
+        public static async Task UsedInNameofTwoMethods(string expression, CodeStyleResult expected)
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        public string M() => nameof(this.M);
+        public void M(int i) { }
+    }
+}".AssertReplace("this.M", expression));
+            Assert.AreEqual(expected, await editor.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [Test]
+        public static async Task UsedInNameofStaticContext()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        public void M() { }
+
+        public static string P => nameof(M);
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [Test]
+        public static async Task UsedInNameofShadowed()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        public void M() { }
+
+        public string M2(int M) => nameof(M);
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
         [TestCase("M1()",      CodeStyleResult.No)]
         [TestCase("this.M1()", CodeStyleResult.Yes)]
         [TestCase("M2()",      CodeStyleResult.NotFound)]

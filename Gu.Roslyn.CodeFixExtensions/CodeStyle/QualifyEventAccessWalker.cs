@@ -56,32 +56,29 @@ namespace Gu.Roslyn.CodeFixExtensions
             switch (node.Parent)
             {
                 case ConditionalAccessExpressionSyntax conditionalAccess when conditionalAccess.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
-                                                                              conditionalAccess.WhenNotNull.IsKind(SyntaxKind.InvocationExpression) &&
-                                                                              IsMemberEvent():
-                    this.Update(CodeStyleResult.No);
-                    break;
-                case InvocationExpressionSyntax invocation when invocation.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
-                                                                IsMemberEvent():
-                    this.Update(CodeStyleResult.No);
-                    break;
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression == node &&
-                                                                    memberAccess.Parent is InvocationExpressionSyntax invocation &&
-                                                                    invocation.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
-                                                                    IsMemberEvent():
-                    this.Update(CodeStyleResult.No);
+                                                                              conditionalAccess.WhenNotNull.IsKind(SyntaxKind.InvocationExpression):
+                case ArgumentSyntax _:
+                case InvocationExpressionSyntax invocation when invocation.Parent.IsKind(SyntaxKind.ExpressionStatement):
+                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression == node:
+                    if (IsInstanceEvent() &&
+                        !Scope.HasLocal(node, node.Identifier.ValueText) &&
+                        !Scope.HasParameter(node, node.Identifier.ValueText))
+                    {
+                        this.Update(CodeStyleResult.No);
+                    }
+
                     break;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Name == node &&
                                                                     memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
-                                                                    IsMemberEvent():
+                                                                    IsInstanceEvent():
                     this.Update(CodeStyleResult.Yes);
                     break;
             }
 
-            bool IsMemberEvent()
+            bool IsInstanceEvent()
             {
-                return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
-                       !IsStatic(containingMember) &&
-                       containingMember.Parent is TypeDeclarationSyntax containingType &&
+                return !node.IsInStaticContext() &&
+                       node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
                        containingType.TryFindEvent(node.Identifier.ValueText, out var @event) &&
                        !IsStatic(@event);
 

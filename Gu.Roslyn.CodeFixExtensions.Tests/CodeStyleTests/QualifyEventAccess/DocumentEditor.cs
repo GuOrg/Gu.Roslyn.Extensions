@@ -55,6 +55,43 @@ namespace N
             Assert.AreEqual(expected, await editor.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
+        [TestCase("E",      CodeStyleResult.No)]
+        [TestCase("this.E", CodeStyleResult.Yes)]
+        public static async Task UsedInNameof(string expression, CodeStyleResult expected)
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    using System;
+
+    class C
+    {
+        public event Action E;
+
+        public string M() => nameof(this.E);
+    }
+}".AssertReplace("this.E", expression));
+            Assert.AreEqual(expected, await editor.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [Test]
+        public static async Task UsedInNameofStaticContext()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    using System;
+
+    class C
+    {
+        public event Action E;
+
+        public static string M() => nameof(E);
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
         private static Microsoft.CodeAnalysis.Editing.DocumentEditor CreateDocumentEditor(string code)
         {
             return Microsoft.CodeAnalysis.Editing.DocumentEditor.CreateAsync(CodeFactory.CreateSolution(code).Projects.Single().Documents.Single()).Result;
