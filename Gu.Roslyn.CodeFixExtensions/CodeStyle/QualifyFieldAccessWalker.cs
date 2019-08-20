@@ -60,6 +60,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                                                                 IsMemberField():
                 case ArrowExpressionClauseSyntax _ when IsMemberField():
                 case ReturnStatementSyntax _ when IsMemberField():
+                case ArgumentSyntax _ when IsMemberField():
                     this.Update(CodeStyleResult.No);
                     break;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
@@ -71,24 +72,10 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             bool IsMemberField()
             {
-                return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
-                       !IsStatic(containingMember) &&
-                       containingMember.Parent is TypeDeclarationSyntax containingType &&
+                return !node.IsInStaticContext() &&
+                       node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
                        containingType.TryFindField(node.Identifier.ValueText, out var field) &&
                        !field.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);
-
-                bool IsStatic(MemberDeclarationSyntax candidate)
-                {
-                    switch (candidate)
-                    {
-                        case BaseMethodDeclarationSyntax declaration:
-                            return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                        case BasePropertyDeclarationSyntax declaration:
-                            return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                        default:
-                            return true;
-                    }
-                }
             }
         }
     }

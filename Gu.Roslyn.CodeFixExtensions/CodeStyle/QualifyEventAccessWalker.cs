@@ -58,15 +58,10 @@ namespace Gu.Roslyn.CodeFixExtensions
                 case ConditionalAccessExpressionSyntax conditionalAccess when conditionalAccess.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
                                                                               conditionalAccess.WhenNotNull.IsKind(SyntaxKind.InvocationExpression) &&
                                                                               IsMemberEvent():
-                    this.Update(CodeStyleResult.No);
-                    break;
+                case ArgumentSyntax _ when IsMemberEvent():
                 case InvocationExpressionSyntax invocation when invocation.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
                                                                 IsMemberEvent():
-                    this.Update(CodeStyleResult.No);
-                    break;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression == node &&
-                                                                    memberAccess.Parent is InvocationExpressionSyntax invocation &&
-                                                                    invocation.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
                                                                     IsMemberEvent():
                     this.Update(CodeStyleResult.No);
                     break;
@@ -79,9 +74,8 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             bool IsMemberEvent()
             {
-                return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
-                       !IsStatic(containingMember) &&
-                       containingMember.Parent is TypeDeclarationSyntax containingType &&
+                return !node.IsInStaticContext() &&
+                       node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
                        containingType.TryFindEvent(node.Identifier.ValueText, out var @event) &&
                        !IsStatic(@event);
 

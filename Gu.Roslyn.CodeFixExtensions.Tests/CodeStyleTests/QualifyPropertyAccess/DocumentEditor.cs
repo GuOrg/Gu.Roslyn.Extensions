@@ -49,6 +49,55 @@ namespace N
             Assert.AreEqual(expected, await editor.QualifyPropertyAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
+        [TestCase("P",      CodeStyleResult.No)]
+        [TestCase("this.P", CodeStyleResult.Yes)]
+        public static async Task UsedInNameof(string expression, CodeStyleResult expected)
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        public int P { get; }
+
+        public string M() => nameof(this.P);
+    }
+}".AssertReplace("this.P", expression));
+            Assert.AreEqual(expected, await editor.QualifyPropertyAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [Test]
+        public static async Task UsedInNameofStaticContext()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        public int P => 1;
+
+        public static string M() => nameof(P);
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyPropertyAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [Test]
+        public static async Task UsedInNameofShadowed()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        public int P => 1;
+
+        public string M(int P) => nameof(P);
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyPropertyAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
         [Test]
         public static async Task IgnoreObjectInitializer()
         {

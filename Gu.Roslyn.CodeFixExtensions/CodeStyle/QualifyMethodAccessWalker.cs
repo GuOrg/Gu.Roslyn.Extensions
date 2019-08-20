@@ -46,46 +46,36 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <inheritdoc />
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             if (node == null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
 
-            switch (node.Expression)
+            switch (node.Parent)
             {
-                case IdentifierNameSyntax _ when IsMemberMethod():
+                case InvocationExpressionSyntax _ when IsMemberMethod():
+                case ArgumentSyntax argument when argument.Parent is ArgumentListSyntax argumentList &&
+                                                  argumentList.Parent is InvocationExpressionSyntax invocation &&
+                                                  invocation.IsNameOf() &&
+                                                  IsMemberMethod():
                     this.Update(CodeStyleResult.No);
                     break;
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression.IsKind(SyntaxKind.ThisExpression):
+                case MemberAccessExpressionSyntax memberAccess when memberAccess.Name == node &&
+                                                                    memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
+                                                                    IsMemberMethod():
                     this.Update(CodeStyleResult.Yes);
                     break;
             }
 
-            base.VisitInvocationExpression(node);
-
             bool IsMemberMethod()
             {
-                return node.TryFirstAncestor(out MemberDeclarationSyntax containingMember) &&
-                       !IsStatic(containingMember) &&
-                       containingMember.Parent is TypeDeclarationSyntax containingType &&
-                       node.TryGetMethodName(out var name) &&
-                       containingType.TryFindMethod(name, out var method) &&
-                       !method.Modifiers.Any(SyntaxKind.StaticKeyword);
-
-                bool IsStatic(MemberDeclarationSyntax candidate)
-                {
-                    switch (candidate)
-                    {
-                        case BaseMethodDeclarationSyntax declaration:
-                            return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                        case BasePropertyDeclarationSyntax declaration:
-                            return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                        default:
-                            return true;
-                    }
-                }
+                return !node.IsInStaticContext() &&
+                       node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
+                       containingType.TryFindMethod(node.Identifier.Text, out var method) &&
+                       !method.Modifiers.Any(SyntaxKind.StaticKeyword) &&
+                       !containingType.TryFindMethod(node.Identifier.Text, x => x.Modifiers.Any(SyntaxKind.StaticKeyword), out _);
             }
         }
     }

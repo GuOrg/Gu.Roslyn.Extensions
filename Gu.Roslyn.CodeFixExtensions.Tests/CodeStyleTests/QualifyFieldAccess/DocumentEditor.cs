@@ -55,6 +55,75 @@ namespace N
             Assert.AreEqual(expected, await editor.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
+        [TestCase("f",      CodeStyleResult.No)]
+        [TestCase("this.f", CodeStyleResult.Yes)]
+        public static async Task UsedInNameof(string expression, CodeStyleResult expected)
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        private readonly int f;
+
+        public string M() => nameof(this.f);
+    }
+}".AssertReplace("this.f", expression));
+            Assert.AreEqual(expected, await editor.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [Test]
+        public static async Task UsedInNameofStaticContext()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        private readonly int f;
+
+        public static string M() => nameof(f);
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [Test]
+        public static async Task UsedInNameofShadowed()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        private readonly int f;
+
+        public string M(int f) => nameof(f);
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
+        [TestCase("value",      CodeStyleResult.NotFound)]
+        [TestCase("this.value", CodeStyleResult.Yes)]
+        public static async Task UsedInNameofShadowedInProperty(string expression, CodeStyleResult expected)
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        private readonly int value;
+
+        public string P
+        {
+            set => _ = nameof(this.value);
+        }
+    }
+}".AssertReplace("this.value", expression));
+            Assert.AreEqual(expected, await editor.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
         [Test]
         public static async Task IgnoreObjectInitializer()
         {
