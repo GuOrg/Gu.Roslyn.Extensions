@@ -81,8 +81,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                     return false;
                 }
 
+#pragma warning disable IDE0019 // Use pattern matching
                 var namespaceParent = nameSpaceName.Parent as QualifiedNameSyntax;
                 var usingParent = usingName.Parent as QualifiedNameSyntax;
+#pragma warning restore IDE0019 // Use pattern matching
                 while (true)
                 {
                     if (usingParent == null)
