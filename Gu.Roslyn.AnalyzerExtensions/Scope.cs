@@ -4,6 +4,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// Exposes helper methods for the current scope.
+    /// </summary>
     public static class Scope
     {
         /// <summary>
