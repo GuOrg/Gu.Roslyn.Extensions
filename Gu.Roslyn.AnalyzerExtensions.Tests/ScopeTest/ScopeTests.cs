@@ -136,5 +136,81 @@ namespace N
             var node = syntaxTree.Find<SyntaxNode>(expression);
             Assert.AreEqual(expected, Scope.HasParameter(node, name));
         }
+
+        [TestCase("0", null, false)]
+        [TestCase("1", null, false)]
+        [TestCase("2", null, false)]
+        [TestCase("3", "x", true)]
+        [TestCase("3", "WRONG", false)]
+        [TestCase("4", null, false)]
+        [TestCase("5", null, false)]
+        [TestCase("6", null, false)]
+        [TestCase("7", null, false)]
+        [TestCase("8", null, false)]
+        [TestCase("9", "x", true)]
+        [TestCase("10", "x", true)]
+        [TestCase("10", "y", false)]
+        [TestCase("11", "x", true)]
+        [TestCase("11", "y", true)]
+        public static void HasLocal(string expression, string name, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    [Obsolete(""0"")]
+    public class C
+    {
+        private readonly int f = 1;
+
+        public C()
+            :this(2)
+        {
+        }
+
+        public C()
+        {
+            var x = 'a';
+            this.f = 3;
+        }
+
+        public event Action E
+        {
+            add { _ = 4; }
+            remove { _ = 5; }
+        }
+
+        public int P
+        {
+            get => 6;
+            set => _ = 7;
+        }
+
+        int M(int _) => 8;
+
+        int M(double _)
+        {
+            var x = 'a';
+            return 9;
+        }
+
+        static int M(string _)
+        {
+            var x = 'a';
+            return 10;
+
+            int M(long _)
+            {
+                var y = 'a';
+                return 11;
+            }
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(expression);
+            Assert.AreEqual(expected, Scope.HasLocal(node, name));
+        }
     }
 }

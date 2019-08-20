@@ -57,6 +57,60 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Check if the current scope has a local named <paramref name="name"/>.
+        /// </summary>
+        /// <param name="nodeInScope">The node in the scope to check.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <returns>True if the current scope has a local named <paramref name="name"/>.</returns>
+        public static bool HasLocal(SyntaxNode nodeInScope, string name)
+        {
+            if (nodeInScope is null)
+            {
+                throw new System.ArgumentNullException(nameof(nodeInScope));
+            }
+
+            var scope = nodeInScope.Parent;
+            while (scope != null)
+            {
+                switch (scope)
+                {
+                    case BaseMethodDeclarationSyntax _:
+                    case AccessorDeclarationSyntax _:
+                        return false;
+                    case BlockSyntax block when DeclaresLocal(block):
+                        return true;
+                }
+
+                scope = scope.Parent;
+            }
+
+            return false;
+
+            bool DeclaresLocal(BlockSyntax block)
+            {
+                foreach (var statement in block.Statements)
+                {
+                    switch (statement)
+                    {
+                        case LocalDeclarationStatementSyntax localDeclaration when localDeclaration.Declaration is VariableDeclarationSyntax declaration:
+                            foreach (var variable in declaration.Variables)
+                            {
+                                if (variable.Identifier.Text == name ||
+                                    variable.Identifier.ValueText == name)
+                                {
+                                    return true;
+                                }
+                            }
+
+                            break;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Check if the node is in static context where this is not accessible.
         /// </summary>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>

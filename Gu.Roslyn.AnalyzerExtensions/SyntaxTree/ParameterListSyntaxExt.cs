@@ -25,7 +25,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             foreach (var candidate in parameterList.Parameters)
             {
-                if (candidate.Identifier.ValueText == name)
+                if (candidate.Identifier.Text == name ||
+                    candidate.Identifier.ValueText == name)
                 {
                     parameter = candidate;
                     return true;
