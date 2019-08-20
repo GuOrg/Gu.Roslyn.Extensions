@@ -1,10 +1,10 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ExpressionSyntaxExtTests
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.ScopeTests
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public static class IsExecutedBefore
+    public static class IsExecutedBeforeExpression
     {
         [Test]
         public static void InnerBeforeOuter()

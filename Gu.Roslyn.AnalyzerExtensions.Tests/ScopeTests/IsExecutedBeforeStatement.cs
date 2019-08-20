@@ -1,10 +1,10 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.StatementSyntaxExtTests
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.ScopeTests
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public static class IsExecutedBefore
+    public static class IsExecutedBeforeStatement
     {
         [TestCase("1", "2", ExecutedBefore.Yes)]
         [TestCase("2", "1", ExecutedBefore.No)]

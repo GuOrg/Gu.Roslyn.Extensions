@@ -11,40 +11,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class SyntaxNodeExt
     {
         /// <summary>
-        /// Check if the node is in static context where this is not accessible.
-        /// </summary>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
-        /// <returns>True if the node is in static context where this is not accessible.</returns>
-        public static bool IsInStaticContext(this SyntaxNode node)
-        {
-            if (node.TryFirstAncestor(out MemberDeclarationSyntax memberDeclaration))
-            {
-                switch (memberDeclaration)
-                {
-                    case FieldDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword) ||
-                               (declaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
-                                variableDeclaration.Variables.TryLast(out var last) &&
-                                last.Initializer.Contains(node));
-                    case BaseFieldDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);
-                    case PropertyDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
-                               declaration.Initializer?.Contains(node) == true;
-                    case BasePropertyDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                    case BaseMethodDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
-                               node.TryFirstAncestor<ConstructorInitializerSyntax>(out _);
-                    default:
-                        return true;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Get the <see cref="FileLinePositionSpan"/> for the token in the containing document.
         /// </summary>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
