@@ -58,26 +58,18 @@ namespace N
             Assert.AreEqual(expected, node.IsInStaticContext());
         }
 
-        [TestCase("0",  null,    false)]
-        [TestCase("1",  null,    false)]
-        [TestCase("2",  null,    false)]
-        [TestCase("3",  "x",     true)]
-        [TestCase("3",  "WRONG", false)]
-        [TestCase("4",  null,    false)]
-        [TestCase("5",  "value", true)]
-        [TestCase("6",  null,    false)]
-        [TestCase("7",  "value", true)]
-        [TestCase("8",  "x",     true)]
-        [TestCase("9",  "x",     true)]
-        [TestCase("10", "x",     true)]
-        [TestCase("10", "y",     true)]
-        [TestCase("11", "x",     true)]
-        [TestCase("11", "z",     true)]
-        [TestCase("12", "x",     true)]
-        [TestCase("12", "y",     false)]
-        [TestCase("13", "x",     true)]
-        [TestCase("13", "y",     false)]
-        [TestCase("13", "w",     true)]
+        [TestCase("0", null, false)]
+        [TestCase("1", null, false)]
+        [TestCase("2", null, false)]
+        [TestCase("3", "x", true)]
+        [TestCase("3", "WRONG", false)]
+        [TestCase("4", null, false)]
+        [TestCase("5", "value", true)]
+        [TestCase("6", null, false)]
+        [TestCase("7", "value", true)]
+        [TestCase("8", "x", true)]
+        [TestCase("9", "x", true)]
+        [TestCase("10", "x", true)]
         public static void HasParameter(string expression, string name, bool expected)
         {
             var code = @"
@@ -86,7 +78,7 @@ namespace N
     using System;
 
     [Obsolete(""0"")]
-    public class C
+    class C
     {
         private readonly int f = 1;
 
@@ -121,19 +113,98 @@ namespace N
 
         static int M(string x)
         {
-            Func<int, int> f1 = y => 10;
-            Func<int, int> f2 = z => 11;
-            return 12;
-
-            int M(long w)
-            {
-                return 13;
-            }
+            return 10;
         }
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var node = syntaxTree.Find<SyntaxNode>(expression);
+            Assert.AreEqual(expected, Scope.HasParameter(node, name));
+        }
+
+        [TestCase("1", "x", "Func<int, int> f = y => 2", true)]
+        [TestCase("1", "y", "Func<int, int> f = y => 2", false)]
+        [TestCase("2", "x", "Func<int, int> f = y => 2", true)]
+        [TestCase("2", "y", "Func<int, int> f = y => 2", true)]
+        [TestCase("3", "x", "Func<int, int> f = y => 2", true)]
+        [TestCase("3", "y", "Func<int, int> f = y => 2", false)]
+        [TestCase("1", "x", "Func<int, int> f = (y) => 2", true)]
+        [TestCase("1", "y", "Func<int, int> f = (y) => 2", false)]
+        [TestCase("2", "x", "Func<int, int> f = (y) => 2", true)]
+        [TestCase("2", "y", "Func<int, int> f = (y) => 2", true)]
+        [TestCase("3", "x", "Func<int, int> f = (y) => 2", true)]
+        [TestCase("3", "y", "Func<int, int> f = (y) => 2", false)]
+        public static void HasParameterLambda(string location, string name, string lambda, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        int M(string x)
+        {
+            x = 1;
+            Func<int, int> f = y => 2;
+            return 3;
+        }
+    }
+}".AssertReplace("Func<int, int> f = y => 2", lambda);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(location);
+            Assert.AreEqual(expected, Scope.HasParameter(node, name));
+        }
+
+        [TestCase("1", "x", true)]
+        [TestCase("1", "y", false)]
+        [TestCase("2", "x", true)]
+        [TestCase("2", "y", true)]
+        public static void HasParameterLocalFunction(string location, string name, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        int M(string x)
+        {
+            return 1;
+
+            int M(long y)
+            {
+                return 2;
+            }
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(location);
+            Assert.AreEqual(expected, Scope.HasParameter(node, name));
+        }
+
+        [TestCase("1", "x", true)]
+        [TestCase("2", "x", true)]
+        public static void HasParameterLocalNested(string location, string name, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        int M(bool x)
+        {
+            if (x)
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(location);
             Assert.AreEqual(expected, Scope.HasParameter(node, name));
         }
 
@@ -150,6 +221,7 @@ namespace N
         [TestCase("9", "x", true)]
         [TestCase("10", "x", true)]
         [TestCase("10", "y", false)]
+        [TestCase("10", "z", false)]
         [TestCase("11", "x", true)]
         [TestCase("11", "y", true)]
         public static void HasLocal(string expression, string name, bool expected)
@@ -187,29 +259,74 @@ namespace N
             set => _ = 7;
         }
 
-        int M(int _) => 8;
+        int M1() => 8;
 
-        int M(double _)
+        int M2()
         {
             var x = 'a';
             return 9;
         }
 
-        static int M(string _)
+        static int M3(bool b)
         {
             var x = 'a';
             return 10;
 
-            int M(long _)
+            if (text is null)
             {
                 var y = 'a';
                 return 11;
+            }
+
+            int M(long _)
+            {
+                var z = 'a';
+                return 12;
             }
         }
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var node = syntaxTree.Find<SyntaxNode>(expression);
+            Assert.AreEqual(expected, Scope.HasLocal(node, name));
+        }
+
+        [TestCase("1", "x", true)]
+        [TestCase("1", "y", false)]
+        [TestCase("1", "z", false)]
+        [TestCase("2", "x", true)]
+        [TestCase("2", "y", true)]
+        [TestCase("2", "z", false)]
+        [TestCase("3", "x", true)]
+        [TestCase("3", "y", false)]
+        [TestCase("3", "z", true)]
+        public static void HasLocalLocalNested(string location, string name, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        int M(bool b)
+        {
+            var x = b;
+            return 1;
+
+            if (x)
+            {
+                var y = b;
+                return 2;
+            }
+            else
+            {
+                var z = b;
+                return 3;
+            }
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(location);
             Assert.AreEqual(expected, Scope.HasLocal(node, name));
         }
     }
