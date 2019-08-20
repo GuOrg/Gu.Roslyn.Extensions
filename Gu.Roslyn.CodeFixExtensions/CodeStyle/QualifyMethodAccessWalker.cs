@@ -85,5 +85,81 @@ namespace Gu.Roslyn.CodeFixExtensions
                        !Scope.HasParameter(node, node.Identifier.ValueText);
             }
         }
+
+        /// <inheritdoc />
+        public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+        {
+            // don't walk
+        }
+
+        /// <inheritdoc />
+        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+        {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (!node.Modifiers.Any(SyntaxKind.StaticKeyword))
+            {
+                base.VisitConstructorDeclaration(node);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+        {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (!node.Modifiers.Any(SyntaxKind.StaticKeyword))
+            {
+                base.VisitClassDeclaration(node);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitStructDeclaration(StructDeclarationSyntax node)
+        {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (!node.Modifiers.Any(SyntaxKind.StaticKeyword))
+            {
+                base.VisitStructDeclaration(node);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+        {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (!node.Modifiers.Any(SyntaxKind.StaticKeyword))
+            {
+                base.VisitPropertyDeclaration(node);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (!node.Modifiers.Any(SyntaxKind.StaticKeyword))
+            {
+                base.VisitMethodDeclaration(node);
+            }
+        }
     }
 }

@@ -30,13 +30,13 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <inheritdoc />
-        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+        public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
-            // Don't walk, optimization.
+            // don't walk
         }
 
         /// <inheritdoc />
-        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
             // Don't walk, optimization.
         }
@@ -49,7 +49,8 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new System.ArgumentNullException(nameof(node));
             }
 
-            if (node.TryGetBackingField(out var field) &&
+            if (!node.Modifiers.Any(SyntaxKind.StaticKeyword) &&
+                node.TryGetBackingField(out var field) &&
                 node.Parent is TypeDeclarationSyntax containingType)
             {
                 if (containingType.Members.IndexOf(node) is int pi &&
@@ -70,6 +71,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                     this.Update(CodeStyleResult.No);
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            // Don't walk, optimization.
         }
 
         /// <inheritdoc />

@@ -63,5 +63,23 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
             }
         }
+
+        /// <inheritdoc />
+        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+        {
+            // Don't walk, optimization.
+        }
+
+        /// <inheritdoc />
+        public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+        {
+            // Don't walk, optimization.
+        }
+
+        /// <inheritdoc />
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            // Don't walk, optimization.
+        }
     }
 }
