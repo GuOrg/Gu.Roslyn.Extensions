@@ -57,4 +57,63 @@ namespace N
             var node = syntaxTree.Find<SyntaxNode>(expression);
             Assert.AreEqual(expected, node.IsInStaticContext());
         }
+
+        [TestCase("0", null, false)]
+        [TestCase("1", null, false)]
+        [TestCase("2", null, false)]
+        [TestCase("3", "x", true)]
+        [TestCase("3", "WRONG", false)]
+        [TestCase("4", null, false)]
+        [TestCase("5", "value", true)]
+        [TestCase("6", null,    false)]
+        [TestCase("7", "value", true)]
+        [TestCase("8", "x", true)]
+        [TestCase("9", "x", true)]
+        public static void HasParameter(string expression, string name, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    [Obsolete(""0"")]
+    public class C
+    {
+        private readonly int f = 1;
+
+        public C()
+            :this(2)
+        {
+        }
+
+        public C(int x)
+        {
+            this.f = 3;
+        }
+
+        public event Action E
+        {
+            add { _ = 4; }
+            remove { _ = 5; }
+        }
+
+        public int P
+        {
+            get => 6;
+            set => _ = 7;
+        }
+
+        int M(int x) => 8;
+
+        void M(double x)
+        {
+            return 9;
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(expression);
+            Assert.AreEqual(expected, Scope.HasParameter(node, name));
+        }
+    }
 }

@@ -10,6 +10,35 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public static class Scope
     {
         /// <summary>
+        /// Check if the current scope has a parameter named <paramref name="name"/>.
+        /// </summary>
+        /// <param name="nodeInScope">The node in the scope to check.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <returns>True if the current scope has a parameter named <paramref name="name"/>.</returns>
+        public static bool HasParameter(SyntaxNode nodeInScope, string name)
+        {
+            if (nodeInScope.TryFirstAncestorOrSelf(out BaseMethodDeclarationSyntax method) &&
+                !method.AttributeLists.TryFirst(x => x.Contains(nodeInScope), out _))
+            {
+                return method.ParameterList is ParameterListSyntax parameterList &&
+                       parameterList.TryFind(name, out _);
+            }
+
+            if (nodeInScope.TryFirstAncestorOrSelf(out AccessorDeclarationSyntax accessor))
+            {
+                switch (accessor.Kind())
+                {
+                    case SyntaxKind.AddAccessorDeclaration:
+                    case SyntaxKind.RemoveAccessorDeclaration:
+                    case SyntaxKind.SetAccessorDeclaration:
+                        return name == "value";
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Check if the node is in static context where this is not accessible.
         /// </summary>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
