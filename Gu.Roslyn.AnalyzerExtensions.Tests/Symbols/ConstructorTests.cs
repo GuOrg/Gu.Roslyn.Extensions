@@ -6,9 +6,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
 
     public static class ConstructorTests
     {
-        [TestCase(Search.TopLevel)]
-        [TestCase(Search.Recursive)]
-        public static void TryFindDefaultSimple(Search search)
+        [TestCase(Recursive.No)]
+        [TestCase(Recursive.Yes)]
+        public static void TryFindDefaultSimple(Recursive recursive)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -34,13 +34,13 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("C"));
-            Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out var ctor));
+            Assert.AreEqual(true, Constructor.TryFindDefault(type, recursive, out var ctor));
             Assert.AreEqual("N.C.C()", ctor.ToString());
         }
 
-        [TestCase(Search.TopLevel)]
-        [TestCase(Search.Recursive)]
-        public static void TryFindDefaultWithBaseAndDefault(Search search)
+        [TestCase(Recursive.No)]
+        [TestCase(Recursive.Yes)]
+        public static void TryFindDefaultWithBaseAndDefault(Recursive recursive)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -73,17 +73,17 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class C : CBase"));
-            Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out var ctor));
+            Assert.AreEqual(true, Constructor.TryFindDefault(type, recursive, out var ctor));
             Assert.AreEqual("N.C.C()", ctor.ToString());
 
             type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("class CBase"));
-            Assert.AreEqual(true, Constructor.TryFindDefault(type, search, out ctor));
+            Assert.AreEqual(true, Constructor.TryFindDefault(type, recursive, out ctor));
             Assert.AreEqual("N.CBase.CBase()", ctor.ToString());
         }
 
-        [TestCase(Search.TopLevel, null)]
-        [TestCase(Search.Recursive, "N.CBase.CBase()")]
-        public static void TryFindDefaultWithBase(Search search, string expected)
+        [TestCase(Recursive.No, null)]
+        [TestCase(Recursive.Yes, "N.CBase.CBase()")]
+        public static void TryFindDefaultWithBase(Recursive recursive, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -112,13 +112,13 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class C : CBase"));
-            Assert.AreEqual(expected != null, Constructor.TryFindDefault(type, search, out var ctor));
+            Assert.AreEqual(expected != null, Constructor.TryFindDefault(type, recursive, out var ctor));
             Assert.AreEqual(expected, ctor?.ToString());
         }
 
-        [TestCase(Search.TopLevel, null)]
-        [TestCase(Search.Recursive, "N.CBaseBase.CBaseBase()")]
-        public static void TryFindDefaultWithBaseWithGap(Search search, string expected)
+        [TestCase(Recursive.No, null)]
+        [TestCase(Recursive.Yes, "N.CBaseBase.CBaseBase()")]
+        public static void TryFindDefaultWithBaseWithGap(Recursive recursive, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -151,7 +151,7 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("internal class C : CBase"));
-            Assert.AreEqual(expected != null, Constructor.TryFindDefault(type, search, out var ctor));
+            Assert.AreEqual(expected != null, Constructor.TryFindDefault(type, recursive, out var ctor));
             Assert.AreEqual(expected, ctor?.ToString());
         }
     }
