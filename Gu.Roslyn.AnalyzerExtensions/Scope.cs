@@ -103,6 +103,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                             }
 
                             break;
+                        case IfStatementSyntax ifStatement when ifStatement.Condition is ExpressionSyntax condition:
+                            foreach (SyntaxNode node in condition.DescendantNodes())
+                            {
+                                if (node is DeclarationExpressionSyntax declaration &&
+                                    declaration.Designation is SingleVariableDesignationSyntax variable &&
+                                    (variable.Identifier.Text == name ||
+                                     variable.Identifier.ValueText == name))
+                                {
+                                    return true;
+                                }
+                            }
+
+                            break;
                     }
                 }
 

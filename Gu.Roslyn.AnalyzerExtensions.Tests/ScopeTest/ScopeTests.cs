@@ -329,5 +329,42 @@ namespace N
             var node = syntaxTree.Find<SyntaxNode>(location);
             Assert.AreEqual(expected, Scope.HasLocal(node, name));
         }
+
+        [TestCase("1", "x", "out var y", true)]
+        [TestCase("1", "y", "out var y", true)]
+        [TestCase("2", "x", "out var y", true)]
+        [TestCase("2", "y", "out var y", true)]
+        [TestCase("3", "x", "out var y", true)]
+        [TestCase("3", "y", "out var y", true)]
+        [TestCase("1", "x", "out int y", true)]
+        [TestCase("1", "y", "out int y", true)]
+        [TestCase("2", "x", "out int y", true)]
+        [TestCase("2", "y", "out int y", true)]
+        [TestCase("3", "x", "out int y", true)]
+        [TestCase("3", "y", "out int y", true)]
+        public static void HasLocalLocalOut(string location, string name, string text, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        int M(string text)
+        {
+            var x = 1;
+
+            if (int.TryParse(out var y))
+            {
+                return 2;
+            }
+
+            return 3;
+        }
+    }
+}".AssertReplace("out var y", text);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(location);
+            Assert.AreEqual(expected, Scope.HasLocal(node, name));
+        }
     }
 }
