@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.QualifyEventAccess
 {
     using System.Linq;
     using System.Threading;
@@ -6,7 +6,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests
     using Gu.Roslyn.Asserts;
     using NUnit.Framework;
 
-    public static class QualifyEventAccess
+    public static class Document
     {
         [Test]
         public static async Task WhenUnknown()
