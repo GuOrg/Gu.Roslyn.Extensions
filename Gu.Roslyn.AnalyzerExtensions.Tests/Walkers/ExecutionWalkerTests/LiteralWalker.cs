@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
             base.VisitLiteralExpression(node);
         }
 
-        internal static LiteralWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+        internal static LiteralWalker Borrow(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new LiteralWalker());
         }

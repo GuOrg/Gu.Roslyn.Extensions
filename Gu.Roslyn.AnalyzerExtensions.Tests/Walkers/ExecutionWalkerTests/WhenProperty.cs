@@ -7,11 +7,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
 
     public static class WhenProperty
     {
-        [TestCase(Scope.Member, "2, 3")]
-        [TestCase(Scope.Instance, "1, 2, 3")]
-        [TestCase(Scope.Type, "1, 2, 3")]
-        [TestCase(Scope.Recursive, "1, 2, 3")]
-        public static void StatementBody(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "2, 3")]
+        [TestCase(SearchScope.Instance, "1, 2, 3")]
+        [TestCase(SearchScope.Type, "1, 2, 3")]
+        [TestCase(SearchScope.Recursive, "1, 2, 3")]
+        public static void StatementBody(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -39,11 +39,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "2, 3")]
-        [TestCase(Scope.Instance, "2, 3")]
-        [TestCase(Scope.Type, "1, 2, 3")]
-        [TestCase(Scope.Recursive, "1, 2, 3")]
-        public static void Static(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "2, 3")]
+        [TestCase(SearchScope.Instance, "2, 3")]
+        [TestCase(SearchScope.Type, "1, 2, 3")]
+        [TestCase(SearchScope.Recursive, "1, 2, 3")]
+        public static void Static(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -68,11 +68,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "2, 3")]
-        [TestCase(Scope.Instance, "2, 3")]
-        [TestCase(Scope.Type, "2, 3")]
-        [TestCase(Scope.Recursive, "1, 2, 3")]
-        public static void StaticOtherType(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "2, 3")]
+        [TestCase(SearchScope.Instance, "2, 3")]
+        [TestCase(SearchScope.Type, "2, 3")]
+        [TestCase(SearchScope.Recursive, "1, 2, 3")]
+        public static void StaticOtherType(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -100,11 +100,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "2, 3")]
-        [TestCase(Scope.Instance, "1, 2, 3")]
-        [TestCase(Scope.Type, "1, 2, 3")]
-        [TestCase(Scope.Recursive, "1, 2, 3")]
-        public static void ExpressionBody(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "2, 3")]
+        [TestCase(SearchScope.Instance, "1, 2, 3")]
+        [TestCase(SearchScope.Type, "1, 2, 3")]
+        [TestCase(SearchScope.Recursive, "1, 2, 3")]
+        public static void ExpressionBody(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -129,11 +129,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "2, 3")]
-        [TestCase(Scope.Instance, "1, 2, 3")]
-        [TestCase(Scope.Type, "1, 2, 3")]
-        [TestCase(Scope.Recursive, "1, 2, 3")]
-        public static void ExpressionBodyGetter(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "2, 3")]
+        [TestCase(SearchScope.Instance, "1, 2, 3")]
+        [TestCase(SearchScope.Type, "1, 2, 3")]
+        [TestCase(SearchScope.Recursive, "1, 2, 3")]
+        public static void ExpressionBodyGetter(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -161,11 +161,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "")]
-        [TestCase(Scope.Instance, "1, 2")]
-        [TestCase(Scope.Type, "1, 2")]
-        [TestCase(Scope.Recursive, "1, 2")]
-        public static void AssignmentSetterWithGetter(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "")]
+        [TestCase(SearchScope.Instance, "1, 2")]
+        [TestCase(SearchScope.Type, "1, 2")]
+        [TestCase(SearchScope.Recursive, "1, 2")]
+        public static void AssignmentSetterWithGetter(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -195,11 +195,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "")]
-        [TestCase(Scope.Instance, "1, 2")]
-        [TestCase(Scope.Type, "1, 2")]
-        [TestCase(Scope.Recursive, "1, 2")]
-        public static void AssignmentSetterWithGetterThis(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "")]
+        [TestCase(SearchScope.Instance, "1, 2")]
+        [TestCase(SearchScope.Type, "1, 2")]
+        [TestCase(SearchScope.Recursive, "1, 2")]
+        public static void AssignmentSetterWithGetterThis(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -229,11 +229,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "")]
-        [TestCase(Scope.Instance, "1, 2")]
-        [TestCase(Scope.Type, "1, 2")]
-        [TestCase(Scope.Recursive, "1, 2")]
-        public static void PropertyUnary(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "")]
+        [TestCase(SearchScope.Instance, "1, 2")]
+        [TestCase(SearchScope.Type, "1, 2")]
+        [TestCase(SearchScope.Recursive, "1, 2")]
+        public static void PropertyUnary(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -263,11 +263,11 @@ namespace N
             }
         }
 
-        [TestCase("Value1 > Value2", Scope.Member, "")]
-        [TestCase("Value1 > Value2", Scope.Instance, "1, 2")]
-        [TestCase("Value1 > Value2", Scope.Type, "1, 2")]
-        [TestCase("Value1 > Value2", Scope.Recursive, "1, 2")]
-        public static void BinaryCompare(string expression, Scope scope, string expected)
+        [TestCase("Value1 > Value2", SearchScope.Member, "")]
+        [TestCase("Value1 > Value2", SearchScope.Instance, "1, 2")]
+        [TestCase("Value1 > Value2", SearchScope.Type, "1, 2")]
+        [TestCase("Value1 > Value2", SearchScope.Recursive, "1, 2")]
+        public static void BinaryCompare(string expression, SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -290,15 +290,15 @@ namespace N
             }
         }
 
-        [TestCase("Value1 ?? Value2", Scope.Member, "")]
-        [TestCase("Value1 ?? Value2", Scope.Instance, "1, 2")]
-        [TestCase("Value1 ?? Value2", Scope.Type, "1, 2")]
-        [TestCase("Value1 ?? Value2", Scope.Recursive, "1, 2")]
-        [TestCase("(int)Value1 > (int)Value2", Scope.Member, "")]
-        [TestCase("(int)Value1 > (int)Value2", Scope.Instance, "1, 2")]
-        [TestCase("(int)Value1 > (int)Value2", Scope.Type, "1, 2")]
-        [TestCase("(int)Value1 > (int)Value2", Scope.Recursive, "1, 2")]
-        public static void Binary(string expression, Scope scope, string expected)
+        [TestCase("Value1 ?? Value2", SearchScope.Member, "")]
+        [TestCase("Value1 ?? Value2", SearchScope.Instance, "1, 2")]
+        [TestCase("Value1 ?? Value2", SearchScope.Type, "1, 2")]
+        [TestCase("Value1 ?? Value2", SearchScope.Recursive, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", SearchScope.Member, "")]
+        [TestCase("(int)Value1 > (int)Value2", SearchScope.Instance, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", SearchScope.Type, "1, 2")]
+        [TestCase("(int)Value1 > (int)Value2", SearchScope.Recursive, "1, 2")]
+        public static void Binary(string expression, SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -321,11 +321,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "2, 3")]
-        [TestCase(Scope.Instance, "1, 2, 3")]
-        [TestCase(Scope.Type, "1, 2, 3")]
-        [TestCase(Scope.Recursive, "1, 2, 3")]
-        public static void ExpressionBodyAsArgument(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "2, 3")]
+        [TestCase(SearchScope.Instance, "1, 2, 3")]
+        [TestCase(SearchScope.Type, "1, 2, 3")]
+        [TestCase(SearchScope.Recursive, "1, 2, 3")]
+        public static void ExpressionBodyAsArgument(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

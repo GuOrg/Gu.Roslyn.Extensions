@@ -11,10 +11,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
 
     public static class AssignedWith
     {
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldCtorArg(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldCtorArg(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -43,10 +43,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void GenericFieldCtorArg(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void GenericFieldCtorArg(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -75,10 +75,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void GenericFieldTypedCtorArg(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void GenericFieldTypedCtorArg(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -110,10 +110,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldCtorArgViaLocal(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldCtorArgViaLocal(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -142,10 +142,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldCtorArgInNested(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldCtorArgInNested(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -176,10 +176,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void ChainedCtorArg(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void ChainedCtorArg(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -204,7 +204,7 @@ namespace N
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
             var symbol = semanticModel.GetDeclaredSymbolSafe(syntaxTree.FindParameter("arg"), CancellationToken.None);
-            if (scope != Scope.Member)
+            if (scope != SearchScope.Member)
             {
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
                 Assert.AreEqual("this.value = chainedArg", result.ToString());
@@ -223,10 +223,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldWithCtorArgViaProperty(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldWithCtorArgViaProperty(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -253,7 +253,7 @@ namespace N
             var value = syntaxTree.FindParameter("arg");
             var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
             var symbol = semanticModel.GetDeclaredSymbolSafe(value, CancellationToken.None);
-            if (scope == Scope.Member)
+            if (scope == SearchScope.Member)
             {
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
                 Assert.AreEqual("this.Number = arg", result.ToString());

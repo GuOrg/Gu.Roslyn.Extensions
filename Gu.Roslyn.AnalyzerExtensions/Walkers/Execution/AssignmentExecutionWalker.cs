@@ -32,7 +32,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>A walker that has visited <paramref name="node"/>.</returns>
-        public static AssignmentExecutionWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static AssignmentExecutionWalker Borrow(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new AssignmentExecutionWalker());
         }
@@ -46,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if an assignment was found for the symbol.</returns>
-        public static AssignmentExecutionWalker For(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static AssignmentExecutionWalker For(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (symbol == null ||
                 node == null)
@@ -68,7 +68,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True if an assignment was found for the symbol.</returns>
-        public static AssignmentExecutionWalker With(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static AssignmentExecutionWalker With(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (symbol == null ||
                 node == null)
@@ -80,7 +80,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             AssignmentExecutionWalker With(ISymbol currentSymbol, SyntaxNode currentNode, PooledSet<ISymbol> visited = null)
             {
-                var walker = Borrow(currentNode, Scope.Member, semanticModel, cancellationToken);
+                var walker = Borrow(currentNode, SearchScope.Member, semanticModel, cancellationToken);
                 walker.assignments.RemoveAll(x => !IsMatch(currentSymbol, x.Right, semanticModel, cancellationToken));
 
                 foreach (var declaration in walker.localDeclarations)
@@ -97,7 +97,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
-                if (scope != Scope.Member)
+                if (scope != SearchScope.Member)
                 {
                     using (var currentVisited = visited.IncrementUsage())
                     {
@@ -163,7 +163,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The first assignment if any.</param>
         /// <returns>True if an assignment was found for the symbol.</returns>
-        public static bool FirstFor(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
+        public static bool FirstFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
         {
             assignment = null;
             if (symbol == null ||
@@ -198,7 +198,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The single assignment.</param>
         /// <returns>True if a single assignment was found for the symbol.</returns>
-        public static bool SingleFor(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
+        public static bool SingleFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
         {
             assignment = null;
             if (symbol == null ||
@@ -238,7 +238,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The single assignment.</param>
         /// <returns>True if a single assignment was found for the symbol.</returns>
-        public static bool FirstWith(ISymbol symbol, SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
+        public static bool FirstWith(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
         {
             assignment = null;
             if (symbol == null ||

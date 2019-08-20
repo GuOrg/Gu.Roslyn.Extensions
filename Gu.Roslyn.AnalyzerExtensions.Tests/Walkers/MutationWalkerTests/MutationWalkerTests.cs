@@ -31,7 +31,7 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("C");
-            using (var walker = MutationWalker.Borrow(classDeclaration, Scope.Instance, semanticModel, CancellationToken.None))
+            using (var walker = MutationWalker.Borrow(classDeclaration, SearchScope.Instance, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual(mutation, walker.All().Single().ToString());
                 Assert.AreEqual(true, walker.TrySingle(out var single));
@@ -66,7 +66,7 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("C");
-            using (var walker = MutationWalker.Borrow(classDeclaration, Scope.Type, semanticModel, CancellationToken.None))
+            using (var walker = MutationWalker.Borrow(classDeclaration, SearchScope.Type, semanticModel, CancellationToken.None))
             {
                 CollectionAssert.IsEmpty(walker.PrefixUnaries);
                 CollectionAssert.IsEmpty(walker.PostfixUnaries);

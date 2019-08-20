@@ -7,11 +7,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
 
     public static class Local
     {
-        [TestCase(Scope.Member, "2")]
-        [TestCase(Scope.Instance, "1, 2")]
-        [TestCase(Scope.Type, "1, 2")]
-        [TestCase(Scope.Recursive, "1, 2")]
-        public static void LocalDeclarationWithExpressionBody(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "2")]
+        [TestCase(SearchScope.Instance, "1, 2")]
+        [TestCase(SearchScope.Type, "1, 2")]
+        [TestCase(SearchScope.Recursive, "1, 2")]
+        public static void LocalDeclarationWithExpressionBody(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -36,11 +36,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "2")]
-        [TestCase(Scope.Instance, "1, 2")]
-        [TestCase(Scope.Type, "1, 2")]
-        [TestCase(Scope.Recursive, "1, 2")]
-        public static void LocalDeclarationWithCastExpressionBody(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "2")]
+        [TestCase(SearchScope.Instance, "1, 2")]
+        [TestCase(SearchScope.Type, "1, 2")]
+        [TestCase(SearchScope.Recursive, "1, 2")]
+        public static void LocalDeclarationWithCastExpressionBody(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

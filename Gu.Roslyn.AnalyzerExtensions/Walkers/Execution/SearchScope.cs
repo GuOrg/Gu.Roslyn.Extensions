@@ -3,7 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// The scope <see cref="ExecutionWalker{T}"/> walks.
     /// </summary>
-    public enum Scope
+    public enum SearchScope
     {
         /// <summary>
         /// Walks the current node, does not follow invocations.

@@ -56,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>A walker that has visited <paramref name="node"/>.</returns>
-        public static MutationWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken) => BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new MutationWalker());
+        public static MutationWalker Borrow(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken) => BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new MutationWalker());
 
         /// <summary>
         /// Get a walker with all mutations for <paramref name="fieldOrProperty"/>.
@@ -69,7 +69,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (fieldOrProperty.Symbol.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
             {
-                var walker = Borrow(typeDeclaration, Scope.Instance, semanticModel, cancellationToken);
+                var walker = Borrow(typeDeclaration, SearchScope.Instance, semanticModel, cancellationToken);
                 walker.assignments.RemoveAll(x => !IsFieldOrProperty(x.Left));
                 walker.prefixUnaries.RemoveAll(x => !IsFieldOrProperty(x.Operand));
                 walker.postfixUnaries.RemoveAll(x => !IsFieldOrProperty(x.Operand));
@@ -131,7 +131,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (localOrParameter.TryGetScope(cancellationToken, out var node))
             {
-                var walker = Borrow(node, Scope.Member, semanticModel, cancellationToken);
+                var walker = Borrow(node, SearchScope.Member, semanticModel, cancellationToken);
                 walker.assignments.RemoveAll(x => !IsMatch(x.Left));
                 walker.prefixUnaries.RemoveAll(x => !IsMatch(x.Operand));
                 walker.postfixUnaries.RemoveAll(x => !IsMatch(x.Operand));

@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets or sets if the walker should walk declarations of invoked methods etc.
         /// </summary>
-        protected Scope Scope { get; set; }
+        protected SearchScope SearchScope { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="SemanticModel"/>.
@@ -51,7 +51,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
-            if (this.Scope != Scope.Member &&
+            if (this.SearchScope != SearchScope.Member &&
                 node?.Initializer == null &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
                 ctor.ContainingType is INamedTypeSymbol containingType &&
@@ -68,13 +68,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitConstructorInitializer(ConstructorInitializerSyntax node)
         {
             base.VisitConstructorInitializer(node);
-            switch (this.Scope)
+            switch (this.SearchScope)
             {
-                case Scope.Member:
+                case SearchScope.Member:
                     break;
-                case Scope.Instance:
-                case Scope.Type:
-                case Scope.Recursive:
+                case SearchScope.Instance:
+                case SearchScope.Type:
+                case SearchScope.Recursive:
                     if (this.visited.Add(node) &&
                         node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
                     {
@@ -83,14 +83,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                     break;
                 default:
-                    throw new InvalidOperationException($"Not handling member {this.Scope}.");
+                    throw new InvalidOperationException($"Not handling member {this.SearchScope}.");
             }
         }
 
         /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
-            if (this.Scope == Scope.Member)
+            if (this.SearchScope == SearchScope.Member)
             {
                 base.VisitObjectCreationExpression(node);
                 return;
@@ -99,7 +99,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (this.visited.Add(node) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var target))
             {
-                if (this.Scope.IsEither(Scope.Instance, Scope.Type) &&
+                if (this.SearchScope.IsEither(SearchScope.Instance, SearchScope.Type) &&
                     !target.ContainingType.Equals(this.ContainingType))
                 {
                     base.VisitObjectCreationExpression(node);
@@ -189,15 +189,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="create">The factory for creating a walker if not found in cache.</param>
         /// <returns>The walker that have visited <paramref name="node"/>.</returns>
-        protected static T BorrowAndVisit(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
+        protected static T BorrowAndVisit(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
 #pragma warning restore CA1068 // CancellationToken parameters must come last
         {
             var walker = Borrow(create);
 
             // Not pretty below here, throwing is perhaps nicer, dunno.
-            walker.Scope = scope == Scope.Member &&
-                           node is TypeDeclarationSyntax ? Scope.Type : scope;
-            if (walker.Scope != Scope.Member)
+            walker.SearchScope = scope == SearchScope.Member &&
+                           node is TypeDeclarationSyntax ? SearchScope.Type : scope;
+            if (walker.SearchScope != SearchScope.Member)
             {
                 if (node is TypeDeclarationSyntax typeDeclaration &&
                     semanticModel.TryGetSymbol(typeDeclaration, cancellationToken, out var containingType))
@@ -214,7 +214,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             walker.SemanticModel = semanticModel;
             walker.CancellationToken = cancellationToken;
             walker.Visit(node);
-            walker.Scope = scope;
+            walker.SearchScope = scope;
             return walker;
         }
 
@@ -243,7 +243,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 foreach (var ctor in walker.Ctors)
                 {
-                    if (this.Scope == Scope.Instance &&
+                    if (this.SearchScope == SearchScope.Instance &&
                         ctor.Modifiers.Any(SyntaxKind.StaticKeyword))
                     {
                         continue;
@@ -257,7 +257,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     this.Visit(member);
                 }
 
-                if (this.Scope == Scope.Recursive)
+                if (this.SearchScope == SearchScope.Recursive)
                 {
                     foreach (var type in walker.Types)
                     {
@@ -290,7 +290,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try getting the target symbol for the node. Check if visited and that the symbol matches <see cref="Scope"/>.
+        /// Try getting the target symbol for the node. Check if visited and that the symbol matches <see cref="SearchScope"/>.
         /// </summary>
         /// <typeparam name="TSymbol">The expected type.</typeparam>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
@@ -301,7 +301,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             symbol = null;
             if (node == null ||
-                this.Scope == Scope.Member)
+                this.SearchScope == SearchScope.Member)
             {
                 return false;
             }
@@ -313,7 +313,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (this.Scope == Scope.Instance &&
+            if (this.SearchScope == SearchScope.Instance &&
                 node.Parent is MemberAccessExpressionSyntax memberAccess &&
                 memberAccess.Expression?.IsEither(SyntaxKind.IdentifierName, SyntaxKind.SimpleMemberAccessExpression) == true)
             {
@@ -323,12 +323,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (this.visited.Add(node) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out symbol))
             {
-                if (this.Scope == Scope.Instance && symbol.IsStatic)
+                if (this.SearchScope == SearchScope.Instance && symbol.IsStatic)
                 {
                     return false;
                 }
 
-                if (this.Scope.IsEither(Scope.Instance, Scope.Type) &&
+                if (this.SearchScope.IsEither(SearchScope.Instance, SearchScope.Type) &&
                     this.ContainingType?.IsAssignableTo(symbol.ContainingType, this.SemanticModel.Compilation) != true)
                 {
                     return false;

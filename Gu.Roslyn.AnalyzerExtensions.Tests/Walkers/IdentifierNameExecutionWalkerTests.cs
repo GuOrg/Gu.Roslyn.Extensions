@@ -8,11 +8,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
 
     public static class IdentifierNameExecutionWalkerTests
     {
-        [TestCase(Scope.Member, "C")]
-        [TestCase(Scope.Instance, "text, C")]
-        [TestCase(Scope.Type, "text, C")]
-        [TestCase(Scope.Recursive, "text, C")]
-        public static void StaticInitializers(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "C")]
+        [TestCase(SearchScope.Instance, "text, C")]
+        [TestCase(SearchScope.Type, "text, C")]
+        [TestCase(SearchScope.Recursive, "text, C")]
+        public static void StaticInitializers(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -35,11 +35,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member, "ValuePropertyKey, DependencyProperty")]
-        [TestCase(Scope.Instance, "ValuePropertyKey, DependencyProperty")]
-        [TestCase(Scope.Type, "ValuePropertyKey, DependencyProperty")]
-        [TestCase(Scope.Recursive, "ValuePropertyKey, DependencyProperty")]
-        public static void DependencyPropertyRegisterReadOnly(Scope scope, string expected)
+        [TestCase(SearchScope.Member, "ValuePropertyKey, DependencyProperty")]
+        [TestCase(SearchScope.Instance, "ValuePropertyKey, DependencyProperty")]
+        [TestCase(SearchScope.Type, "ValuePropertyKey, DependencyProperty")]
+        [TestCase(SearchScope.Recursive, "ValuePropertyKey, DependencyProperty")]
+        public static void DependencyPropertyRegisterReadOnly(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -73,11 +73,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Type)]
-        [TestCase(Scope.Recursive)]
-        public static void TryFindWhenProperty(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Type)]
+        [TestCase(SearchScope.Recursive)]
+        public static void TryFindWhenProperty(SearchScope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -106,11 +106,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Type)]
-        [TestCase(Scope.Recursive)]
-        public static void TryFindWhenProperty2(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Type)]
+        [TestCase(SearchScope.Recursive)]
+        public static void TryFindWhenProperty2(SearchScope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

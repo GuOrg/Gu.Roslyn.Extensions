@@ -10,10 +10,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
 
     public static class ForSymbol
     {
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldWithCtorArg(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldWithCtorArg(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -44,10 +44,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldWithChainedCtorArg(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldWithChainedCtorArg(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -74,7 +74,7 @@ namespace N
             var ctor = syntaxTree.FindConstructorDeclaration("C()");
             AssignmentExpressionSyntax result;
             var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
-            if (scope != Scope.Member)
+            if (scope != SearchScope.Member)
             {
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.value = arg", result.ToString());
@@ -91,10 +91,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldPrivateCtorCalledByInitializer(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldPrivateCtorCalledByInitializer(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -125,10 +125,10 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldWithCtorArgViaProperty(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldWithCtorArgViaProperty(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -156,7 +156,7 @@ namespace N
             var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
             AssignmentExpressionSyntax result;
             var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
-            if (scope != Scope.Member)
+            if (scope != SearchScope.Member)
             {
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.number = value", result.ToString());
@@ -173,11 +173,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Type)]
-        [TestCase(Scope.Recursive)]
-        public static void FieldInPropertyExpressionBody(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Type)]
+        [TestCase(SearchScope.Recursive)]
+        public static void FieldInPropertyExpressionBody(SearchScope scope)
         {
             var code = @"
 namespace N
@@ -201,7 +201,7 @@ namespace N
             var ctor = syntaxTree.FindConstructorDeclaration("C()");
             AssignmentExpressionSyntax result;
             var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
-            if (scope != Scope.Member)
+            if (scope != SearchScope.Member)
             {
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.number = 3", result.ToString());

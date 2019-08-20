@@ -7,11 +7,11 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
 
     public static class Ignore
     {
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Type)]
-        [TestCase(Scope.Recursive)]
-        public static void IgnoreNameOfProperty(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Type)]
+        [TestCase(SearchScope.Recursive)]
+        public static void IgnoreNameOfProperty(SearchScope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -35,11 +35,11 @@ namespace N
             }
         }
 
-        [TestCase(Scope.Member)]
-        [TestCase(Scope.Instance)]
-        [TestCase(Scope.Type)]
-        [TestCase(Scope.Recursive)]
-        public static void IgnoreNameOfMethod(Scope scope)
+        [TestCase(SearchScope.Member)]
+        [TestCase(SearchScope.Instance)]
+        [TestCase(SearchScope.Type)]
+        [TestCase(SearchScope.Recursive)]
+        public static void IgnoreNameOfMethod(SearchScope scope)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

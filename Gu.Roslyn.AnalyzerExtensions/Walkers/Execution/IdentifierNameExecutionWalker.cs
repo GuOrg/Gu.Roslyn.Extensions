@@ -29,7 +29,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>A walker that has visited <paramref name="node"/>.</returns>
-        public static IdentifierNameExecutionWalker Borrow(SyntaxNode node, Scope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static IdentifierNameExecutionWalker Borrow(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new IdentifierNameExecutionWalker());
         }
