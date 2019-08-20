@@ -26,7 +26,7 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyEventAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("E?.Invoke();", CodeStyleResult.No)]
@@ -54,7 +54,7 @@ namespace N
 }".AssertReplace("E?.Invoke();", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyEventAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
     }
 }

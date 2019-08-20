@@ -26,7 +26,7 @@ namespace N
     }
 }");
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("_f1 = 1", CodeStyleResult.No)]
@@ -54,7 +54,7 @@ namespace N
 }".AssertReplace("_f1 = 1", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace N
 }");
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(CodeStyleResult.NotFound, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("this.f", CodeStyleResult.Yes)]
@@ -91,7 +91,7 @@ namespace N
 }".AssertReplace("this.f", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("this.f", CodeStyleResult.Yes)]
@@ -110,7 +110,7 @@ namespace N
 }".AssertReplace("this.f", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("this.f", CodeStyleResult.Yes)]
@@ -132,7 +132,7 @@ namespace N
 }".AssertReplace("this.f", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("this.f", CodeStyleResult.Yes)]
@@ -154,7 +154,7 @@ namespace N
 }".AssertReplace("this.f", expression));
 
             var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
         [TestCase("this.f = 1", CodeStyleResult.Yes)]
@@ -188,7 +188,7 @@ namespace N
 
             foreach (var document in sln.Projects.Single().Documents)
             {
-                Assert.AreEqual(expected, await CodeStyle.QualifyFieldAccessAsync(document, CancellationToken.None).ConfigureAwait(false));
+                Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
             }
         }
     }
