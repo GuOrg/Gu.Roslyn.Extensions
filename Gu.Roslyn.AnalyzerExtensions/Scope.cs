@@ -79,6 +79,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         return false;
                     case BlockSyntax block when DeclaresLocal(block):
                         return true;
+                    case SwitchSectionSyntax switchSection:
+                        foreach (var label in switchSection.Labels)
+                        {
+                            if (label is CasePatternSwitchLabelSyntax casePattern &&
+                                casePattern.Pattern is DeclarationPatternSyntax declarationPattern &&
+                                DesignatesLocal(declarationPattern.Designation))
+                            {
+                                return true;
+                            }
+                        }
+
+                        break;
                 }
 
                 scope = scope.Parent;
@@ -95,8 +107,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         case LocalDeclarationStatementSyntax localDeclaration when localDeclaration.Declaration is VariableDeclarationSyntax declaration:
                             foreach (var variable in declaration.Variables)
                             {
-                                if (variable.Identifier.Text == name ||
-                                    variable.Identifier.ValueText == name)
+                                if (IsMatch(variable.Identifier))
                                 {
                                     return true;
                                 }
@@ -106,12 +117,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         case IfStatementSyntax ifStatement when ifStatement.Condition is ExpressionSyntax condition:
                             foreach (SyntaxNode node in condition.DescendantNodes())
                             {
-                                if (node is DeclarationExpressionSyntax declaration &&
-                                    declaration.Designation is SingleVariableDesignationSyntax variable &&
-                                    (variable.Identifier.Text == name ||
-                                     variable.Identifier.ValueText == name))
+                                switch (node)
                                 {
-                                    return true;
+                                    case DeclarationExpressionSyntax declaration when declaration.Designation is SingleVariableDesignationSyntax variable &&
+                                                                                      IsMatch(variable.Identifier):
+                                        return true;
+                                    case DeclarationPatternSyntax declaration when DesignatesLocal(declaration.Designation):
+                                        return true;
                                 }
                             }
 
@@ -121,6 +133,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 return false;
             }
+
+            bool DesignatesLocal(VariableDesignationSyntax candidate)
+            {
+                switch (candidate)
+                {
+                    case SingleVariableDesignationSyntax variable:
+                        return IsMatch(variable.Identifier);
+                    default:
+                        return true;
+                }
+            }
+
+            bool IsMatch(SyntaxToken identifier) => identifier.Text == name || identifier.ValueText == name;
         }
 
         /// <summary>

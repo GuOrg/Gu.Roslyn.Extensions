@@ -366,5 +366,67 @@ namespace N
             var node = syntaxTree.Find<SyntaxNode>(location);
             Assert.AreEqual(expected, Scope.HasLocal(node, name));
         }
+
+        [TestCase("1", "x", true)]
+        [TestCase("1", "y", true)]
+        [TestCase("2", "x", true)]
+        [TestCase("2", "y", true)]
+        [TestCase("3", "x", true)]
+        [TestCase("3", "y", true)]
+        public static void HasLocalLocalIsPattern(string location, string name, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        int M(object o)
+        {
+            var x = 1;
+
+            if (o is int y)
+            {
+                return 2;
+            }
+
+            return 3;
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(location);
+            Assert.AreEqual(expected, Scope.HasLocal(node, name));
+        }
+
+        [TestCase("1", "x", true)]
+        [TestCase("1", "y", false)]
+        [TestCase("2", "x", true)]
+        [TestCase("2", "y", true)]
+        [TestCase("3", "x", true)]
+        [TestCase("3", "y", false)]
+        public static void HasLocalSwitch(string location, string name, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        int M(object o)
+        {
+            var x = 1;
+            switch (o)
+            {
+                case int y:
+                    return 2;
+            }
+
+            return 3;
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var node = syntaxTree.Find<SyntaxNode>(location);
+            Assert.AreEqual(expected, Scope.HasLocal(node, name));
+        }
     }
 }
