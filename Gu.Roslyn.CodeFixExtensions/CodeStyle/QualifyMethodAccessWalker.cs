@@ -55,27 +55,34 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             switch (node.Parent)
             {
-                case InvocationExpressionSyntax _ when IsMemberMethod():
+                case InvocationExpressionSyntax _:
                 case ArgumentSyntax argument when argument.Parent is ArgumentListSyntax argumentList &&
                                                   argumentList.Parent is InvocationExpressionSyntax invocation &&
-                                                  invocation.IsNameOf() &&
-                                                  IsMemberMethod():
-                    this.Update(CodeStyleResult.No);
+                                                  invocation.IsNameOf():
+                    if (IsInstanceMethod() &&
+                        !Scope.HasLocal(node, node.Identifier.ValueText) &&
+                        !Scope.HasParameter(node, node.Identifier.ValueText))
+                    {
+                        this.Update(CodeStyleResult.No);
+                    }
+
                     break;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Name == node &&
                                                                     memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
-                                                                    IsMemberMethod():
+                                                                    IsInstanceMethod():
                     this.Update(CodeStyleResult.Yes);
                     break;
             }
 
-            bool IsMemberMethod()
+            bool IsInstanceMethod()
             {
                 return !node.IsInStaticContext() &&
                        node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
                        containingType.TryFindMethod(node.Identifier.Text, out var method) &&
                        !method.Modifiers.Any(SyntaxKind.StaticKeyword) &&
-                       !containingType.TryFindMethod(node.Identifier.Text, x => x.Modifiers.Any(SyntaxKind.StaticKeyword), out _);
+                       !containingType.TryFindMethod(node.Identifier.Text, x => x.Modifiers.Any(SyntaxKind.StaticKeyword), out _) &&
+                       !Scope.HasLocal(node, node.Identifier.ValueText) &&
+                       !Scope.HasParameter(node, node.Identifier.ValueText);
             }
         }
     }

@@ -56,27 +56,32 @@ namespace Gu.Roslyn.CodeFixExtensions
             switch (node.Parent)
             {
                 case AssignmentExpressionSyntax assignment when assignment.Left.Contains(node) &&
-                                                                !assignment.Parent.IsKind(SyntaxKind.ObjectInitializerExpression) &&
-                                                                IsMemberField():
-                case ArrowExpressionClauseSyntax _ when IsMemberField():
-                case ReturnStatementSyntax _ when IsMemberField():
-                case ArgumentSyntax _ when IsMemberField():
-                    this.Update(CodeStyleResult.No);
+                                                                !assignment.Parent.IsKind(SyntaxKind.ObjectInitializerExpression):
+                case ArrowExpressionClauseSyntax _:
+                case ReturnStatementSyntax _:
+                case ArgumentSyntax _:
+                    if (IsInstanceField() &&
+                        !Scope.HasLocal(node, node.Identifier.ValueText) &&
+                        !Scope.HasParameter(node, node.Identifier.ValueText))
+                    {
+                        this.Update(CodeStyleResult.No);
+                    }
+
                     break;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Contains(node) &&
                                                                     memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
-                                                                    IsMemberField():
+                                                                    IsInstanceField():
                     this.Update(CodeStyleResult.Yes);
                     break;
             }
 
-            bool IsMemberField()
+            bool IsInstanceField()
             {
                 return !node.IsInStaticContext() &&
                        node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
                        containingType.TryFindField(node.Identifier.ValueText, out var field) &&
                        !field.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);
-            }
         }
     }
+}
 }

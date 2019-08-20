@@ -56,26 +56,33 @@ namespace Gu.Roslyn.CodeFixExtensions
             switch (node.Parent)
             {
                 case AssignmentExpressionSyntax assignment when assignment.Left.Contains(node) &&
-                                                                !assignment.Parent.IsKind(SyntaxKind.ObjectInitializerExpression) &&
-                                                                IsMemberProperty():
-                case ArrowExpressionClauseSyntax _ when IsMemberProperty():
-                case ReturnStatementSyntax _ when IsMemberProperty():
-                case ArgumentSyntax _ when IsMemberProperty():
-                    this.Update(CodeStyleResult.No);
+                                                                !assignment.Parent.IsKind(SyntaxKind.ObjectInitializerExpression):
+                case ArrowExpressionClauseSyntax _:
+                case ReturnStatementSyntax _:
+                case ArgumentSyntax _:
+                    if (IsInstanceProperty() &&
+                        !Scope.HasLocal(node, node.Identifier.ValueText) &&
+                        !Scope.HasParameter(node, node.Identifier.ValueText))
+                    {
+                        this.Update(CodeStyleResult.No);
+                    }
+
                     break;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Name == node &&
                                                                     memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
-                                                                    IsMemberProperty():
+                                                                    IsInstanceProperty():
                     this.Update(CodeStyleResult.Yes);
                     break;
             }
 
-            bool IsMemberProperty()
+            bool IsInstanceProperty()
             {
                 return !node.IsInStaticContext() &&
                        node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
                        containingType.TryFindProperty(node.Identifier.ValueText, out var property) &&
-                       !property.Modifiers.Any(SyntaxKind.StaticKeyword);
+                       !property.Modifiers.Any(SyntaxKind.StaticKeyword) &&
+                       !Scope.HasLocal(node, node.Identifier.ValueText) &&
+                       !Scope.HasParameter(node, node.Identifier.ValueText);
             }
         }
     }

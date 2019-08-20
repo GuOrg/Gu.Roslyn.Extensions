@@ -99,6 +99,22 @@ namespace N
             Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
+        [Test]
+        public static async Task UsedInNameofShadowed()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace N
+{
+    class C
+    {
+        public void M() { }
+
+        public string M2(int M) => nameof(M);
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.NotFound, await editor.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
+        }
+
         [TestCase("M1()",      CodeStyleResult.No)]
         [TestCase("this.M1()", CodeStyleResult.Yes)]
         [TestCase("M2()",      CodeStyleResult.NotFound)]
