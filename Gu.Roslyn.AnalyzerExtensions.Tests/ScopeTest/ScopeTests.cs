@@ -1,23 +1,23 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.ScopeTests
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.ScopeTest
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public static class IsInStaticContext
+    public static class ScopeTests
     {
         [TestCase("0", true)]
-        [TestCase("1",       true)]
-        [TestCase("2",       true)]
-        [TestCase("3",       false)]
-        [TestCase("4",       true)]
-        [TestCase("5",       false)]
-        [TestCase("6",       true)]
-        [TestCase("7",       true)]
-        [TestCase("8",       true)]
-        [TestCase("9",       false)]
-        public static void Expression(string expression, bool expected)
+        [TestCase("1", true)]
+        [TestCase("2", true)]
+        [TestCase("3", false)]
+        [TestCase("4", true)]
+        [TestCase("5", false)]
+        [TestCase("6", true)]
+        [TestCase("7", true)]
+        [TestCase("8", true)]
+        [TestCase("9", false)]
+        public static void IsInStaticContext(string expression, bool expected)
         {
             var code = @"
 namespace N
@@ -57,5 +57,4 @@ namespace N
             var node = syntaxTree.Find<SyntaxNode>(expression);
             Assert.AreEqual(expected, node.IsInStaticContext());
         }
-    }
 }

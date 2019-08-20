@@ -300,7 +300,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (ReferenceEquals(statement,        other) ||
+            if (ReferenceEquals(statement, other) ||
                 ReferenceEquals(statement.Parent, other.Parent))
             {
                 return false;
