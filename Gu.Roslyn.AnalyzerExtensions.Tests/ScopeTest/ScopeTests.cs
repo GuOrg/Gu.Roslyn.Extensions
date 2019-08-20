@@ -58,17 +58,26 @@ namespace N
             Assert.AreEqual(expected, node.IsInStaticContext());
         }
 
-        [TestCase("0", null, false)]
-        [TestCase("1", null, false)]
-        [TestCase("2", null, false)]
-        [TestCase("3", "x", true)]
-        [TestCase("3", "WRONG", false)]
-        [TestCase("4", null, false)]
-        [TestCase("5", "value", true)]
-        [TestCase("6", null,    false)]
-        [TestCase("7", "value", true)]
-        [TestCase("8", "x", true)]
-        [TestCase("9", "x", true)]
+        [TestCase("0",  null,    false)]
+        [TestCase("1",  null,    false)]
+        [TestCase("2",  null,    false)]
+        [TestCase("3",  "x",     true)]
+        [TestCase("3",  "WRONG", false)]
+        [TestCase("4",  null,    false)]
+        [TestCase("5",  "value", true)]
+        [TestCase("6",  null,    false)]
+        [TestCase("7",  "value", true)]
+        [TestCase("8",  "x",     true)]
+        [TestCase("9",  "x",     true)]
+        [TestCase("10", "x",     true)]
+        [TestCase("10", "y",     true)]
+        [TestCase("11", "x",     true)]
+        [TestCase("11", "z",     true)]
+        [TestCase("12", "x",     true)]
+        [TestCase("12", "y",     false)]
+        [TestCase("13", "x",     true)]
+        [TestCase("13", "y",     false)]
+        [TestCase("13", "w",     true)]
         public static void HasParameter(string expression, string name, bool expected)
         {
             var code = @"
@@ -105,9 +114,21 @@ namespace N
 
         int M(int x) => 8;
 
-        void M(double x)
+        int M(double x)
         {
             return 9;
+        }
+
+        static int M(string x)
+        {
+            Func<int, int> f1 = y => 10;
+            Func<int, int> f2 = z => 11;
+            return 12;
+
+            int M(long w)
+            {
+                return 13;
+            }
         }
     }
 }";

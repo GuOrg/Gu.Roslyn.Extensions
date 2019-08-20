@@ -17,25 +17,43 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the current scope has a parameter named <paramref name="name"/>.</returns>
         public static bool HasParameter(SyntaxNode nodeInScope, string name)
         {
-            if (nodeInScope.TryFirstAncestorOrSelf(out BaseMethodDeclarationSyntax method) &&
-                !method.AttributeLists.TryFirst(x => x.Contains(nodeInScope), out _))
+            if (nodeInScope is null)
             {
-                return method.ParameterList is ParameterListSyntax parameterList &&
-                       parameterList.TryFind(name, out _);
+                throw new System.ArgumentNullException(nameof(nodeInScope));
             }
 
-            if (nodeInScope.TryFirstAncestorOrSelf(out AccessorDeclarationSyntax accessor))
+            var scope = nodeInScope.Parent;
+            while (scope != null)
             {
-                switch (accessor.Kind())
+                switch (scope)
                 {
-                    case SyntaxKind.AddAccessorDeclaration:
-                    case SyntaxKind.RemoveAccessorDeclaration:
-                    case SyntaxKind.SetAccessorDeclaration:
-                        return name == "value";
+                    case BaseMethodDeclarationSyntax method:
+                        return HasParameter(method.ParameterList);
+                    case AccessorDeclarationSyntax accessor:
+                        switch (accessor.Kind())
+                        {
+                            case SyntaxKind.AddAccessorDeclaration:
+                            case SyntaxKind.RemoveAccessorDeclaration:
+                            case SyntaxKind.SetAccessorDeclaration:
+                                return name == "value";
+                        }
+
+                        return false;
+                    case ParenthesizedLambdaExpressionSyntax lambda when HasParameter(lambda.ParameterList):
+                    case SimpleLambdaExpressionSyntax simpleLambda when simpleLambda.Parameter?.Identifier.Text == name:
+                    case LocalFunctionStatementSyntax localFunction when HasParameter(localFunction.ParameterList):
+                        return true;
                 }
+
+                scope = scope.Parent;
             }
 
             return false;
+
+            bool HasParameter(ParameterListSyntax parameterList)
+            {
+                return parameterList.TryFind(name, out _);
+            }
         }
 
         /// <summary>
