@@ -1,6 +1,8 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
     using Gu.Roslyn.AnalyzerExtensions;
@@ -34,17 +36,16 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return containingResult;
             }
 
-            foreach (var document in containing.Project.Documents)
+            using (var set = PooledSet<Document>.Borrow())
             {
-                if (document == containing)
+                foreach (var document in Documents())
                 {
-                    continue;
-                }
-
-                if (await Check(document).ConfigureAwait(false) is CodeStyleResult documentResult &&
-                    documentResult != CodeStyleResult.NotFound)
-                {
-                    return documentResult;
+                    if (set.Add(document) &&
+                        await Check(document).ConfigureAwait(false) is CodeStyleResult documentResult &&
+                        documentResult != CodeStyleResult.NotFound)
+                    {
+                        return documentResult;
+                    }
                 }
             }
 
@@ -70,6 +71,87 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
 
                 return CodeStyleResult.NotFound;
+            }
+
+            IEnumerable<Document> Documents()
+            {
+                foreach (var document in containing.Project.Documents)
+                {
+                    if (Equals(document.Folders, containing.Folders))
+                    {
+                        yield return document;
+                    }
+                }
+
+                foreach (var document in containing.Project.Documents)
+                {
+                    if (IsIn(document.Folders, containing.Folders))
+                    {
+                        yield return document;
+                    }
+                }
+
+                foreach (var document in containing.Project.Documents)
+                {
+                    if (document.Folders.TrySingle(out var folder) &&
+                        folder == "obj")
+                    {
+                        continue;
+                    }
+
+                    yield return document;
+                }
+
+                bool Equals(IReadOnlyList<string> x, IReadOnlyList<string> y)
+                {
+                    if (x is null && y is null)
+                    {
+                        return true;
+                    }
+
+                    if (x is null || y is null)
+                    {
+                        return false;
+                    }
+
+                    if (x.Count == y.Count)
+                    {
+                        for (int i = 0; i < x.Count; i++)
+                        {
+                            if (x[i] != y[i])
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                bool IsIn(IReadOnlyList<string> x, IReadOnlyList<string> y)
+                {
+                    if (x is null || y is null)
+                    {
+                        return false;
+                    }
+
+                    if (x.Count > y.Count)
+                    {
+                        for (int i = 0; i < y.Count; i++)
+                        {
+                            if (x[i] != y[i])
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                }
             }
         }
 
