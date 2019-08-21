@@ -102,7 +102,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="trivia"/> before existing trivia.
         /// </summary>
         /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
         /// <returns>The node with updated trivia.</returns>
         public static T PrependLeadingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
@@ -125,7 +125,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="trivia"/> before existing trivia.
         /// </summary>
         /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
         /// <returns>The node with updated trivia.</returns>
         public static T PrependLeadingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
@@ -148,12 +148,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="trivia"/> after existing trivia.
         /// </summary>
         /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
         /// <returns>The node with updated trivia.</returns>
         public static T AppendLeadingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
             where T : SyntaxNode
         {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             if (node.HasLeadingTrivia)
             {
                 return node.WithLeadingTrivia(node.GetLeadingTrivia().Concat(trivia));
@@ -166,7 +171,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="trivia"/> after existing trivia.
         /// </summary>
         /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
         /// <returns>The node with updated trivia.</returns>
         public static T AppendLeadingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
@@ -189,12 +194,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="trivia"/> before existing trivia.
         /// </summary>
         /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
         /// <returns>The node with updated trivia.</returns>
         public static T PrependTrailingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
             where T : SyntaxNode
         {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             if (node.HasTrailingTrivia)
             {
                 return node.WithTrailingTrivia(trivia.Concat(node.GetTrailingTrivia()));
@@ -207,7 +217,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="trivia"/> before existing trivia.
         /// </summary>
         /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
         /// <returns>The node with updated trivia.</returns>
         public static T PrependTrailingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
@@ -230,7 +240,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="trivia"/> after existing trivia.
         /// </summary>
         /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
         /// <returns>The node with updated trivia.</returns>
         public static T AppendTrailingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
@@ -253,7 +263,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="trivia"/> after existing trivia.
         /// </summary>
         /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="T"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
         /// <returns>The node with updated trivia.</returns>
         public static T AppendTrailingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
