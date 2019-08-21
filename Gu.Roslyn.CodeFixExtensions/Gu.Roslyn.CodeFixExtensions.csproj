@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.6.2.1-dev</Version>
+    <Version>0.7-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -17,14 +17,9 @@
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer codefix</PackageTags>
-    <PackageReleaseNotes>
-      FEATURE: DocumentEditor.MoveBefore and MoveAfter.
-      BUGFIX: Simplify in doc comments.
-      BUGFIX: AttributeSyntaxExt.TryFindArgument when name.
-      BREAKING: Move TryFindArgument to AttributeSyntaxExt.
-      FEATURE: QualifiedType.Equals handle alias.
-      BUGFIX: Infinite reqursion in TypeSyntax == QualifiedType when aliased.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>FEATURE: Scope
+BREAKING: Rename SearchScope, was Scope
+BREAKING: Move IsExecutedBefore extension method to Scope</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>

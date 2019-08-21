@@ -1,3 +1,8 @@
+#### 0.7
+FEATURE: Scope
+BREAKING: Rename SearchScope, was Scope
+BREAKING: Move IsExecutedBefore extension method to Scope
+
 #### 0.6.2
 FEATURE: DocumentEditor.MoveBefore and MoveAfter.
 BUGFIX: Simplify in doc comments.
