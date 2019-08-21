@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
-    using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>

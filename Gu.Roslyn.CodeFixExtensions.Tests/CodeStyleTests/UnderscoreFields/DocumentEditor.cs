@@ -81,5 +81,55 @@ namespace N
                 Assert.AreEqual(expected, CodeStyle.UnderscoreFields(editor));
             }
         }
+
+        [Test]
+        public static void Repro()
+        {
+            var editor = CreateDocumentEditor(@"
+namespace Vanguard_MVVM.ViewModels
+{
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+
+    public sealed class MainWindowViewModel : INotifyPropertyChanged
+    {
+        IChildDataContext _childDataContext;
+        readonly string _title;
+        MainWindowViewModel()
+        {
+            _title = ""MVVM Attempt"";
+        }
+
+        public IChildDataContext ChildDataContext
+        {
+            get { return _childDataContext; }
+
+            private set
+            {
+                if (Equals(value, _childDataContext)) return;
+                ↓_childDataContext = value;
+                NotifyPropertyChanged(nameof(ChildDataContext));
+            }
+        }
+
+        public static MainWindowViewModel Instance { get; } = new MainWindowViewModel();
+
+        public string Title => ChildDataContext?.Title == null ? _title : string.Concat(_title, "" - "", ChildDataContext?.Title);
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void NotifyPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+    }
+}");
+            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.UnderscoreFields(editor));
+        }
+
+        private static Microsoft.CodeAnalysis.Editing.DocumentEditor CreateDocumentEditor(string code)
+        {
+            return Microsoft.CodeAnalysis.Editing.DocumentEditor.CreateAsync(CodeFactory.CreateSolution(code).Projects.Single().Documents.Single()).Result;
+        }
     }
 }

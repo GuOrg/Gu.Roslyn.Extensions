@@ -54,7 +54,8 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(node));
             }
 
-            if (node.Modifiers.Any(SyntaxKind.PrivateKeyword) && !node.Modifiers.Any(SyntaxKind.ConstKeyword, SyntaxKind.StaticKeyword))
+            if (!node.Modifiers.Any(SyntaxKind.ProtectedKeyword, SyntaxKind.InternalKeyword, SyntaxKind.PublicKeyword) &&
+                !node.Modifiers.Any(SyntaxKind.ConstKeyword, SyntaxKind.StaticKeyword))
             {
                 foreach (var variable in node.Declaration.Variables)
                 {
