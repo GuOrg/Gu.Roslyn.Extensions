@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.ScopeTests
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Scope
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;

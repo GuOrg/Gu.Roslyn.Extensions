@@ -1,9 +1,10 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.ScopeTest
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Scope
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
+    using Scope = Gu.Roslyn.AnalyzerExtensions.Scope;
 
     public static class ScopeTests
     {
