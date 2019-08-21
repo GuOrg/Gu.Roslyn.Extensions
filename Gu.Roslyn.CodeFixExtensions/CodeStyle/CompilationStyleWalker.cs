@@ -52,8 +52,13 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             async Task<CodeStyleResult> Check(Document candidate)
             {
+                if (IsExcluded(candidate.FilePath))
+                {
+                    return CodeStyleResult.NotFound;
+                }
+
                 var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-                if (IsExcluded(tree))
+                if (IsExcluded(tree.FilePath))
                 {
                     return CodeStyleResult.NotFound;
                 }
@@ -110,7 +115,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             CodeStyleResult Check(SyntaxTree tree)
             {
-                if (IsExcluded(tree))
+                if (IsExcluded(tree.FilePath))
                 {
                     return CodeStyleResult.NotFound;
                 }
@@ -163,10 +168,10 @@ namespace Gu.Roslyn.CodeFixExtensions
             this.result = CodeStyleResult.NotFound;
         }
 
-        private static bool IsExcluded(SyntaxTree syntaxTree)
+        private static bool IsExcluded(string filePath)
         {
-            return syntaxTree.FilePath.EndsWith(".g.i.cs", StringComparison.Ordinal) ||
-                   syntaxTree.FilePath.EndsWith(".g.cs", StringComparison.Ordinal);
+            return filePath.EndsWith(".g.i.cs", StringComparison.Ordinal) ||
+                   filePath.EndsWith(".g.cs", StringComparison.Ordinal);
         }
     }
 }
