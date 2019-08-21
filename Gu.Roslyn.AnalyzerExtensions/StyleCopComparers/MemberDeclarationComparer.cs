@@ -115,14 +115,16 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>
         /// <returns>A signed integer that indicates if the node is before or after the other in the document.</returns>
-        public static int CompareSpanStart(int x, int y)
+        public static int CompareSpanStart(SyntaxNode x, SyntaxNode y)
         {
-            if (x == 0 || y == 0)
+            if (x?.SyntaxTree is SyntaxTree treeX &&
+                y?.SyntaxTree is SyntaxTree treeY &&
+                treeX.FilePath == treeY.FilePath)
             {
-                return 0;
+                return x.SpanStart.CompareTo(y.SpanStart);
             }
 
-            return x.CompareTo(y);
+            return 0;
         }
 
         /// <summary>
@@ -200,7 +202,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                         return true;
                     }
 
-                    result = CompareSpanStart(x.SpanStart, y.SpanStart);
+                    result = CompareSpanStart(x, y);
                     return true;
                 }
 

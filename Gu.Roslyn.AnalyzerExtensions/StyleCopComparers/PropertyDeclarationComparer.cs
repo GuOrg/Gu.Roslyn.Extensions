@@ -72,7 +72,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 return 1;
             }
 
-            return MemberDeclarationComparer.CompareSpanStart(x.SpanStart, y.SpanStart);
+            return MemberDeclarationComparer.CompareSpanStart(x, y);
         }
 
         /// <inheritdoc />

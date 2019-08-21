@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
@@ -19,8 +20,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="generator">The <see cref="SyntaxGenerator"/>.</param>
         /// <param name="containingType">The containing type.</param>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
-        public static TypeDeclarationSyntax AddSorted(this SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member)
+        public static TypeDeclarationSyntax AddSorted(this SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member, IComparer<MemberDeclarationSyntax> comparer = null)
         {
             if (generator == null)
             {
@@ -37,16 +39,22 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new System.ArgumentNullException(nameof(member));
             }
 
+            comparer = comparer ?? MemberDeclarationComparer.Default;
+            if (!member.HasLeadingTrivia)
+            {
+                member = member.WithLeadingTrivia(SyntaxFactory.Whitespace(containingType.LeadingWhitespace() + "    "));
+            }
+
+            if (!member.HasTrailingTrivia)
+            {
+                member = member.WithTrailingLineFeed();
+            }
+
             for (var i = 0; i < containingType.Members.Count; i++)
             {
                 var existing = containingType.Members[i];
-                if (MemberDeclarationComparer.Compare(member, existing) < 0)
+                if (comparer.Compare(member, existing) < 0)
                 {
-                    if (!member.HasTrailingTrivia)
-                    {
-                        member = member.WithTrailingLineFeed();
-                    }
-
                     if (TryMoveDirectives(existing.GetFirstToken(), member, out var token, out var memberWithDirectives))
                     {
                         containingType = (TypeDeclarationSyntax)generator.InsertNodesBefore(
@@ -97,8 +105,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 source.LeadingTrivia.Any(x => ShouldMove(x)))
             {
                 updated = source.WithLeadingTrivia(source.LeadingTrivia.SkipWhile(x => ShouldMove(x)));
-                var leading = source.LeadingTrivia.TakeWhile(x => ShouldMove(x)).Concat(new[] { SyntaxFactory.LineFeed }).ToArray();
-                updatedTarget = target.WithLeadingTrivia(leading);
+                updatedTarget = target.PrependLeadingTrivia(source.LeadingTrivia.TakeWhile(x => ShouldMove(x)).Concat(new[] { SyntaxFactory.LineFeed }));
                 return true;
             }
 
@@ -122,10 +129,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         private static bool ShouldAddLeadingLineFeed(MemberDeclarationSyntax before, MemberDeclarationSyntax after)
         {
-            if (after.HasLeadingTrivia &&
-                after.GetLeadingTrivia() is SyntaxTriviaList leading &&
-                leading.TryFirst(out var first) &&
-                first.IsKind(SyntaxKind.EndOfLineTrivia))
+            if (after.TryGetLeadingNewLine(out _))
             {
                 return false;
             }

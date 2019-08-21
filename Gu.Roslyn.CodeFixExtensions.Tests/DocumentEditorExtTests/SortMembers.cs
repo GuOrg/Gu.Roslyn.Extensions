@@ -81,9 +81,9 @@ namespace N
         public struct S2 { }
 
         private class C1 { }
-        
+
         class C2 { }
-        
+
         private static class C3 { }
 
         public class C4 { }

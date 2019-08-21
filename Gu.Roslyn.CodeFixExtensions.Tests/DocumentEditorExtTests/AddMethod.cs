@@ -309,7 +309,7 @@ namespace N
     public class C
     {
 #if true
-     private int M() => 1;
+        private int M() => 1;
 #endif
     }
 }";
