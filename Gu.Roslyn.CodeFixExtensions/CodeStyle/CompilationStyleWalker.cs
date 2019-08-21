@@ -251,6 +251,11 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         private static bool IsExcluded(string filePath)
         {
+            if (filePath == null)
+            {
+                return false;
+            }
+
             return filePath.EndsWith(".g.i.cs", StringComparison.Ordinal) ||
                    filePath.EndsWith(".g.cs", StringComparison.Ordinal);
         }
