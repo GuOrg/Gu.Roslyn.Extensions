@@ -1,7 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -34,50 +33,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             comment = null;
             return false;
-        }
-
-        /// <summary>
-        /// Get the leading whitespace for the accessor.
-        /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <returns>The string with the leading whitespace.</returns>
-        public static string LeadingWhitespace(this MemberDeclarationSyntax member)
-        {
-            if (member == null)
-            {
-                throw new System.ArgumentNullException(nameof(member));
-            }
-
-            if (member.HasLeadingTrivia &&
-                member.GetLeadingTrivia() is var triviaList &&
-                triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
-            {
-                return trivia.ToString();
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Get the leading whitespace for the accessor.
-        /// </summary>
-        /// <param name="accessor">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <returns>The string with the leading whitespace.</returns>
-        public static string LeadingWhitespace(this AccessorDeclarationSyntax accessor)
-        {
-            if (accessor == null)
-            {
-                throw new System.ArgumentNullException(nameof(accessor));
-            }
-
-            if (accessor.HasLeadingTrivia &&
-                accessor.GetLeadingTrivia() is var triviaList &&
-                triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
-            {
-                return trivia.ToString();
-            }
-
-            return null;
         }
     }
 }

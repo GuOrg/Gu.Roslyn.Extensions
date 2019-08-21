@@ -1,6 +1,7 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.MemberDeclarationSyntaxExtensionsTests
+namespace Gu.Roslyn.CodeFixExtensions.Tests.TriviaTests
 {
     using Gu.Roslyn.Asserts;
+    using Gu.Roslyn.CodeFixExtensions;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
