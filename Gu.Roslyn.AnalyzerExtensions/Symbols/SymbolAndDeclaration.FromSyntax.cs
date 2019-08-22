@@ -7,7 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helper class with factory methods for <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.
     /// </summary>
-    public static class SymbolAndDeclaration
+    public static partial class SymbolAndDeclaration
     {
         /// <summary>
         /// Create a <see cref="SymbolAndDeclaration{IFieldSymbol, FieldDeclarationSyntax}"/> is symbol exists.

@@ -49,6 +49,62 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Try to get the single declaration of a property.
+        /// </summary>
+        /// <param name="symbol">The <see cref="IEventSymbol"/>. </param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="declaration">The declaration.</param>
+        /// <returns>True if one declaration was found.</returns>
+        public static bool TrySingleDeclaration(this IEventSymbol symbol, CancellationToken cancellationToken, out MemberDeclarationSyntax declaration)
+        {
+            declaration = null;
+            if (symbol != null &&
+                symbol.DeclaringSyntaxReferences.TrySingle(out var reference))
+            {
+                declaration = reference.GetSyntax(cancellationToken) as MemberDeclarationSyntax;
+            }
+
+            return declaration != null;
+        }
+
+        /// <summary>
+        /// Try to get the single declaration of a property.
+        /// </summary>
+        /// <param name="symbol">The <see cref="IEventSymbol"/>. </param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="declaration">The declaration.</param>
+        /// <returns>True if one declaration was found.</returns>
+        public static bool TrySingleEventDeclaration(this IEventSymbol symbol, CancellationToken cancellationToken, out EventDeclarationSyntax declaration)
+        {
+            declaration = null;
+            if (symbol != null &&
+                symbol.DeclaringSyntaxReferences.TrySingle(out var reference))
+            {
+                declaration = reference.GetSyntax(cancellationToken) as EventDeclarationSyntax;
+            }
+
+            return declaration != null;
+        }
+
+        /// Try to get the single declaration of a property.
+        /// </summary>
+        /// <param name="symbol">The <see cref="IEventSymbol"/>. </param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="declaration">The declaration.</param>
+        /// <returns>True if one declaration was found.</returns>
+        public static bool TrySingleEventFieldDeclaration(this IEventSymbol symbol, CancellationToken cancellationToken, out EventFieldDeclarationSyntax declaration)
+        {
+            declaration = null;
+            if (symbol != null &&
+                symbol.DeclaringSyntaxReferences.TrySingle(out var reference))
+            {
+                declaration = reference.GetSyntax(cancellationToken) as EventFieldDeclarationSyntax;
+            }
+
+            return declaration != null;
+        }
+
+        /// <summary>
         /// Try to get the single declaration of a method.
         /// </summary>
         /// <param name="method">The <see cref="IMethodSymbol"/>. </param>
