@@ -146,7 +146,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Operators == and !=
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="ConditionalAccessExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="instance">The left value.</param>
