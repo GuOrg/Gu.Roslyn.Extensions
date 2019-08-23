@@ -146,6 +146,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Operators == and !=
         /// Equals, ReferenceEquals.
         /// </summary>
+        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <param name="instance">The left value.</param>
+        /// <param name="other">The right value.</param>
+        /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
+        public static bool IsInstanceEquals(ConditionalAccessExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax instance, out ExpressionSyntax other)
+        {
+            return IsInstanceEquals(candidate?.WhenNotNull, semanticModel, cancellationToken, out instance, out other);
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is a check for equality.
+        /// Operators == and !=
+        /// Equals, ReferenceEquals.
+        /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
@@ -158,9 +174,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 case InvocationExpressionSyntax invocation:
                     return IsInstanceEquals(invocation, semanticModel, cancellationToken, out instance, out other);
-                case ConditionalAccessExpressionSyntax conditionalAccess
-                    when conditionalAccess.WhenNotNull is InvocationExpressionSyntax invocation:
-                    return IsInstanceEquals(invocation, semanticModel, cancellationToken, out instance, out other);
+                case ConditionalAccessExpressionSyntax conditionalAccess:
+                    return IsInstanceEquals(conditionalAccess, semanticModel, cancellationToken, out instance, out other);
                 case BinaryExpressionSyntax binary
                     when IsOperatorEquals(binary, out var x, out var y) ||
                          IsOperatorNotEquals(binary, out x, out y):
