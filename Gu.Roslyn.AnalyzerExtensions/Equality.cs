@@ -443,7 +443,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             switch (type.SpecialType)
             {
-                case SpecialType.System_Enum:
                 case SpecialType.System_Boolean:
                 case SpecialType.System_Char:
                 case SpecialType.System_SByte:
@@ -462,6 +461,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case SpecialType.System_UIntPtr:
                 case SpecialType.System_DateTime:
                     return true;
+            }
+
+            if (type == QualifiedType.System.NullableOfT)
+            {
+                return type.TryGetSingleTypeArgument(out var typeArgument) &&
+                       HasEqualityOperator(typeArgument);
             }
 
             if (type.TypeKind == TypeKind.Enum ||

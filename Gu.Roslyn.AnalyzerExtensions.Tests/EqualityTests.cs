@@ -430,7 +430,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(true, semanticModel.TryGetNamedType(syntaxTree.Find<TypeSyntax>(typeSyntax), CancellationToken.None, out var type));
+            Assert.AreEqual(true,     semanticModel.TryGetNamedType(syntaxTree.Find<TypeSyntax>(typeSyntax), CancellationToken.None, out var type));
             Assert.AreEqual(expected, Equality.HasEqualityOperator(type));
         }
 
@@ -447,7 +447,7 @@ namespace N
     struct S { }
     class C
     {
-        public void M(int x) { }
+        void M(int x) { }
     }
 }".AssertReplace("int", typeSyntax);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
