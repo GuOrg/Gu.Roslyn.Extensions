@@ -470,18 +470,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            foreach (var op in type.GetMembers("op_Equality"))
+            return type.GetMembers("op_Equality").TryFirst(out _);
+        }
+
+        /// <summary>
+        /// Check if <paramref name="type"/> has op_Equality defined.
+        /// </summary>
+        /// <param name="type">The <see cref="ITypeSymbol"/>.</param>
+        /// <returns>True if <paramref name="type"/> has op_Equality defined.</returns>
+        public static bool HasOverridenEqualityOperator(ITypeSymbol type)
+        {
+            if (type == null)
             {
-                var opMethod = op as IMethodSymbol;
-                if (opMethod?.Parameters.Length == 2 &&
-                    type.Equals(opMethod.Parameters[0].Type) &&
-                    type.Equals(opMethod.Parameters[1].Type))
-                {
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            if (type.IsReferenceType)
+            {
+                return type.GetMembers("op_Equality").TryFirst(out var @operator) &&
+                       type.Equals(@operator.ContainingType);
+            }
+
+            return HasEqualityOperator(type);
         }
 
         /// <summary>

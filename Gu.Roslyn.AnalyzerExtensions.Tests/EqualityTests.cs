@@ -410,5 +410,51 @@ namespace N
             Assert.AreEqual(true, semanticModel.TryGetNamedType(declaration, CancellationToken.None, out var type));
             Assert.AreEqual(true, Equality.IsOverriden(type));
         }
+
+        [TestCase("int",    true)]
+        [TestCase("int?",   true)]
+        [TestCase("string", true)]
+        [TestCase("S",      false)]
+        [TestCase("C",      true)]
+        public static void HasEqualityOperator(string typeSyntax, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    struct S { }
+    class C
+    {
+        public void M(int x) { }
+    }
+}".AssertReplace("int", typeSyntax);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(syntaxTree.Find<TypeSyntax>(typeSyntax), CancellationToken.None, out var type));
+            Assert.AreEqual(expected, Equality.HasEqualityOperator(type));
+        }
+
+        [TestCase("int",    true)]
+        [TestCase("int?",   true)]
+        [TestCase("string", true)]
+        [TestCase("S",      false)]
+        [TestCase("C",      false)]
+        public static void HasOverridenEqualityOperator(string typeSyntax, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    struct S { }
+    class C
+    {
+        public void M(int x) { }
+    }
+}".AssertReplace("int", typeSyntax);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true,     semanticModel.TryGetNamedType(syntaxTree.Find<TypeSyntax>(typeSyntax), CancellationToken.None, out var type));
+            Assert.AreEqual(expected, Equality.HasOverridenEqualityOperator(type));
+        }
     }
 }
