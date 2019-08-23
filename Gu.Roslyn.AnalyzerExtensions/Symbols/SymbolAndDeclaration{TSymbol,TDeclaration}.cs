@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     /// <typeparam name="TSymbol">The <see cref="Symbol"/>.</typeparam>
     /// <typeparam name="TDeclaration">The <see cref="MemberDeclarationSyntax"/>.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "Nice with fields, not gonna be any side effects.")]
     public struct SymbolAndDeclaration<TSymbol, TDeclaration> : IEquatable<SymbolAndDeclaration<TSymbol, TDeclaration>>
         where TSymbol : class, ISymbol, IEquatable<ISymbol>
         where TDeclaration : SyntaxNode
@@ -27,8 +27,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="SymbolAndDeclaration{TSymbol, TDeclaration}"/> struct.
         /// </summary>
-        /// <typeparam name="TSymbol">The <see cref="ISymbol"/>.</typeparam>
-        /// <typeparam name="TDeclaration">The <see cref="MemberDeclarationSyntax"/>.</typeparam>
         /// <param name="symbol">The <typeparamref name="TSymbol"/>.</param>
         /// <param name="declaration">The <typeparamref name="TDeclaration"/>.</param>
         public SymbolAndDeclaration(TSymbol symbol, TDeclaration declaration)

@@ -68,7 +68,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Try to get the single declaration of a property.
+        /// Try to get the single declaration of an event.
         /// </summary>
         /// <param name="symbol">The <see cref="IEventSymbol"/>. </param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
@@ -86,9 +86,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return declaration != null;
         }
 
-        /// Try to get the single declaration of a property.
+        /// <summary>
+        /// Try to get the single declaration of an event.
         /// </summary>
-        /// <param name="symbol">The <see cref="IEventSymbol"/>. </param>
+        /// <param name="symbol">The <see cref="IEventSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
