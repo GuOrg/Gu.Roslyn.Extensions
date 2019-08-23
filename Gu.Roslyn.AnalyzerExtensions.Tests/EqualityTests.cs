@@ -103,14 +103,14 @@ namespace N
             }
         }
 
-        [TestCase("text.Equals(null)",                    "text", "null", true,  true)]
-        [TestCase("text?.Equals(null)",                   "text", "null", true,  true)]
-        [TestCase("M(C x, C y) => x.Equals(y)",           "x",    "y",    true,  true)]
-        [TestCase("M(C x, C y) => x?.Equals(y) == true",  "x",    "y",    true,  true)]
-        [TestCase("M(C x, C y) => x?.Equals(y) ?? false", "x",    "y",    true,  true)]
-        [TestCase("Equals(text, null)",                   null,   null,   false, false)]
-        [TestCase("object.Equals(text, null)",            null,   null,   false, false)]
-        public static void IsInstanceEquals(string check, string expectedLeft, string expectedRight, bool syntaxExpected, bool symbolExpected)
+        [TestCase("bool M(string s) => s.Equals(null)",        "s", "null", true,  true)]
+        [TestCase("bool? M(string s) => s?.Equals(null)",      "s", "null", true,  true)]
+        [TestCase("bool M(C x, C y) => x.Equals(y)",           "x",    "y",    true,  true)]
+        [TestCase("bool M(C x, C y) => x?.Equals(y) == true",  "x",    "y",    true,  true)]
+        [TestCase("bool M(C x, C y) => x?.Equals(y) ?? false", "x",    "y",    true,  true)]
+        [TestCase("bool M(C x, C y) => Equals(x, y)",          null,   null,   false, false)]
+        [TestCase("bool M(C x, C y) => object.Equals(x, y)",   null,   null,   false, false)]
+        public static void IsInstanceEquals(string signature, string expectedLeft, string expectedRight, bool syntaxExpected, bool symbolExpected)
         {
             var code = @"
 namespace N
@@ -119,11 +119,11 @@ namespace N
 
     class C
     {
-        bool M(string text) => text.Equals(null);
+        bool M(C x, C y) => x.Equals(y);
     }
-}".AssertReplace("text.Equals(null)", check);
+}".AssertReplace("M(C x, C y) => x.Equals(y)", signature);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var expression = syntaxTree.FindInvocation(check);
+            var expression = syntaxTree.FindMethodDeclaration(signature).ExpressionBody.Expression;
             Assert.AreEqual(syntaxExpected, Equality.IsInstanceEquals(expression, default, default, out var left, out var right));
             if (syntaxExpected)
             {

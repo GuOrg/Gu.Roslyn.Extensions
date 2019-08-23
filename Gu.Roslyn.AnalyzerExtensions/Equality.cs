@@ -26,19 +26,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             switch (candidate)
             {
-                case InvocationExpressionSyntax invocation when IsObjectEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
-                                                                IsObjectReferenceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
-                                                                IsNullableEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
-                                                                IsRuntimeHelpersEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
-                                                                IsStringEquals(invocation, semanticModel, cancellationToken, out left, out right, out _) ||
-                                                                IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
-                                                                (semanticModel != null && IsEqualityComparerEquals(invocation, semanticModel, cancellationToken, out _, out left, out right)):
+                case InvocationExpressionSyntax invocation
+                    when IsObjectEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
+                         IsObjectReferenceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
+                         IsNullableEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
+                         IsRuntimeHelpersEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
+                         IsStringEquals(invocation, semanticModel, cancellationToken, out left, out right, out _) ||
+                         IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
+                         (semanticModel != null && IsEqualityComparerEquals(invocation, semanticModel, cancellationToken, out _, out left, out right)):
                     return true;
-                case ConditionalAccessExpressionSyntax conditionalAccess when conditionalAccess.WhenNotNull is InvocationExpressionSyntax invocation &&
-                                                                              IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
+                case ConditionalAccessExpressionSyntax conditionalAccess
+                    when conditionalAccess.WhenNotNull is InvocationExpressionSyntax invocation &&
+                         IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
                     return true;
-                case BinaryExpressionSyntax node when IsOperatorEquals(node, out left, out right) ||
-                                                      IsOperatorNotEquals(node, out left, out right):
+                case BinaryExpressionSyntax node
+                    when IsInstanceEquals(node, semanticModel, cancellationToken, out left, out right) ||
+                         IsOperatorEquals(node, out left, out right) ||
+                         IsOperatorNotEquals(node, out left, out right):
                     return true;
                 default:
                     left = null;
@@ -102,7 +106,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Operators == and !=
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="instance">The left value.</param>
@@ -134,6 +138,65 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is a check for equality.
+        /// Operators == and !=
+        /// Equals, ReferenceEquals.
+        /// </summary>
+        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <param name="instance">The left value.</param>
+        /// <param name="other">The right value.</param>
+        /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
+        public static bool IsInstanceEquals(ExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax instance, out ExpressionSyntax other)
+        {
+            switch (candidate)
+            {
+                case InvocationExpressionSyntax invocation:
+                    return IsInstanceEquals(invocation, semanticModel, cancellationToken, out instance, out other);
+                case ConditionalAccessExpressionSyntax conditionalAccess
+                    when conditionalAccess.WhenNotNull is InvocationExpressionSyntax invocation:
+                    return IsInstanceEquals(invocation, semanticModel, cancellationToken, out instance, out other);
+                case BinaryExpressionSyntax binary
+                    when IsOperatorEquals(binary, out var x, out var y) ||
+                         IsOperatorNotEquals(binary, out x, out y):
+                    instance = null;
+                    other = null;
+                    return IsLiteralAndExpressionAny(x, y, out _, out var expression) &&
+                           IsInstanceEquals(expression, semanticModel, cancellationToken, out instance, out other);
+                case BinaryExpressionSyntax binary
+                    when binary.IsKind(SyntaxKind.CoalesceExpression) &&
+                         binary.Right is LiteralExpressionSyntax:
+                    return IsInstanceEquals(binary.Left, semanticModel, cancellationToken, out instance, out other);
+                default:
+                    instance = null;
+                    other = null;
+                    return false;
+            }
+
+            bool IsLiteralAndExpressionAny(ExpressionSyntax x, ExpressionSyntax y, out LiteralExpressionSyntax literal, out ExpressionSyntax expression)
+            {
+                return IsLiteralAndExpression(x, y, out literal, out expression) ||
+                       IsLiteralAndExpression(y, x, out literal, out expression);
+            }
+
+            bool IsLiteralAndExpression(ExpressionSyntax x, ExpressionSyntax y, out LiteralExpressionSyntax literal, out ExpressionSyntax expression)
+            {
+                if (x is LiteralExpressionSyntax xl &&
+                    !(y is LiteralExpressionSyntax))
+                {
+                    literal = xl;
+                    expression = y;
+                    return true;
+                }
+
+                literal = null;
+                expression = null;
+                return false;
             }
         }
 
