@@ -456,5 +456,22 @@ namespace N
             Assert.AreEqual(true,     semanticModel.TryGetNamedType(syntaxTree.Find<TypeSyntax>(typeSyntax), CancellationToken.None, out var type));
             Assert.AreEqual(expected, Equality.HasOverridenEqualityOperator(type));
         }
+
+        [TestCase("M(int x, int y) => !Equals(x, y)", "Equals(x, y)", true)]
+        [TestCase("M(int x, int y) => !(Equals(x, y))", "Equals(x, y)", true)]
+        public static void IsNegated(string signature, string expression, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        void M(int x, int y) => !Equals(x, y);
+    }
+}".AssertReplace("M(int x, int y) => !Equals(x, y)", signature);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var check = syntaxTree.Find<ExpressionSyntax>(expression);
+            Assert.AreEqual(expected, Equality.IsNegated(check));
+        }
     }
 }

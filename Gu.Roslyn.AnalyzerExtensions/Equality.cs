@@ -609,6 +609,29 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    candidate.TryFindFirstMethod(nameof(GetHashCode), x => x.Parameters.Length == 0 && x.IsOverride, out _);
         }
 
+        /// <summary>
+        /// Check if <paramref name="expression"/> is negated.
+        /// </summary>
+        /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
+        /// <returns>True if <paramref name="expression"/> is negated.</returns>
+        public static bool IsNegated(ExpressionSyntax expression)
+        {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            switch (expression.Parent)
+            {
+                case ParenthesizedExpressionSyntax paren:
+                    return IsNegated(paren);
+                case PrefixUnaryExpressionSyntax unary when unary.IsKind(SyntaxKind.LogicalNotExpression):
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         private static bool TryGetInstance(InvocationExpressionSyntax invocation, out ExpressionSyntax result)
         {
             switch (invocation.Expression)
