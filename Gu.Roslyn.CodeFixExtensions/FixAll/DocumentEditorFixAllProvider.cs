@@ -52,7 +52,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 var actions = await GetDocumentEditorActionsAsync(fixAllContext, fixAllContext.Document).ConfigureAwait(false);
 
-                if (actions.Count == 0)
+                if (actions.Length == 0)
                 {
                     return null;
                 }
@@ -62,11 +62,11 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             if (fixAllContext.Scope == FixAllScope.Project)
             {
-                var docActions = new Dictionary<Document, List<CodeAction>>();
+                var docActions = new Dictionary<Document, ImmutableArray<CodeAction>>();
                 foreach (var document in fixAllContext.Project.Documents)
                 {
                     var actions = await GetDocumentEditorActionsAsync(fixAllContext, document).ConfigureAwait(false);
-                    if (actions.Count == 0)
+                    if (actions.Length == 0)
                     {
                         continue;
                     }
@@ -84,13 +84,13 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             if (fixAllContext.Scope == FixAllScope.Solution)
             {
-                var docActions = new Dictionary<Document, List<CodeAction>>();
+                var docActions = new Dictionary<Document, ImmutableArray<CodeAction>>();
                 foreach (var project in fixAllContext.Solution.Projects)
                 {
                     foreach (var document in project.Documents)
                     {
                         var actions = await GetDocumentEditorActionsAsync(fixAllContext, document).ConfigureAwait(false);
-                        if (actions.Count == 0)
+                        if (actions.Length == 0)
                         {
                             continue;
                         }
@@ -110,7 +110,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             return null;
         }
 
-        private static async Task<List<CodeAction>> GetDocumentEditorActionsAsync(FixAllContext fixAllContext, Document document)
+        private static async Task<ImmutableArray<CodeAction>> GetDocumentEditorActionsAsync(FixAllContext fixAllContext, Document document)
         {
             var diagnostics = await fixAllContext.GetDocumentDiagnosticsAsync(document)
                                                  .ConfigureAwait(false);
@@ -132,10 +132,10 @@ namespace Gu.Roslyn.CodeFixExtensions
                                    .ConfigureAwait(false);
             }
 
-            return actions;
+            return actions.ToImmutableArray();
         }
 
-        private static async Task<Document> FixDocumentAsync(Document document, IReadOnlyList<CodeAction> actions, CancellationToken cancellationToken)
+        private static async Task<Document> FixDocumentAsync(Document document, ImmutableArray<CodeAction> actions, CancellationToken cancellationToken)
         {
             var editor = await DocumentEditor.CreateAsync(document, cancellationToken)
                                              .ConfigureAwait(false);
@@ -155,7 +155,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             return editor.GetChangedDocument();
         }
 
-        private static async Task<Solution> FixDocumentsAsync(Solution solution, Dictionary<Document, List<CodeAction>> docActions, CancellationToken cancellationToken)
+        private static async Task<Solution> FixDocumentsAsync(Solution solution, Dictionary<Document, ImmutableArray<CodeAction>> docActions, CancellationToken cancellationToken)
         {
             foreach (var docAction in docActions)
             {
