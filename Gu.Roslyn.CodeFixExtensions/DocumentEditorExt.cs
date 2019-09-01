@@ -2,6 +2,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -93,10 +94,9 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             MemberDeclarationSyntax ToMove()
             {
-                if (member.Parent is TypeDeclarationSyntax typeDeclaration &&
-                    typeDeclaration.Members.IndexOf(member) == 0)
+                if (toMove.Parent is TypeDeclarationSyntax typeDeclaration)
                 {
-                    return toMove.WithoutLeadingLineFeed();
+                    return toMove.AdjustLeadingNewLine(typeDeclaration.Members.ElementAtOrDefault(typeDeclaration.Members.IndexOf(member) - 1));
                 }
 
                 return toMove;
@@ -104,13 +104,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             MemberDeclarationSyntax Member()
             {
-                if (member.Parent is TypeDeclarationSyntax typeDeclaration &&
-                    typeDeclaration.Members.IndexOf(member) == 0)
-                {
-                    return member.WithLeadingLineFeed();
-                }
-
-                return member;
+                return member.AdjustLeadingNewLine(toMove);
             }
         }
 
@@ -145,24 +139,23 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             MemberDeclarationSyntax ToMove()
             {
-                if (toMove.Parent is TypeDeclarationSyntax typeDeclaration &&
-                    typeDeclaration.Members.IndexOf(toMove) == 0)
-                {
-                    return toMove.WithLeadingLineFeed();
-                }
-
-                return toMove;
+                return toMove.AdjustLeadingNewLine(member);
             }
 
             MemberDeclarationSyntax Member()
             {
-                if (toMove.Parent is TypeDeclarationSyntax typeDeclaration &&
-                    typeDeclaration.Members.IndexOf(toMove) == 0)
+                if (member.Parent is TypeDeclarationSyntax typeDeclaration)
                 {
-                    return member.WithoutLeadingLineFeed();
+                    var index = typeDeclaration.Members.IndexOf(member) - 1;
+                    if (typeDeclaration.Members.IndexOf(toMove) == index)
+                    {
+                        index--;
+                    }
+
+                    return member.AdjustLeadingNewLine(typeDeclaration.Members.ElementAtOrDefault(index));
                 }
 
-                return member;
+                return toMove;
             }
         }
 
