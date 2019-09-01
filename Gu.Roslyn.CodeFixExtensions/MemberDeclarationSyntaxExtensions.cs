@@ -13,13 +13,13 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add <paramref name="text"/> as leading trivia to <paramref name="member"/>.
         /// </summary>
-        /// <typeparam name="TNode">The type of the member to add docs to.</typeparam>
+        /// <typeparam name="TMember">The type of the member to add docs to.</typeparam>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <param name="text">The text to parse into <see cref="SyntaxTriviaList"/>.</param>
         /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
-        public static TNode WithDocumentationText<TNode>(this TNode member, string text, bool adjustLeadingWhitespace = true)
-            where TNode : MemberDeclarationSyntax
+        public static TMember WithDocumentationText<TMember>(this TMember member, string text, bool adjustLeadingWhitespace = true)
+            where TMember : MemberDeclarationSyntax
         {
             if (member == null)
             {
@@ -40,12 +40,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Add docs as leading trivia to <paramref name="member"/>.
         /// </summary>
-        /// <typeparam name="TNode">The type of the member to add docs to.</typeparam>
+        /// <typeparam name="TMember">The type of the member to add docs to.</typeparam>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <param name="docs">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
-        public static TNode WithDocs<TNode>(this TNode member, DocumentationCommentTriviaSyntax docs)
-            where TNode : MemberDeclarationSyntax
+        public static TMember WithDocs<TMember>(this TMember member, DocumentationCommentTriviaSyntax docs)
+            where TMember : MemberDeclarationSyntax
         {
             if (member == null)
             {
@@ -69,6 +69,33 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             return member.WithLeadingTrivia(SyntaxFactory.Trivia(docs));
+        }
+
+        /// <summary>
+        /// Adjust leading whitespace for <paramref name="member"/> to match StyleCop.
+        /// </summary>
+        /// <typeparam name="TMember">The type of <paramref name="member"/>.</typeparam>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="previous">The previous member or null if <paramref name="member"/> is the first in the type.</param>
+        /// <returns><paramref name="member"/> with adjusted leading newline.</returns>
+        public static TMember AdjustLeadingNewLine<TMember>(this TMember member, TMember previous)
+            where TMember : MemberDeclarationSyntax
+        {
+            if (previous is null)
+            {
+                return member.WithoutLeadingLineFeed();
+            }
+
+            if (member is FieldDeclarationSyntax field &&
+                previous is FieldDeclarationSyntax previousField &&
+                field.Modifiers.Equals(previousField.Modifiers))
+            {
+                return member.WithoutLeadingLineFeed();
+            }
+
+            return member.TryGetLeadingNewLine(out _)
+                ? member
+                : member.WithLeadingLineFeed();
         }
     }
 }
