@@ -1,7 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
 {
     using System.Linq;
-    using System.Threading.Tasks;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Editing;
@@ -238,6 +237,39 @@ namespace N
     {
         public int P2 { get; set; }
 
+        internal int P1 { get; set; }
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static void InternalPropertyBeforePublicWithComments()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        // P1
+        internal int P1 { get; set; }
+
+        // P2
+        public int P2 { get; set; }
+    }
+}";
+            var editor = CreateDocumentEditor(code);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        // P2
+        public int P2 { get; set; }
+
+        // P1
         internal int P1 { get; set; }
     }
 }";

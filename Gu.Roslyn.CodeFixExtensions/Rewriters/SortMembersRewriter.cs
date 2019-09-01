@@ -19,7 +19,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     {
         private static readonly SortMembersRewriter Default = new SortMembersRewriter();
 #pragma warning disable IDISP002, IDISP006
-        private readonly ThreadLocal<ImmutableArray<MemberDeclarationSyntax>> members = new ThreadLocal<ImmutableArray<MemberDeclarationSyntax>>();
+        private readonly ThreadLocal<ImmutableArray<MemberDeclarationSyntax>> sortedMembers = new ThreadLocal<ImmutableArray<MemberDeclarationSyntax>>();
         private readonly ThreadLocal<int> index = new ThreadLocal<int>();
 #pragma warning restore IDISP006, IDISP002
 
@@ -35,7 +35,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             if (typeDeclaration == null)
             {
-                throw new System.ArgumentNullException(nameof(typeDeclaration));
+                throw new ArgumentNullException(nameof(typeDeclaration));
             }
 
             return Default.SortCore(typeDeclaration, comparer);
@@ -70,7 +70,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         private SyntaxNode Next()
         {
-            var next = this.members.Value[this.index.Value];
+            var next = this.sortedMembers.Value[this.index.Value];
             this.index.Value++;
             return next;
         }
@@ -78,7 +78,18 @@ namespace Gu.Roslyn.CodeFixExtensions
         private T SortCore<T>(T typeDeclaration, IComparer<MemberDeclarationSyntax> comparer)
             where T : TypeDeclarationSyntax
         {
-            this.members.Value = typeDeclaration.Members.OrderBy(x => x, comparer ?? MemberDeclarationComparer.Default).ToImmutableArray();
+            if (typeDeclaration.Members.Count == 0)
+            {
+                return typeDeclaration;
+            }
+
+            var sorted = typeDeclaration.Members.OrderBy(x => x, comparer ?? MemberDeclarationComparer.Default).ToArray();
+            for (int i = 0; i < sorted.Length; i++)
+            {
+                sorted[i] = i == 0 ? sorted[i].AdjustLeadingNewLine(null) : sorted[i].AdjustLeadingNewLine(sorted[i - 1]);
+            }
+
+            this.sortedMembers.Value = sorted.ToImmutableArray();
             this.index.Value = 0;
             switch (typeDeclaration)
             {
@@ -90,12 +101,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                     break;
             }
 
-            if (this.index.Value != this.members.Value.Length)
+            if (this.index.Value != this.sortedMembers.Value.Length)
             {
                 throw new InvalidOperationException("Bug in Gu.Roslyn.Asserts. All members were not sorted.");
             }
 
-            this.members.Value = ImmutableArray<MemberDeclarationSyntax>.Empty;
+            this.sortedMembers.Value = ImmutableArray<MemberDeclarationSyntax>.Empty;
             return typeDeclaration;
         }
     }
