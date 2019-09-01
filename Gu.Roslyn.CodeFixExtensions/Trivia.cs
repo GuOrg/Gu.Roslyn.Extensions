@@ -438,6 +438,31 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <summary>
+        /// Add leading line feed to <paramref name="node"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <returns><paramref name="node"/> with leading line feed.</returns>
+        public static T WithoutLeadingLineFeed<T>(this T node)
+            where T : SyntaxNode
+        {
+            if (node == null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (node.HasLeadingTrivia &&
+                node.GetLeadingTrivia() is SyntaxTriviaList triviaList &&
+                triviaList.TryFirst(out var first) &&
+                first.IsKind(SyntaxKind.EndOfLineTrivia))
+            {
+                return node.WithLeadingTrivia(triviaList.Skip(1));
+            }
+
+            return node;
+        }
+
+        /// <summary>
         /// Add trailing elastic line feed to <paramref name="node"/>.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
