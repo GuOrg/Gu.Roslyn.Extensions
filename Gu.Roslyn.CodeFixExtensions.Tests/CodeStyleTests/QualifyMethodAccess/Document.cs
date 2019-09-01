@@ -29,9 +29,9 @@ namespace N
             Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("M1()", CodeStyleResult.No)]
+        [TestCase("M1()",      CodeStyleResult.No)]
         [TestCase("this.M1()", CodeStyleResult.Yes)]
-        [TestCase("M2()", CodeStyleResult.NotFound)]
+        [TestCase("M2()",      CodeStyleResult.NotFound)]
         public static async Task CallInCtor(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -54,9 +54,9 @@ namespace N
             Assert.AreEqual(expected, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("M1()", CodeStyleResult.No)]
+        [TestCase("M1()",      CodeStyleResult.No)]
         [TestCase("this.M1()", CodeStyleResult.Yes)]
-        [TestCase("M2()", CodeStyleResult.NotFound)]
+        [TestCase("M2()",      CodeStyleResult.NotFound)]
         public static async Task ExpressionBody(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -76,9 +76,9 @@ namespace N
             Assert.AreEqual(expected, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("M1()", CodeStyleResult.No)]
+        [TestCase("M1()",      CodeStyleResult.No)]
         [TestCase("this.M1()", CodeStyleResult.Yes)]
-        [TestCase("M2()", CodeStyleResult.NotFound)]
+        [TestCase("M2()",      CodeStyleResult.NotFound)]
         public static async Task Assignment(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
@@ -101,9 +101,9 @@ namespace N
             Assert.AreEqual(expected, await document.QualifyMethodAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
 
-        [TestCase("M1()", CodeStyleResult.No)]
+        [TestCase("M1()",      CodeStyleResult.No)]
         [TestCase("this.M1()", CodeStyleResult.Yes)]
-        [TestCase("M2()", CodeStyleResult.NotFound)]
+        [TestCase("M2()",      CodeStyleResult.NotFound)]
         public static async Task Argument(string expression, CodeStyleResult expected)
         {
             var sln = CodeFactory.CreateSolution(@"
