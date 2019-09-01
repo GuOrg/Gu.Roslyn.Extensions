@@ -38,7 +38,6 @@ namespace N
         }
 
         [Test]
-        [Test]
         public static void MovePropertyBeforeSecond()
         {
             var code = @"
