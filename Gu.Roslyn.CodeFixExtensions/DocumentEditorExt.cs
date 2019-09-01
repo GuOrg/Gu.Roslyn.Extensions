@@ -87,18 +87,31 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             editor.RemoveNode(toMove);
-            if (member.Parent is TypeDeclarationSyntax typeDeclaration &&
-                typeDeclaration.Members.IndexOf(member) == 0)
+            editor.InsertBefore(member, ToMove());
+            editor.ReplaceNode(member, Member());
+            return editor;
+
+            MemberDeclarationSyntax ToMove()
             {
-                editor.InsertBefore(member, new[] { toMove.WithLeadingElasticLineFeed() });
-                editor.ReplaceNode(member, member.WithLeadingElasticLineFeed());
-            }
-            else
-            {
-                editor.InsertBefore(member, new[] { toMove });
+                if (member.Parent is TypeDeclarationSyntax typeDeclaration &&
+                    typeDeclaration.Members.IndexOf(member) == 0)
+                {
+                    return toMove.WithoutLeadingLineFeed();
+                }
+
+                return toMove;
             }
 
-            return editor;
+            MemberDeclarationSyntax Member()
+            {
+                if (member.Parent is TypeDeclarationSyntax typeDeclaration &&
+                    typeDeclaration.Members.IndexOf(member) == 0)
+                {
+                    return member.WithLeadingLineFeed();
+                }
+
+                return member;
+            }
         }
 
         /// <summary>
@@ -126,18 +139,31 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             editor.RemoveNode(toMove);
-            if (toMove.Parent is TypeDeclarationSyntax typeDeclaration &&
-                typeDeclaration.Members.IndexOf(toMove) == 0)
+            editor.InsertAfter(member, ToMove());
+            editor.ReplaceNode(member, Member());
+            return editor;
+
+            MemberDeclarationSyntax ToMove()
             {
-                editor.InsertAfter(member, new[] { toMove.WithLeadingElasticLineFeed() });
-                editor.ReplaceNode(member, member.WithLeadingElasticLineFeed());
-            }
-            else
-            {
-                editor.InsertAfter(member, new[] { toMove });
+                if (toMove.Parent is TypeDeclarationSyntax typeDeclaration &&
+                    typeDeclaration.Members.IndexOf(toMove) == 0)
+                {
+                    return toMove.WithLeadingLineFeed();
+                }
+
+                return toMove;
             }
 
-            return editor;
+            MemberDeclarationSyntax Member()
+            {
+                if (toMove.Parent is TypeDeclarationSyntax typeDeclaration &&
+                    typeDeclaration.Members.IndexOf(toMove) == 0)
+                {
+                    return member.WithoutLeadingLineFeed();
+                }
+
+                return member;
+            }
         }
 
         /// <summary>
@@ -165,8 +191,18 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             editor.RemoveNode(toMove);
-            editor.InsertBefore(statement, new[] { toMove });
+            editor.InsertBefore(statement, ToMove());
             return editor;
+
+            StatementSyntax ToMove()
+            {
+                if (statement.GetLastToken().IsKind(SyntaxKind.CloseBraceToken))
+                {
+                    return toMove.WithoutLeadingLineFeed();
+                }
+
+                return toMove;
+            }
         }
 
         /// <summary>
@@ -194,8 +230,18 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             editor.RemoveNode(toMove);
-            editor.InsertAfter(statement, new[] { toMove });
+            editor.InsertAfter(statement, ToMove());
             return editor;
+
+            StatementSyntax ToMove()
+            {
+                if (statement.GetLastToken().IsKind(SyntaxKind.CloseBraceToken))
+                {
+                    return toMove.WithLeadingLineFeed();
+                }
+
+                return toMove;
+            }
         }
 
         /// <summary>

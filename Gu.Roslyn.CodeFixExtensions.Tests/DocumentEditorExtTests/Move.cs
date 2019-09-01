@@ -9,6 +9,130 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
     public static class Move
     {
         [Test]
+        public static void MoveFieldBeforeFirst()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        public static readonly int F1 = 1;
+
+        private static readonly int F2 = 2;
+    }
+}";
+            var editor = CreateDocumentEditor(code);
+            _ = editor.MoveBefore(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        private static readonly int F2 = 2;
+
+        public static readonly int F1 = 1;
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static void MoveFieldBeforeFirstWithComments()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        // F1
+        public static readonly int F1 = 1;
+
+        // F2
+        private static readonly int F2 = 2;
+    }
+}";
+            var editor = CreateDocumentEditor(code);
+            _ = editor.MoveBefore(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        // F2
+        private static readonly int F2 = 2;
+
+        // F1
+        public static readonly int F1 = 1;
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static void MoveFieldFirstAfterLast()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        public static readonly int F1 = 1;
+
+        private static readonly int F2 = 2;
+    }
+}";
+            var editor = CreateDocumentEditor(code);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        private static readonly int F2 = 2;
+
+        public static readonly int F1 = 1;
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static void MoveFieldFirstAfterLastWithComments()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        // F1
+        public static readonly int F1 = 1;
+
+        // F2
+        private static readonly int F2 = 2;
+    }
+}";
+            var editor = CreateDocumentEditor(code);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        // F2
+        private static readonly int F2 = 2;
+
+        // F1
+        public static readonly int F1 = 1;
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
         public static void MovePropertyBeforeFirst()
         {
             var code = @"
@@ -97,6 +221,44 @@ namespace N
         {
             var b = 1;
             var a = 1;
+        }
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static void MoveStatementBeforeIf()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        C()
+        {
+            if (true)
+            {
+            }
+
+            var b = 1;
+        }
+    }
+}";
+            var editor = CreateDocumentEditor(code);
+            _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("if (true)"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        C()
+        {
+            var b = 1;
+            if (true)
+            {
+            }
         }
     }
 }";
@@ -226,6 +388,44 @@ namespace N
         C()
         {
             var b = 1;
+            var a = 1;
+        }
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static void MoveStatementAfterIf()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        C()
+        {
+            var a = 1;
+            if (true)
+            {
+            }
+        }
+    }
+}";
+            var editor = CreateDocumentEditor(code);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"), editor.OriginalRoot.Find<StatementSyntax>("if (true)"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        C()
+        {
+            if (true)
+            {
+            }
+
             var a = 1;
         }
     }
