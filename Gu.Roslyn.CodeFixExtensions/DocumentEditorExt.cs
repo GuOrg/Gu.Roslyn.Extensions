@@ -67,7 +67,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="toMove">The <see cref="MemberDeclarationSyntax"/> to move.</param>
-        /// <param name="member">The new <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor MoveBefore(this DocumentEditor editor, MemberDeclarationSyntax toMove, MemberDeclarationSyntax member)
         {
@@ -106,7 +106,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="toMove">The <see cref="MemberDeclarationSyntax"/> to move.</param>
-        /// <param name="member">The new <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor MoveAfter(this DocumentEditor editor, MemberDeclarationSyntax toMove, MemberDeclarationSyntax member)
         {
@@ -145,7 +145,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="toMove">The <see cref="StatementSyntax"/> to move.</param>
-        /// <param name="statement">The new <see cref="StatementSyntax"/>.</param>
+        /// <param name="statement">The <see cref="StatementSyntax"/>.</param>
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor MoveBefore(this DocumentEditor editor, StatementSyntax toMove, StatementSyntax statement)
         {
@@ -174,7 +174,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="toMove">The <see cref="StatementSyntax"/> to move.</param>
-        /// <param name="statement">The new <see cref="StatementSyntax"/>.</param>
+        /// <param name="statement">The <see cref="StatementSyntax"/>.</param>
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor MoveAfter(this DocumentEditor editor, StatementSyntax toMove, StatementSyntax statement)
         {
