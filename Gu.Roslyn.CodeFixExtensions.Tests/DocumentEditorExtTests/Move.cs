@@ -1,7 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
 {
     using System.Linq;
-    using System.Threading.Tasks;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Editing;
@@ -10,7 +9,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
     public static class Move
     {
         [Test]
-        public static async Task MovePropertyBeforeFirst()
+        public static void MovePropertyBeforeFirst()
         {
             var code = @"
 namespace N
@@ -22,8 +21,7 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
             _ = editor.MoveBefore(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"));
 
             var expected = @"
@@ -40,7 +38,8 @@ namespace N
         }
 
         [Test]
-        public static async Task MovePropertyBeforeSecond()
+        [Test]
+        public static void MovePropertyBeforeSecond()
         {
             var code = @"
 namespace N
@@ -54,8 +53,7 @@ namespace N
         public int P3 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
             _ = editor.MoveBefore(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P3"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
 
             var expected = @"
@@ -74,7 +72,7 @@ namespace N
         }
 
         [Test]
-        public static async Task MoveStatementBeforeFirst()
+        public static void MoveStatementBeforeFirst()
         {
             var code = @"
 namespace N
@@ -88,8 +86,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
             _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"));
 
             var expected = @"
@@ -108,7 +105,7 @@ namespace N
         }
 
         [Test]
-        public static async Task MoveStatementBeforeSecond()
+        public static void MoveStatementBeforeSecond()
         {
             var code = @"
 namespace N
@@ -123,8 +120,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
             _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var c = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"));
 
             var expected = @"
@@ -144,7 +140,7 @@ namespace N
         }
 
         [Test]
-        public static async Task MovePropertyAfterFirst()
+        public static void MovePropertyAfterFirst()
         {
             var code = @"
 namespace N
@@ -156,8 +152,7 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
             _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
 
             var expected = @"
@@ -174,7 +169,7 @@ namespace N
         }
 
         [Test]
-        public static async Task MovePropertyAfterSecond()
+        public static void MovePropertyAfterSecond()
         {
             var code = @"
 namespace N
@@ -188,8 +183,7 @@ namespace N
         public int P3 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
             _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P3"));
 
             var expected = @"
@@ -208,7 +202,7 @@ namespace N
         }
 
         [Test]
-        public static async Task MoveStatementAfterFirst()
+        public static void MoveStatementAfterFirst()
         {
             var code = @"
 namespace N
@@ -222,8 +216,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
             _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"));
 
             var expected = @"
@@ -242,7 +235,7 @@ namespace N
         }
 
         [Test]
-        public static async Task MoveStatementAfterSecond()
+        public static void MoveStatementAfterSecond()
         {
             var code = @"
 namespace N
@@ -257,8 +250,7 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
             _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var c = 1;"));
 
             var expected = @"
@@ -275,6 +267,12 @@ namespace N
     }
 }";
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        private static DocumentEditor CreateDocumentEditor(string code)
+        {
+            var sln = CodeFactory.CreateSolution(code);
+            return DocumentEditor.CreateAsync(sln.Projects.Single().Documents.Single()).Result;
         }
     }
 }

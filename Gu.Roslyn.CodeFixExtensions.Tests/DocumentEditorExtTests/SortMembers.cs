@@ -10,7 +10,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
     public static class SortMembers
     {
         [Test]
-        public static async Task EmptyClass()
+        public static void EmptyClass()
         {
             var code = @"
 namespace N
@@ -19,8 +19,7 @@ namespace N
     {
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
 
             var expected = @"
 namespace N
@@ -34,7 +33,7 @@ namespace N
         }
 
         [Test]
-        public static async Task ClassWithMembers()
+        public static void ClassWithMembers()
         {
             var code = @"
 namespace N
@@ -123,8 +122,7 @@ namespace N
         public int P16 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var editor = CreateDocumentEditor(code);
 
             var expected = @"
 namespace N
@@ -215,6 +213,41 @@ namespace N
 }";
             _ = editor.SortMembers(editor.OriginalRoot.Find<ClassDeclarationSyntax>("public class WithMembers"));
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static void InternalPropertyBeforePublic()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        internal int P1 { get; set; }
+
+        public int P2 { get; set; }
+    }
+}";
+            var editor = CreateDocumentEditor(code);
+            _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        public int P2 { get; set; }
+
+        internal int P1 { get; set; }
+    }
+}";
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        private static DocumentEditor CreateDocumentEditor(string code)
+        {
+            var sln = CodeFactory.CreateSolution(code);
+            return DocumentEditor.CreateAsync(sln.Projects.Single().Documents.Single()).Result;
         }
     }
 }
