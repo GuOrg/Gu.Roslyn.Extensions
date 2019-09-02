@@ -88,7 +88,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             if (member is FieldDeclarationSyntax field &&
                 previous is FieldDeclarationSyntax previousField &&
-                field.Modifiers.Equals(previousField.Modifiers))
+               Equal(field.Modifiers, previousField.Modifiers))
             {
                 return member.WithoutLeadingLineFeed();
             }
@@ -96,6 +96,24 @@ namespace Gu.Roslyn.CodeFixExtensions
             return member.TryGetLeadingNewLine(out _)
                 ? member
                 : member.WithLeadingLineFeed();
+
+            bool Equal(SyntaxTokenList x, SyntaxTokenList y)
+            {
+                if (x.Count == y.Count)
+                {
+                    for (int i = 0; i < x.Count; i++)
+                    {
+                        if (x[i].Kind() != y[i].Kind())
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
         }
     }
 }

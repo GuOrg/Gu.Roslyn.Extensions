@@ -132,23 +132,35 @@ namespace N
     {
         public const int F7 = 0;
         public const int F8 = 0;
+
         public static readonly int F13 = 0;
         public static readonly int F14 = 0;
+
         public readonly int F20 = 0;
+
         public int F19 = 0;
+
         internal const int F5 = 0;
         internal const int F6 = 0;
+
         internal static readonly int F11 = 0;
         internal static readonly int F12 = 0;
+
         protected readonly int F18 = 0;
+
         protected int F17 = 0;
+
         private const int f1 = 0;
         private const int f2 = 0;
+
         const int F3 = 0;
         const int F4 = 0;
+
         private static readonly int F9 = 0;
         private static readonly int F10 = 0;
+
         private readonly int F16 = 0;
+
         private int F15 = 0;
 
         public WithMembers(int _) { }
