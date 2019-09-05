@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IFieldSymbol, FieldDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(FieldDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IFieldSymbol, FieldDeclarationSyntax> result)
+        public static bool TryCreate(FieldDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IFieldSymbol, FieldDeclarationSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out var symbol))
             {
@@ -37,7 +37,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IMethodSymbol, ConstructorDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(ConstructorDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax> result)
+        public static bool TryCreate(ConstructorDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out var symbol))
             {
@@ -57,7 +57,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IEventSymbol, EventDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(EventDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IEventSymbol, EventDeclarationSyntax> result)
+        public static bool TryCreate(EventDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IEventSymbol, EventDeclarationSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out var symbol))
             {
@@ -77,7 +77,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IEventSymbol, EventFieldDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(EventFieldDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IEventSymbol, EventFieldDeclarationSyntax> result)
+        public static bool TryCreate(EventFieldDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IEventSymbol, EventFieldDeclarationSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out var symbol))
             {
@@ -97,7 +97,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IPropertySymbol, PropertyDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(PropertyDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IPropertySymbol, PropertyDeclarationSyntax> result)
+        public static bool TryCreate(PropertyDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IPropertySymbol, PropertyDeclarationSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out var symbol))
             {
@@ -117,7 +117,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IMethodSymbol, PropertAccessorDeclarationSyntaxyDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(AccessorDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IMethodSymbol, AccessorDeclarationSyntax> result)
+        public static bool TryCreate(AccessorDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IMethodSymbol, AccessorDeclarationSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out IMethodSymbol symbol))
             {
@@ -137,7 +137,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IMethodSymbol, MethodDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(MethodDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax> result)
+        public static bool TryCreate(MethodDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out var symbol))
             {
@@ -157,7 +157,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{ITypeSymbol, TypeDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(TypeDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<ITypeSymbol, TypeDeclarationSyntax> result)
+        public static bool TryCreate(TypeDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<ITypeSymbol, TypeDeclarationSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out var symbol))
             {
@@ -177,7 +177,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{ITypeSymbol, EnumDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(EnumDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<INamedTypeSymbol, EnumDeclarationSyntax> result)
+        public static bool TryCreate(EnumDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<INamedTypeSymbol, EnumDeclarationSyntax> result)
         {
             if (semanticModel.TryGetNamedType(declaration, cancellationToken, out var symbol))
             {
@@ -197,7 +197,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{ITypeSymbol, StructDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(StructDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<INamedTypeSymbol, StructDeclarationSyntax> result)
+        public static bool TryCreate(StructDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<INamedTypeSymbol, StructDeclarationSyntax> result)
         {
             if (semanticModel.TryGetNamedType(declaration, cancellationToken, out var symbol))
             {
@@ -217,7 +217,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{ITypeSymbol, ClassDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(ClassDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<INamedTypeSymbol, ClassDeclarationSyntax> result)
+        public static bool TryCreate(ClassDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<INamedTypeSymbol, ClassDeclarationSyntax> result)
         {
             if (semanticModel.TryGetNamedType(declaration, cancellationToken, out var symbol))
             {
@@ -237,7 +237,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IParameterSymbol, ParameterSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool Create(ParameterSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IParameterSymbol, ParameterSyntax> result)
+        public static bool TryCreate(ParameterSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IParameterSymbol, ParameterSyntax> result)
         {
             if (semanticModel.TryGetSymbol(declaration, cancellationToken, out var symbol))
             {
