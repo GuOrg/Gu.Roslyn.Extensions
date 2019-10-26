@@ -2,6 +2,7 @@
 Extensions for analyzers &amp; code fixes.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ipk8pqx4n4m7y8u8/branch/master?svg=true)](https://ci.appveyor.com/project/JohanLarsson/gu-roslyn-extensions/branch/master)
+[![Build Status](https://dev.azure.com/guorg/Gu.Roslyn.Extensions/_apis/build/status/GuOrg.Gu.Roslyn.Extensions?branchName=master)](https://dev.azure.com/guorg/Gu.Roslyn.Extensions/_build/latest?definitionId=9&branchName=master)
 [![NuGet](https://img.shields.io/nuget/v/Gu.Roslyn.Extensions.svg)](https://www.nuget.org/packages/Gu.Roslyn.Extensions/)
 [![NuGet](https://img.shields.io/nuget/v/Gu.Roslyn.AnalyzerExtensions.svg)](https://www.nuget.org/packages/Gu.Roslyn.AnalyzerExtensions/)
 [![NuGet](https://img.shields.io/nuget/v/Gu.Roslyn.CodeFixExtensions.svg)](https://www.nuget.org/packages/Gu.Roslyn.CodeFixExtensions/)
