@@ -8,18 +8,20 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.7.3-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer codefix</PackageTags>
-    <PackageReleaseNotes>FEATURE: Scope
-BREAKING: Rename SearchScope, was Scope
-BREAKING: Move IsExecutedBefore extension method to Scope</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      FEATURE: Scope
+      BREAKING: Rename SearchScope, was Scope
+      BREAKING: Move IsExecutedBefore extension method to Scope
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -31,11 +33,12 @@ BREAKING: Move IsExecutedBefore extension method to Scope</PackageReleaseNotes>
     <AdditionalFiles Include="PublicAPI.Shipped.txt" />
     <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Gu.Analyzers" Version="1.6.1-dev" />
     <PackageReference Include="IDisposableAnalyzers" Version="2.1.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.3.1" PrivateAssets="None" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6" />
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="2.9.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -45,9 +48,5 @@ BREAKING: Move IsExecutedBefore extension method to Scope</PackageReleaseNotes>
 
   <ItemGroup>
     <ProjectReference Include="..\Gu.Roslyn.AnalyzerExtensions\Gu.Roslyn.AnalyzerExtensions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6" />
   </ItemGroup>
 </Project>

@@ -8,18 +8,20 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.7.3-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer codefix</PackageTags>
-    <PackageReleaseNotes>FEATURE: Scope
-BREAKING: Rename SearchScope, was Scope
-BREAKING: Move IsExecutedBefore extension method to Scope</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      FEATURE: Scope
+      BREAKING: Rename SearchScope, was Scope
+      BREAKING: Move IsExecutedBefore extension method to Scope
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,17 +30,11 @@ BREAKING: Move IsExecutedBefore extension method to Scope</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gu.Analyzers" Version="1.6.1-dev" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.3.1" PrivateAssets="None" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.66" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions" />
     <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6" />
   </ItemGroup>
 </Project>
