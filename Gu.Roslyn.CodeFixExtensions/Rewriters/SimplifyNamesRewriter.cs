@@ -8,7 +8,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     /// <summary>
     /// Adds <see cref="Simplifier.Annotation"/> to all <see cref="QualifiedNameSyntax"/> and <see cref="QualifiedCrefSyntax"/>.
     /// </summary>
-    public class SimplifyNamesRewriter : CSharpSyntaxRewriter
+    public sealed class SimplifyNamesRewriter : CSharpSyntaxRewriter
     {
         /// <summary>The default instance.</summary>
         public static readonly SimplifyNamesRewriter Default = new SimplifyNamesRewriter();

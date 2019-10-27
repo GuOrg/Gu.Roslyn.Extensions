@@ -16,7 +16,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// For comparison with <see cref="ITypeSymbol"/>.
     /// </summary>
     [global::System.Diagnostics.DebuggerDisplay("{this.FullName}")]
+#pragma warning disable GU0025 // Seal type with overridden equality.
     public class QualifiedType
+#pragma warning restore GU0025 // Seal type with overridden equality.
     {
         /// <summary>
         /// A map type.FullName - alias
