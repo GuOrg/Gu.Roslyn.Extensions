@@ -98,7 +98,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         {
             return Index(x).CompareTo(Index(y));
 
-            int Index(FieldDeclarationSyntax field)
+            static int Index(FieldDeclarationSyntax field)
             {
                 if (field.Modifiers.Any(SyntaxKind.ReadOnlyKeyword))
                 {

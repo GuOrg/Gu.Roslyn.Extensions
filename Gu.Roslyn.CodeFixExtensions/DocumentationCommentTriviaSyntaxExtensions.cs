@@ -168,7 +168,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
                 return before != null;
 
-                bool TryGetTypeParameterList(MemberDeclarationSyntax source, out TypeParameterListSyntax result)
+                static bool TryGetTypeParameterList(MemberDeclarationSyntax source, out TypeParameterListSyntax result)
                 {
                     switch (source)
                     {

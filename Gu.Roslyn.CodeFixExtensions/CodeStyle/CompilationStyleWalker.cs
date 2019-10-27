@@ -101,7 +101,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     yield return document;
                 }
 
-                bool Equals(IReadOnlyList<string> x, IReadOnlyList<string> y)
+                static bool Equals(IReadOnlyList<string> x, IReadOnlyList<string> y)
                 {
                     if (x is null && y is null)
                     {
@@ -129,7 +129,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     return false;
                 }
 
-                bool IsIn(IReadOnlyList<string> x, IReadOnlyList<string> y)
+                static bool IsIn(IReadOnlyList<string> x, IReadOnlyList<string> y)
                 {
                     if (x is null || y is null)
                     {

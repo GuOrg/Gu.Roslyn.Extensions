@@ -82,7 +82,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                        containingType.TryFindEvent(node.Identifier.ValueText, out var @event) &&
                        !IsStatic(@event);
 
-                bool IsStatic(MemberDeclarationSyntax candidate)
+                static bool IsStatic(MemberDeclarationSyntax candidate)
                 {
                     switch (candidate)
                     {

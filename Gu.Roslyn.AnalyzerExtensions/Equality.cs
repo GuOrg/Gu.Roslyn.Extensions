@@ -193,13 +193,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return false;
             }
 
-            bool IsLiteralAndExpressionAny(ExpressionSyntax x, ExpressionSyntax y, out LiteralExpressionSyntax literal, out ExpressionSyntax expression)
+            static bool IsLiteralAndExpressionAny(ExpressionSyntax x, ExpressionSyntax y, out LiteralExpressionSyntax literal, out ExpressionSyntax expression)
             {
                 return IsLiteralAndExpression(x, y, out literal, out expression) ||
                        IsLiteralAndExpression(y, x, out literal, out expression);
             }
 
-            bool IsLiteralAndExpression(ExpressionSyntax x, ExpressionSyntax y, out LiteralExpressionSyntax literal, out ExpressionSyntax expression)
+            static bool IsLiteralAndExpression(ExpressionSyntax x, ExpressionSyntax y, out LiteralExpressionSyntax literal, out ExpressionSyntax expression)
             {
                 if (x is LiteralExpressionSyntax xl &&
                     !(y is LiteralExpressionSyntax))
@@ -220,7 +220,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Operators == and !=
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="left">The left value.</param>
@@ -263,7 +263,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Operators == and !=
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="left">The left value.</param>

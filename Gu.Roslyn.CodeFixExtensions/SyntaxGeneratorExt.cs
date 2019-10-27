@@ -113,7 +113,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             updatedTarget = default;
             return false;
 
-            bool ShouldMove(SyntaxTrivia trivia)
+            static bool ShouldMove(SyntaxTrivia trivia)
             {
                 switch (trivia.Kind())
                 {

@@ -97,7 +97,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 ? member
                 : member.WithLeadingLineFeed();
 
-            bool Equal(SyntaxTokenList x, SyntaxTokenList y)
+            static bool Equal(SyntaxTokenList x, SyntaxTokenList y)
             {
                 if (x.Count == y.Count)
                 {

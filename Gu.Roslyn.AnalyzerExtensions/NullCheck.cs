@@ -86,7 +86,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return false;
             }
 
-            bool IsNullAndExpression(ExpressionSyntax x, ExpressionSyntax y, out ExpressionSyntax result)
+            static bool IsNullAndExpression(ExpressionSyntax x, ExpressionSyntax y, out ExpressionSyntax result)
             {
                 if (x.IsKind(SyntaxKind.NullLiteralExpression) && !y.IsKind(SyntaxKind.NullLiteralExpression))
                 {

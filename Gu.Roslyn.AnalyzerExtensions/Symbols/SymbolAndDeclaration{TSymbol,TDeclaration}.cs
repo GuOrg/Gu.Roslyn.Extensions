@@ -38,8 +38,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="left"/> is equal to <paramref name="right"/>.
         /// </summary>
-        /// <param name="left">The left <see cref="LocalOrParameter"/>.</param>
-        /// <param name="right">The right <see cref="LocalOrParameter"/>.</param>
+        /// <param name="left">The left <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</param>
+        /// <param name="right">The right <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</param>
         /// <returns>True if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
         public static bool operator ==(SymbolAndDeclaration<TSymbol, TDeclaration> left, SymbolAndDeclaration<TSymbol, TDeclaration> right)
         {
@@ -49,8 +49,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="left"/> is not equal to <paramref name="right"/>.
         /// </summary>
-        /// <param name="left">The left <see cref="LocalOrParameter"/>.</param>
-        /// <param name="right">The right <see cref="LocalOrParameter"/>.</param>
+        /// <param name="left">The left <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</param>
+        /// <param name="right">The right <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</param>
         /// <returns>True if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
         public static bool operator !=(SymbolAndDeclaration<TSymbol, TDeclaration> left, SymbolAndDeclaration<TSymbol, TDeclaration> right)
         {
@@ -60,7 +60,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public bool Equals(SymbolAndDeclaration<TSymbol, TDeclaration> other)
         {
-            return this.Symbol.Equals(other.Symbol) &&
+            return Equals(this.Symbol, other.Symbol) &&
                    ReferenceEquals(this.Declaration, other.Declaration);
         }
 

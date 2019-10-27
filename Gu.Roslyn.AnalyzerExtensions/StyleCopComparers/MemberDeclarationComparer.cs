@@ -48,7 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         {
             return Index(x).CompareTo(Index(y));
 
-            int Index(SyntaxTokenList list)
+            static int Index(SyntaxTokenList list)
             {
                 if (list.Any(SyntaxKind.ConstKeyword))
                 {
@@ -88,7 +88,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         {
             return Index(x).CompareTo(Index(y));
 
-            int Index(Accessibility accessibility)
+            static int Index(Accessibility accessibility)
             {
                 switch (accessibility)
                 {
@@ -219,10 +219,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             result = 0;
             return false;
 
-            bool IsEvent(MemberDeclarationSyntax candidate) => candidate is EventDeclarationSyntax ||
+            static bool IsEvent(MemberDeclarationSyntax candidate) => candidate is EventDeclarationSyntax ||
                                                                candidate is EventFieldDeclarationSyntax;
 
-            Accessibility Accessibility(MemberDeclarationSyntax member)
+            static Accessibility Accessibility(MemberDeclarationSyntax member)
             {
                 switch (member)
                 {
@@ -240,7 +240,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 }
             }
 
-            SyntaxTokenList Modifiers(MemberDeclarationSyntax member)
+            static SyntaxTokenList Modifiers(MemberDeclarationSyntax member)
             {
                 switch (member)
                 {
