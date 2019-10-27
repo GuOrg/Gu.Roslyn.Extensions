@@ -7,10 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.AnalyzerExtension
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.AnalyzerExtensions.Tests", "Gu.Roslyn.AnalyzerExtensions.Tests\Gu.Roslyn.AnalyzerExtensions.Tests.csproj", "{ACAE23DE-9E73-4EEE-984C-F92B9DC0E59C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{A9187C9F-98FB-4696-B023-548C641E7B54}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{A9187C9F-98FB-4696-B023-548C641E7B54}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
-		Directory.Build.props = Directory.Build.props
+		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Roslyn.CodeFixExtensions", "Gu.Roslyn.CodeFixExtensions\Gu.Roslyn.CodeFixExtensions.csproj", "{0153B29C-9038-43C1-BE4E-F762A37B6989}"
