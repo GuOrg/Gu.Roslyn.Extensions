@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard13</TargetFramework>
     <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
+    <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
     <CodeAnalysisRuleSet>Gu.Roslyn.CodeFixExtensions.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -29,6 +31,11 @@
     <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AnnotatedReferenceAssemblyVersion>3.0.0</AnnotatedReferenceAssemblyVersion>
+    <GenerateNullableAttributes>true</GenerateNullableAttributes>
+  </PropertyGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="PublicAPI.Shipped.txt" />
     <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
@@ -43,7 +50,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.66" />
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.77" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
