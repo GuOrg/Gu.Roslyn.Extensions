@@ -144,7 +144,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A <see cref="QualifiedType"/>.</returns>
         public static QualifiedType FromType(Type type)
         {
-            if (type is null)
+            if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
@@ -171,7 +171,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="INamedTypeSymbol"/>.</returns>
         public virtual ITypeSymbol GetTypeSymbol(Compilation compilation)
         {
-            if (compilation is null)
+            if (compilation == null)
             {
                 throw new ArgumentNullException(nameof(compilation));
             }
@@ -225,7 +225,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if equal.</returns>
         protected virtual bool Equals(ITypeSymbol type)
         {
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -241,7 +241,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if equal.</returns>
         protected virtual bool Equals(TypeSyntax type)
         {
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }

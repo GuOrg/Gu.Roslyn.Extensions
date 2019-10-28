@@ -21,12 +21,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 return 0;
             }
 
-            if (x is null)
+            if (x == null)
             {
                 return -1;
             }
 
-            if (y is null)
+            if (y == null)
             {
                 return 1;
             }

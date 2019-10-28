@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -19,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="FileLinePositionSpan"/> for the token in the containing document.</returns>
         public static FileLinePositionSpan FileLinePositionSpan(this SyntaxNode node, CancellationToken cancellationToken)
         {
-            if (node is null)
+            if (node == null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -43,7 +42,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="result"><see cref="SyntaxNodeExt.FirstAncestor{T}"/>.</param>
         /// <returns>True if not null.</returns>
-        public static bool TryFirstAncestor<T>(this SyntaxNode node, [NotNullWhen(true)]out T? result)
+        public static bool TryFirstAncestor<T>(this SyntaxNode node, out T result)
             where T : SyntaxNode
         {
             result = node.FirstAncestor<T>();
@@ -57,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="result"><see cref="SyntaxNode.FirstAncestorOrSelf{T}"/>.</param>
         /// <returns>True if not null.</returns>
-        public static bool TryFirstAncestorOrSelf<T>(this SyntaxNode node, [NotNullWhen(true)]out T? result)
+        public static bool TryFirstAncestorOrSelf<T>(this SyntaxNode node, out T result)
             where T : SyntaxNode
         {
             result = node?.FirstAncestorOrSelf<T>();
@@ -70,10 +69,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <typeparam name="T">The type of ancestor.</typeparam>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <returns>The ancestor or null.</returns>
-        public static T? FirstAncestor<T>(this SyntaxNode node)
+        public static T FirstAncestor<T>(this SyntaxNode node)
             where T : SyntaxNode
         {
-            if (node is null)
+            if (node == null)
             {
                 return null;
             }
@@ -95,12 +94,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the node is in an expression tree.</returns>
         public static bool IsInExpressionTree(this SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (semanticModel is null)
+            if (semanticModel == null)
             {
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
 
-            if (node is null)
+            if (node == null)
             {
                 return false;
             }
@@ -133,8 +132,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             var firstAncestor = FirstAncestor<T>(first);
             var otherAncestor = FirstAncestor<T>(other);
-            if (firstAncestor is null ||
-                otherAncestor is null ||
+            if (firstAncestor == null ||
+                otherAncestor == null ||
                 !ReferenceEquals(firstAncestor, otherAncestor))
             {
                 ancestor = null;
@@ -158,8 +157,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             var firstAncestor = FirstAncestor<T>(first);
             var otherAncestor = FirstAncestor<T>(other);
-            if (firstAncestor is null ||
-                otherAncestor is null)
+            if (firstAncestor == null ||
+                otherAncestor == null)
             {
                 ancestor = null;
                 return false;

@@ -23,7 +23,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="ClassDeclarationSyntax"/> that was passed in rewritten as sealed.</returns>
         public static ClassDeclarationSyntax Seal(ClassDeclarationSyntax classDeclaration)
         {
-            if (classDeclaration is null)
+            if (classDeclaration == null)
             {
                 throw new System.ArgumentNullException(nameof(classDeclaration));
             }
@@ -41,7 +41,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override SyntaxNode VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
-            if (node is null)
+            if (node == null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -57,7 +57,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override SyntaxNode VisitEventDeclaration(EventDeclarationSyntax node)
         {
-            if (node is null)
+            if (node == null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -73,7 +73,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
-            if (node is null)
+            if (node == null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -89,7 +89,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override SyntaxNode VisitAccessorDeclaration(AccessorDeclarationSyntax node)
         {
-            if (node is null)
+            if (node == null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -109,7 +109,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            if (node is null)
+            if (node == null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }

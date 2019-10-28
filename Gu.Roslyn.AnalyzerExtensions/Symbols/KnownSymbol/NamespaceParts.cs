@@ -27,12 +27,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal.</returns>
         public static bool operator ==(INamespaceSymbol left, NamespaceParts right)
         {
-            if (left is null && right is null)
+            if (left == null && right == null)
             {
                 return true;
             }
 
-            if (left is null || right is null)
+            if (left == null || right == null)
             {
                 return false;
             }
@@ -40,7 +40,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             var ns = left;
             for (var i = right.parts.Count - 1; i >= 0; i--)
             {
-                if (ns is null || ns.IsGlobalNamespace)
+                if (ns == null || ns.IsGlobalNamespace)
                 {
                     return false;
                 }
@@ -69,7 +69,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The created instance.</returns>
         public static NamespaceParts Create(string fullName)
         {
-            if (fullName is null)
+            if (fullName == null)
             {
                 throw new System.ArgumentNullException(nameof(fullName));
             }

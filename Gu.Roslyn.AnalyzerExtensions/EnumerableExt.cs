@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryElementAt<T>(this IEnumerable<T> source, int index, out T result)
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -52,7 +52,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingle<T>(this IEnumerable<T> source, out T result)
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -85,7 +85,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -129,7 +129,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -171,7 +171,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -211,7 +211,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFirst<T>(this IEnumerable<T> source, out T result)
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -240,7 +240,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -271,7 +271,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -302,7 +302,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T result)
         {
-            if (source is null)
+            if (source == null)
             {
                 result = default;
                 return false;
@@ -334,7 +334,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryLast<T>(this IEnumerable<T> source, out T result)
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -366,7 +366,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryLast<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -405,7 +405,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -444,7 +444,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
             result = default;
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }

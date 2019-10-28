@@ -25,8 +25,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            if (x is null ||
-                y is null)
+            if (x == null ||
+                y == null)
             {
                 return false;
             }

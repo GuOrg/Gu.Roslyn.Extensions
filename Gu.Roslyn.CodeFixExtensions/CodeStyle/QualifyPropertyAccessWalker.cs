@@ -48,7 +48,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
-            if (node is null)
+            if (node == null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }

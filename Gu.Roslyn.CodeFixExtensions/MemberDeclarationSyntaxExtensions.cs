@@ -21,7 +21,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static TMember WithDocumentationText<TMember>(this TMember member, string text, bool adjustLeadingWhitespace = true)
             where TMember : MemberDeclarationSyntax
         {
-            if (member is null)
+            if (member == null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }
@@ -47,7 +47,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static TMember WithDocs<TMember>(this TMember member, DocumentationCommentTriviaSyntax docs)
             where TMember : MemberDeclarationSyntax
         {
-            if (member is null)
+            if (member == null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }

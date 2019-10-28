@@ -20,12 +20,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
         public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IFieldSymbol target)
         {
-            if (candidate is null)
+            if (candidate == null)
             {
                 throw new System.ArgumentNullException(nameof(candidate));
             }
 
-            if (expected is null)
+            if (expected == null)
             {
                 throw new System.ArgumentNullException(nameof(expected));
             }
@@ -47,12 +47,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
         public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IPropertySymbol target)
         {
-            if (candidate is null)
+            if (candidate == null)
             {
                 throw new System.ArgumentNullException(nameof(candidate));
             }
 
-            if (expected is null)
+            if (expected == null)
             {
                 throw new System.ArgumentNullException(nameof(expected));
             }
@@ -74,12 +74,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
         public static bool IsSymbol(this IdentifierNameSyntax candidate, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (candidate is null)
+            if (candidate == null)
             {
                 throw new System.ArgumentNullException(nameof(candidate));
             }
 
-            if (symbol is null)
+            if (symbol == null)
             {
                 throw new System.ArgumentNullException(nameof(symbol));
             }

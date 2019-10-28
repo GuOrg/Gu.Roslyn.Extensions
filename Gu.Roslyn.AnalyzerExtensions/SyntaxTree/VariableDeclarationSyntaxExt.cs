@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindVariable(this VariableDeclarationSyntax variableDeclaration, string name, out VariableDeclaratorSyntax result)
         {
             result = null;
-            if (variableDeclaration is null)
+            if (variableDeclaration == null)
             {
                 return false;
             }

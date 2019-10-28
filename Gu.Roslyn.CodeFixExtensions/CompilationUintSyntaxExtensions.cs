@@ -21,17 +21,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The updated <see cref="CompilationUnitSyntax"/>.</returns>
         public static CompilationUnitSyntax AddUsing(this CompilationUnitSyntax compilationUnit, ITypeSymbol type, SemanticModel semanticModel)
         {
-            if (compilationUnit is null)
+            if (compilationUnit == null)
             {
                 throw new System.ArgumentNullException(nameof(compilationUnit));
             }
 
-            if (type is null)
+            if (type == null)
             {
                 throw new System.ArgumentNullException(nameof(type));
             }
 
-            if (semanticModel is null)
+            if (semanticModel == null)
             {
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
@@ -58,17 +58,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The updated <see cref="CompilationUnitSyntax"/>.</returns>
         public static CompilationUnitSyntax AddUsing(this CompilationUnitSyntax compilationUnit, UsingDirectiveSyntax usingDirective, SemanticModel semanticModel)
         {
-            if (compilationUnit is null)
+            if (compilationUnit == null)
             {
                 throw new System.ArgumentNullException(nameof(compilationUnit));
             }
 
-            if (semanticModel is null)
+            if (semanticModel == null)
             {
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
 
-            if (usingDirective is null)
+            if (usingDirective == null)
             {
                 throw new System.ArgumentNullException(nameof(usingDirective));
             }

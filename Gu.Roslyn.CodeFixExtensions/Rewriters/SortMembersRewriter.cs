@@ -33,7 +33,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T Sort<T>(T typeDeclaration, IComparer<MemberDeclarationSyntax> comparer)
             where T : TypeDeclarationSyntax
         {
-            if (typeDeclaration is null)
+            if (typeDeclaration == null)
             {
                 throw new ArgumentNullException(nameof(typeDeclaration));
             }

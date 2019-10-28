@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public LocalOrParameter(ILocalSymbol local)
             : this((ISymbol)local)
         {
-            if (local is null)
+            if (local == null)
             {
                 throw new ArgumentNullException(nameof(local));
             }
@@ -31,7 +31,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public LocalOrParameter(IParameterSymbol parameter)
             : this((ISymbol)parameter)
         {
-            if (parameter is null)
+            if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
             }

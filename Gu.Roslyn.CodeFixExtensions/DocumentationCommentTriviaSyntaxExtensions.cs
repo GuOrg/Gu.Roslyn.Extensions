@@ -21,12 +21,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><paramref name="comment"/> with summary.</returns>
         public static DocumentationCommentTriviaSyntax WithSummaryText(this DocumentationCommentTriviaSyntax comment, string text)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            if (text is null)
+            if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
@@ -43,7 +43,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><paramref name="comment"/> with <paramref name="summary"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithSummary(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax summary)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
@@ -72,17 +72,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><paramref name="comment"/> with summary.</returns>
         public static DocumentationCommentTriviaSyntax WithTypeParamText(this DocumentationCommentTriviaSyntax comment, string parameterName, string text)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            if (parameterName is null)
+            if (parameterName == null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
 
-            if (text is null)
+            if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
@@ -100,7 +100,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><paramref name="comment"/> with <paramref name="typeparam"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithTypeParam(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax typeparam)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
@@ -197,17 +197,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><paramref name="comment"/> with summary.</returns>
         public static DocumentationCommentTriviaSyntax WithParamText(this DocumentationCommentTriviaSyntax comment, string parameterName, string text)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            if (parameterName is null)
+            if (parameterName == null)
             {
                 throw new ArgumentNullException(nameof(parameterName));
             }
 
-            if (text is null)
+            if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
@@ -225,12 +225,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><paramref name="comment"/> with <paramref name="param"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithParam(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax param)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            if (param is null)
+            if (param == null)
             {
                 throw new ArgumentNullException(nameof(param));
             }
@@ -308,12 +308,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><paramref name="comment"/> with  <paramref name="text"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithReturnsText(this DocumentationCommentTriviaSyntax comment, string text)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            if (text is null)
+            if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
@@ -330,12 +330,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><paramref name="comment"/> with <paramref name="returns"/>.</returns>
         public static DocumentationCommentTriviaSyntax WithReturns(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax returns)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            if (returns is null)
+            if (returns == null)
             {
                 throw new ArgumentNullException(nameof(returns));
             }
@@ -362,17 +362,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="newElement"/> added.</returns>
         public static DocumentationCommentTriviaSyntax InsertBefore(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax node, XmlElementSyntax newElement)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            if (node is null)
+            if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
 
-            if (newElement is null)
+            if (newElement == null)
             {
                 throw new ArgumentNullException(nameof(newElement));
             }
@@ -391,17 +391,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>A <see cref="DocumentationCommentTriviaSyntax"/> withe <paramref name="newElement"/> added.</returns>
         public static DocumentationCommentTriviaSyntax InsertAfter(this DocumentationCommentTriviaSyntax comment, XmlElementSyntax node, XmlElementSyntax newElement)
         {
-            if (comment is null)
+            if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            if (node is null)
+            if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
 
-            if (newElement is null)
+            if (newElement == null)
             {
                 throw new ArgumentNullException(nameof(newElement));
             }

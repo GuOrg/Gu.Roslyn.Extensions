@@ -115,7 +115,7 @@ namespace Vanguard_MVVM.ViewModels
 
         public static MainWindowViewModel Instance { get; } = new MainWindowViewModel();
 
-        public string Title => ChildDataContext?.Titleis null ? _title : string.Concat(_title, "" - "", ChildDataContext?.Title);
+        public string Title => ChildDataContext?.Title == null ? _title : string.Concat(_title, "" - "", ChildDataContext?.Title);
 
 
         public event PropertyChangedEventHandler PropertyChanged;

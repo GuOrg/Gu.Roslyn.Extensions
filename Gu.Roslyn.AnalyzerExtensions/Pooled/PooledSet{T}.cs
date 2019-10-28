@@ -63,7 +63,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning restore CA1000 // Do not declare static members on generic types
 #pragma warning restore IDISP015 // Member should not return created and cached instance.
         {
-            if (set is null)
+            if (set == null)
             {
                 return Borrow();
             }

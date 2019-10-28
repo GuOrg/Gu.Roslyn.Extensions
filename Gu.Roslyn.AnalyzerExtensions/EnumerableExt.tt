@@ -396,7 +396,7 @@ private void WriteIfNullReturnFalse(Data item)
 {
     if (!item.IsValueType)
     {
-        this.WriteLine("            if (sourceis null)");
+        this.WriteLine("            if (source == null)");
         this.WriteLine("            {");
         this.WriteLine("                return false;");
         this.WriteLine("            }");

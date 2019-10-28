@@ -58,7 +58,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The walker.</returns>
         protected static T Borrow(Func<T> create)
         {
-            if (create is null)
+            if (create == null)
             {
                 throw new ArgumentNullException(nameof(create));
             }

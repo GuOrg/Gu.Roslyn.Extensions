@@ -26,17 +26,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static DocumentEditor ReplaceNode<T>(this DocumentEditor editor, T node, Func<T, SyntaxNode> replacement)
             where T : SyntaxNode
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            if (node is null)
+            if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
 
-            if (replacement is null)
+            if (replacement == null)
             {
                 throw new ArgumentNullException(nameof(replacement));
             }
@@ -54,7 +54,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor ReplaceToken(this DocumentEditor editor, SyntaxToken oldToken, SyntaxToken newToken)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
@@ -72,17 +72,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor MoveBefore(this DocumentEditor editor, MemberDeclarationSyntax toMove, MemberDeclarationSyntax member)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            if (toMove is null)
+            if (toMove == null)
             {
                 throw new ArgumentNullException(nameof(toMove));
             }
 
-            if (member is null)
+            if (member == null)
             {
                 throw new ArgumentNullException(nameof(member));
             }
@@ -117,17 +117,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor MoveAfter(this DocumentEditor editor, MemberDeclarationSyntax toMove, MemberDeclarationSyntax member)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            if (toMove is null)
+            if (toMove == null)
             {
                 throw new ArgumentNullException(nameof(toMove));
             }
 
-            if (member is null)
+            if (member == null)
             {
                 throw new ArgumentNullException(nameof(member));
             }
@@ -168,17 +168,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor MoveBefore(this DocumentEditor editor, StatementSyntax toMove, StatementSyntax statement)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            if (toMove is null)
+            if (toMove == null)
             {
                 throw new ArgumentNullException(nameof(toMove));
             }
 
-            if (statement is null)
+            if (statement == null)
             {
                 throw new ArgumentNullException(nameof(statement));
             }
@@ -207,17 +207,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor MoveAfter(this DocumentEditor editor, StatementSyntax toMove, StatementSyntax statement)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            if (toMove is null)
+            if (toMove == null)
             {
                 throw new ArgumentNullException(nameof(toMove));
             }
 
-            if (statement is null)
+            if (statement == null)
             {
                 throw new ArgumentNullException(nameof(statement));
             }
@@ -245,12 +245,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor FormatNode(this DocumentEditor editor, SyntaxNode node)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            if (node is null)
+            if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
@@ -269,12 +269,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor Seal(this DocumentEditor editor, ClassDeclarationSyntax classDeclaration)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            if (classDeclaration is null)
+            if (classDeclaration == null)
             {
                 throw new ArgumentNullException(nameof(classDeclaration));
             }
@@ -297,14 +297,14 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="classDeclaration">The <see cref="ClassDeclarationSyntax"/>.</param>
         /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
-        public static DocumentEditor SortMembers(this DocumentEditor editor, TypeDeclarationSyntax classDeclaration, IComparer<MemberDeclarationSyntax>? comparer = null)
+        public static DocumentEditor SortMembers(this DocumentEditor editor, TypeDeclarationSyntax classDeclaration, IComparer<MemberDeclarationSyntax> comparer = null)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            if (classDeclaration is null)
+            if (classDeclaration == null)
             {
                 throw new ArgumentNullException(nameof(classDeclaration));
             }

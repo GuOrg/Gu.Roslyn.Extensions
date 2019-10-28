@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindField(this TypeDeclarationSyntax type, string name, out FieldDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -46,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindConstructor(this TypeDeclarationSyntax type, out ConstructorDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -73,7 +73,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindConstructor(this TypeDeclarationSyntax type, Func<ConstructorDeclarationSyntax, bool> predicate, out ConstructorDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -101,7 +101,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindEvent(this TypeDeclarationSyntax type, string name, out MemberDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -132,7 +132,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindProperty(this TypeDeclarationSyntax type, string name, out PropertyDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -159,7 +159,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindIndexer(this TypeDeclarationSyntax type, out IndexerDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -186,7 +186,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, out MethodDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -215,7 +215,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, Func<MethodDeclarationSyntax, bool> predicate, out MethodDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -244,7 +244,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindMethod(this TypeDeclarationSyntax type, Func<MethodDeclarationSyntax, bool> predicate, out MethodDeclarationSyntax match)
         {
             match = null;
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }

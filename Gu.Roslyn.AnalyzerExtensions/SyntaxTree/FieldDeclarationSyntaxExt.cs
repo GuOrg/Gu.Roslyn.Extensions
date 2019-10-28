@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/>.</returns>
         public static Accessibility Accessibility(this FieldDeclarationSyntax declaration)
         {
-            if (declaration is null)
+            if (declaration == null)
             {
                 return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
             }
@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetName(this FieldDeclarationSyntax declaration, out string name)
         {
             name = null;
-            if (declaration is null)
+            if (declaration == null)
             {
                 return false;
             }
@@ -83,7 +83,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindVariable(this FieldDeclarationSyntax fieldDeclaration, string name, out VariableDeclaratorSyntax result)
         {
             result = null;
-            if (fieldDeclaration is null)
+            if (fieldDeclaration == null)
             {
                 return false;
             }

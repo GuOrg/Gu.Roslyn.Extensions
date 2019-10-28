@@ -52,7 +52,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
             if (this.SearchScope != SearchScope.Member &&
-                node?.Initializer is null &&
+                node?.Initializer == null &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
                 ctor.ContainingType is INamedTypeSymbol containingType &&
                 Constructor.TryFindDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
@@ -229,7 +229,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="TypeDeclarationSyntax"/>.</param>
         protected virtual void VisitTypeDeclaration(TypeDeclarationSyntax node)
         {
-            if (node is null)
+            if (node == null)
             {
                 return;
             }
@@ -300,7 +300,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TSymbol : class, ISymbol
         {
             symbol = null;
-            if (node is null ||
+            if (node == null ||
                 this.SearchScope == SearchScope.Member)
             {
                 return false;

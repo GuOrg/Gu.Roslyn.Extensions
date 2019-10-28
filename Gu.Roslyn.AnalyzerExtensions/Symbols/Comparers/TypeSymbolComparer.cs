@@ -25,8 +25,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            if (x is null ||
-                y is null)
+            if (x == null ||
+                y == null)
             {
                 return false;
             }
@@ -74,7 +74,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static int GetHashCode(ITypeSymbol obj)
 #pragma warning restore CA1720 // Identifier contains type name
         {
-            if (obj is null)
+            if (obj == null)
             {
                 return 0;
             }

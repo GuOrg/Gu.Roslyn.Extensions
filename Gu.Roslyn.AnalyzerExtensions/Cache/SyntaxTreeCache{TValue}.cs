@@ -41,7 +41,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The cached value.</returns>
         public static TValue GetOrAdd(SyntaxTree key, Func<SyntaxTree, TValue> valueFactory)
         {
-            if (valueFactory is null)
+            if (valueFactory == null)
             {
                 throw new ArgumentNullException(nameof(valueFactory));
             }
@@ -94,7 +94,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             private void Purge()
             {
-                if (this.compilation is null)
+                if (this.compilation == null)
                 {
                     if (RefCount == 0)
                     {
@@ -106,7 +106,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 lock (this.gate)
                 {
-                    if (this.compilation is null)
+                    if (this.compilation == null)
                     {
                         return;
                     }

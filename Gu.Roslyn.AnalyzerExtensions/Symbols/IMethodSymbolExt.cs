@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -15,9 +14,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
-        /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, [NotNullWhen(true)]out IParameterSymbol? parameter)
+        public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, out IParameterSymbol parameter)
         {
             if (method is null ||
                 argument is null)
@@ -55,12 +54,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
         /// <param name="name">The name of the parameter.</param>
-        /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, string name, [NotNullWhen(true)]out IParameterSymbol? parameter)
+        public static bool TryFindParameter(this IMethodSymbol method, string name, out IParameterSymbol parameter)
         {
             parameter = null;
-            if (method is null)
+            if (method == null)
             {
                 return false;
             }
@@ -82,12 +81,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
         /// <param name="type">The type fo the parameter.</param>
-        /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
+        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, [NotNullWhen(true)]out IParameterSymbol? parameter)
+        public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, out IParameterSymbol parameter)
         {
             parameter = null;
-            if (method is null)
+            if (method == null)
             {
                 return false;
             }

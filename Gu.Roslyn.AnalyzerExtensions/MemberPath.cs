@@ -198,7 +198,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>A walker.</returns>
             public static PathWalker Borrow(ExpressionSyntax node)
             {
-                if (node is null)
+                if (node == null)
                 {
                     throw new ArgumentNullException(nameof(node));
                 }
@@ -246,7 +246,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <inheritdoc />
             public override void VisitIdentifierName(IdentifierNameSyntax node)
             {
-                if (node is null)
+                if (node == null)
                 {
                     throw new ArgumentNullException(nameof(node));
                 }
@@ -257,7 +257,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <inheritdoc />
             public override void VisitPredefinedType(PredefinedTypeSyntax node)
             {
-                if (node is null)
+                if (node == null)
                 {
                     throw new ArgumentNullException(nameof(node));
                 }
@@ -293,7 +293,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>True if this path starts with the other or is equal.</returns>
             public bool StartsWith(PathWalker other)
             {
-                if (other is null)
+                if (other == null)
                 {
                     throw new ArgumentNullException(nameof(other));
                 }

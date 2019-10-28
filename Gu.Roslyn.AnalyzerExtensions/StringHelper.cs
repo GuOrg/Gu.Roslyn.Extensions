@@ -16,12 +16,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="x"></paramref> equals <paramref name="y"></paramref> starting at <paramref name="position"></paramref>.</returns>
         public static bool EqualsAt(this string x, string y, int position)
         {
-            if (x is null)
+            if (x == null)
             {
                 throw new ArgumentNullException(nameof(x));
             }
 
-            if (y is null)
+            if (y == null)
             {
                 throw new ArgumentNullException(nameof(y));
             }
@@ -57,9 +57,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="text"/> is start + end.</returns>
         public static bool IsParts(this string text, string start, string end, StringComparison stringComparison = StringComparison.Ordinal)
         {
-            if (text is null)
+            if (text == null)
             {
-                return start is null && end is null;
+                return start == null && end == null;
             }
 
             if (string.IsNullOrEmpty(start))
@@ -92,9 +92,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="text"/> is start + end.</returns>
         public static bool IsParts(this string text, string start, string middle, string end, StringComparison stringComparison = StringComparison.Ordinal)
         {
-            if (text is null)
+            if (text == null)
             {
-                return start is null && middle is null && end is null;
+                return start == null && middle == null && end == null;
             }
 
             if (string.IsNullOrEmpty(start))
@@ -134,9 +134,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="text"/> is start + end.</returns>
         public static bool IsParts(this string text, string part1, string part2, string part3, string part4, StringComparison stringComparison = StringComparison.Ordinal)
         {
-            if (text is null)
+            if (text == null)
             {
-                return part1 is null && part2 is null && part3 is null && part4 is null;
+                return part1 == null && part2 == null && part3 == null && part4 == null;
             }
 
             if (string.IsNullOrEmpty(part1))
@@ -183,9 +183,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="text"/> is start + end.</returns>
         public static bool IsParts(this string text, string part1, string part2, string part3, string part4, string part5, StringComparison stringComparison = StringComparison.Ordinal)
         {
-            if (text is null)
+            if (text == null)
             {
-                return part1 is null && part2 is null && part3 is null && part4 is null && part5 is null;
+                return part1 == null && part2 == null && part3 == null && part4 == null && part5 == null;
             }
 
             if (string.IsNullOrEmpty(part1))

@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="Accessibility"/>.</returns>
         public static Accessibility Accessibility(this BaseMethodDeclarationSyntax declaration)
         {
-            if (declaration is null)
+            if (declaration == null)
             {
                 return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
             }
@@ -65,11 +64,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, ArgumentSyntax argument, [NotNullWhen(true)]out ParameterSyntax? parameter)
+        public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, ArgumentSyntax argument, out ParameterSyntax parameter)
         {
             parameter = null;
-            if (argument is null ||
-                method is null)
+            if (argument == null ||
+                method == null)
             {
                 return false;
             }
@@ -110,14 +109,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Find the matching parameter for the argument.
         /// </summary>
         /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
-        /// <param name="name">The name of the parameter.</param>
+        /// <param name="name">The <see cref="ArgumentSyntax"/>.</param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, string name, [NotNullWhen(true)]out ParameterSyntax? parameter)
+        public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, string name, out ParameterSyntax parameter)
         {
             parameter = null;
-            if (name is null ||
-                method is null)
+            if (name == null ||
+                method == null)
             {
                 return false;
             }

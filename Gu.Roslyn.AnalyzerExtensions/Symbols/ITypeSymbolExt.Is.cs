@@ -67,7 +67,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
         {
-            if (source is null || destination is null)
+            if (source == null || destination == null)
             {
                 return false;
             }
@@ -84,17 +84,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
         {
-            if (source is null)
+            if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (destination is null)
+            if (destination == null)
             {
                 throw new ArgumentNullException(nameof(destination));
             }
 
-            if (compilation is null)
+            if (compilation == null)
             {
                 throw new ArgumentNullException(nameof(compilation));
             }
@@ -111,7 +111,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
         {
-            if (source is null || destination is null)
+            if (source == null || destination == null)
             {
                 return false;
             }
@@ -128,7 +128,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
         {
-            if (source is null || destination is null)
+            if (source == null || destination == null)
             {
                 return false;
             }
@@ -144,7 +144,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="qualifiedType"/>. </returns>
         public static bool Is(this ITypeSymbol source, QualifiedType qualifiedType)
         {
-            if (source is null || qualifiedType is null)
+            if (source == null || qualifiedType == null)
             {
                 return false;
             }
@@ -192,7 +192,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Obsolete("Use IsAssignableTo or conversion.")]
         public static bool Is(this ITypeSymbol source, ITypeSymbol destination)
         {
-            if (source is null || destination is null)
+            if (source == null || destination == null)
             {
                 return false;
             }
@@ -243,7 +243,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            if (x is null || y is null)
+            if (x == null || y == null)
             {
                 return false;
             }
@@ -291,8 +291,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Obsolete("Use overload with Compilation")]
         public static bool IsSameType(this INamedTypeSymbol x, INamedTypeSymbol y)
         {
-            if (x is null ||
-                y is null)
+            if (x == null ||
+                y == null)
             {
                 return false;
             }
@@ -316,8 +316,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Obsolete("Use IsAssignableTo, candidate for removal")]
         public static bool IsNullable(this ITypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (nullableType is null ||
-                value is null)
+            if (nullableType == null ||
+                value == null)
             {
                 return false;
             }
@@ -337,8 +337,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Obsolete("Use IsAssignableTo, candidate for removal")]
         public static bool IsNullable(this INamedTypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (nullableType is null ||
-                value is null)
+            if (nullableType == null ||
+                value == null)
             {
                 return false;
             }

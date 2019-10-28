@@ -8,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
 
     public static class NullCheckTests
     {
-        [TestCase("textis null")]
+        [TestCase("text == null")]
         [TestCase("null == text")]
         [TestCase("text != null")]
         [TestCase("text is null")]
@@ -30,9 +30,9 @@ namespace N
 
     class C
     {
-        bool M(string text) => textis null;
+        bool M(string text) => text == null;
     }
-}".AssertReplace("textis null", check);
+}".AssertReplace("text == null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var expression = syntaxTree.Find<ExpressionSyntax>(check);
             Assert.AreEqual(true, NullCheck.IsNullCheck(expression, default, default, out var value));
@@ -44,9 +44,9 @@ namespace N
             Assert.AreEqual("text", value.ToString());
         }
 
-        [TestCase("textis null")]
+        [TestCase("text == null")]
         [TestCase("text != null")]
-        [TestCase("textis null && otheris null")]
+        [TestCase("text == null && other == null")]
         [TestCase("text is null")]
         public static void IsCheckedWhenOldStyleNullCheck(string check)
         {
@@ -61,7 +61,7 @@ namespace N
 
         public C(string text, string other)
         {
-            if (textis null)
+            if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
@@ -69,7 +69,7 @@ namespace N
             this.text = text;
         }
     }
-}".AssertReplace("textis null", check);
+}".AssertReplace("text == null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
@@ -118,7 +118,7 @@ namespace N
 
         public C(string text, string other)
         {
-            if (textis null || otheris null)
+            if (text == null || other == null)
             {
                 throw new ArgumentNullException(nameof(text));
             }

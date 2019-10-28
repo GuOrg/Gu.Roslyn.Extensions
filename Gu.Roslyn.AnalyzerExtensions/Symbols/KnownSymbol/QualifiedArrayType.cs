@@ -27,7 +27,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override ITypeSymbol GetTypeSymbol(Compilation compilation)
         {
-            if (compilation is null)
+            if (compilation == null)
             {
                 throw new global::System.ArgumentNullException(nameof(compilation));
             }

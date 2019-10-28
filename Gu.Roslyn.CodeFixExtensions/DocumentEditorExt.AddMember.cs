@@ -20,12 +20,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddUsing(this DocumentEditor editor, UsingDirectiveSyntax usingDirective)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (usingDirective is null)
+            if (usingDirective == null)
             {
                 throw new System.ArgumentNullException(nameof(usingDirective));
             }
@@ -48,12 +48,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddUsing(this DocumentEditor editor, ITypeSymbol type)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (type is null)
+            if (type == null)
             {
                 throw new System.ArgumentNullException(nameof(type));
             }
@@ -77,17 +77,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddField(this DocumentEditor editor, TypeDeclarationSyntax containingType, FieldDeclarationSyntax field)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (containingType is null)
+            if (containingType == null)
             {
                 throw new System.ArgumentNullException(nameof(containingType));
             }
 
-            if (field is null)
+            if (field == null)
             {
                 throw new System.ArgumentNullException(nameof(field));
             }
@@ -108,12 +108,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>A <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax AddBackingField(this DocumentEditor editor, PropertyDeclarationSyntax propertyDeclaration)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (propertyDeclaration is null)
+            if (propertyDeclaration == null)
             {
                 throw new System.ArgumentNullException(nameof(propertyDeclaration));
             }
@@ -136,12 +136,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>A <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax CreateBackingField(this DocumentEditor editor, PropertyDeclarationSyntax propertyDeclaration)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (propertyDeclaration is null)
+            if (propertyDeclaration == null)
             {
                 throw new System.ArgumentNullException(nameof(propertyDeclaration));
             }
@@ -178,17 +178,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventDeclarationSyntax @event)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (containingType is null)
+            if (containingType == null)
             {
                 throw new System.ArgumentNullException(nameof(containingType));
             }
 
-            if (@event is null)
+            if (@event == null)
             {
                 throw new System.ArgumentNullException(nameof(@event));
             }
@@ -208,17 +208,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventFieldDeclarationSyntax @event)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (containingType is null)
+            if (containingType == null)
             {
                 throw new System.ArgumentNullException(nameof(containingType));
             }
 
-            if (@event is null)
+            if (@event == null)
             {
                 throw new System.ArgumentNullException(nameof(@event));
             }
@@ -238,17 +238,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddProperty(this DocumentEditor editor, TypeDeclarationSyntax containingType, BasePropertyDeclarationSyntax property)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (containingType is null)
+            if (containingType == null)
             {
                 throw new System.ArgumentNullException(nameof(containingType));
             }
 
-            if (property is null)
+            if (property == null)
             {
                 throw new System.ArgumentNullException(nameof(property));
             }
@@ -268,17 +268,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddMethod(this DocumentEditor editor, TypeDeclarationSyntax containingType, MethodDeclarationSyntax method)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (containingType is null)
+            if (containingType == null)
             {
                 throw new System.ArgumentNullException(nameof(containingType));
             }
 
-            if (method is null)
+            if (method == null)
             {
                 throw new System.ArgumentNullException(nameof(method));
             }
@@ -298,17 +298,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddMember(this DocumentEditor editor, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member)
         {
-            if (editor is null)
+            if (editor == null)
             {
                 throw new System.ArgumentNullException(nameof(editor));
             }
 
-            if (containingType is null)
+            if (containingType == null)
             {
                 throw new System.ArgumentNullException(nameof(containingType));
             }
 
-            if (member is null)
+            if (member == null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }

@@ -57,12 +57,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static bool TryFindNode<T>(this SyntaxNode syntaxRoot, Location location, out T node)
             where T : SyntaxNode
         {
-            if (syntaxRoot is null)
+            if (syntaxRoot == null)
             {
                 throw new System.ArgumentNullException(nameof(syntaxRoot));
             }
 
-            if (location is null)
+            if (location == null)
             {
                 throw new System.ArgumentNullException(nameof(location));
             }
@@ -95,12 +95,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static bool TryFindNodeOrAncestor<T>(this SyntaxNode syntaxRoot, Location location, out T node)
             where T : SyntaxNode
         {
-            if (syntaxRoot is null)
+            if (syntaxRoot == null)
             {
                 throw new System.ArgumentNullException(nameof(syntaxRoot));
             }
 
-            if (location is null)
+            if (location == null)
             {
                 throw new System.ArgumentNullException(nameof(location));
             }

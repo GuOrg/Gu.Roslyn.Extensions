@@ -426,7 +426,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
         public static bool IsEqualityComparerEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax comparer, out ExpressionSyntax left, out ExpressionSyntax right)
         {
-            if (semanticModel is null)
+            if (semanticModel == null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
@@ -514,7 +514,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="type"/> has op_Equality defined.</returns>
         public static bool HasEqualityOperator(ITypeSymbol type)
         {
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -563,7 +563,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="type"/> has op_Equality defined.</returns>
         public static bool HasOverridenEqualityOperator(ITypeSymbol type)
         {
-            if (type is null)
+            if (type == null)
             {
                 return false;
             }
@@ -584,7 +584,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if Equals or GetHashCode is overriden.</returns>
         public static bool IsOverriden(TypeDeclarationSyntax candidate)
         {
-            if (candidate is null)
+            if (candidate == null)
             {
                 throw new ArgumentNullException(nameof(candidate));
             }

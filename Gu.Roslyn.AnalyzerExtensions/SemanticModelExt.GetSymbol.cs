@@ -87,17 +87,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetSymbol(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, QualifiedType expected, CancellationToken cancellationToken, out IMethodSymbol symbol)
         {
-            if (semanticModel is null)
+            if (semanticModel == null)
             {
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
 
-            if (expected is null)
+            if (expected == null)
             {
                 throw new System.ArgumentNullException(nameof(expected));
             }
 
-            if (node is null)
+            if (node == null)
             {
                 symbol = null;
                 return false;
@@ -149,13 +149,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetSymbol(this SemanticModel semanticModel, InvocationExpressionSyntax node, QualifiedMethod expected, CancellationToken cancellationToken, out IMethodSymbol symbol)
         {
-            if (expected is null)
+            if (expected == null)
             {
                 throw new System.ArgumentNullException(nameof(expected));
             }
 
             symbol = null;
-            if (node is null)
+            if (node == null)
             {
                 return false;
             }
@@ -181,7 +181,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-        /// <param name="node">The <see cref="ElementAccessExpressionSyntax"/>.</param>
+        /// <param name="node">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="symbol">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
