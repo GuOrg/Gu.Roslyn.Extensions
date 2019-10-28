@@ -114,15 +114,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a scope could be determined.</returns>
         public bool TryGetScope(CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? scope)
         {
-            switch (this.Symbol)
+            return this.Symbol switch
             {
-                case ILocalSymbol local:
-                    return local.TryGetScope(cancellationToken, out scope);
-                case IParameterSymbol parameter:
-                    return parameter.ContainingSymbol.TrySingleDeclaration(cancellationToken, out scope);
-                default:
-                    throw new InvalidOperationException("Should never get here.");
-            }
+                ILocalSymbol local => local.TryGetScope(cancellationToken, out scope),
+                IParameterSymbol parameter => parameter.ContainingSymbol.TrySingleDeclaration(cancellationToken, out scope),
+                _ => throw new InvalidOperationException("Should never get here."),
+            };
         }
 
         /// <inheritdoc/>

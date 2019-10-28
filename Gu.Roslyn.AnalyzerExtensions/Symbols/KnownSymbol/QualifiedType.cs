@@ -246,30 +246,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            switch (type)
+            return type switch
             {
-                case PredefinedTypeSyntax predefinedType:
-                    return predefinedType.Keyword.ValueText == this.Alias;
-                case ArrayTypeSyntax array:
-                    return this is QualifiedArrayType arrayType &&
-                           arrayType.ElementType.Equals(array.ElementType);
-                case NullableTypeSyntax nullable:
-                    return this is QualifiedGenericType qualifiedGenericType &&
+                PredefinedTypeSyntax predefinedType => predefinedType.Keyword.ValueText == this.Alias,
+                ArrayTypeSyntax array => this is QualifiedArrayType arrayType &&
+                           arrayType.ElementType.Equals(array.ElementType),
+                NullableTypeSyntax nullable => this is QualifiedGenericType qualifiedGenericType &&
                            qualifiedGenericType.TypeArguments.TrySingle(out var typeArg) &&
                            qualifiedGenericType.Type == "Nullable`1" &&
-                           typeArg.Equals(nullable.ElementType);
-                case GenericNameSyntax genericName:
-                    return this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString(CultureInfo.InvariantCulture));
-                case SimpleNameSyntax simple:
-                    return this.NameEquals(simple.Identifier.ValueText) ||
-                           Aliased(simple);
-                case QualifiedNameSyntax qualified:
-                    return this.Equals(qualified.Right) &&
-                           this.Namespace.Matches(qualified.Left);
-            }
+                           typeArg.Equals(nullable.ElementType),
+                GenericNameSyntax genericName => this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString(CultureInfo.InvariantCulture)),
+                SimpleNameSyntax simple => this.NameEquals(simple.Identifier.ValueText) ||
+                           Aliased(simple),
+                QualifiedNameSyntax qualified => this.Equals(qualified.Right) &&
+                           this.Namespace.Matches(qualified.Left),
 
-            return false;
-
+                _ => false,
+            };
             bool Aliased(SimpleNameSyntax name)
             {
                 if (!name.Parent.IsKind(SyntaxKind.QualifiedName) &&

@@ -39,7 +39,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new System.ArgumentNullException(nameof(member));
             }
 
-            comparer = comparer ?? MemberDeclarationComparer.Default;
+            comparer ??= MemberDeclarationComparer.Default;
             if (!member.HasLeadingTrivia)
             {
                 member = member.WithLeadingTrivia(SyntaxFactory.Whitespace(containingType.LeadingWhitespace() + "    "));

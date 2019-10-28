@@ -90,21 +90,15 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 
             static int Index(Accessibility accessibility)
             {
-                switch (accessibility)
+                return accessibility switch
                 {
-                    case Accessibility.Public:
-                        return 0;
-                    case Accessibility.Internal:
-                        return 1;
-                    case Accessibility.ProtectedAndInternal:
-                        return 2;
-                    case Accessibility.Protected:
-                        return 3;
-                    case Accessibility.Private:
-                        return 4;
-                    default:
-                        return 5;
-                }
+                    Accessibility.Public => 0,
+                    Accessibility.Internal => 1,
+                    Accessibility.ProtectedAndInternal => 2,
+                    Accessibility.Protected => 3,
+                    Accessibility.Private => 4,
+                    _ => 5,
+                };
             }
         }
 
@@ -242,15 +236,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 
             static SyntaxTokenList Modifiers(MemberDeclarationSyntax member)
             {
-                switch (member)
+                return member switch
                 {
-                    case EventDeclarationSyntax eventDeclaration:
-                        return eventDeclaration.Modifiers;
-                    case EventFieldDeclarationSyntax eventField:
-                        return eventField.Modifiers;
-                    default:
-                        return default;
-                }
+                    EventDeclarationSyntax eventDeclaration => eventDeclaration.Modifiers,
+                    EventFieldDeclarationSyntax eventField => eventField.Modifiers,
+                    _ => default,
+                };
             }
         }
 
