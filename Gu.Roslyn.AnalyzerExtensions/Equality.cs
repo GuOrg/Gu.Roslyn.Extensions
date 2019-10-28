@@ -62,7 +62,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Operators == and !=
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="left">The left value.</param>
@@ -349,7 +349,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Check if <paramref name="candidate"/> is Nullable.Equals(left, right).
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="left">The left value.</param>
@@ -404,12 +404,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Check if <paramref name="candidate"/> is Nullable.Equals(left, right).
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
-        /// <param name="stringComparison">The <see cref="ExpressionSyntax"/> with the <see cref="System.StringComparison"/>.</param>
+        /// <param name="stringComparison">The <see cref="ExpressionSyntax"/> with the <see cref="StringComparison"/>.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
         public static bool IsStringEquals(InvocationExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right, [NotNullWhen(true)]out ExpressionSyntax? stringComparison)
         {
@@ -463,7 +463,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Check if <paramref name="candidate"/> is Nullable.Equals(left, right).
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="comparer">The <see cref="ExpressionSyntax"/> for the <see cref="System.Collections.Generic.EqualityComparer{T}"/>.</param>
@@ -513,7 +513,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Operators == and !=
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="BinaryExpressionSyntax"/>.</param>
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
@@ -543,7 +543,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Operators == and !=
         /// Equals, ReferenceEquals.
         /// </summary>
-        /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
+        /// <param name="candidate">The <see cref="BinaryExpressionSyntax"/>.</param>
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>

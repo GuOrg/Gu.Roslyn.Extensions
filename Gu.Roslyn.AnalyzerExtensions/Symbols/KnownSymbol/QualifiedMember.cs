@@ -34,8 +34,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public QualifiedType ContainingType { get; }
 
         /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
-        /// <param name="left">The <see cref="ITypeSymbol"/>.</param>
-        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <param name="left">The <see cref="ISymbol"/>.</param>
+        /// <param name="right">The <see cref="QualifiedMember{T}"/>.</param>
         /// <returns>True if found equal.</returns>
         public static bool operator ==(T left, QualifiedMember<T> right)
         {
@@ -43,14 +43,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>
-        /// <param name="left">The <see cref="ITypeSymbol"/>.</param>
-        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <param name="left">The <see cref="ISymbol"/>.</param>
+        /// <param name="right">The <see cref="QualifiedMember{T}"/>.</param>
         /// <returns>True if not found equal.</returns>
         public static bool operator !=(T left, QualifiedMember<T> right) => !(left == right);
 
         /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
-        /// <param name="left">The <see cref="ITypeSymbol"/>.</param>
-        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <param name="left">The <see cref="ISymbol"/>.</param>
+        /// <param name="right">The <see cref="QualifiedMember{T}"/>.</param>
         /// <returns>True if found equal.</returns>
         public static bool operator ==(ISymbol left, QualifiedMember<T> right)
         {
@@ -58,8 +58,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>
-        /// <param name="left">The <see cref="ITypeSymbol"/>.</param>
-        /// <param name="right">The <see cref="QualifiedType"/>.</param>
+        /// <param name="left">The <see cref="ISymbol"/>.</param>
+        /// <param name="right">The <see cref="QualifiedMember{T}"/>.</param>
         /// <returns>True if not found equal.</returns>
         public static bool operator !=(ISymbol left, QualifiedMember<T> right)
         {

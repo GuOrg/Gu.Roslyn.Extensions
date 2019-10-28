@@ -110,7 +110,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Find the matching parameter for the argument.
         /// </summary>
         /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
-        /// <param name="name">The <see cref="ArgumentSyntax"/>.</param>
+        /// <param name="name">The name of the parameter.</param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, string name, [NotNullWhen(true)]out ParameterSyntax? parameter)

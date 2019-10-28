@@ -329,7 +329,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if <paramref name="value"/> can be assigned to <paramref name="nullableType"/>.
         /// </summary>
-        /// <param name="nullableType">The <see cref="ITypeSymbol"/>.</param>
+        /// <param name="nullableType">The <see cref="INamedTypeSymbol"/>.</param>
         /// <param name="value">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>

@@ -86,7 +86,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <see cref="AttributeSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
@@ -108,7 +108,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <see cref="TypeSyntax"/>.</param>
         /// <param name="expected">The expected type.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>

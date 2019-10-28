@@ -87,7 +87,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="symbol">The <see cref="IEventSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
-        /// <param name="result">The <see cref="SymbolAndDeclaration{IEventSymbol, EventDeclarationSyntax}"/>.</param>
+        /// <param name="result">The <see cref="SymbolAndDeclaration{IEventSymbol, EventFieldDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
         public static bool TryCreate(IEventSymbol symbol, CancellationToken cancellationToken, out SymbolAndDeclaration<IEventSymbol, EventFieldDeclarationSyntax> result)
         {
@@ -111,7 +111,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="symbol">The <see cref="IPropertySymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
-        /// <param name="result">The <see cref="SymbolAndDeclaration{IPropertySymbol, PropertyDeclarationSyntax}"/>.</param>
+        /// <param name="result">The <see cref="SymbolAndDeclaration{IPropertySymbol, BasePropertyDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
         public static bool TryCreate(IPropertySymbol symbol, CancellationToken cancellationToken, out SymbolAndDeclaration<IPropertySymbol, BasePropertyDeclarationSyntax> result)
         {
@@ -133,9 +133,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Create a <see cref="SymbolAndDeclaration{IMethodSymbol, AccessorDeclarationSyntax}"/> is symbol exists.
         /// </summary>
-        /// <param name="symbol">The <see cref="AccessorDeclarationSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="IMethodSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
-        /// <param name="result">The <see cref="SymbolAndDeclaration{IMethodSymbol, PropertAccessorDeclarationSyntaxyDeclarationSyntax}"/>.</param>
+        /// <param name="result">The <see cref="SymbolAndDeclaration{IMethodSymbol, AccessorDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
         public static bool TryCreate(IMethodSymbol symbol, CancellationToken cancellationToken, out SymbolAndDeclaration<IMethodSymbol, AccessorDeclarationSyntax> result)
         {
@@ -158,7 +158,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Create a <see cref="SymbolAndDeclaration{IMethodSymbol, MethodDeclarationSyntax}"/> is symbol exists.
         /// </summary>
-        /// <param name="symbol">The <see cref="MethodDeclarationSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="IMethodSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{IMethodSymbol, MethodDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
@@ -183,7 +183,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Create a <see cref="SymbolAndDeclaration{ITypeSymbol, TypeDeclarationSyntax}"/> is symbol exists.
         /// </summary>
-        /// <param name="symbol">The <see cref="TypeDeclarationSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="ITypeSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{ITypeSymbol, TypeDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
@@ -207,7 +207,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Create a <see cref="SymbolAndDeclaration{INamedTypeSymbol, EnumDeclarationSyntax}"/> is symbol exists.
         /// </summary>
-        /// <param name="symbol">The <see cref="EnumDeclarationSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="INamedTypeSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{INamedTypeSymbol, EnumDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
@@ -232,7 +232,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Create a <see cref="SymbolAndDeclaration{INamedTypeSymbol, StructDeclarationSyntax}"/> is symbol exists.
         /// </summary>
-        /// <param name="symbol">The <see cref="StructDeclarationSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="INamedTypeSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{INamedTypeSymbol, StructDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
@@ -257,7 +257,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Create a <see cref="SymbolAndDeclaration{INamedTypeSymbol, ClassDeclarationSyntax}"/> is symbol exists.
         /// </summary>
-        /// <param name="symbol">The <see cref="ClassDeclarationSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="INamedTypeSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="result">The <see cref="SymbolAndDeclaration{INamedTypeSymbol, ClassDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
@@ -280,13 +280,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Create a <see cref="SymbolAndDeclaration{INamedTypeSymbol, ParameterSyntax}"/> is symbol exists.
+        /// Create a <see cref="SymbolAndDeclaration{IParameterSymbol, ParameterSyntax}"/> is symbol exists.
         /// </summary>
-        /// <param name="symbol">The <see cref="ParameterSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
-        /// <param name="result">The <see cref="SymbolAndDeclaration{INamedTypeSymbol, ParameterSyntax}"/>.</param>
+        /// <param name="result">The <see cref="SymbolAndDeclaration{IParameterSymbol, ParameterSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
-        public static bool TryCreate(INamedTypeSymbol symbol, CancellationToken cancellationToken, out SymbolAndDeclaration<INamedTypeSymbol, ParameterSyntax> result)
+        public static bool TryCreate(IParameterSymbol symbol, CancellationToken cancellationToken, out SymbolAndDeclaration<IParameterSymbol, ParameterSyntax> result)
         {
             if (symbol is null)
             {
@@ -295,7 +295,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (symbol.TrySingleDeclaration(cancellationToken, out ParameterSyntax? declaration))
             {
-                result = new SymbolAndDeclaration<INamedTypeSymbol, ParameterSyntax>(symbol, declaration);
+                result = new SymbolAndDeclaration<IParameterSymbol, ParameterSyntax>(symbol, declaration);
                 return true;
             }
 

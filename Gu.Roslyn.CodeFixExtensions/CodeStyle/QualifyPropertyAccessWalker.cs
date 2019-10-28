@@ -34,7 +34,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Check the <paramref name="containing"/> first. Then check all documents in containing.Project.Documents.
         /// </summary>
-        /// <param name="containing">The <see cref="Document"/> containing the currently fixed <see cref="SyntaxNode"/>.</param>
+        /// <param name="containing">The <see cref="SyntaxTree"/> containing the currently fixed <see cref="SyntaxNode"/>.</param>
         /// <param name="compilation">The current <see cref="Compilation"/>.</param>
         /// <returns>The <see cref="CodeStyleResult"/>.</returns>
         public static CodeStyleResult Check(SyntaxTree containing, Compilation compilation)

@@ -174,7 +174,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try find an attribute of the expected type.
         /// </summary>
-        /// <param name="attributeLists">The <see cref="AttributeListSyntax"/>.</param>
+        /// <param name="attributeLists">The <see cref="SyntaxList{AttributeListSyntax}"/>.</param>
         /// <param name="expected">The expected type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
