@@ -69,6 +69,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
+                result = default!;
                 return false;
             }
         }
