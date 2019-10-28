@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -249,7 +250,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="mutation">The mutation.</param>
         /// <returns>True if exactly one mutation was found.</returns>
-        public bool TrySingle(out SyntaxNode mutation)
+        public bool TrySingle([NotNullWhen(true)]out SyntaxNode? mutation)
         {
             if (this.assignments.Count == 1 &&
                 this.prefixUnaries.Count == 0 &&

@@ -79,7 +79,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return With(symbol.OriginalDefinition, node, null);
 
-            AssignmentExecutionWalker With(ISymbol currentSymbol, SyntaxNode currentNode, PooledSet<ISymbol> visited = null)
+            AssignmentExecutionWalker With(ISymbol currentSymbol, SyntaxNode currentNode, PooledSet<ISymbol>? visited = null)
             {
                 var walker = Borrow(currentNode, SearchScope.Member, semanticModel, cancellationToken);
                 walker.assignments.RemoveAll(x => !IsMatch(currentSymbol, x.Right, semanticModel, cancellationToken));
@@ -131,8 +131,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 bool TryWalkBackingField(PooledSet<ISymbol> currentVisited, out AssignmentExpressionSyntax propertyAssignment, out AssignmentExecutionWalker setterWalker)
                 {
-                    propertyAssignment = null;
-                    setterWalker = null;
+                    propertyAssignment = null!;
+                    setterWalker = null!;
 
                     foreach (var candidate in walker.assignments)
                     {

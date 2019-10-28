@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -47,7 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public bool TryFind(string name, out IdentifierNameSyntax identifierName)
+        public bool TryFind(string name, [NotNullWhen(true)]out IdentifierNameSyntax? identifierName)
         {
             foreach (var candidate in this.identifierNames)
             {
