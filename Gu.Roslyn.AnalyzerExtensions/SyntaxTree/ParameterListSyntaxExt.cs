@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -12,9 +13,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="parameterList">The <see cref="ParameterListSyntax"/>.</param>
         /// <param name="name">The name.</param>
-        /// <param name="parameter">The <see cref="ArgumentSyntax"/>.</param>
+        /// <param name="parameter">The <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFind(this ParameterListSyntax parameterList, string name, out ParameterSyntax parameter)
+        public static bool TryFind(this ParameterListSyntax parameterList, string name, [NotNullWhen(true)]out ParameterSyntax? parameter)
         {
             if (parameterList == null ||
                 string.IsNullOrEmpty(name))
