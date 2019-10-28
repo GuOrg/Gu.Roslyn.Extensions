@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -112,7 +113,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="attributeType">The <see cref="QualifiedType"/>.</param>
         /// <param name="attribute">The attribute if found.</param>
         /// <returns>True if a single attribute of type <paramref name="attributeType"/> declared on <paramref name="symbol"/>.</returns>
-        public static bool TryGetAttribute(this ISymbol symbol, QualifiedType attributeType, out AttributeData attribute)
+        public static bool TryGetAttribute(this ISymbol symbol, QualifiedType attributeType, [NotNullWhen(true)]out AttributeData? attribute)
         {
             attribute = null;
             return symbol?.GetAttributes().TrySingle(x => x.AttributeClass == attributeType, out attribute) ?? false;

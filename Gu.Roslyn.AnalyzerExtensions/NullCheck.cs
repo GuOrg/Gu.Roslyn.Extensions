@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -64,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="value">The nullchecked value.</param>
         /// <returns>True if <paramref name="candidate"/> is a nullcheck.</returns>
-        public static bool IsNullCheck(ExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax value)
+        public static bool IsNullCheck(ExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? value)
         {
             if (Equality.IsEqualsCheck(candidate, semanticModel, cancellationToken, out var left, out var right) &&
                 IsNullAndExpression(left, right, out value))
@@ -86,7 +87,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return false;
             }
 
-            static bool IsNullAndExpression(ExpressionSyntax x, ExpressionSyntax y, out ExpressionSyntax result)
+            static bool IsNullAndExpression(ExpressionSyntax x, ExpressionSyntax y, out ExpressionSyntax? result)
             {
                 if (x.IsKind(SyntaxKind.NullLiteralExpression) && !y.IsKind(SyntaxKind.NullLiteralExpression))
                 {

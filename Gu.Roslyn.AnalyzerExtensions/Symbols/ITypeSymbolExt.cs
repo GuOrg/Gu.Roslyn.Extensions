@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -14,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="type">The <see cref="ITypeSymbol"/>.</param>
         /// <param name="typeArgument">The single type argument.</param>
         /// <returns>True if <paramref name="type"/> has a single type argument.</returns>
-        public static bool TryGetSingleTypeArgument(this ITypeSymbol type, out ITypeSymbol typeArgument)
+        public static bool TryGetSingleTypeArgument(this ITypeSymbol type, [NotNullWhen(true)]out ITypeSymbol? typeArgument)
         {
             typeArgument = null;
             return type is INamedTypeSymbol namedType &&

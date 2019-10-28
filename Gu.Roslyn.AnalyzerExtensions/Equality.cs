@@ -210,8 +210,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
                 }
 
-                literal = null;
-                expression = null;
+                literal = null!;
+                expression = null!;
                 return false;
             }
         }

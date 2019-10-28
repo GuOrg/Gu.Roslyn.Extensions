@@ -3,6 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -148,7 +149,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="name">The name.</param>
         /// <returns>True if a name was found.</returns>
-        public static bool TryGetMemberName(this ExpressionSyntax expression, out string name)
+        public static bool TryGetMemberName(this ExpressionSyntax expression, [NotNullWhen(true)]out string? name)
         {
             name = null;
             switch (expression)

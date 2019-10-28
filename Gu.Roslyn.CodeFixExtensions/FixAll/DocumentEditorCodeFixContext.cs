@@ -121,7 +121,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is DocumentEditorCodeFixContext other && this.Equals(other);
         }

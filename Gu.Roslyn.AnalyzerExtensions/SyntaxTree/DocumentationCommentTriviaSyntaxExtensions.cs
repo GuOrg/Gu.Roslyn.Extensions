@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -13,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="element">The <see cref="XmlElementSyntax"/> for the summary.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryGetSummary(this DocumentationCommentTriviaSyntax comment, out XmlElementSyntax element)
+        public static bool TryGetSummary(this DocumentationCommentTriviaSyntax comment, [NotNullWhen(true)]out XmlElementSyntax? element)
         {
             element = null;
             return comment?.Content.TrySingleOfType(x => x.HasLocalName("summary"), out element) == true;
@@ -25,7 +26,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="comment">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <param name="element">The <see cref="XmlElementSyntax"/> for the summary.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryGetReturns(this DocumentationCommentTriviaSyntax comment, out XmlElementSyntax element)
+        public static bool TryGetReturns(this DocumentationCommentTriviaSyntax comment, [NotNullWhen(true)]out XmlElementSyntax? element)
         {
             element = null;
             return comment?.Content.TrySingleOfType(x => x.HasLocalName("returns"), out element) == true;
@@ -38,7 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameterName">The name of the parameter to search for.</param>
         /// <param name="element">The <see cref="XmlElementSyntax"/> for the parameter.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryGetParam(this DocumentationCommentTriviaSyntax comment, string parameterName, out XmlElementSyntax element)
+        public static bool TryGetParam(this DocumentationCommentTriviaSyntax comment, string parameterName, [NotNullWhen(true)]out XmlElementSyntax? element)
         {
             element = null;
             return comment?.Content.TrySingleOfType(x => x.HasLocalName("param") && x.HasNameAttribute(parameterName), out element) == true;
@@ -51,7 +52,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameterName">The name of the parameter to search for.</param>
         /// <param name="element">The <see cref="XmlElementSyntax"/> for the parameter.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryGetTypeParam(this DocumentationCommentTriviaSyntax comment, string parameterName, out XmlElementSyntax element)
+        public static bool TryGetTypeParam(this DocumentationCommentTriviaSyntax comment, string parameterName, [NotNullWhen(true)]out XmlElementSyntax? element)
         {
             element = null;
             return comment?.Content.TrySingleOfType(x => x.HasLocalName("typeparam") && x.HasNameAttribute(parameterName), out element) == true;

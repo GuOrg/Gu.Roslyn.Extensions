@@ -65,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is SymbolAndDeclaration<TSymbol, TDeclaration> other && this.Equals(other);
         }

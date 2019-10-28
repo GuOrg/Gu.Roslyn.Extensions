@@ -85,7 +85,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <inheritdoc />
-        public override bool Equals(object obj) => obj is QualifiedParameter other &&
+        public override bool Equals(object? obj) => obj is QualifiedParameter other &&
                                                    this.Equals(other);
 
         /// <inheritdoc />

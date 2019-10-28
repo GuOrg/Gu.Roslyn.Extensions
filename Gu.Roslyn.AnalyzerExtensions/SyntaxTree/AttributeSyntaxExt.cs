@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -13,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="attribute">The <see cref="AttributeSyntax"/>.</param>
         /// <param name="argument">The match.</param>
         /// <returns>True if a match as found.</returns>
-        public static bool TrySingleArgument(this AttributeSyntax attribute, out AttributeArgumentSyntax argument)
+        public static bool TrySingleArgument(this AttributeSyntax attribute, [NotNullWhen(true)]out AttributeArgumentSyntax? argument)
         {
             var argumentList = attribute?.ArgumentList;
             if (argumentList is null)
@@ -33,7 +34,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name colon or name equals name.</param>
         /// <param name="argument">The match.</param>
         /// <returns>True if a match as found.</returns>
-        public static bool TryFindArgument(this AttributeSyntax attribute, int index, string name, out AttributeArgumentSyntax argument)
+        public static bool TryFindArgument(this AttributeSyntax attribute, int index, string name, [NotNullWhen(true)]out AttributeArgumentSyntax? argument)
         {
             if (attribute is null)
             {

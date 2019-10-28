@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -62,7 +63,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
         /// <param name="result">The get accessor if found.</param>
         /// <returns>True if <paramref name="property"/> has a get accessor.</returns>
-        public static bool TryGetGetter(this BasePropertyDeclarationSyntax property, out AccessorDeclarationSyntax result)
+        public static bool TryGetGetter(this BasePropertyDeclarationSyntax property, [NotNullWhen(true)]out AccessorDeclarationSyntax? result)
         {
             result = null;
             return property?.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.GetAccessorDeclaration), out result) == true;
@@ -74,7 +75,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
         /// <param name="result">The set accessor if found.</param>
         /// <returns>True if <paramref name="property"/> has a get accessor.</returns>
-        public static bool TryGetSetter(this BasePropertyDeclarationSyntax property, out AccessorDeclarationSyntax result)
+        public static bool TryGetSetter(this BasePropertyDeclarationSyntax property, [NotNullWhen(true)]out AccessorDeclarationSyntax? result)
         {
             result = null;
             return property?.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.SetAccessorDeclaration), out result) == true;

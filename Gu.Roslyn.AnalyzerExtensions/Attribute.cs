@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(CompilationUnitSyntax compilation, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(CompilationUnitSyntax compilation, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             if (compilation is null)
             {
@@ -39,7 +40,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(TypeDeclarationSyntax typeDeclaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(TypeDeclarationSyntax typeDeclaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             if (typeDeclaration is null)
             {
@@ -59,7 +60,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(FieldDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(FieldDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             if (declaration is null)
             {
@@ -79,7 +80,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(BaseMethodDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(BaseMethodDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             if (declaration is null)
             {
@@ -99,7 +100,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(EventDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(EventDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             if (declaration is null)
             {
@@ -119,7 +120,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(EventFieldDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(EventFieldDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             if (declaration is null)
             {
@@ -139,7 +140,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(BasePropertyDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(BasePropertyDeclarationSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             if (declaration is null)
             {
@@ -159,7 +160,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(ParameterSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(ParameterSyntax declaration, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             if (declaration is null)
             {
@@ -179,7 +180,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if an attribute of the expected type was found.</returns>
-        public static bool TryFind(this SyntaxList<AttributeListSyntax> attributeLists, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, out AttributeSyntax result)
+        public static bool TryFind(this SyntaxList<AttributeListSyntax> attributeLists, QualifiedType expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AttributeSyntax? result)
         {
             result = null;
             foreach (var attributeList in attributeLists)
@@ -217,7 +218,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="attribute">The <see cref="AttributeSyntax"/>.</param>
         /// <param name="name">The type name if found.</param>
         /// <returns>True if the name of the attribute type was found.</returns>
-        public static bool TryGetTypeName(AttributeSyntax attribute, out string name)
+        public static bool TryGetTypeName(AttributeSyntax attribute, [NotNullWhen(true)]out string? name)
         {
             name = null;
             if (attribute is null)
