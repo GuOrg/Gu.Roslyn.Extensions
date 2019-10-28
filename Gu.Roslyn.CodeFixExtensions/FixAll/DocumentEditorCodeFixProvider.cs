@@ -7,7 +7,7 @@ namespace Gu.Roslyn.CodeFixExtensions
     public abstract class DocumentEditorCodeFixProvider : CodeFixProvider
     {
         /// <inheritdoc />
-        public sealed override FixAllProvider GetFixAllProvider() => this.FixAllProvider();
+        public sealed override FixAllProvider? GetFixAllProvider() => this.FixAllProvider();
 
         /// <inheritdoc />
         public sealed override Task RegisterCodeFixesAsync(CodeFixContext context) => this.RegisterCodeFixesAsync(new DocumentEditorCodeFixContext(context));
