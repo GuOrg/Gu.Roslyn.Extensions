@@ -16,7 +16,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
         /// </summary>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
+        /// <param name="trivia">The <see cref="SyntaxTriviaList"/>.</param>
         /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
         public static bool TryGetLeadingTrivia(this MemberDeclarationSyntax member, out SyntaxTriviaList trivia)
         {
@@ -40,7 +40,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <returns>The string with the leading whitespace.</returns>
-        public static string LeadingWhitespace(this MemberDeclarationSyntax member)
+        public static string? LeadingWhitespace(this MemberDeclarationSyntax member)
         {
             if (member is null)
             {
@@ -59,7 +59,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Get the leading whitespace for the accessor.
         /// </summary>
-        /// <param name="accessor">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="accessor">The <see cref="AccessorDeclarationSyntax"/>.</param>
         /// <returns>The string with the leading whitespace.</returns>
         public static string LeadingWhitespace(this AccessorDeclarationSyntax accessor)
         {
@@ -82,7 +82,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
         /// </summary>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
+        /// <param name="trivia">The <see cref="SyntaxTriviaList"/>.</param>
         /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
         public static bool TryGetTrailingTrivia(this MemberDeclarationSyntax member, out SyntaxTriviaList trivia)
         {

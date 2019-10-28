@@ -2,6 +2,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -96,7 +97,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindFirst(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
+        public static bool TryFindFirst(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IdentifierNameSyntax? identifierName)
         {
             if (symbol != null)
             {
@@ -119,7 +120,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindLast(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
+        public static bool TryFindLast(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IdentifierNameSyntax? identifierName)
         {
             if (symbol != null)
             {
@@ -169,7 +170,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public bool TryFindFirst(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
+        public bool TryFindFirst(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IdentifierNameSyntax? identifierName)
         {
             foreach (var candidate in this.identifierNames)
             {
@@ -192,7 +193,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public bool TryFindLast(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, out IdentifierNameSyntax identifierName)
+        public bool TryFindLast(ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IdentifierNameSyntax? identifierName)
         {
             for (var i = this.identifierNames.Count - 1; i >= 0; i--)
             {

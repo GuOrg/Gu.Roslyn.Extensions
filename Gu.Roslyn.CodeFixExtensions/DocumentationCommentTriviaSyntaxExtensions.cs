@@ -141,8 +141,8 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             bool TryGetPositionFromTypeParam(out XmlElementSyntax before, out XmlElementSyntax after)
             {
-                before = null;
-                after = null;
+                before = null!;
+                after = null!;
                 if (comment.TryFirstAncestor(out MemberDeclarationSyntax? member) &&
                     TryGetTypeParameterList(member, out var typeParameterList) &&
                     typeParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == identifierName.Identifier.ValueText, out var parameter) &&
@@ -179,7 +179,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                             result = typeDeclaration.TypeParameterList;
                             return result != null;
                         default:
-                            result = null;
+                            result = null!;
                             return false;
                     }
                 }
@@ -270,8 +270,8 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             bool TryGetPositionFromParam(out XmlElementSyntax before, out XmlElementSyntax after)
             {
-                before = null;
-                after = null;
+                before = null!;
+                after = null!;
                 if (comment.ParentTrivia is var parentTrivia &&
                     parentTrivia.Token.Parent is MethodDeclarationSyntax method &&
                     method.TryFindParameter(identifierName.Identifier.ValueText, out var parameter) &&

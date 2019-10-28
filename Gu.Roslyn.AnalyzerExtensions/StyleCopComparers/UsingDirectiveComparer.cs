@@ -127,7 +127,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             return false;
         }
 
-        private static int CompareRecursive(QualifiedNameSyntax xqn, QualifiedNameSyntax yqn)
+        private static int CompareRecursive(QualifiedNameSyntax? xqn, QualifiedNameSyntax? yqn)
         {
             if (xqn is null && yqn is null)
             {
