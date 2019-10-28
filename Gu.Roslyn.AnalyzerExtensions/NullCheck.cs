@@ -65,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <param name="value">The nullchecked value.</param>
         /// <returns>True if <paramref name="candidate"/> is a nullcheck.</returns>
-        public static bool IsNullCheck(ExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? value)
+        public static bool IsNullCheck(ExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? value)
         {
             if (Equality.IsEqualsCheck(candidate, semanticModel, cancellationToken, out var left, out var right) &&
                 IsNullAndExpression(left, right, out value))

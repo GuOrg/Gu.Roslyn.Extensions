@@ -23,8 +23,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsEqualsCheck(ExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
+        public static bool IsEqualsCheck(ExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
         {
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
             switch (candidate)
             {
                 case InvocationExpressionSyntax invocation
@@ -63,9 +68,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsObjectEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
+        public static bool IsObjectEquals(InvocationExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
         {
-            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
+            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
                 argumentList.Arguments.Count == 2 &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
@@ -113,9 +123,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="instance">The left value.</param>
         /// <param name="other">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsInstanceEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? instance, [NotNullWhen(true)]out ExpressionSyntax? other)
+        public static bool IsInstanceEquals(InvocationExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? instance, [NotNullWhen(true)]out ExpressionSyntax? other)
         {
-            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
+            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
                 argumentList.Arguments.Count == 1 &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
@@ -153,9 +168,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="instance">The left value.</param>
         /// <param name="other">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsInstanceEquals(ConditionalAccessExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? instance, [NotNullWhen(true)]out ExpressionSyntax? other)
+        public static bool IsInstanceEquals(ConditionalAccessExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? instance, [NotNullWhen(true)]out ExpressionSyntax? other)
         {
-            return IsInstanceEquals(candidate?.WhenNotNull, semanticModel, cancellationToken, out instance, out other);
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
+            return IsInstanceEquals(candidate.WhenNotNull, semanticModel, cancellationToken, out instance, out other);
         }
 
         /// <summary>
@@ -169,8 +189,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="instance">The left value.</param>
         /// <param name="other">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsInstanceEquals(ExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? instance, [NotNullWhen(true)]out ExpressionSyntax? other)
+        public static bool IsInstanceEquals(ExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? instance, [NotNullWhen(true)]out ExpressionSyntax? other)
         {
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
             switch (candidate)
             {
                 case InvocationExpressionSyntax invocation:
@@ -227,9 +252,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsObjectReferenceEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
+        public static bool IsObjectReferenceEquals(InvocationExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
         {
-            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
+            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
                 argumentList.Arguments.Count == 2 &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "ReferenceEquals" &&
@@ -270,9 +300,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsRuntimeHelpersEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
+        public static bool IsRuntimeHelpersEquals(InvocationExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
         {
-            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
+            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
                 argumentList.Arguments.Count == 2 &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
@@ -320,9 +355,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="left">The left value.</param>
         /// <param name="right">The right value.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsNullableEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
+        public static bool IsNullableEquals(InvocationExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
         {
-            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
+            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
                 argumentList.Arguments.Count == 2 &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
@@ -371,9 +411,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="right">The right value.</param>
         /// <param name="stringComparison">The <see cref="ExpressionSyntax"/> with the <see cref="System.StringComparison"/>.</param>
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
-        public static bool IsStringEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right, [NotNullWhen(true)]out ExpressionSyntax? stringComparison)
+        public static bool IsStringEquals(InvocationExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right, [NotNullWhen(true)]out ExpressionSyntax? stringComparison)
         {
-            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
+            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
                 argumentList.Arguments.Count == 3 &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
@@ -427,6 +472,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
         public static bool IsEqualityComparerEquals(InvocationExpressionSyntax candidate, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ExpressionSyntax? comparer, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
         {
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
             if (semanticModel is null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
@@ -469,6 +519,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
         public static bool IsOperatorEquals(BinaryExpressionSyntax candidate, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
         {
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
             if (candidate.IsKind(SyntaxKind.EqualsExpression))
             {
 #pragma warning disable CA1062 // Validate arguments of public methods
@@ -494,6 +549,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="candidate"/> is a check for equality.</returns>
         public static bool IsOperatorNotEquals(BinaryExpressionSyntax candidate, [NotNullWhen(true)]out ExpressionSyntax? left, [NotNullWhen(true)]out ExpressionSyntax? right)
         {
+            if (candidate is null)
+            {
+                throw new ArgumentNullException(nameof(candidate));
+            }
+
             if (candidate.IsKind(SyntaxKind.NotEqualsExpression))
             {
 #pragma warning disable CA1062 // Validate arguments of public methods
