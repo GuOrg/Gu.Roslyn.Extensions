@@ -237,7 +237,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitArgument(ArgumentSyntax node)
         {
-            if (node?.RefOrOutKeyword.IsEither(SyntaxKind.RefKeyword, SyntaxKind.OutKeyword) ?? false)
+            if (node.RefOrOutKeyword.IsEither(SyntaxKind.RefKeyword, SyntaxKind.OutKeyword))
             {
                 this.refOrOutArguments.Add(node);
             }

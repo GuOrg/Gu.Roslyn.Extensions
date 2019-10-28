@@ -157,7 +157,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <summary>
         /// Walk <paramref name="containing"/> then trees in <paramref name="compilation"/>.
         /// </summary>
-        /// <param name="containing">The <see cref="Document"/>.</param>
+        /// <param name="containing">The <see cref="SyntaxTree"/>.</param>
         /// <param name="compilation">The <see cref="Compilation"/>.</param>
         /// <returns>The <see cref="CodeStyleResult"/> found.</returns>
         protected CodeStyleResult CheckCore(SyntaxTree containing, Compilation compilation)

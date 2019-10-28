@@ -294,7 +294,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Remove virtual.
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
-        /// <param name="classDeclaration">The <see cref="ClassDeclarationSyntax"/>.</param>
+        /// <param name="classDeclaration">The <see cref="TypeDeclarationSyntax"/>.</param>
         /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor SortMembers(this DocumentEditor editor, TypeDeclarationSyntax classDeclaration, IComparer<MemberDeclarationSyntax>? comparer = null)

@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
@@ -98,7 +99,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
         }
 
-        private static bool TryMoveDirectives<T>(SyntaxToken source, T target, out SyntaxToken updated, out T updatedTarget)
+        private static bool TryMoveDirectives<T>(SyntaxToken source, T target, out SyntaxToken updated, [NotNullWhen(true)] out T? updatedTarget)
             where T : SyntaxNode
         {
             if (source.HasLeadingTrivia &&

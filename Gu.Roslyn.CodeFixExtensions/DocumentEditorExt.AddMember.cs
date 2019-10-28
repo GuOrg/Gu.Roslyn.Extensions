@@ -104,7 +104,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// The property is unchanged by this call.
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
-        /// <param name="propertyDeclaration">The <see cref="FieldDeclarationSyntax"/>.</param>
+        /// <param name="propertyDeclaration">The <see cref="PropertyDeclarationSyntax"/>.</param>
         /// <returns>A <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax AddBackingField(this DocumentEditor editor, PropertyDeclarationSyntax propertyDeclaration)
         {
