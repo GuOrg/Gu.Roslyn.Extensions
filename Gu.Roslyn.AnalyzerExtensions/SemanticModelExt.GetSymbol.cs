@@ -109,14 +109,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
                  AliasWalker.TryGet(node.SyntaxTree, typeName.Identifier.ValueText, out _)))
             {
                 symbol = semanticModel.GetSymbolSafe(node, cancellationToken);
-                return symbol?.ContainingType == expected;
+                return symbol is { } &&
+                       symbol.ContainingType == expected;
             }
 
             if (node.Type is QualifiedNameSyntax qualifiedName &&
                 qualifiedName.Right.Identifier.ValueText == expected.Type)
             {
                 symbol = semanticModel.GetSymbolSafe(node, cancellationToken);
-                return symbol?.ContainingType == expected;
+                return symbol is { } &&
+                       symbol.ContainingType == expected;
             }
 
             symbol = null;

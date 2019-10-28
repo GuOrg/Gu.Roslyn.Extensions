@@ -16,8 +16,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryGetSummary(this DocumentationCommentTriviaSyntax comment, [NotNullWhen(true)]out XmlElementSyntax? element)
         {
+            if (comment is null)
+            {
+                throw new System.ArgumentNullException(nameof(comment));
+            }
+
             element = null;
-            return comment?.Content.TrySingleOfType(x => x.HasLocalName("summary"), out element) == true;
+            return comment.Content.TrySingleOfType(x => x.HasLocalName("summary"), out element) == true;
         }
 
         /// <summary>
@@ -28,8 +33,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryGetReturns(this DocumentationCommentTriviaSyntax comment, [NotNullWhen(true)]out XmlElementSyntax? element)
         {
+            if (comment is null)
+            {
+                throw new System.ArgumentNullException(nameof(comment));
+            }
+
             element = null;
-            return comment?.Content.TrySingleOfType(x => x.HasLocalName("returns"), out element) == true;
+            return comment.Content.TrySingleOfType(x => x.HasLocalName("returns"), out element) == true;
         }
 
         /// <summary>
@@ -41,8 +51,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryGetParam(this DocumentationCommentTriviaSyntax comment, string parameterName, [NotNullWhen(true)]out XmlElementSyntax? element)
         {
+            if (comment is null)
+            {
+                throw new System.ArgumentNullException(nameof(comment));
+            }
+
+            if (parameterName is null)
+            {
+                throw new System.ArgumentNullException(nameof(parameterName));
+            }
+
             element = null;
-            return comment?.Content.TrySingleOfType(x => x.HasLocalName("param") && x.HasNameAttribute(parameterName), out element) == true;
+            return comment.Content.TrySingleOfType(x => x.HasLocalName("param") && x.HasNameAttribute(parameterName), out element) == true;
         }
 
         /// <summary>
@@ -54,8 +74,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryGetTypeParam(this DocumentationCommentTriviaSyntax comment, string parameterName, [NotNullWhen(true)]out XmlElementSyntax? element)
         {
+            if (comment is null)
+            {
+                throw new System.ArgumentNullException(nameof(comment));
+            }
+
+            if (parameterName is null)
+            {
+                throw new System.ArgumentNullException(nameof(parameterName));
+            }
+
             element = null;
-            return comment?.Content.TrySingleOfType(x => x.HasLocalName("typeparam") && x.HasNameAttribute(parameterName), out element) == true;
+            return comment.Content.TrySingleOfType(x => x.HasLocalName("typeparam") && x.HasNameAttribute(parameterName), out element) == true;
         }
     }
 }

@@ -128,7 +128,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public bool Equals(FieldOrProperty other) => this.Symbol.Equals(other.Symbol);
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) => obj is FieldOrProperty other && this.Equals(other);
+        public override bool Equals(object? obj) => obj is FieldOrProperty other && this.Equals(other);
 
         /// <inheritdoc/>
         public override int GetHashCode() => this.Symbol.GetHashCode();

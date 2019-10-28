@@ -2,6 +2,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
 
@@ -111,7 +112,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="scope">The scope.</param>
         /// <returns>True if a scope could be determined.</returns>
-        public bool TryGetScope(CancellationToken cancellationToken, out SyntaxNode scope)
+        public bool TryGetScope(CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? scope)
         {
             switch (this.Symbol)
             {

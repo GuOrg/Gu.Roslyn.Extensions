@@ -36,7 +36,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     case SymbolDisplayPartKind.InterfaceName:
                     case SymbolDisplayPartKind.StructName:
                     case SymbolDisplayPartKind.NamespaceName:
-                        builder.Append(part.Symbol.MetadataName);
+                        if (part.Symbol is { } symbol)
+                        {
+                            builder.Append(symbol.MetadataName);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Part symbol is null {part}.");
+                        }
+
                         break;
                     case SymbolDisplayPartKind.Punctuation when part.ToString() == ".":
                         builder.Append(previous.Symbol is null || previous.Symbol.Kind == SymbolKind.Namespace ? "." : "+");

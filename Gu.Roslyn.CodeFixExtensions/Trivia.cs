@@ -61,7 +61,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="accessor">The <see cref="AccessorDeclarationSyntax"/>.</param>
         /// <returns>The string with the leading whitespace.</returns>
-        public static string LeadingWhitespace(this AccessorDeclarationSyntax accessor)
+        public static string? LeadingWhitespace(this AccessorDeclarationSyntax accessor)
         {
             if (accessor is null)
             {

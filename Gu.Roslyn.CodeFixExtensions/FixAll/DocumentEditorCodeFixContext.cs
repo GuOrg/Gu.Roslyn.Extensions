@@ -80,7 +80,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             this.context.RegisterCodeFix(
-                new DocumentEditorAction(title, this.context.Document, action, equivalenceKey?.FullName),
+                new DocumentEditorAction(title, this.context.Document, action, equivalenceKey.FullName ?? equivalenceKey.Name),
                 diagnostic);
         }
 

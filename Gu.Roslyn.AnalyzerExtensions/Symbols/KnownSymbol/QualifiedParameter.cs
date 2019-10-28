@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="type">The type of the parameter.</param>
-        public QualifiedParameter(string name, QualifiedType type)
+        public QualifiedParameter(string? name, QualifiedType? type)
         {
             this.Name = name;
             this.Type = type;
@@ -22,12 +22,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets the name of the parameter.
         /// </summary>
-        public string Name { get; }
+        public string? Name { get; }
 
         /// <summary>
         /// Gets the type of the parameter.
         /// </summary>
-        public QualifiedType Type { get; }
+        public QualifiedType? Type { get; }
 
         /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="IParameterSymbol"/>.</param>

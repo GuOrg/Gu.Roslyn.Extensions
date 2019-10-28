@@ -78,7 +78,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <param name="previous">The previous member or null if <paramref name="member"/> is the first in the type.</param>
         /// <returns><paramref name="member"/> with adjusted leading newline.</returns>
-        public static TMember AdjustLeadingNewLine<TMember>(this TMember member, TMember previous)
+        public static TMember AdjustLeadingNewLine<TMember>(this TMember member, TMember? previous)
             where TMember : MemberDeclarationSyntax
         {
             if (previous is null)
