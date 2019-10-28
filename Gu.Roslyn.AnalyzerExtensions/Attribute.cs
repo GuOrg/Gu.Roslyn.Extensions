@@ -220,7 +220,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetTypeName(AttributeSyntax attribute, out string name)
         {
             name = null;
-            if (attribute == null)
+            if (attribute is null)
             {
                 return false;
             }

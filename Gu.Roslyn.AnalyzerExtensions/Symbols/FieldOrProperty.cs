@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public FieldOrProperty(IFieldSymbol field)
             : this((ISymbol)field)
         {
-            if (field == null)
+            if (field is null)
             {
                 throw new ArgumentNullException(nameof(field));
             }
@@ -32,7 +32,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public FieldOrProperty(IPropertySymbol property)
             : this((ISymbol)property)
         {
-            if (property == null)
+            if (property is null)
             {
                 throw new ArgumentNullException(nameof(property));
             }

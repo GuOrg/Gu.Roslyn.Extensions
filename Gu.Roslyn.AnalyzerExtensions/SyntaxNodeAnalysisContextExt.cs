@@ -15,9 +15,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the current node should be skipped.</returns>
         public static bool IsExcludedFromAnalysis(this SyntaxNodeAnalysisContext context)
         {
-            if (context.Node == null ||
+            if (context.Node is null ||
                 context.Node.IsMissing ||
-                context.SemanticModel == null)
+                context.SemanticModel is null)
             {
                 return true;
             }
@@ -28,7 +28,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             static bool IsGenerated(ISymbol symbol)
             {
-                if (symbol == null)
+                if (symbol is null)
                 {
                     return false;
                 }

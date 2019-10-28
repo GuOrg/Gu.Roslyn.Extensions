@@ -41,9 +41,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         public override IEnumerable<FixAllScope> GetSupportedFixAllScopes() => this.supportedFixAllScopes;
 
         /// <inheritdoc />
-        public override async Task<CodeAction> GetFixAsync(FixAllContext fixAllContext)
+        public override async Task<CodeAction?> GetFixAsync(FixAllContext fixAllContext)
         {
-            if (fixAllContext == null)
+            if (fixAllContext is null)
             {
                 throw new System.ArgumentNullException(nameof(fixAllContext));
             }

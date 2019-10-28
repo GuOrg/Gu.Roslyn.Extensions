@@ -63,12 +63,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the property is an auto property with get only.</returns>
         public static bool IsGetOnly(this IPropertySymbol property)
         {
-            if (property == null)
+            if (property is null)
             {
                 return false;
             }
 
-            return property.SetMethod == null &&
+            return property.SetMethod is null &&
                    property.IsAutoProperty();
         }
 

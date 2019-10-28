@@ -1,4 +1,4 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -21,7 +21,7 @@
         public static bool TryElementAt<T>(this IReadOnlyList<T> source, int index, out T result)
         {
             result = default(T);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -46,7 +46,7 @@
         public static bool TrySingle<T>(this IReadOnlyList<T> source, out T result)
         {
             result = default(T);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -72,7 +72,7 @@
             where TResult : T
         {
             result = default(TResult);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -110,7 +110,7 @@
             where TResult : T
         {
             result = default(TResult);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -148,7 +148,7 @@
         public static bool TrySingle<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
         {
             result = default(T);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -184,7 +184,7 @@
         public static bool TryFirst<T>(this IReadOnlyList<T> source, out T result)
         {
             result = default(T);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -210,7 +210,7 @@
             where TResult : T
         {
             result = default(TResult);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -240,7 +240,7 @@
             where TResult : T
         {
             result = default(TResult);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -269,7 +269,7 @@
         public static bool TryFirst<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
         {
             result = default(T);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -296,7 +296,7 @@
         public static bool TryLast<T>(this IReadOnlyList<T> source, out T result)
         {
             result = default(T);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -323,7 +323,7 @@
             where TResult : T
         {
             result = default(TResult);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -353,7 +353,7 @@
             where TResult : T
         {
             result = default(TResult);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -382,7 +382,7 @@
         public static bool TryLast<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
         {
             result = default(T);
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }

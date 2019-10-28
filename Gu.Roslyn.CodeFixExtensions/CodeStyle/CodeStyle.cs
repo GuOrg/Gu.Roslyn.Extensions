@@ -26,7 +26,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> QualifyFieldAccessAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -49,7 +49,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static Task<CodeStyleResult> QualifyFieldAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken) => QualifyFieldAccessAsync(editor?.OriginalDocument, cancellationToken);
+        public static Task<CodeStyleResult> QualifyFieldAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken)
+        {
+            if (editor is null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            return editor.OriginalDocument.QualifyFieldAccessAsync(cancellationToken);
+        }
 
         /// <summary>
         /// Figuring out if field access should be prefixed with this.
@@ -62,7 +70,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> QualifyEventAccessAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -85,7 +93,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static Task<CodeStyleResult> QualifyEventAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken) => QualifyEventAccessAsync(editor?.OriginalDocument, cancellationToken);
+        public static Task<CodeStyleResult> QualifyEventAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken)
+        {
+            if (editor is null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            return editor.OriginalDocument.QualifyEventAccessAsync(cancellationToken);
+        }
 
         /// <summary>
         /// Figuring out if field access should be prefixed with this.
@@ -98,7 +114,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> QualifyPropertyAccessAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -121,7 +137,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static Task<CodeStyleResult> QualifyPropertyAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken) => QualifyPropertyAccessAsync(editor?.OriginalDocument, cancellationToken);
+        public static Task<CodeStyleResult> QualifyPropertyAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken)
+        {
+            if (editor is null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            return editor.OriginalDocument.QualifyPropertyAccessAsync(cancellationToken);
+        }
 
         /// <summary>
         /// Figuring out if field access should be prefixed with this.
@@ -134,7 +158,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> QualifyMethodAccessAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -156,7 +180,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static Task<CodeStyleResult> QualifyMethodAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken) => QualifyMethodAccessAsync(editor?.OriginalDocument, cancellationToken);
+        public static Task<CodeStyleResult> QualifyMethodAccessAsync(this DocumentEditor editor, CancellationToken cancellationToken)
+        {
+            if (editor is null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            return editor.OriginalDocument.QualifyMethodAccessAsync(cancellationToken);
+        }
 
         /// <summary>
         /// Figuring out if field names should be prefixed with _.
@@ -168,7 +200,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> UnderscoreFieldsAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -182,7 +214,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static CodeStyleResult UnderscoreFields(DocumentEditor editor) => UnderscoreFields(editor?.SemanticModel);
+        public static CodeStyleResult UnderscoreFields(DocumentEditor editor)
+        {
+            if (editor is null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            return editor.SemanticModel.UnderscoreFields();
+        }
 
         /// <summary>
         /// Figuring out if the code uses underscore prefix in field names.
@@ -191,7 +231,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static CodeStyleResult UnderscoreFields(this SemanticModel semanticModel)
         {
-            if (semanticModel == null)
+            if (semanticModel is null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
@@ -206,7 +246,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static CodeStyleResult UsingDirectivesInsideNamespace(SemanticModel semanticModel)
         {
-            if (semanticModel == null)
+            if (semanticModel is null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
@@ -219,7 +259,15 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static CodeStyleResult UsingDirectivesInsideNamespace(DocumentEditor editor) => UsingDirectivesInsideNamespace(editor?.SemanticModel);
+        public static CodeStyleResult UsingDirectivesInsideNamespace(DocumentEditor editor)
+        {
+            if (editor is null)
+            {
+                throw new ArgumentNullException(nameof(editor));
+            }
+
+            return UsingDirectivesInsideNamespace(editor.SemanticModel);
+        }
 
         /// <summary>
         /// Figuring out if backing fields are adjacent to their properties.
@@ -229,7 +277,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static CodeStyleResult BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)
         {
-            if (semanticModel == null)
+            if (semanticModel is null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
@@ -243,7 +291,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="newLineBetween">If there is a new line between the field and the property.</param>
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
-        public static CodeStyleResult BackingFieldsAdjacent(this DocumentEditor editor, out bool newLineBetween) => BackingFieldsAdjacent(editor?.SemanticModel, out newLineBetween);
+        public static CodeStyleResult BackingFieldsAdjacent(this DocumentEditor editor, out bool newLineBetween) => BackingFieldsAdjacent(editor.SemanticModel, out newLineBetween);
 
         /// <summary>
         /// Find the <see cref="CodeStyleOption{T}"/> for <paramref name="key"/>.
@@ -253,14 +301,14 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="key">The <see cref="PerLanguageOption{T}"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns><see cref="CodeStyleOption{T}"/> or null if not found.</returns>
-        public static async Task<CodeStyleOption<T>> FindInEditorConfigAsync<T>(Document document, PerLanguageOption<CodeStyleOption<T>> key, CancellationToken cancellationToken)
+        public static async Task<CodeStyleOption<T>?> FindInEditorConfigAsync<T>(Document document, PerLanguageOption<CodeStyleOption<T>> key, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            if (key == null)
+            if (key is null)
             {
                 throw new ArgumentNullException(nameof(key));
             }

@@ -22,19 +22,19 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
         /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
-        public static TypeDeclarationSyntax AddSorted(this SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member, IComparer<MemberDeclarationSyntax> comparer = null)
+        public static TypeDeclarationSyntax AddSorted(this SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
-            if (generator == null)
+            if (generator is null)
             {
                 throw new System.ArgumentNullException(nameof(generator));
             }
 
-            if (containingType == null)
+            if (containingType is null)
             {
                 throw new System.ArgumentNullException(nameof(containingType));
             }
 
-            if (member == null)
+            if (member is null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }

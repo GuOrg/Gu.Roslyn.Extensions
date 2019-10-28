@@ -21,7 +21,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>What System.Type.FullName returns.</returns>
         public static string FullName(this INamedTypeSymbol type)
         {
-            if (type == null)
+            if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
@@ -39,7 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         builder.Append(part.Symbol.MetadataName);
                         break;
                     case SymbolDisplayPartKind.Punctuation when part.ToString() == ".":
-                        builder.Append(previous.Symbol == null || previous.Symbol.Kind == SymbolKind.Namespace ? "." : "+");
+                        builder.Append(previous.Symbol is null || previous.Symbol.Kind == SymbolKind.Namespace ? "." : "+");
                         break;
                     default:
                         throw new InvalidOperationException($"Not handling member {part.Kind}.");

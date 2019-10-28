@@ -12,16 +12,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the argument that matches <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="argumentList">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+        /// <param name="argumentList">The <see cref="ArgumentListSyntax"/>.</param>
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
         public static bool TryFind(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
             argument = null;
-            if (argumentList == null ||
+            if (argumentList is null ||
                 argumentList.Arguments.Count == 0 ||
-                parameter == null)
+                parameter is null)
             {
                 return false;
             }
@@ -40,7 +40,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (parameter.IsOptional)
             {
                 if (argumentList.Arguments.TryElementAt(parameter.Ordinal, out var candidate) &&
-                    candidate.NameColon == null)
+                    candidate.NameColon is null)
                 {
                     argument = candidate;
                     return true;
@@ -55,13 +55,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the arguments that matches <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="argumentList">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+        /// <param name="argumentList">The <see cref="ArgumentListSyntax"/>.</param>
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="arguments">The <see cref="ImmutableArray{ArgumentSyntax}"/>.</param>
         /// <returns>True if one or more were found.</returns>
         public static bool TryFindParams(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
         {
-            if (parameter == null)
+            if (parameter is null)
             {
                 throw new System.ArgumentNullException(nameof(parameter));
             }
@@ -96,7 +96,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindByNameColon(this ArgumentListSyntax argumentList, string name, out ArgumentSyntax argument)
         {
             argument = null;
-            if (argumentList == null)
+            if (argumentList is null)
             {
                 return false;
             }

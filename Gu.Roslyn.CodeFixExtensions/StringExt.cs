@@ -13,14 +13,14 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="text">The text.</param>
         /// <param name="leadingWhitespace">The whitespace to adjust each row to have.</param>
         /// <returns><paramref name="text"/> with each line adjusted to start with <paramref name="leadingWhitespace"/>.</returns>
-        public static string WithLeadingWhiteSpace(this string text, string leadingWhitespace)
+        public static string WithLeadingWhiteSpace(this string text, string? leadingWhitespace)
         {
-            if (text == null)
+            if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
 
-            if (leadingWhitespace == null)
+            if (leadingWhitespace is null)
             {
                 return text;
             }

@@ -34,7 +34,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
         public static AliasWalker Borrow(SyntaxTree tree)
         {
-            if (tree == null)
+            if (tree is null)
             {
                 throw new System.ArgumentNullException(nameof(tree));
             }
@@ -57,8 +57,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGet(SyntaxTree tree, string name, out UsingDirectiveSyntax result)
         {
             result = null;
-            if (tree == null ||
-                name == null)
+            if (tree is null ||
+                name is null)
             {
                 return false;
             }
@@ -91,8 +91,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGet(SyntaxTree tree, QualifiedType type, out UsingDirectiveSyntax result)
         {
             result = null;
-            if (tree == null ||
-                type == null)
+            if (tree is null ||
+                type is null)
             {
                 return false;
             }

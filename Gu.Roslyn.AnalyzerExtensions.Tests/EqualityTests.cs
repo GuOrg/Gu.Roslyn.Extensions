@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests
 
     public static class EqualityTests
     {
-        [TestCase("M(string text) => text == null",                                                      "text", "null")]
+        [TestCase("M(string text) => textis null",                                                      "text", "null")]
         [TestCase("M(string text) => text != null",                                                      "text", "null")]
         [TestCase("M(string text) => Equals(text, null)",                                                "text", "null")]
         [TestCase("M(string text) => text.Equals(null)",                                                 "text", "null")]
@@ -35,9 +35,9 @@ namespace N
 
     class C
     {
-        bool M(string text) => text == null;
+        bool M(string text) => textis null;
     }
-}".AssertReplace("M(string text) => text == null", check);
+}".AssertReplace("M(string text) => textis null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var expression = syntaxTree.Find<ExpressionSyntax>(check.Split('>').Last().TrimStart());
             Assert.AreEqual(true,          Equality.IsEqualsCheck(expression, default, default, out var left, out var right));
@@ -328,7 +328,7 @@ namespace N
             }
         }
 
-        [TestCase("text == null", true)]
+        [TestCase("textis null", true)]
         [TestCase("text != null", false)]
         public static void IsOperatorEquals(string check, bool expected)
         {
@@ -339,9 +339,9 @@ namespace N
 
     class C
     {
-        bool M(string text) => text == null;
+        bool M(string text) => textis null;
     }
-}".AssertReplace("text == null", check);
+}".AssertReplace("textis null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var expression = syntaxTree.FindBinaryExpression(check);
             Assert.AreEqual(expected, Equality.IsOperatorEquals(expression, out var left, out var right));
@@ -352,7 +352,7 @@ namespace N
             }
         }
 
-        [TestCase("text == null", false)]
+        [TestCase("textis null", false)]
         [TestCase("text != null", true)]
         public static void IsOperatorNotEquals(string check, bool expected)
         {
@@ -363,9 +363,9 @@ namespace N
 
     class C
     {
-        bool M(string text) => text == null;
+        bool M(string text) => textis null;
     }
-}".AssertReplace("text == null", check);
+}".AssertReplace("textis null", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var expression = syntaxTree.FindBinaryExpression(check);
             Assert.AreEqual(expected, Equality.IsOperatorNotEquals(expression, out var left, out var right));

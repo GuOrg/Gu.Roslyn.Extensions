@@ -32,7 +32,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
         public static UsingDirectiveWalker Borrow(SyntaxTree tree)
         {
-            if (tree == null)
+            if (tree is null)
             {
                 throw new System.ArgumentNullException(nameof(tree));
             }
@@ -53,7 +53,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker that has visited <paramref name="tree"/>.</returns>
         public static async Task<UsingDirectiveWalker> BorrowAsync(SyntaxTree tree, CancellationToken cancellationToken)
         {
-            if (tree == null)
+            if (tree is null)
             {
                 throw new System.ArgumentNullException(nameof(tree));
             }
