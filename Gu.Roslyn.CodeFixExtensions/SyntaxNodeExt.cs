@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -15,7 +16,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="diagnostic">The <see cref="Diagnostic"/>.</param>
         /// <param name="node">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindNode<T>(this SyntaxNode syntaxRoot, Diagnostic diagnostic, out T node)
+        public static bool TryFindNode<T>(this SyntaxNode syntaxRoot, Diagnostic diagnostic, [NotNullWhen(true)]out T? node)
             where T : SyntaxNode
         {
             if (diagnostic is null)
@@ -35,7 +36,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="diagnostic">The <see cref="Diagnostic"/>.</param>
         /// <param name="node">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindNodeOrAncestor<T>(this SyntaxNode syntaxRoot, Diagnostic diagnostic, out T node)
+        public static bool TryFindNodeOrAncestor<T>(this SyntaxNode syntaxRoot, Diagnostic diagnostic, [NotNullWhen(true)]out T? node)
             where T : SyntaxNode
         {
             if (diagnostic is null)
@@ -54,7 +55,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="location">The <see cref="Location"/>.</param>
         /// <param name="node">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindNode<T>(this SyntaxNode syntaxRoot, Location location, out T node)
+        public static bool TryFindNode<T>(this SyntaxNode syntaxRoot, Location location, [NotNullWhen(true)]out T? node)
             where T : SyntaxNode
         {
             if (syntaxRoot is null)
@@ -92,7 +93,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="location">The <see cref="Location"/>.</param>
         /// <param name="node">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindNodeOrAncestor<T>(this SyntaxNode syntaxRoot, Location location, out T node)
+        public static bool TryFindNodeOrAncestor<T>(this SyntaxNode syntaxRoot, Location location, [NotNullWhen(true)]out T? node)
             where T : SyntaxNode
         {
             if (syntaxRoot is null)
