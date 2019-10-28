@@ -77,7 +77,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             bool IsInstanceMethod()
             {
                 return !node.IsInStaticContext() &&
-                       node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
+                       node.TryFirstAncestor(out TypeDeclarationSyntax? containingType) &&
                        containingType.TryFindMethod(node.Identifier.Text, out var method) &&
                        !method.Modifiers.Any(SyntaxKind.StaticKeyword) &&
                        !containingType.TryFindMethod(node.Identifier.Text, x => x.Modifiers.Any(SyntaxKind.StaticKeyword), out _) &&

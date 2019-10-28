@@ -78,7 +78,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             bool IsInstanceField()
             {
                 return !node.IsInStaticContext() &&
-                       node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
+                       node.TryFirstAncestor(out TypeDeclarationSyntax? containingType) &&
                        containingType.TryFindField(node.Identifier.ValueText, out var field) &&
                        !field.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);
             }

@@ -119,7 +119,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the symbol exists.</returns>
         public static bool TryCreate(AccessorDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<IMethodSymbol, AccessorDeclarationSyntax> result)
         {
-            if (semanticModel.TryGetSymbol(declaration, cancellationToken, out IMethodSymbol symbol))
+            if (semanticModel.TryGetSymbol(declaration, cancellationToken, out IMethodSymbol? symbol))
             {
                 result = new SymbolAndDeclaration<IMethodSymbol, AccessorDeclarationSyntax>(symbol, declaration);
                 return true;

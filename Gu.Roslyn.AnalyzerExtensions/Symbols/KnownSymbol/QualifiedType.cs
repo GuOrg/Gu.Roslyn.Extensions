@@ -69,7 +69,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.FullName = fullName;
             this.Namespace = @namespace;
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
-            this.Alias = alias ?? (type.EndsWith("Attribute", StringComparison.Ordinal) ? type.Substring(0, type.Length - 9) : (string)null);
+            this.Alias = alias ?? (type.EndsWith("Attribute", StringComparison.Ordinal) ? type.Substring(0, type.Length - 9) : null);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets the type alias, can be null.
         /// </summary>
-        public string Alias { get; }
+        public string? Alias { get; }
 
         /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="ITypeSymbol"/>.</param>

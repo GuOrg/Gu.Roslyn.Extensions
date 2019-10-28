@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindArgument(this ObjectCreationExpressionSyntax objectCreation, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryFindArgument(this ObjectCreationExpressionSyntax objectCreation, IParameterSymbol parameter, [NotNullWhen(true)]out ArgumentSyntax? argument)
         {
             argument = null;
             return objectCreation?.ArgumentList is ArgumentListSyntax argumentList &&
@@ -46,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The <see cref="ConstructorDeclarationSyntax"/>.</param>
         /// <returns>True if the declaration was found.</returns>
-        public static bool TryGetTargetDeclaration(this ObjectCreationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, out ConstructorDeclarationSyntax declaration)
+        public static bool TryGetTargetDeclaration(this ObjectCreationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ConstructorDeclarationSyntax? declaration)
         {
             declaration = null;
             return semanticModel.TryGetSymbol(invocation, cancellationToken, out var symbol) &&

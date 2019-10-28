@@ -71,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            if (semanticModel.TryGetSymbol(node, cancellationToken, out ISymbol symbol))
+            if (semanticModel.TryGetSymbol(node, cancellationToken, out ISymbol? symbol))
             {
                 type = symbol as ITypeSymbol;
                 return type != null;
@@ -249,7 +249,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return Cache.GetOrAdd(expression.SyntaxTree, GetSemanticModel);
 
-            SemanticModel GetSemanticModel(SyntaxTree syntaxTree)
+            SemanticModel? GetSemanticModel(SyntaxTree syntaxTree)
             {
                 if (semanticModel.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
                 {

@@ -143,7 +143,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 before = null;
                 after = null;
-                if (comment.TryFirstAncestor(out MemberDeclarationSyntax member) &&
+                if (comment.TryFirstAncestor(out MemberDeclarationSyntax? member) &&
                     TryGetTypeParameterList(member, out var typeParameterList) &&
                     typeParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == identifierName.Identifier.ValueText, out var parameter) &&
                     typeParameterList.Parameters.IndexOf(parameter) is var ordinal &&

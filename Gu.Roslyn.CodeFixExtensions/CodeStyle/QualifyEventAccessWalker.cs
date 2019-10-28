@@ -78,7 +78,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             bool IsInstanceEvent()
             {
                 return !node.IsInStaticContext() &&
-                       node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
+                       node.TryFirstAncestor(out TypeDeclarationSyntax? containingType) &&
                        containingType.TryFindEvent(node.Identifier.ValueText, out var @event) &&
                        !IsStatic(@event);
 

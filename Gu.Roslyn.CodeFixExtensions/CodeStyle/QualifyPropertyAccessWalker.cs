@@ -78,7 +78,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             bool IsInstanceProperty()
             {
                 return !node.IsInStaticContext() &&
-                       node.TryFirstAncestor(out TypeDeclarationSyntax containingType) &&
+                       node.TryFirstAncestor(out TypeDeclarationSyntax? containingType) &&
                        containingType.TryFindProperty(node.Identifier.ValueText, out var property) &&
                        !property.Modifiers.Any(SyntaxKind.StaticKeyword) &&
                        !Scope.HasLocal(node, node.Identifier.ValueText) &&

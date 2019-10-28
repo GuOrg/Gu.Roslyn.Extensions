@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -18,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="target">The symbol of the target if match.</param>
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this MemberAccessExpressionSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IFieldSymbol target)
+        public static bool TryGetTarget(this MemberAccessExpressionSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IFieldSymbol? target)
         {
             target = null;
             return candidate?.Name is IdentifierNameSyntax identifierName &&
@@ -34,7 +35,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="target">The symbol of the target if match.</param>
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this MemberAccessExpressionSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IPropertySymbol target)
+        public static bool TryGetTarget(this MemberAccessExpressionSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IPropertySymbol? target)
         {
             target = null;
             return candidate?.Name is IdentifierNameSyntax identifierName &&

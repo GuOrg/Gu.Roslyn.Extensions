@@ -2,6 +2,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -133,7 +134,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             base.VisitInvocationExpression(node);
-            if (this.TryGetTargetSymbol(node, out IMethodSymbol target) &&
+            if (this.TryGetTargetSymbol(node, out IMethodSymbol? target) &&
                 target.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration))
             {
                 this.Visit(declaration);
@@ -144,7 +145,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             base.VisitIdentifierName(node);
-            if (this.TryGetTargetSymbol(node, out IPropertySymbol property))
+            if (this.TryGetTargetSymbol(node, out IPropertySymbol? property))
             {
                 if (this.IsPropertyGetAndSet(node))
                 {
@@ -204,7 +205,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     walker.ContainingType = containingType;
                 }
-                else if (node.TryFirstAncestor(out TypeDeclarationSyntax containingTypeDeclaration) &&
+                else if (node.TryFirstAncestor(out TypeDeclarationSyntax? containingTypeDeclaration) &&
                          semanticModel.TryGetSymbol(containingTypeDeclaration, cancellationToken, out containingType))
                 {
                     walker.ContainingType = containingType;
@@ -274,7 +275,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="node"/> is found to be a property set.</returns>
         protected virtual bool IsPropertySet(IdentifierNameSyntax node)
         {
-            return node.TryFirstAncestor(out AssignmentExpressionSyntax assignment) &&
+            return node.TryFirstAncestor(out AssignmentExpressionSyntax? assignment) &&
                    assignment.Left.Contains(node);
         }
 
@@ -296,7 +297,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="symbol">The symbol if a match.</param>
         /// <returns>True if a symbol was found.</returns>
-        protected virtual bool TryGetTargetSymbol<TSymbol>(SyntaxNode node, out TSymbol symbol)
+        protected virtual bool TryGetTargetSymbol<TSymbol>(SyntaxNode node, [NotNullWhen(true)]out TSymbol? symbol)
             where TSymbol : class, ISymbol
         {
             symbol = null;
@@ -306,7 +307,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (node.TryFirstAncestor(out InvocationExpressionSyntax invocation) &&
+            if (node.TryFirstAncestor(out InvocationExpressionSyntax? invocation) &&
                 invocation.TryGetMethodName(out var name) &&
                 name == "nameof")
             {

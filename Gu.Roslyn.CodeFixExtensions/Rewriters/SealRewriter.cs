@@ -94,7 +94,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new System.ArgumentNullException(nameof(node));
             }
 
-            if (node.TryFirstAncestor(out BasePropertyDeclarationSyntax parent) &&
+            if (node.TryFirstAncestor(out BasePropertyDeclarationSyntax? parent) &&
                 parent.Modifiers.Any(SyntaxKind.PrivateKeyword) &&
                 node.Modifiers.TrySingle(x => x.IsKind(SyntaxKind.PrivateKeyword), out var modifier))
             {
