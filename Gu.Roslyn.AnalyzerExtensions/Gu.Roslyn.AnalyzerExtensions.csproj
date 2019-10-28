@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.7.3-dev</Version>
+    <Version>0.8.0-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -20,9 +20,7 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>roslyn analyzer</PackageTags>
     <PackageReleaseNotes>
-      FEATURE: Scope
-      BREAKING: Rename SearchScope, was Scope
-      BREAKING: Move IsExecutedBefore extension method to Scope
+      FEATURE: nullable enable
     </PackageReleaseNotes>
   </PropertyGroup>
 
