@@ -12,6 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <typeparam name="TKey">The type of keys.</typeparam>
     /// <typeparam name="TValue">The type of values.</typeparam>
     public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDisposable
+        where TKey : notnull
     {
         private static readonly ConcurrentQueue<PooledDictionary<TKey, TValue>> Cache = new ConcurrentQueue<PooledDictionary<TKey, TValue>>();
 
