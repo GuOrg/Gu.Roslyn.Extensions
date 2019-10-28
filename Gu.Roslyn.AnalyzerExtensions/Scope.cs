@@ -155,7 +155,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the node is in static context where this is not accessible.</returns>
         public static bool IsInStaticContext(this SyntaxNode node)
         {
-            if (node.TryFirstAncestor(out MemberDeclarationSyntax memberDeclaration))
+            if (node.TryFirstAncestor(out MemberDeclarationSyntax? memberDeclaration))
             {
                 switch (memberDeclaration)
                 {
@@ -273,18 +273,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return ExecutedBefore.No;
             }
 
-            if (statement.TryFindSharedAncestorRecursive(other, out IfStatementSyntax ifStatement) &&
+            if (statement.TryFindSharedAncestorRecursive(other, out IfStatementSyntax? ifStatement) &&
                 ((ifStatement.Statement?.Contains(statement) == true && ifStatement.Else?.Statement?.Contains(other) == true) ||
                  (ifStatement.Statement?.Contains(other) == true && ifStatement.Else?.Statement?.Contains(statement) == true)))
             {
                 return ExecutedBefore.No;
             }
 
-            if (statement.TryFirstAncestor(out TryStatementSyntax tryStatement))
+            if (statement.TryFirstAncestor(out TryStatementSyntax? tryStatement))
             {
                 if (tryStatement.Block.Contains(statement))
                 {
-                    if (other.TryFirstAncestor(out CatchClauseSyntax catchClause) &&
+                    if (other.TryFirstAncestor(out CatchClauseSyntax? catchClause) &&
                         tryStatement.Catches.TryFirst(x => x == catchClause, out _))
                     {
                         return ExecutedBefore.Yes;
@@ -343,7 +343,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return executedBefore;
             }
 
-            if (other.TryFirstAncestor(out StatementSyntax otherStatement))
+            if (other.TryFirstAncestor(out StatementSyntax? otherStatement))
             {
                 return statement.IsExecutedBefore(otherStatement);
             }
@@ -385,8 +385,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return executedBefore;
             }
 
-            if (node.TryFirstAncestor(out StatementSyntax statement) &&
-                other.TryFirstAncestor(out StatementSyntax otherStatement))
+            if (node.TryFirstAncestor(out StatementSyntax? statement) &&
+                other.TryFirstAncestor(out StatementSyntax? otherStatement))
             {
                 return statement.IsExecutedBefore(otherStatement);
             }
@@ -418,7 +418,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return executedBefore;
             }
 
-            if (node.TryFirstAncestor(out StatementSyntax statement))
+            if (node.TryFirstAncestor(out StatementSyntax? statement))
             {
                 return statement.IsExecutedBefore(other);
             }

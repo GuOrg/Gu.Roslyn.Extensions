@@ -297,7 +297,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="classDeclaration">The <see cref="ClassDeclarationSyntax"/>.</param>
         /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
-        public static DocumentEditor SortMembers(this DocumentEditor editor, TypeDeclarationSyntax classDeclaration, IComparer<MemberDeclarationSyntax> comparer = null)
+        public static DocumentEditor SortMembers(this DocumentEditor editor, TypeDeclarationSyntax classDeclaration, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
             if (editor is null)
             {

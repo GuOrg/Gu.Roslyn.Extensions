@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -142,7 +143,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             /// <param name="field">The <see cref="FieldDeclarationSyntax"/>.</param>
             /// <param name="setter">The single setter accessor assigning the field.</param>
             /// <returns>True if a single setter was found.</returns>
-            internal static bool TryGetSetter(FieldDeclarationSyntax field, out AccessorDeclarationSyntax setter)
+            internal static bool TryGetSetter(FieldDeclarationSyntax field, [NotNullWhen(true)]out AccessorDeclarationSyntax? setter)
             {
                 setter = null;
 

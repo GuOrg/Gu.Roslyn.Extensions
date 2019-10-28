@@ -17,9 +17,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if any or both nodes are in lambda.</returns>
         internal static bool IsInLambda(SyntaxNode node, SyntaxNode other, out ExecutedBefore executedBefore)
         {
-            if (node.TryFirstAncestor(out AnonymousFunctionExpressionSyntax nodeLambda))
+            if (node.TryFirstAncestor(out AnonymousFunctionExpressionSyntax? nodeLambda))
             {
-                if (other.TryFirstAncestor(out AnonymousFunctionExpressionSyntax otherLambda))
+                if (other.TryFirstAncestor(out AnonymousFunctionExpressionSyntax? otherLambda))
                 {
                     if (ReferenceEquals(nodeLambda, otherLambda))
                     {

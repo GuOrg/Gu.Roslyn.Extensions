@@ -26,21 +26,21 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         protected static readonly IReadOnlyDictionary<string, string> TypeAliasMap = new Dictionary<string, string>
         {
-            { typeof(bool).FullName, "bool" },
-            { typeof(byte).FullName, "byte" },
-            { typeof(sbyte).FullName, "sbyte" },
-            { typeof(char).FullName, "char" },
-            { typeof(decimal).FullName, "decimal" },
-            { typeof(double).FullName, "double" },
-            { typeof(float).FullName, "float" },
-            { typeof(int).FullName, "int" },
-            { typeof(uint).FullName, "uint" },
-            { typeof(long).FullName, "long" },
-            { typeof(ulong).FullName, "ulong" },
-            { typeof(object).FullName, "object" },
-            { typeof(short).FullName, "short" },
-            { typeof(ushort).FullName, "ushort" },
-            { typeof(string).FullName, "string" },
+            { typeof(bool).FullName!, "bool" },
+            { typeof(byte).FullName!, "byte" },
+            { typeof(sbyte).FullName!, "sbyte" },
+            { typeof(char).FullName!, "char" },
+            { typeof(decimal).FullName!, "decimal" },
+            { typeof(double).FullName!, "double" },
+            { typeof(float).FullName!, "float" },
+            { typeof(int).FullName!, "int" },
+            { typeof(uint).FullName!, "uint" },
+            { typeof(long).FullName!, "long" },
+            { typeof(ulong).FullName!, "ulong" },
+            { typeof(object).FullName!, "object" },
+            { typeof(short).FullName!, "short" },
+            { typeof(ushort).FullName!, "ushort" },
+            { typeof(string).FullName!, "string" },
         };
 
         /// <summary>
