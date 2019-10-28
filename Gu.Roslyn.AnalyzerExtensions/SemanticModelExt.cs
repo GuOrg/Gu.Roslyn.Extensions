@@ -33,10 +33,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
                 }
 
-                if (optional.Value == null)
+                if (optional.Value is null)
                 {
                     value = default;
-                    return default(T) == null;
+                    return default(T) is null;
                 }
 
                 // We can't use GetTypeInfo() here as it brings in System.Reflection.Extensions that does not work in VS.
@@ -92,7 +92,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetNamedType(this SemanticModel semanticModel, AttributeSyntax node, QualifiedType expected, CancellationToken cancellationToken, out INamedTypeSymbol type)
         {
-            if (expected == null)
+            if (expected is null)
             {
                 throw new System.ArgumentNullException(nameof(expected));
             }
@@ -114,7 +114,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetNamedType(this SemanticModel semanticModel, TypeSyntax node, QualifiedType expected, CancellationToken cancellationToken, out INamedTypeSymbol type)
         {
-            if (expected == null)
+            if (expected is null)
             {
                 throw new ArgumentNullException(nameof(expected));
             }
@@ -161,7 +161,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a boxed instance can be cast.</returns>
         public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax expression, ITypeSymbol destination)
         {
-            if (expression == null || destination == null)
+            if (expression is null || destination is null)
             {
                 return false;
             }
@@ -234,8 +234,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The semantic model that corresponds to <paramref name="expression"/>.</returns>
         public static SemanticModel SemanticModelFor(this SemanticModel semanticModel, SyntaxNode expression)
         {
-            if (semanticModel == null ||
-                expression == null ||
+            if (semanticModel is null ||
+                expression is null ||
                 expression.IsMissing)
             {
                 return null;

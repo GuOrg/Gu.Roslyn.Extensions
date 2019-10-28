@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingleArgument(this AttributeSyntax attribute, out AttributeArgumentSyntax argument)
         {
             var argumentList = attribute?.ArgumentList;
-            if (argumentList == null)
+            if (argumentList is null)
             {
                 argument = null;
                 return false;
@@ -35,7 +35,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match as found.</returns>
         public static bool TryFindArgument(this AttributeSyntax attribute, int index, string name, out AttributeArgumentSyntax argument)
         {
-            if (attribute == null)
+            if (attribute is null)
             {
                 throw new System.ArgumentNullException(nameof(attribute));
             }

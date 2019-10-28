@@ -20,8 +20,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="parameter"/> is checked for null.</returns>
         public static bool IsChecked(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (parameter == null ||
-                scope == null)
+            if (parameter is null ||
+                scope is null)
             {
                 return false;
             }
@@ -42,8 +42,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="parameter"/> is checked for null before <paramref name="location"/>.</returns>
         public static bool IsCheckedBefore(IParameterSymbol parameter, SyntaxNode location, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (parameter == null ||
-                location == null)
+            if (parameter is null ||
+                location is null)
             {
                 return false;
             }
@@ -115,12 +115,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A <see cref="NullCheckWalker"/> filtered by all null checks for <paramref name="parameter"/>.</returns>
         public static NullCheckWalker For(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (parameter == null)
+            if (parameter is null)
             {
                 throw new System.ArgumentNullException(nameof(parameter));
             }
 
-            if (scope == null)
+            if (scope is null)
             {
                 throw new System.ArgumentNullException(nameof(scope));
             }

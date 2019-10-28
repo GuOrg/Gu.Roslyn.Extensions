@@ -19,9 +19,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFind(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ArgumentSyntax argument)
         {
             argument = null;
-            if (argumentList == null ||
+            if (argumentList is null ||
                 argumentList.Arguments.Count == 0 ||
-                parameter == null)
+                parameter is null)
             {
                 return false;
             }
@@ -40,7 +40,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (parameter.IsOptional)
             {
                 if (argumentList.Arguments.TryElementAt(parameter.Ordinal, out var candidate) &&
-                    candidate.NameColon == null)
+                    candidate.NameColon is null)
                 {
                     argument = candidate;
                     return true;
@@ -61,7 +61,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one or more were found.</returns>
         public static bool TryFindParams(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
         {
-            if (parameter == null)
+            if (parameter is null)
             {
                 throw new System.ArgumentNullException(nameof(parameter));
             }
@@ -96,7 +96,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindByNameColon(this ArgumentListSyntax argumentList, string name, out ArgumentSyntax argument)
         {
             argument = null;
-            if (argumentList == null)
+            if (argumentList is null)
             {
                 return false;
             }

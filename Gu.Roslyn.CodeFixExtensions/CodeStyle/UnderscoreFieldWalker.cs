@@ -49,7 +49,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new ArgumentNullException(nameof(node));
             }

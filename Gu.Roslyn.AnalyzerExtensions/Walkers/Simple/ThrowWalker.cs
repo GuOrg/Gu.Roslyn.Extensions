@@ -34,7 +34,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if there is at least one <see cref="ThrowStatementSyntax"/> or <see cref="ThrowExpressionSyntax"/> in <paramref name="node"/>.</returns>
         public static bool Throws(SyntaxNode node)
         {
-            if (node == null)
+            if (node is null)
             {
                 return false;
             }

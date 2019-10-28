@@ -43,7 +43,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override async Task<CodeAction> GetFixAsync(FixAllContext fixAllContext)
         {
-            if (fixAllContext == null)
+            if (fixAllContext is null)
             {
                 throw new System.ArgumentNullException(nameof(fixAllContext));
             }

@@ -73,7 +73,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected virtual bool Equals(T symbol)
 #pragma warning restore CA2225 // Operator overloads have named alternates
         {
-            if (symbol == null)
+            if (symbol is null)
             {
                 return false;
             }

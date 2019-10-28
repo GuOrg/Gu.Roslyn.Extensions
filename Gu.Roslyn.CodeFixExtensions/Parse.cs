@@ -129,7 +129,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="SyntaxTriviaList"/>.</returns>
         public static SyntaxTriviaList LeadingTrivia(string text, string leadingWhitespace = null)
         {
-            if (text == null)
+            if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }

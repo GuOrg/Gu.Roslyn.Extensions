@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the parameter has [CallerMemberName].</returns>
         public static bool IsCallerMemberName(this IParameterSymbol parameter)
         {
-            if (parameter == null)
+            if (parameter is null)
             {
                 throw new System.ArgumentNullException(nameof(parameter));
             }

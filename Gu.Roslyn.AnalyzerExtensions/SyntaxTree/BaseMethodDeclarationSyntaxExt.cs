@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="Accessibility"/>.</returns>
         public static Accessibility Accessibility(this BaseMethodDeclarationSyntax declaration)
         {
-            if (declaration == null)
+            if (declaration is null)
             {
                 return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
             }
@@ -67,8 +67,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, ArgumentSyntax argument, out ParameterSyntax parameter)
         {
             parameter = null;
-            if (argument == null ||
-                method == null)
+            if (argument is null ||
+                method is null)
             {
                 return false;
             }
@@ -115,8 +115,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, string name, out ParameterSyntax parameter)
         {
             parameter = null;
-            if (name == null ||
-                method == null)
+            if (name is null ||
+                method is null)
             {
                 return false;
             }

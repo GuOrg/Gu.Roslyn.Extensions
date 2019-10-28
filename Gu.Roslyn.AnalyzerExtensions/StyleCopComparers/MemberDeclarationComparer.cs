@@ -147,7 +147,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         public static bool TryCompare<T>(MemberDeclarationSyntax x, MemberDeclarationSyntax y, Func<T, T, int> compare, out int result)
             where T : MemberDeclarationSyntax
         {
-            if (compare == null)
+            if (compare is null)
             {
                 throw new ArgumentNullException(nameof(compare));
             }

@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a goto or label is found.</returns>
         public static bool ContainsGoto(this BlockSyntax block)
         {
-            if (block == null)
+            if (block is null)
             {
                 return false;
             }

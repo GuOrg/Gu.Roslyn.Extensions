@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindParameter(this IMethodSymbol method, string name, out IParameterSymbol parameter)
         {
             parameter = null;
-            if (method == null)
+            if (method is null)
             {
                 return false;
             }
@@ -86,7 +86,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, out IParameterSymbol parameter)
         {
             parameter = null;
-            if (method == null)
+            if (method is null)
             {
                 return false;
             }

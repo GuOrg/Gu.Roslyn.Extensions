@@ -49,7 +49,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingleReturned(this PropertyDeclarationSyntax property, out ExpressionSyntax result)
         {
             result = null;
-            if (property == null)
+            if (property is null)
             {
                 return false;
             }
@@ -71,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 var body = getter.Body;
-                if (body == null ||
+                if (body is null ||
                     body.Statements.Count == 0)
                 {
                     return false;

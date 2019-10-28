@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetStringValue(this ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken, out string text)
         {
             text = null;
-            if (expression == null)
+            if (expression is null)
             {
                 return false;
             }
@@ -89,7 +89,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ExpressionSyntax expression, ITypeSymbol destination, SemanticModel semanticModel)
         {
-            if (expression == null || destination == null)
+            if (expression is null || destination is null)
             {
                 return false;
             }
@@ -106,9 +106,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ExpressionSyntax expression, QualifiedType destination, SemanticModel semanticModel)
         {
-            if (expression == null ||
-                destination == null ||
-                semanticModel?.Compilation == null)
+            if (expression is null ||
+                destination is null ||
+                semanticModel?.Compilation is null)
             {
                 return false;
             }
@@ -125,7 +125,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ExpressionSyntax expression, ITypeSymbol destination, SemanticModel semanticModel)
         {
-            if (expression == null || destination == null)
+            if (expression is null || destination is null)
             {
                 return false;
             }
@@ -142,9 +142,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="expression"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ExpressionSyntax expression, QualifiedType destination, SemanticModel semanticModel)
         {
-            if (expression == null ||
-                destination == null ||
-                semanticModel?.Compilation == null)
+            if (expression is null ||
+                destination is null ||
+                semanticModel?.Compilation is null)
             {
                 return false;
             }

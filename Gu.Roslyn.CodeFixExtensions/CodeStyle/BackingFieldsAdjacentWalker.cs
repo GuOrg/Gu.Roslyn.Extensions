@@ -44,7 +44,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <inheritdoc />
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }

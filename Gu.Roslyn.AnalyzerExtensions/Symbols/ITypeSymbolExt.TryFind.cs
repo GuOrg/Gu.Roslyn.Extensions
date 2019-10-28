@@ -148,7 +148,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TMember : class, ISymbol
         {
             member = null;
-            if (type == null ||
+            if (type is null ||
                 string.IsNullOrEmpty(name))
             {
                 return false;
@@ -170,8 +170,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TMember : class, ISymbol
         {
             member = null;
-            if (type == null ||
-                predicate == null)
+            if (type is null ||
+                predicate is null)
             {
                 return false;
             }
@@ -207,8 +207,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TMember : class, ISymbol
         {
             member = null;
-            if (type == null ||
-                predicate == null)
+            if (type is null ||
+                predicate is null)
             {
                 return false;
             }
@@ -243,8 +243,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TMember : class, ISymbol
         {
             member = null;
-            if (type == null ||
-                predicate == null)
+            if (type is null ||
+                predicate is null)
             {
                 return false;
             }
@@ -274,7 +274,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TMember : class, ISymbol
         {
             member = null;
-            if (type == null)
+            if (type is null)
             {
                 return false;
             }
@@ -295,8 +295,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TMember : class, ISymbol
         {
             member = null;
-            if (type == null ||
-                predicate == null)
+            if (type is null ||
+                predicate is null)
             {
                 return false;
             }

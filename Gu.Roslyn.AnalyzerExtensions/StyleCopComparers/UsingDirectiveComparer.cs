@@ -17,12 +17,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <param name="y">The second node to compare.</param>
         public static int Compare(UsingDirectiveSyntax x, UsingDirectiveSyntax y)
         {
-            if (x == null)
+            if (x is null)
             {
                 throw new ArgumentNullException(nameof(x));
             }
 
-            if (y == null)
+            if (y is null)
             {
                 throw new ArgumentNullException(nameof(y));
             }
@@ -63,12 +63,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <returns>True if the using directive is not needed.</returns>
         public static bool IsSameOrContained(NamespaceDeclarationSyntax namespaceDeclarationSyntax, UsingDirectiveSyntax usingDirective)
         {
-            if (namespaceDeclarationSyntax == null)
+            if (namespaceDeclarationSyntax is null)
             {
                 throw new ArgumentNullException(nameof(namespaceDeclarationSyntax));
             }
 
-            if (usingDirective == null)
+            if (usingDirective is null)
             {
                 throw new ArgumentNullException(nameof(usingDirective));
             }
@@ -87,12 +87,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 #pragma warning restore IDE0019 // Use pattern matching
                 while (true)
                 {
-                    if (usingParent == null)
+                    if (usingParent is null)
                     {
                         return true;
                     }
 
-                    if (namespaceParent == null ||
+                    if (namespaceParent is null ||
                         namespaceParent.Right.Identifier.ValueText != usingParent.Right.Identifier.ValueText)
                     {
                         return false;
@@ -128,17 +128,17 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 
         private static int CompareRecursive(QualifiedNameSyntax xqn, QualifiedNameSyntax yqn)
         {
-            if (xqn == null && yqn == null)
+            if (xqn is null && yqn is null)
             {
                 return 0;
             }
 
-            if (xqn == null)
+            if (xqn is null)
             {
                 return -1;
             }
 
-            if (yqn == null)
+            if (yqn is null)
             {
                 return 1;
             }

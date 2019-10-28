@@ -24,7 +24,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="CodeStyleResult"/> found.</returns>
         protected async Task<CodeStyleResult> CheckCoreAsync(Document containing, CancellationToken cancellationToken)
         {
-            if (containing == null)
+            if (containing is null)
             {
                 throw new ArgumentNullException(nameof(containing));
             }
@@ -162,12 +162,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="CodeStyleResult"/> found.</returns>
         protected CodeStyleResult CheckCore(SyntaxTree containing, Compilation compilation)
         {
-            if (containing == null)
+            if (containing is null)
             {
                 throw new ArgumentNullException(nameof(containing));
             }
 
-            if (compilation == null)
+            if (compilation is null)
             {
                 throw new ArgumentNullException(nameof(compilation));
             }
@@ -251,7 +251,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
         private static bool IsExcluded(string filePath)
         {
-            if (filePath == null)
+            if (filePath is null)
             {
                 return false;
             }

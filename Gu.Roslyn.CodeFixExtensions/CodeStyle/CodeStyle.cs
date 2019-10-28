@@ -26,7 +26,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> QualifyFieldAccessAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -62,7 +62,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> QualifyEventAccessAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -98,7 +98,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> QualifyPropertyAccessAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -134,7 +134,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> QualifyMethodAccessAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -168,7 +168,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static async Task<CodeStyleResult> UnderscoreFieldsAsync(this Document document, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
@@ -191,7 +191,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static CodeStyleResult UnderscoreFields(this SemanticModel semanticModel)
         {
-            if (semanticModel == null)
+            if (semanticModel is null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
@@ -206,7 +206,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static CodeStyleResult UsingDirectivesInsideNamespace(SemanticModel semanticModel)
         {
-            if (semanticModel == null)
+            if (semanticModel is null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
@@ -229,7 +229,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if the code is found to prefix field names with underscore.</returns>
         public static CodeStyleResult BackingFieldsAdjacent(this SemanticModel semanticModel, out bool newLineBetween)
         {
-            if (semanticModel == null)
+            if (semanticModel is null)
             {
                 throw new ArgumentNullException(nameof(semanticModel));
             }
@@ -255,12 +255,12 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns><see cref="CodeStyleOption{T}"/> or null if not found.</returns>
         public static async Task<CodeStyleOption<T>> FindInEditorConfigAsync<T>(Document document, PerLanguageOption<CodeStyleOption<T>> key, CancellationToken cancellationToken)
         {
-            if (document == null)
+            if (document is null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            if (key == null)
+            if (key is null)
             {
                 throw new ArgumentNullException(nameof(key));
             }

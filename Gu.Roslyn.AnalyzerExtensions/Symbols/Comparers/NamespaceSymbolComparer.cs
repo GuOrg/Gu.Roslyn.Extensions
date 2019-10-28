@@ -25,8 +25,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            if (x == null ||
-                y == null)
+            if (x is null ||
+                y is null)
             {
                 return false;
             }
@@ -40,8 +40,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the instances are found equal.</returns>
         public static bool Equals(INamespaceSymbol x, string y)
         {
-            if (x == null ||
-                y == null)
+            if (x is null ||
+                y is null)
             {
                 return false;
             }

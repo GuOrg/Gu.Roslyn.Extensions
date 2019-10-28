@@ -20,7 +20,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
         public static bool TryGetLeadingTrivia(this MemberDeclarationSyntax member, out SyntaxTriviaList trivia)
         {
-            if (member == null)
+            if (member is null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }
@@ -42,7 +42,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The string with the leading whitespace.</returns>
         public static string LeadingWhitespace(this MemberDeclarationSyntax member)
         {
-            if (member == null)
+            if (member is null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }
@@ -63,7 +63,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The string with the leading whitespace.</returns>
         public static string LeadingWhitespace(this AccessorDeclarationSyntax accessor)
         {
-            if (accessor == null)
+            if (accessor is null)
             {
                 throw new System.ArgumentNullException(nameof(accessor));
             }
@@ -86,7 +86,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
         public static bool TryGetTrailingTrivia(this MemberDeclarationSyntax member, out SyntaxTriviaList trivia)
         {
-            if (member == null)
+            if (member is null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }
@@ -109,7 +109,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
         public static bool TryGetLeadingNewLine(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
         {
-            if (member == null)
+            if (member is null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }
@@ -129,7 +129,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>True if trailing <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
         public static bool TryGetTrailingNewLine(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
         {
-            if (member == null)
+            if (member is null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }
@@ -335,7 +335,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithLeadingTriviaFrom<T>(this T target, SyntaxNode source)
             where T : SyntaxNode
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new System.ArgumentNullException(nameof(source));
             }
@@ -355,7 +355,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithTrailingTriviaFrom<T>(this T target, SyntaxNode source)
             where T : SyntaxNode
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new System.ArgumentNullException(nameof(source));
             }
@@ -374,7 +374,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithLeadingElasticLineFeed<T>(this T node)
             where T : SyntaxNode
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -398,7 +398,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithLeadingElasticSpace<T>(this T node)
             where T : SyntaxNode
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -422,7 +422,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithLeadingLineFeed<T>(this T node)
             where T : SyntaxNode
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -446,7 +446,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithoutLeadingLineFeed<T>(this T node)
             where T : SyntaxNode
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -471,7 +471,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithTrailingElasticLineFeed<T>(this T node)
             where T : SyntaxNode
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }
@@ -495,7 +495,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static T WithTrailingLineFeed<T>(this T node)
             where T : SyntaxNode
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new System.ArgumentNullException(nameof(node));
             }

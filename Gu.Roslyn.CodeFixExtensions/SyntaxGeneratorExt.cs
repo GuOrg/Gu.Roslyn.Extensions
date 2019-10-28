@@ -24,17 +24,17 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
         public static TypeDeclarationSyntax AddSorted(this SyntaxGenerator generator, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member, IComparer<MemberDeclarationSyntax> comparer = null)
         {
-            if (generator == null)
+            if (generator is null)
             {
                 throw new System.ArgumentNullException(nameof(generator));
             }
 
-            if (containingType == null)
+            if (containingType is null)
             {
                 throw new System.ArgumentNullException(nameof(containingType));
             }
 
-            if (member == null)
+            if (member is null)
             {
                 throw new System.ArgumentNullException(nameof(member));
             }

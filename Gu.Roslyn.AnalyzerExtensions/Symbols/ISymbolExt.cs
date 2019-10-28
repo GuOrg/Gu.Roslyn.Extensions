@@ -68,8 +68,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the symbols are found equivalent.</returns>
         public static bool IsEquivalentTo(this ISymbol x, ISymbol y)
         {
-            if (x == null ||
-                y == null ||
+            if (x is null ||
+                y is null ||
                 x.Name != y.Name ||
                 x.Kind != y.Kind)
             {

@@ -416,7 +416,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="ILocalSymbol"/> or <see cref="IFieldSymbol"/> or null.</returns>
         public static ISymbol? GetDeclaredSymbolSafe(this SemanticModel semanticModel, VariableDeclarationSyntax node, CancellationToken cancellationToken)
         {
-            if (node?.Variables == null)
+            if (node?.Variables is null)
             {
                 return null;
             }
@@ -439,7 +439,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>An <see cref="ILocalSymbol"/> or <see cref="IFieldSymbol"/> or null.</returns>
         public static ISymbol? GetDeclaredSymbolSafe(this SemanticModel semanticModel, VariableDeclaratorSyntax node, CancellationToken cancellationToken)
         {
-            if (node == null)
+            if (node is null)
             {
                 return null;
             }

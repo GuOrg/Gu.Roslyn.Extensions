@@ -202,7 +202,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where T : SyntaxNode
         {
             declaration = null;
-            if (symbol == null)
+            if (symbol is null)
             {
                 return false;
             }

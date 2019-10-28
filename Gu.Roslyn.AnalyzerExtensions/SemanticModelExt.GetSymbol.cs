@@ -87,17 +87,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetSymbol(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, QualifiedType expected, CancellationToken cancellationToken, out IMethodSymbol symbol)
         {
-            if (semanticModel == null)
+            if (semanticModel is null)
             {
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
 
-            if (expected == null)
+            if (expected is null)
             {
                 throw new System.ArgumentNullException(nameof(expected));
             }
 
-            if (node == null)
+            if (node is null)
             {
                 symbol = null;
                 return false;
@@ -149,13 +149,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetSymbol(this SemanticModel semanticModel, InvocationExpressionSyntax node, QualifiedMethod expected, CancellationToken cancellationToken, out IMethodSymbol symbol)
         {
-            if (expected == null)
+            if (expected is null)
             {
                 throw new System.ArgumentNullException(nameof(expected));
             }
 
             symbol = null;
-            if (node == null)
+            if (node is null)
             {
                 return false;
             }

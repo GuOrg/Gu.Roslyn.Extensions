@@ -35,7 +35,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal.</returns>
         public static bool operator ==(IParameterSymbol left, QualifiedParameter right)
         {
-            if (left == null)
+            if (left is null)
             {
                 return false;
             }

@@ -190,8 +190,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>Null if the execution order could not be figured out.</returns>
         public static ExecutedBefore IsExecutedBefore(this StatementSyntax statement, StatementSyntax other)
         {
-            if (statement == null ||
-                other == null)
+            if (statement is null ||
+                other is null)
             {
                 return ExecutedBefore.Unknown;
             }
@@ -328,12 +328,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>Null if the execution order could not be figured out.</returns>
         public static ExecutedBefore IsExecutedBefore(this StatementSyntax statement, ExpressionSyntax other)
         {
-            if (statement == null)
+            if (statement is null)
             {
                 throw new System.ArgumentNullException(nameof(statement));
             }
 
-            if (other == null)
+            if (other is null)
             {
                 throw new System.ArgumentNullException(nameof(other));
             }
@@ -434,7 +434,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="statement"/> or statement.Parent contains the block <paramref name="other"/> is in.</returns>
         private static bool IsInParentBlock(this StatementSyntax statement, StatementSyntax other)
         {
-            if (statement == null || other == null)
+            if (statement is null || other is null)
             {
                 return false;
             }

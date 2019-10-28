@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/>.</returns>
         public static Accessibility Accessibility(this BasePropertyDeclarationSyntax declaration)
         {
-            if (declaration == null)
+            if (declaration is null)
             {
                 return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
             }
@@ -88,8 +88,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool IsGetOnly(this BasePropertyDeclarationSyntax property)
         {
             return property.TryGetGetter(out var getter) &&
-                   getter.Body == null &&
-                   getter.ExpressionBody == null &&
+                   getter.Body is null &&
+                   getter.ExpressionBody is null &&
                    !property.TryGetSetter(out _);
         }
 
@@ -101,13 +101,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool IsAutoProperty(this BasePropertyDeclarationSyntax property)
         {
             if (property.TryGetGetter(out var getter) &&
-                getter.Body == null &&
-                getter.ExpressionBody == null)
+                getter.Body is null &&
+                getter.ExpressionBody is null)
             {
                 if (property.TryGetSetter(out var setter))
                 {
-                    return setter.Body == null &&
-                           setter.ExpressionBody == null;
+                    return setter.Body is null &&
+                           setter.ExpressionBody is null;
                 }
 
                 return true;
