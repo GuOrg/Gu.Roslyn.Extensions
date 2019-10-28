@@ -48,7 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (symbol.MethodKind == MethodKind.Constructor &&
-                symbol.TrySingleDeclaration(cancellationToken, out ConstructorDeclarationSyntax declaration))
+                symbol.TrySingleDeclaration(cancellationToken, out ConstructorDeclarationSyntax? declaration))
             {
                 result = new SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax>(symbol, declaration);
                 return true;
@@ -145,7 +145,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (symbol.MethodKind != MethodKind.Ordinary &&
-                symbol.TrySingleDeclaration(cancellationToken, out AccessorDeclarationSyntax declaration))
+                symbol.TrySingleDeclaration(cancellationToken, out AccessorDeclarationSyntax? declaration))
             {
                 result = new SymbolAndDeclaration<IMethodSymbol, AccessorDeclarationSyntax>(symbol, declaration);
                 return true;
@@ -170,7 +170,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (symbol.MethodKind == MethodKind.Ordinary &&
-                symbol.TrySingleDeclaration(cancellationToken, out MethodDeclarationSyntax declaration))
+                symbol.TrySingleDeclaration(cancellationToken, out MethodDeclarationSyntax? declaration))
             {
                 result = new SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax>(symbol, declaration);
                 return true;
@@ -194,7 +194,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new System.ArgumentNullException(nameof(symbol));
             }
 
-            if (symbol.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax declaration))
+            if (symbol.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax? declaration))
             {
                 result = new SymbolAndDeclaration<ITypeSymbol, TypeDeclarationSyntax>(symbol, declaration);
                 return true;
@@ -219,7 +219,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (symbol.TypeKind == TypeKind.Enum &&
-                symbol.TrySingleDeclaration(cancellationToken, out EnumDeclarationSyntax declaration))
+                symbol.TrySingleDeclaration(cancellationToken, out EnumDeclarationSyntax? declaration))
             {
                 result = new SymbolAndDeclaration<INamedTypeSymbol, EnumDeclarationSyntax>(symbol, declaration);
                 return true;
@@ -244,7 +244,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (symbol.TypeKind == TypeKind.Struct &&
-                symbol.TrySingleDeclaration(cancellationToken, out StructDeclarationSyntax declaration))
+                symbol.TrySingleDeclaration(cancellationToken, out StructDeclarationSyntax? declaration))
             {
                 result = new SymbolAndDeclaration<INamedTypeSymbol, StructDeclarationSyntax>(symbol, declaration);
                 return true;
@@ -269,7 +269,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (symbol.TypeKind == TypeKind.Class &&
-                symbol.TrySingleDeclaration(cancellationToken, out ClassDeclarationSyntax declaration))
+                symbol.TrySingleDeclaration(cancellationToken, out ClassDeclarationSyntax? declaration))
             {
                 result = new SymbolAndDeclaration<INamedTypeSymbol, ClassDeclarationSyntax>(symbol, declaration);
                 return true;
@@ -293,7 +293,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new System.ArgumentNullException(nameof(symbol));
             }
 
-            if (symbol.TrySingleDeclaration(cancellationToken, out ParameterSyntax declaration))
+            if (symbol.TrySingleDeclaration(cancellationToken, out ParameterSyntax? declaration))
             {
                 result = new SymbolAndDeclaration<INamedTypeSymbol, ParameterSyntax>(symbol, declaration);
                 return true;

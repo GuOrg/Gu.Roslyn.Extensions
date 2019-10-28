@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The string contents of <paramref name="argument"/>.</param>
         /// <returns>True if the argument expression was a constant string.</returns>
-        public static bool TryGetStringValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string result)
+        public static bool TryGetStringValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out string? result)
         {
             result = null;
             return argument?.Expression is ExpressionSyntax expression &&
@@ -32,7 +33,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The string contents of <paramref name="argument"/>.</param>
         /// <returns>True if the call is typeof() and we could figure out the type.</returns>
-        public static bool TryGetTypeofValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out ITypeSymbol result)
+        public static bool TryGetTypeofValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ITypeSymbol? result)
         {
             result = null;
             return argument?.Expression is TypeOfExpressionSyntax expression &&

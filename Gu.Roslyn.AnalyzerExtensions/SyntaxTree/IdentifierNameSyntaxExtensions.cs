@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -18,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="target">The symbol of the target if match.</param>
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IFieldSymbol target)
+        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IFieldSymbol? target)
         {
             if (candidate is null)
             {
@@ -45,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="target">The symbol of the target if match.</param>
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, out IPropertySymbol target)
+        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IPropertySymbol? target)
         {
             if (candidate is null)
             {
@@ -85,7 +86,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return candidate.Identifier.ValueText == symbol.Name &&
-                   semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol candidateSymbol) &&
+                   semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol? candidateSymbol) &&
                    candidateSymbol.IsEquivalentTo(symbol);
         }
     }

@@ -96,7 +96,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     return compilationUnit;
                 }
 
-                UsingDirectiveSyntax previous = null;
+                UsingDirectiveSyntax? previous = null;
                 foreach (var directive in walker.UsingDirectives)
                 {
                     var compare = UsingDirectiveComparer.Compare(directive, usingDirective);

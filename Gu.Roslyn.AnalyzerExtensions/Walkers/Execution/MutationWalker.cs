@@ -67,7 +67,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>A walker with all mutations for <paramref name="fieldOrProperty"/>.</returns>
         public static MutationWalker For(FieldOrProperty fieldOrProperty, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (fieldOrProperty.Symbol.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax typeDeclaration))
+            if (fieldOrProperty.Symbol.ContainingType.TrySingleDeclaration(cancellationToken, out TypeDeclarationSyntax? typeDeclaration))
             {
                 var walker = Borrow(typeDeclaration, SearchScope.Instance, semanticModel, cancellationToken);
                 walker.assignments.RemoveAll(x => !IsFieldOrProperty(x.Left));
@@ -81,7 +81,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             bool IsFieldOrProperty(ExpressionSyntax expression)
             {
-                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) &&
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol? symbol) &&
                        symbol.Equals(fieldOrProperty.Symbol);
             }
         }
@@ -143,7 +143,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             bool IsMatch(ExpressionSyntax expression)
             {
-                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol symbol) &&
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol? symbol) &&
                        symbol.Equals(localOrParameter.Symbol);
             }
         }

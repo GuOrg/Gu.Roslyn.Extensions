@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The string contents of <paramref name="argument"/>.</param>
         /// <returns>True if the argument expression was a constant string.</returns>
-        public static bool TryGetStringValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string result)
+        public static bool TryGetStringValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out string? result)
         {
             result = null;
             return argument?.Expression is ExpressionSyntax expression &&
@@ -32,7 +33,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The string contents of <paramref name="argument"/>.</param>
         /// <returns>True if the call is typeof() and we could figure out the type.</returns>
-        public static bool TryGetTypeofValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out ITypeSymbol result)
+        public static bool TryGetTypeofValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out ITypeSymbol? result)
         {
             result = null;
             return argument?.Expression is TypeOfExpressionSyntax expression &&
@@ -46,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="method">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this ArgumentSyntax argument, BaseMethodDeclarationSyntax method, out ParameterSyntax parameter)
+        public static bool TryFindParameter(this ArgumentSyntax argument, BaseMethodDeclarationSyntax method, [NotNullWhen(true)]out ParameterSyntax? parameter)
         {
             return method.TryFindParameter(argument, out parameter);
         }
@@ -56,9 +57,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
-        /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
+        /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this ArgumentSyntax argument, IMethodSymbol method, out IParameterSymbol parameter)
+        public static bool TryFindParameter(this ArgumentSyntax argument, IMethodSymbol method, [NotNullWhen(true)]out IParameterSymbol? parameter)
         {
             return method.TryFindParameter(argument, out parameter);
         }

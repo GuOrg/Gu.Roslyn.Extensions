@@ -1,6 +1,7 @@
 // ReSharper disable InconsistentNaming
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -18,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, out SyntaxNode declaration)
+        public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? declaration)
         {
             declaration = null;
             return property?.GetMethod is IMethodSymbol getMethod &&
@@ -32,7 +33,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="getter">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, out AccessorDeclarationSyntax getter)
+        public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out AccessorDeclarationSyntax? getter)
         {
             getter = null;
             return property?.GetMethod != null &&
@@ -47,7 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="setter">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, out AccessorDeclarationSyntax setter)
+        public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out AccessorDeclarationSyntax? setter)
         {
             setter = null;
             return property?.SetMethod != null &&

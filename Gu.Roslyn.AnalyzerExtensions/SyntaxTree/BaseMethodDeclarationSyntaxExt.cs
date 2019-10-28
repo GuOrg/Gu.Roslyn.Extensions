@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -64,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, ArgumentSyntax argument, out ParameterSyntax parameter)
+        public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, ArgumentSyntax argument, [NotNullWhen(true)]out ParameterSyntax? parameter)
         {
             parameter = null;
             if (argument is null ||
@@ -112,7 +113,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The <see cref="ArgumentSyntax"/>.</param>
         /// <param name="parameter">The matching <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, string name, out ParameterSyntax parameter)
+        public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, string name, [NotNullWhen(true)]out ParameterSyntax? parameter)
         {
             parameter = null;
             if (name is null ||

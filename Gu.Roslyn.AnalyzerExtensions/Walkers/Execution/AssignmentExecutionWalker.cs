@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -88,7 +89,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     if (declaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
                         variableDeclaration.Variables.TryFirst(x => x.Initializer != null, out var variable) &&
                         IsMatch(currentSymbol, variable.Initializer.Value, semanticModel, cancellationToken) &&
-                        semanticModel.TryGetSymbol(variable, cancellationToken, out ILocalSymbol local))
+                        semanticModel.TryGetSymbol(variable, cancellationToken, out ILocalSymbol? local))
                     {
                         using (var localWalker = With(local, currentNode))
                         {
@@ -106,8 +107,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                             if (argument.Expression is IdentifierNameSyntax identifierName &&
                                 identifierName.Identifier.ValueText == currentSymbol.Name &&
                                 argument.Parent is ArgumentListSyntax argumentList &&
-                                semanticModel.TryGetSymbol(argumentList.Parent, cancellationToken, out IMethodSymbol method) &&
-                                method.TrySingleDeclaration(cancellationToken, out BaseMethodDeclarationSyntax methodDeclaration) &&
+                                semanticModel.TryGetSymbol(argumentList.Parent, cancellationToken, out IMethodSymbol? method) &&
+                                method.TrySingleDeclaration(cancellationToken, out BaseMethodDeclarationSyntax? methodDeclaration) &&
                                 method.TryFindParameter(argument, out var parameter) &&
                                 currentVisited.Add(parameter))
                             {
@@ -135,10 +136,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                     foreach (var candidate in walker.assignments)
                     {
-                        if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out IPropertySymbol property) &&
+                        if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out IPropertySymbol? property) &&
                             property.SetMethod is IMethodSymbol setMethod &&
                             setMethod.Parameters.TrySingle(out var parameter) &&
-                            setMethod.TrySingleDeclaration(cancellationToken, out AccessorDeclarationSyntax setter) &&
+                            setMethod.TrySingleDeclaration(cancellationToken, out AccessorDeclarationSyntax? setter) &&
                             (setter.Body != null || setter.ExpressionBody != null) &&
                             currentVisited.Add(parameter))
                         {
@@ -163,7 +164,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The first assignment if any.</param>
         /// <returns>True if an assignment was found for the symbol.</returns>
-        public static bool FirstFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
+        public static bool FirstFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AssignmentExpressionSyntax? assignment)
         {
             assignment = null;
             if (symbol is null ||
@@ -176,7 +177,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 foreach (var candidate in walker.Assignments)
                 {
-                    if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out ISymbol assignedSymbol) &&
+                    if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out ISymbol? assignedSymbol) &&
                         SymbolComparer.Equals(symbol.OriginalDefinition, assignedSymbol))
                     {
                         assignment = candidate;
@@ -198,7 +199,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The single assignment.</param>
         /// <returns>True if a single assignment was found for the symbol.</returns>
-        public static bool SingleFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
+        public static bool SingleFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AssignmentExpressionSyntax? assignment)
         {
             assignment = null;
             if (symbol is null ||
@@ -211,7 +212,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 foreach (var candidate in walker.Assignments)
                 {
-                    if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out ISymbol assignedSymbol) &&
+                    if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out ISymbol? assignedSymbol) &&
                         SymbolComparer.Equals(symbol.OriginalDefinition, assignedSymbol))
                     {
                         if (assignment != null)
@@ -238,7 +239,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The single assignment.</param>
         /// <returns>True if a single assignment was found for the symbol.</returns>
-        public static bool FirstWith(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, out AssignmentExpressionSyntax assignment)
+        public static bool FirstWith(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AssignmentExpressionSyntax? assignment)
         {
             assignment = null;
             if (symbol is null ||

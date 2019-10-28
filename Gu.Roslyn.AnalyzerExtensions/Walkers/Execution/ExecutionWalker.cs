@@ -56,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
                 ctor.ContainingType is INamedTypeSymbol containingType &&
                 Constructor.TryFindDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
-                defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax defaultCtorDeclaration))
+                defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax? defaultCtorDeclaration))
             {
                 this.Visit(defaultCtorDeclaration);
             }
@@ -106,7 +106,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return;
                 }
 
-                if (target.ContainingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax containingTypeDeclaration))
+                if (target.ContainingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax? containingTypeDeclaration))
                 {
                     using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
                     {
@@ -120,7 +120,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
-                if (target.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax declaration))
+                if (target.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax? declaration))
                 {
                     this.Visit(declaration);
                 }
@@ -134,7 +134,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             base.VisitInvocationExpression(node);
             if (this.TryGetTargetSymbol(node, out IMethodSymbol target) &&
-                target.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax declaration))
+                target.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration))
             {
                 this.Visit(declaration);
             }
@@ -165,7 +165,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         this.Visit(setter);
                     }
                 }
-                else if (property.GetMethod.TrySingleDeclaration(this.CancellationToken, out SyntaxNode getter))
+                else if (property.GetMethod.TrySingleDeclaration(this.CancellationToken, out SyntaxNode? getter))
                 {
                     this.Visit(getter);
                 }

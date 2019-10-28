@@ -48,7 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="fullName">For example 'System.String'.</param>
         /// <param name="alias">For example 'string'.</param>
-        public QualifiedType(string fullName, string alias = null)
+        public QualifiedType(string fullName, string? alias = null)
             : this(
                   fullName ?? throw new ArgumentNullException(nameof(fullName)),
                   NamespaceParts.Create(fullName),
@@ -64,7 +64,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="namespace">The namespace parts.</param>
         /// <param name="type">The type metadata name.</param>
         /// <param name="alias">For example 'string'.</param>
-        protected QualifiedType(string fullName, NamespaceParts @namespace, string type, string alias = null)
+        protected QualifiedType(string fullName, NamespaceParts @namespace, string type, string? alias = null)
         {
             this.FullName = fullName;
             this.Namespace = @namespace;
