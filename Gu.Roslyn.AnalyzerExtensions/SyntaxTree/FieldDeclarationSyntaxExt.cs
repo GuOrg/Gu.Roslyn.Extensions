@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -56,7 +57,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/>.</param>
         /// <param name="name">The name.</param>
         /// <returns>True if the declaration is for a single variable.</returns>
-        public static bool TryGetName(this FieldDeclarationSyntax declaration, out string name)
+        public static bool TryGetName(this FieldDeclarationSyntax declaration, [NotNullWhen(true)]out string? name)
         {
             name = null;
             if (declaration is null)

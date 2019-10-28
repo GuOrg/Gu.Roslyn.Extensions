@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -12,11 +13,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the argument that matches <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="argumentList">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+        /// <param name="argumentList">The <see cref="ArgumentListSyntax"/>.</param>
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFind(this ArgumentListSyntax argumentList, IParameterSymbol parameter, out ArgumentSyntax argument)
+        public static bool TryFind(this ArgumentListSyntax argumentList, IParameterSymbol parameter, [NotNullWhen(true)]out ArgumentSyntax? argument)
         {
             argument = null;
             if (argumentList is null ||
@@ -55,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the arguments that matches <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="argumentList">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+        /// <param name="argumentList">The <see cref="ArgumentListSyntax"/>.</param>
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="arguments">The <see cref="ImmutableArray{ArgumentSyntax}"/>.</param>
         /// <returns>True if one or more were found.</returns>
@@ -93,7 +94,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindByNameColon(this ArgumentListSyntax argumentList, string name, out ArgumentSyntax argument)
+        public static bool TryFindByNameColon(this ArgumentListSyntax argumentList, string name, [NotNullWhen(true)]out ArgumentSyntax? argument)
         {
             argument = null;
             if (argumentList is null)

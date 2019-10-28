@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -14,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="search">Specifies if the search is recursive.</param>
         /// <param name="result">The first parameterless constructor found.</param>
         /// <returns>True if a parameterless constructor was found.</returns>
-        public static bool TryFindDefault(INamedTypeSymbol type, Search search, out IMethodSymbol result)
+        public static bool TryFindDefault(INamedTypeSymbol type, Search search, [NotNullWhen(true)]out IMethodSymbol? result)
         {
             result = null;
             while (type != null &&

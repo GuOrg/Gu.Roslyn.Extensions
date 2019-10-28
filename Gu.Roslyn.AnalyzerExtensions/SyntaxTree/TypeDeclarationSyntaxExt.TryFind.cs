@@ -2,6 +2,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -16,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindField(this TypeDeclarationSyntax type, string name, out FieldDeclarationSyntax match)
+        public static bool TryFindField(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)]out FieldDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
@@ -43,7 +44,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="type">The containing type.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindConstructor(this TypeDeclarationSyntax type, out ConstructorDeclarationSyntax match)
+        public static bool TryFindConstructor(this TypeDeclarationSyntax type, [NotNullWhen(true)]out ConstructorDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
@@ -70,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindConstructor(this TypeDeclarationSyntax type, Func<ConstructorDeclarationSyntax, bool> predicate, out ConstructorDeclarationSyntax match)
+        public static bool TryFindConstructor(this TypeDeclarationSyntax type, Func<ConstructorDeclarationSyntax, bool> predicate, [NotNullWhen(true)]out ConstructorDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
@@ -98,7 +99,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindEvent(this TypeDeclarationSyntax type, string name, out MemberDeclarationSyntax match)
+        public static bool TryFindEvent(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)]out MemberDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
@@ -129,7 +130,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindProperty(this TypeDeclarationSyntax type, string name, out PropertyDeclarationSyntax match)
+        public static bool TryFindProperty(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)]out PropertyDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
@@ -156,7 +157,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="type">The containing type.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindIndexer(this TypeDeclarationSyntax type, out IndexerDeclarationSyntax match)
+        public static bool TryFindIndexer(this TypeDeclarationSyntax type, [NotNullWhen(true)]out IndexerDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
@@ -183,7 +184,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, out MethodDeclarationSyntax match)
+        public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)]out MethodDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
@@ -212,7 +213,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, Func<MethodDeclarationSyntax, bool> predicate, out MethodDeclarationSyntax match)
+        public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, Func<MethodDeclarationSyntax, bool> predicate, [NotNullWhen(true)]out MethodDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
@@ -241,7 +242,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindMethod(this TypeDeclarationSyntax type, Func<MethodDeclarationSyntax, bool> predicate, out MethodDeclarationSyntax match)
+        public static bool TryFindMethod(this TypeDeclarationSyntax type, Func<MethodDeclarationSyntax, bool> predicate, [NotNullWhen(true)]out MethodDeclarationSyntax? match)
         {
             match = null;
             if (type is null)
