@@ -2,6 +2,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -22,7 +23,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="value">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetConstantValue<T>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, out T value)
+        public static bool TryGetConstantValue<T>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [MaybeNullWhen(false)]out T value)
         {
             if (semanticModel.GetConstantValueSafe(node, cancellationToken) is Optional<object> optional &&
                 optional.HasValue)
@@ -62,7 +63,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, out ITypeSymbol type)
+        public static bool TryGetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)]out ITypeSymbol? type)
         {
             if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is ITypeSymbol temp)
             {
@@ -90,7 +91,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetNamedType(this SemanticModel semanticModel, AttributeSyntax node, QualifiedType expected, CancellationToken cancellationToken, out INamedTypeSymbol type)
+        public static bool TryGetNamedType(this SemanticModel semanticModel, AttributeSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
         {
             if (expected is null)
             {
@@ -112,7 +113,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetNamedType(this SemanticModel semanticModel, TypeSyntax node, QualifiedType expected, CancellationToken cancellationToken, out INamedTypeSymbol type)
+        public static bool TryGetNamedType(this SemanticModel semanticModel, TypeSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
         {
             if (expected is null)
             {
@@ -134,7 +135,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, out INamedTypeSymbol type)
+        public static bool TryGetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
         {
             if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is INamedTypeSymbol temp)
             {
@@ -232,7 +233,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The semantic model.</param>
         /// <param name="expression">The expression.</param>
         /// <returns>The semantic model that corresponds to <paramref name="expression"/>.</returns>
-        public static SemanticModel SemanticModelFor(this SemanticModel semanticModel, SyntaxNode expression)
+        public static SemanticModel? SemanticModelFor(this SemanticModel semanticModel, SyntaxNode expression)
         {
             if (semanticModel is null ||
                 expression is null ||
