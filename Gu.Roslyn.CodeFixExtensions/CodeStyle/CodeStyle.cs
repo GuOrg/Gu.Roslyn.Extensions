@@ -306,7 +306,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <param name="document">The <see cref="Document"/>.</param>
-        /// <param name="key">The <see cref="PerLanguageOption{T}"/>.</param>
+        /// <param name="key">The <see cref="CodeStyleOption{T}"/> for c#.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns><see cref="CodeStyleOption{T}"/> or null if not found.</returns>
         public static async Task<CodeStyleOption<T>?> FindInEditorConfigAsync<T>(Document document, PerLanguageOption<CodeStyleOption<T>> key, CancellationToken cancellationToken)

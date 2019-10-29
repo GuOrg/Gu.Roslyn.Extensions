@@ -149,9 +149,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(type));
             }
 
+            if (type.FullName is null)
+            {
+                throw new ArgumentException("FullName is null", nameof(type));
+            }
+
             if (type.IsArray)
             {
-                return new QualifiedArrayType(FromType(type.GetElementType()));
+                return new QualifiedArrayType(FromType(type.GetElementType()!));
             }
 
             if (type.IsConstructedGenericType)

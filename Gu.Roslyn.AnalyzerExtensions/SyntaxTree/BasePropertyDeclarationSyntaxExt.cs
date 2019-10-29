@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the <see cref="Microsoft.CodeAnalysis.Accessibility"/> from the modifiers.
         /// </summary>
-        /// <param name="declaration">The <see cref="BaseMethodDeclarationSyntax"/>.</param>
+        /// <param name="declaration">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
         /// <returns>The <see cref="Microsoft.CodeAnalysis.Accessibility"/>.</returns>
         public static Accessibility Accessibility(this BasePropertyDeclarationSyntax declaration)
         {

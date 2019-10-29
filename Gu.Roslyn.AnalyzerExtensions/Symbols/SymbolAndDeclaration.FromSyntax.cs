@@ -215,7 +215,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="declaration">The <see cref="ClassDeclarationSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
-        /// <param name="result">The <see cref="SymbolAndDeclaration{ITypeSymbol, ClassDeclarationSyntax}"/>.</param>
+        /// <param name="result">The <see cref="SymbolAndDeclaration{INamedTypeSymbol, ClassDeclarationSyntax}"/>.</param>
         /// <returns>True if the symbol exists.</returns>
         public static bool TryCreate(ClassDeclarationSyntax declaration, SemanticModel semanticModel, CancellationToken cancellationToken, out SymbolAndDeclaration<INamedTypeSymbol, ClassDeclarationSyntax> result)
         {

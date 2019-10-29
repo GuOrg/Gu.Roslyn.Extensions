@@ -132,7 +132,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Handles name collisions and reserved keywords.
         /// </summary>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
-        /// <param name="propertyDeclaration">The <see cref="FieldDeclarationSyntax"/>.</param>
+        /// <param name="propertyDeclaration">The <see cref="PropertyDeclarationSyntax"/>.</param>
         /// <returns>A <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax CreateBackingField(this DocumentEditor editor, PropertyDeclarationSyntax propertyDeclaration)
         {

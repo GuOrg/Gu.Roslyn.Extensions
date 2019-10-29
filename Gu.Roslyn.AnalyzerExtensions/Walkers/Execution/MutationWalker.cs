@@ -215,7 +215,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         {
-            switch (node?.Kind())
+            switch (node.Kind())
             {
                 case SyntaxKind.LogicalNotExpression:
                     break;

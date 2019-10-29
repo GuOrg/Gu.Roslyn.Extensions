@@ -36,7 +36,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 if (optional.Value is null)
                 {
-                    value = default;
+                    value = default!;
                     return default(T) is null;
                 }
 
@@ -50,7 +50,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            value = default;
+            value = default!;
             return false;
         }
 
