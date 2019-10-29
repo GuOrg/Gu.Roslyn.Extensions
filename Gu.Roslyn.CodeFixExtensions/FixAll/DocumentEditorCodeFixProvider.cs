@@ -16,7 +16,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// The <see cref="DocumentEditorFixAllProvider"/> for the desired scope <see cref="DocumentEditorFixAllProvider.Document"/>.
         /// </summary>
         /// <returns>A <see cref="DocumentEditorFixAllProvider"/>. </returns>
-        protected virtual DocumentEditorFixAllProvider FixAllProvider() => DocumentEditorFixAllProvider.Document;
+        protected virtual DocumentEditorFixAllProvider? FixAllProvider() => DocumentEditorFixAllProvider.Document;
 
         /// <summary>
         /// Computes one or more fixes for the specified <see cref="DocumentEditorCodeFixContext" />.
