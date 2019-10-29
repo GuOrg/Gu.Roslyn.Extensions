@@ -30,7 +30,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <typeparam name="T">The type of elements in the set.</typeparam>
         /// <param name="set">The <see cref="PooledSet{T}"/>.</param>
         /// <returns>The set with incremented usage or a new set if null was passed.</returns>
-        public static PooledSet<T> IncrementUsage<T>(this PooledSet<T> set)
+        public static PooledSet<T> IncrementUsage<T>(this PooledSet<T>? set)
         {
             return PooledSet<T>.BorrowOrIncrementUsage(set);
         }

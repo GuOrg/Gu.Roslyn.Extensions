@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="set">A previously borrowed set or null.</param>
         /// <returns>A newly borrowed set or the same instance with incremented ref count.</returns>
-        public static PooledSet<T> BorrowOrIncrementUsage(PooledSet<T> set)
+        public static PooledSet<T> BorrowOrIncrementUsage(PooledSet<T>? set)
 #pragma warning restore CA1000 // Do not declare static members on generic types
 #pragma warning restore IDISP015 // Member should not return created and cached instance.
         {
