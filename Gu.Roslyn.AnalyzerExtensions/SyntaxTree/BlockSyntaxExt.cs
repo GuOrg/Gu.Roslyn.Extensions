@@ -29,11 +29,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
                 }
 
-                if (candidate is IfStatementSyntax ifStatement &&
-                    (ContainsGoto(ifStatement.Statement as BlockSyntax) ||
-                     ContainsGoto(ifStatement.Else?.Statement as BlockSyntax)))
+                if (candidate is IfStatementSyntax ifStatement)
                 {
-                    return true;
+                    if (ifStatement.Statement is BlockSyntax statementBlock &&
+                        ContainsGoto(statementBlock))
+                    {
+                        return true;
+                    }
+
+                    if (ifStatement.Else?.Statement is BlockSyntax elseBlock &&
+                        ContainsGoto(elseBlock))
+                    {
+                        return true;
+                    }
                 }
             }
 

@@ -30,7 +30,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="typeDeclaration">The <see cref="TypeDeclarationSyntax"/>.</param>
         /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns><paramref name="typeDeclaration"/> with members sorted according to how StyleCop wants it.</returns>
-        public static T Sort<T>(T typeDeclaration, IComparer<MemberDeclarationSyntax> comparer)
+        public static T Sort<T>(T typeDeclaration, IComparer<MemberDeclarationSyntax>? comparer)
             where T : TypeDeclarationSyntax
         {
             if (typeDeclaration is null)
@@ -75,7 +75,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             return next;
         }
 
-        private T SortCore<T>(T typeDeclaration, IComparer<MemberDeclarationSyntax> comparer)
+        private T SortCore<T>(T typeDeclaration, IComparer<MemberDeclarationSyntax>? comparer)
             where T : TypeDeclarationSyntax
         {
             if (typeDeclaration.Members.Count == 0)

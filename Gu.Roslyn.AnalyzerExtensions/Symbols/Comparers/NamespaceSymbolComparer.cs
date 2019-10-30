@@ -40,10 +40,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the instances are found equal.</returns>
         public static bool Equals(INamespaceSymbol x, string y)
         {
-            if (x is null ||
-                y is null)
+            if (x is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(x));
+            }
+
+            if (y is null)
+            {
+                throw new ArgumentNullException(nameof(y));
             }
 
             var index = y.Length - 1;
