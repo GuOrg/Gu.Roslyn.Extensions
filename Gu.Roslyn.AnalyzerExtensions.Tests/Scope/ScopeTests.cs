@@ -18,6 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Scope
         [TestCase("7", true)]
         [TestCase("8", true)]
         [TestCase("9", false)]
+        [TestCase("10", true)]
         public static void IsInStaticContext(string expression, bool expected)
         {
             var code = @"
@@ -51,6 +52,7 @@ namespace N
 
         public static int M() => 8;
 
+        [Obsolete(""10"")]
         public int M() => 9;
     }
 }";

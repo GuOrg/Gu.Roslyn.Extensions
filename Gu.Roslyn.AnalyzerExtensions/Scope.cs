@@ -155,13 +155,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the node is in static context where this is not accessible.</returns>
         public static bool IsInStaticContext(this SyntaxNode node)
         {
+            if (node.TryFirstAncestor<AttributeSyntax>(out _))
+            {
+                return true;
+            }
+
             if (node.TryFirstAncestor(out MemberDeclarationSyntax? memberDeclaration))
             {
                 switch (memberDeclaration)
                 {
                     case FieldDeclarationSyntax declaration:
                         return declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword) ||
-                               (declaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
+                               (declaration.Declaration is { } variableDeclaration &&
                                 variableDeclaration.Variables.TryLast(out var last) &&
                                 last.Initializer.Contains(node));
                     case BaseFieldDeclarationSyntax declaration:
