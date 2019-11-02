@@ -78,6 +78,16 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="diagnostic">The subset of <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
         public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, Type equivalenceKey, Diagnostic diagnostic)
         {
+            if (title is null)
+            {
+                throw new ArgumentNullException(nameof(title));
+            }
+
+            if (equivalenceKey is null)
+            {
+                throw new ArgumentNullException(nameof(equivalenceKey));
+            }
+
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey.FullName ?? equivalenceKey.Name),
@@ -91,8 +101,13 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="action">The <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
         /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
         /// <param name="diagnostic">The subset of <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
-        public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, string equivalenceKey, Diagnostic diagnostic)
+        public void RegisterCodeFix(string title, Action<DocumentEditor, CancellationToken> action, string? equivalenceKey, Diagnostic diagnostic)
         {
+            if (title is null)
+            {
+                throw new ArgumentNullException(nameof(title));
+            }
+
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey),
@@ -106,7 +121,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="action">The <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
         /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
         /// <param name="diagnostic">The subset of <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
-        public void RegisterCodeFix(string title, Func<DocumentEditor, CancellationToken, Task> action, string equivalenceKey, Diagnostic diagnostic)
+        public void RegisterCodeFix(string title, Func<DocumentEditor, CancellationToken, Task> action, string? equivalenceKey, Diagnostic diagnostic)
         {
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             this.context.RegisterCodeFix(

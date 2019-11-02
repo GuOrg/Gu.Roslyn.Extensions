@@ -19,7 +19,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="document">The <see cref="Document"/>.</param>
         /// <param name="action">The action to perform to fix the diagnostic.</param>
         /// <param name="equivalenceKey">The key by which VS determines if actions should be used in the same batch.</param>
-        public AsyncDocumentEditorAction(string title, Document document, Func<DocumentEditor, CancellationToken, Task> action, string equivalenceKey)
+        public AsyncDocumentEditorAction(string title, Document document, Func<DocumentEditor, CancellationToken, Task> action, string? equivalenceKey)
         {
             this.document = document;
             this.Title = title;
@@ -36,7 +36,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public sealed override string Title { get; }
 
         /// <inheritdoc />
-        public sealed override string EquivalenceKey { get; }
+        public sealed override string? EquivalenceKey { get; }
 
         /// <inheritdoc />
         protected override async Task<Document> GetChangedDocumentAsync(CancellationToken cancellationToken)
