@@ -98,7 +98,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            return obj is NamespaceParts && this.Equals((NamespaceParts)obj);
+            return obj is NamespaceParts namespaceParts &&
+                   this.Equals(namespaceParts);
         }
 
         /// <inheritdoc />

@@ -19,15 +19,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, [NotNullWhen(true)]out IParameterSymbol? parameter)
         {
-            if (method is null ||
-                argument is null)
+            if (method is null)
             {
-                parameter = null;
-                return false;
+                throw new System.ArgumentNullException(nameof(method));
             }
 
-            if (argument.NameColon is NameColonSyntax nameColon &&
-                nameColon.Name is IdentifierNameSyntax name)
+            if (argument is null)
+            {
+                throw new System.ArgumentNullException(nameof(argument));
+            }
+
+            if (argument.NameColon is { Name: IdentifierNameSyntax name })
             {
                 return method.TryFindParameter(name.Identifier.ValueText, out parameter);
             }
@@ -59,10 +61,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, string name, [NotNullWhen(true)]out IParameterSymbol? parameter)
         {
-            parameter = null;
             if (method is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(method));
+            }
+
+            if (name is null)
+            {
+                throw new System.ArgumentNullException(nameof(name));
             }
 
             foreach (var candidate in method.Parameters)
@@ -74,6 +80,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            parameter = null;
             return false;
         }
 
@@ -86,10 +93,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, [NotNullWhen(true)]out IParameterSymbol? parameter)
         {
-            parameter = null;
             if (method is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(method));
+            }
+
+            if (type is null)
+            {
+                throw new System.ArgumentNullException(nameof(type));
             }
 
             foreach (var candidate in method.Parameters)
@@ -101,6 +112,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            parameter = null;
             return false;
         }
     }

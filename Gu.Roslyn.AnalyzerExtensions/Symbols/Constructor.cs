@@ -23,9 +23,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 foreach (var candidate in type.Constructors)
                 {
-                    if (candidate.Parameters.Length == 0 &&
-                        candidate.ContainingType == type &&
-                        candidate.DeclaringSyntaxReferences.Length == 1)
+                    if (candidate is { Parameters: { Length: 0 }, DeclaringSyntaxReferences: { Length: 1 } } &&
+                        candidate.ContainingType == type)
                     {
                         result = candidate;
                         return true;

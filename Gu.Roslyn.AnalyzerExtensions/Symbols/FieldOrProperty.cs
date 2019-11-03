@@ -112,12 +112,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             switch (this.Symbol.Kind)
             {
-                case SymbolKind.Field when this.Symbol.TrySingleDeclaration(cancellationToken, out FieldDeclarationSyntax? fieldDeclaration) &&
-                                           fieldDeclaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
-                                           variableDeclaration.Variables.TrySingle(out var variable) &&
-                                           variable.Initializer is EqualsValueClauseSyntax initializer:
+                case SymbolKind.Field
+                    when this.Symbol.TrySingleDeclaration(cancellationToken, out FieldDeclarationSyntax? fieldDeclaration) &&
+                         fieldDeclaration.Declaration is { Variables: { Count: 1 } variables } &&
+                         variables.TrySingle(out var variable) &&
+                         variable.Initializer is { } initializer:
                     return initializer;
-                case SymbolKind.Property when this.Symbol.TrySingleDeclaration(cancellationToken, out PropertyDeclarationSyntax? propertyDeclaration):
+                case SymbolKind.Property
+                    when this.Symbol.TrySingleDeclaration(cancellationToken, out PropertyDeclarationSyntax? propertyDeclaration):
                     return propertyDeclaration.Initializer;
                 default:
                     throw new InvalidOperationException("Should never get here.");

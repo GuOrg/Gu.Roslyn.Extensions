@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -14,9 +15,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="elementType">The element type.</param>
         public QualifiedArrayType(QualifiedType elementType)
-            : base(elementType?.FullName + "[]", NamespaceParts, elementType.Type + "[]")
+            : base(elementType?.FullName + "[]", NamespaceParts, elementType?.Type + "[]")
         {
-            this.ElementType = elementType ?? throw new global::System.ArgumentNullException(nameof(elementType));
+            this.ElementType = elementType ?? throw new ArgumentNullException(nameof(elementType));
         }
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (compilation is null)
             {
-                throw new global::System.ArgumentNullException(nameof(compilation));
+                throw new ArgumentNullException(nameof(compilation));
             }
 
             return compilation.CreateArrayTypeSymbol(this.ElementType.GetTypeSymbol(compilation));
