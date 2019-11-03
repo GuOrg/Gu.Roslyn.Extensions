@@ -125,5 +125,45 @@ namespace N
             _ = editor.Seal(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
+
+        [Test]
+        public static async Task WithNestedProtected()
+        {
+            var code = @"
+namespace N
+{
+    public class C
+    {
+        private class C1
+        {
+            protected int F;
+
+            protected int P { get; }
+
+            protected void M() { }
+        }
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+
+            var expected = @"
+namespace N
+{
+    public sealed class C
+    {
+        private class C1
+        {
+            protected int F;
+
+            protected int P { get; }
+
+            protected void M() { }
+        }
+    }
+}";
+            _ = editor.Seal(editor.OriginalRoot.Find<ClassDeclarationSyntax>("public class C"));
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
     }
 }
