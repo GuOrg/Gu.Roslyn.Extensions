@@ -89,5 +89,41 @@ namespace N
             _ = editor.Seal(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
+
+        [Test]
+        public static async Task WithProtectedOverride()
+        {
+            var code = @"
+namespace N
+{
+    using System.Collections.ObjectModel;
+
+    public class C : Collection<int>
+    {
+        protected override void ClearItems()
+        {
+            base.ClearItems();
+        }
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+
+            var expected = @"
+namespace N
+{
+    using System.Collections.ObjectModel;
+
+    public sealed class C : Collection<int>
+    {
+        protected override void ClearItems()
+        {
+            base.ClearItems();
+        }
+    }
+}";
+            _ = editor.Seal(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
     }
 }

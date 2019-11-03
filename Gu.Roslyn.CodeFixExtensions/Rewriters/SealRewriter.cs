@@ -130,7 +130,8 @@ namespace Gu.Roslyn.CodeFixExtensions
                 result = modifiers.Remove(modifier);
             }
 
-            if (result.TrySingle(x => x.IsKind(SyntaxKind.ProtectedKeyword), out modifier))
+            if (result.TrySingle(x => x.IsKind(SyntaxKind.ProtectedKeyword), out modifier) &&
+                !result.Any(SyntaxKind.OverrideKeyword))
             {
                 result = result.Replace(modifier, SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
             }
