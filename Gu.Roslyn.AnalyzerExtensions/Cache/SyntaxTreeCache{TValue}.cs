@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="compilation">The <see cref="Compilation"/>.</param>
         /// <returns>A <see cref="Transaction"/> that clears the cache when disposed.</returns>
-        public static IDisposable Begin(Compilation compilation)
+        public static IDisposable Begin(Compilation? compilation)
         {
             return new Transaction(compilation);
         }
@@ -41,6 +41,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The cached value.</returns>
         public static TValue GetOrAdd(SyntaxTree key, Func<SyntaxTree, TValue> valueFactory)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (valueFactory is null)
             {
                 throw new ArgumentNullException(nameof(valueFactory));
@@ -63,13 +68,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             internal static int RefCount;
 #pragma warning restore SA1401 // Fields should be private
             private readonly object gate = new object();
-            private Compilation compilation;
+            private Compilation? compilation;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Transaction"/> class.
             /// </summary>
             /// <param name="compilation">The <see cref="Compilation"/>.</param>
-            internal Transaction(Compilation compilation)
+            internal Transaction(Compilation? compilation)
             {
                 this.compilation = compilation;
                 _ = Interlocked.Increment(ref RefCount);
