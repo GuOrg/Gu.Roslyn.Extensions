@@ -327,7 +327,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="symbol">The symbol if a match.</param>
         /// <returns>True if a symbol was found.</returns>
-        protected virtual bool TryGetTargetSymbol<TSymbol>(SyntaxNode node, [NotNullWhen(true)]out TSymbol? symbol)
+        protected virtual bool TryGetTargetSymbol<TSymbol>(SyntaxNode node, [NotNullWhen(true)] out TSymbol? symbol)
             where TSymbol : class, ISymbol
         {
             symbol = null;

@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="property">The <see cref="PropertyDeclarationSyntax"/>.</param>
         /// <param name="backingField">The backing field if found.</param>
         /// <returns>True if a backing field was found.</returns>
-        public static bool TryGetBackingField(this PropertyDeclarationSyntax property, [NotNullWhen(true)]out FieldDeclarationSyntax? backingField)
+        public static bool TryGetBackingField(this PropertyDeclarationSyntax property, [NotNullWhen(true)] out FieldDeclarationSyntax? backingField)
         {
             if (property is null)
             {
@@ -47,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="property">The <see cref="PropertyDeclarationSyntax"/>.</param>
         /// <param name="result">The returned <see cref="ExpressionSyntax"/>.</param>
         /// <returns>True if a single return was found.</returns>
-        public static bool TrySingleReturned(this PropertyDeclarationSyntax property, [NotNullWhen(true)]out ExpressionSyntax? result)
+        public static bool TrySingleReturned(this PropertyDeclarationSyntax property, [NotNullWhen(true)] out ExpressionSyntax? result)
         {
             result = null;
             if (property is null)

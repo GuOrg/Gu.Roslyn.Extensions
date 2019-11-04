@@ -112,7 +112,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="scope">The scope.</param>
         /// <returns>True if a scope could be determined.</returns>
-        public bool TryGetScope(CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? scope)
+        public bool TryGetScope(CancellationToken cancellationToken, [NotNullWhen(true)] out SyntaxNode? scope)
         {
             return this.Symbol switch
             {

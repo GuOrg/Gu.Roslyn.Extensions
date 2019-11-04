@@ -149,7 +149,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="expression">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="name">The name.</param>
         /// <returns>True if a name was found.</returns>
-        public static bool TryGetMemberName(this ExpressionSyntax expression, [NotNullWhen(true)]out string? name)
+        public static bool TryGetMemberName(this ExpressionSyntax expression, [NotNullWhen(true)] out string? name)
         {
             name = null;
             switch (expression)

@@ -114,7 +114,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="attributeType">The <see cref="QualifiedType"/>.</param>
         /// <param name="attribute">The attribute if found.</param>
         /// <returns>True if a single attribute of type <paramref name="attributeType"/> declared on <paramref name="symbol"/>.</returns>
-        public static bool TryGetAttribute(this ISymbol symbol, QualifiedType attributeType, [NotNullWhen(true)]out AttributeData? attribute)
+        public static bool TryGetAttribute(this ISymbol symbol, QualifiedType attributeType, [NotNullWhen(true)] out AttributeData? attribute)
         {
             if (symbol is null)
             {

@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="scope">The scope.</param>
         /// <returns>True if a scope could be determined.</returns>
-        public static bool TryGetScope(this ILocalSymbol local, CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? scope)
+        public static bool TryGetScope(this ILocalSymbol local, CancellationToken cancellationToken, [NotNullWhen(true)] out SyntaxNode? scope)
         {
             if (local.TrySingleDeclaration(cancellationToken, out var declaration))
             {

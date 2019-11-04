@@ -73,7 +73,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)]out ITypeSymbol? type)
+        public static bool TryGetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)] out ITypeSymbol? type)
         {
             if (semanticModel is null)
             {
@@ -111,7 +111,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetNamedType(this SemanticModel semanticModel, AttributeSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
+        public static bool TryGetNamedType(this SemanticModel semanticModel, AttributeSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)] out INamedTypeSymbol? type)
         {
             if (semanticModel is null)
             {
@@ -143,7 +143,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetNamedType(this SemanticModel semanticModel, TypeSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
+        public static bool TryGetNamedType(this SemanticModel semanticModel, TypeSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)] out INamedTypeSymbol? type)
         {
             if (semanticModel is null)
             {
@@ -175,7 +175,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="type">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
+        public static bool TryGetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)] out INamedTypeSymbol? type)
         {
             if (semanticModel is null)
             {

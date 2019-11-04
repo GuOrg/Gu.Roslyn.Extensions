@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if a match as found.</returns>
-        public static bool TryFindVariable(this VariableDeclarationSyntax variableDeclaration, string name, [NotNullWhen(true)]out VariableDeclaratorSyntax? result)
+        public static bool TryFindVariable(this VariableDeclarationSyntax variableDeclaration, string name, [NotNullWhen(true)] out VariableDeclaratorSyntax? result)
         {
             result = null;
             if (variableDeclaration is null)

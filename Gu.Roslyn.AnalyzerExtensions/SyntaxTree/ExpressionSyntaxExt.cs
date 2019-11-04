@@ -20,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="text">The string contents of <paramref name="expression"/>.</param>
         /// <returns>True if the argument expression was a constant string.</returns>
-        public static bool TryGetStringValue(this ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out string? text)
+        public static bool TryGetStringValue(this ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out string? text)
         {
             text = null;
             if (expression is null)

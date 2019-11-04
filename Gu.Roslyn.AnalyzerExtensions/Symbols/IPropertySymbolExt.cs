@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? declaration)
+        public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out SyntaxNode? declaration)
         {
             if (property is null)
             {
@@ -38,7 +38,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="getter">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out AccessorDeclarationSyntax? getter)
+        public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out AccessorDeclarationSyntax? getter)
         {
             if (property is null)
             {
@@ -58,7 +58,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="setter">The declaration.</param>
         /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out AccessorDeclarationSyntax? setter)
+        public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out AccessorDeclarationSyntax? setter)
         {
             if (property is null)
             {

@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="element">The <see cref="XmlElementSyntax"/>.</param>
         /// <param name="localName">The result if found.</param>
         /// <returns>True if a local name was found.</returns>
-        public static bool TryGetLocalName(this XmlElementSyntax element, [NotNullWhen(true)]out string? localName)
+        public static bool TryGetLocalName(this XmlElementSyntax element, [NotNullWhen(true)] out string? localName)
         {
             localName = null;
             if (element?.StartTag is XmlElementStartTagSyntax startTag &&
@@ -46,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="element">The <see cref="XmlElementSyntax"/>.</param>
         /// <param name="attribute">The name attribute if it exits.</param>
         /// <returns>True if a name attribute was found.</returns>
-        public static bool TryGetNameAttribute(this XmlElementSyntax element, [NotNullWhen(true)]out XmlNameAttributeSyntax? attribute)
+        public static bool TryGetNameAttribute(this XmlElementSyntax element, [NotNullWhen(true)] out XmlNameAttributeSyntax? attribute)
         {
             attribute = null;
             return element?.StartTag is XmlElementStartTagSyntax startTag &&

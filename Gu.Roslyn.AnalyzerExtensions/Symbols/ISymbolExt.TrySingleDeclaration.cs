@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleDeclaration(this IFieldSymbol field, CancellationToken cancellationToken, [NotNullWhen(true)]out FieldDeclarationSyntax? declaration)
+        public static bool TrySingleDeclaration(this IFieldSymbol field, CancellationToken cancellationToken, [NotNullWhen(true)] out FieldDeclarationSyntax? declaration)
         {
             if (field is null)
             {
@@ -38,7 +38,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out BasePropertyDeclarationSyntax? declaration)
+        public static bool TrySingleDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out BasePropertyDeclarationSyntax? declaration)
         {
             if (property is null)
             {
@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)]out MemberDeclarationSyntax? declaration)
+        public static bool TrySingleDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)] out MemberDeclarationSyntax? declaration)
         {
             if (@event is null)
             {
@@ -80,7 +80,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleEventDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)]out EventDeclarationSyntax? declaration)
+        public static bool TrySingleEventDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)] out EventDeclarationSyntax? declaration)
         {
             if (@event is null)
             {
@@ -101,7 +101,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleEventFieldDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)]out EventFieldDeclarationSyntax? declaration)
+        public static bool TrySingleEventFieldDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)] out EventFieldDeclarationSyntax? declaration)
         {
             if (@event is null)
             {
@@ -122,7 +122,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleMethodDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)]out MethodDeclarationSyntax? declaration)
+        public static bool TrySingleMethodDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)] out MethodDeclarationSyntax? declaration)
         {
             if (method is null)
             {
@@ -139,7 +139,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleAccessorDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)]out AccessorDeclarationSyntax? declaration)
+        public static bool TrySingleAccessorDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)] out AccessorDeclarationSyntax? declaration)
         {
             if (method is null)
             {
@@ -157,7 +157,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleDeclaration<T>(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)]out T? declaration)
+        public static bool TrySingleDeclaration<T>(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)] out T? declaration)
             where T : SyntaxNode
         {
             if (method is null)
@@ -179,7 +179,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleDeclaration(this IParameterSymbol parameter, CancellationToken cancellationToken, [NotNullWhen(true)]out ParameterSyntax? declaration)
+        public static bool TrySingleDeclaration(this IParameterSymbol parameter, CancellationToken cancellationToken, [NotNullWhen(true)] out ParameterSyntax? declaration)
         {
             if (parameter is null)
             {
@@ -201,7 +201,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleDeclaration(this ILocalSymbol local, CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? declaration)
+        public static bool TrySingleDeclaration(this ILocalSymbol local, CancellationToken cancellationToken, [NotNullWhen(true)] out SyntaxNode? declaration)
         {
             if (local is null)
             {
@@ -224,7 +224,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleDeclaration<T>(this ISymbol symbol, CancellationToken cancellationToken, [NotNullWhen(true)]out T? declaration)
+        public static bool TrySingleDeclaration<T>(this ISymbol symbol, CancellationToken cancellationToken, [NotNullWhen(true)] out T? declaration)
             where T : SyntaxNode
         {
             if (symbol is null)

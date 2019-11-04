@@ -110,7 +110,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <inheritdoc />
         int IComparer<UsingDirectiveSyntax>.Compare(UsingDirectiveSyntax x, UsingDirectiveSyntax y) => Compare(x, y);
 
-        private static bool TryGetRoot(NameSyntax uds, [NotNullWhen(true)]out SimpleNameSyntax? name)
+        private static bool TryGetRoot(NameSyntax uds, [NotNullWhen(true)] out SimpleNameSyntax? name)
         {
             if (uds is SimpleNameSyntax simpleName)
             {

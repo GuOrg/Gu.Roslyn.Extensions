@@ -92,7 +92,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="name">The name of the invoked method.</param>
         /// <returns>True if the name was found.</returns>
-        public static bool TryGetMethodName(this InvocationExpressionSyntax invocation, [NotNullWhen(true)]out string? name)
+        public static bool TryGetMethodName(this InvocationExpressionSyntax invocation, [NotNullWhen(true)] out string? name)
         {
             name = null;
             if (invocation is null)
@@ -140,7 +140,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="target">The symbol of the target method.</param>
         /// <returns>True if <paramref name="invocation"/> is a call to <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IMethodSymbol? target)
+        public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out IMethodSymbol? target)
         {
             if (expected is null)
             {
@@ -176,7 +176,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="target">The symbol of the target method.</param>
         /// <param name="argument">The argument if match.</param>
         /// <returns>True if <paramref name="invocation"/> is a call to <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, QualifiedParameter qualifiedParameter0, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IMethodSymbol? target, [NotNullWhen(true)]out ArgumentSyntax? argument)
+        public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, QualifiedParameter qualifiedParameter0, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out IMethodSymbol? target, [NotNullWhen(true)] out ArgumentSyntax? argument)
         {
             if (expected is null)
             {
@@ -208,7 +208,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="argument0">The first argument if match.</param>
         /// <param name="argument1">The second argument if match.</param>
         /// <returns>True if <paramref name="invocation"/> is a call to <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, QualifiedParameter qualifiedParameter0, QualifiedParameter qualifiedParameter1, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IMethodSymbol? target, [NotNullWhen(true)]out ArgumentSyntax? argument0, [NotNullWhen(true)]out ArgumentSyntax? argument1)
+        public static bool TryGetTarget(this InvocationExpressionSyntax invocation, QualifiedMethod expected, QualifiedParameter qualifiedParameter0, QualifiedParameter qualifiedParameter1, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out IMethodSymbol? target, [NotNullWhen(true)] out ArgumentSyntax? argument0, [NotNullWhen(true)] out ArgumentSyntax? argument1)
         {
             if (expected is null)
             {
@@ -253,10 +253,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             QualifiedParameter qualifiedParameter2,
             SemanticModel semanticModel,
             CancellationToken cancellationToken,
-            [NotNullWhen(true)]out IMethodSymbol? target,
-            [NotNullWhen(true)]out ArgumentSyntax? argument0,
-            [NotNullWhen(true)]out ArgumentSyntax? argument1,
-            [NotNullWhen(true)]out ArgumentSyntax? argument2)
+            [NotNullWhen(true)] out IMethodSymbol? target,
+            [NotNullWhen(true)] out ArgumentSyntax? argument0,
+            [NotNullWhen(true)] out ArgumentSyntax? argument1,
+            [NotNullWhen(true)] out ArgumentSyntax? argument2)
         {
             if (expected is null)
             {
@@ -307,11 +307,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             QualifiedParameter qualifiedParameter3,
             SemanticModel semanticModel,
             CancellationToken cancellationToken,
-            [NotNullWhen(true)]out IMethodSymbol? target,
-            [NotNullWhen(true)]out ArgumentSyntax? argument0,
-            [NotNullWhen(true)]out ArgumentSyntax? argument1,
-            [NotNullWhen(true)]out ArgumentSyntax? argument2,
-            [NotNullWhen(true)]out ArgumentSyntax? argument3)
+            [NotNullWhen(true)] out IMethodSymbol? target,
+            [NotNullWhen(true)] out ArgumentSyntax? argument0,
+            [NotNullWhen(true)] out ArgumentSyntax? argument1,
+            [NotNullWhen(true)] out ArgumentSyntax? argument2,
+            [NotNullWhen(true)] out ArgumentSyntax? argument3)
         {
             if (expected is null)
             {
@@ -378,7 +378,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, [NotNullWhen(true)]out ArgumentSyntax? argument)
+        public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, [NotNullWhen(true)] out ArgumentSyntax? argument)
         {
             if (parameter is null)
             {
@@ -417,7 +417,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The <see cref="MethodDeclarationSyntax"/>.</param>
         /// <returns>True if the declaration was found.</returns>
-        public static bool TryGetTargetDeclaration(this InvocationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out MethodDeclarationSyntax? declaration)
+        public static bool TryGetTargetDeclaration(this InvocationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out MethodDeclarationSyntax? declaration)
         {
             if (semanticModel is null)
             {

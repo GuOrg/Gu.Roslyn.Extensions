@@ -48,7 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="identifierName">The <see cref="IdentifierNameSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public bool TryFind(string name, [NotNullWhen(true)]out IdentifierNameSyntax? identifierName)
+        public bool TryFind(string name, [NotNullWhen(true)] out IdentifierNameSyntax? identifierName)
         {
             foreach (var candidate in this.identifierNames)
             {

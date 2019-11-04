@@ -164,7 +164,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The first assignment if any.</param>
         /// <returns>True if an assignment was found for the symbol.</returns>
-        public static bool FirstFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AssignmentExpressionSyntax? assignment)
+        public static bool FirstFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out AssignmentExpressionSyntax? assignment)
         {
             assignment = null;
             if (symbol is null ||
@@ -199,7 +199,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The single assignment.</param>
         /// <returns>True if a single assignment was found for the symbol.</returns>
-        public static bool SingleFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AssignmentExpressionSyntax? assignment)
+        public static bool SingleFor(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out AssignmentExpressionSyntax? assignment)
         {
             assignment = null;
             if (symbol is null ||
@@ -239,7 +239,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="assignment">The single assignment.</param>
         /// <returns>True if a single assignment was found for the symbol.</returns>
-        public static bool FirstWith(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out AssignmentExpressionSyntax? assignment)
+        public static bool FirstWith(ISymbol symbol, SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out AssignmentExpressionSyntax? assignment)
         {
             assignment = null;
             if (symbol is null ||

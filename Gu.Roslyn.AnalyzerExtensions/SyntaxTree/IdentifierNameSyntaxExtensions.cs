@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="target">The symbol of the target if match.</param>
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IFieldSymbol? target)
+        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedField expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out IFieldSymbol? target)
         {
             if (candidate is null)
             {
@@ -46,7 +46,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="target">The symbol of the target if match.</param>
         /// <returns>True if <paramref name="candidate"/> matches <paramref name="expected"/>.</returns>
-        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)]out IPropertySymbol? target)
+        public static bool TryGetTarget(this IdentifierNameSyntax candidate, QualifiedProperty expected, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out IPropertySymbol? target)
         {
             if (candidate is null)
             {

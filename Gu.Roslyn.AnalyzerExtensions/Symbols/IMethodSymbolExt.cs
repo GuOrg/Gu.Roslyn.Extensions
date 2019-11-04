@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, [NotNullWhen(true)]out IParameterSymbol? parameter)
+        public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, [NotNullWhen(true)] out IParameterSymbol? parameter)
         {
             if (method is null)
             {
@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name of the parameter.</param>
         /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, string name, [NotNullWhen(true)]out IParameterSymbol? parameter)
+        public static bool TryFindParameter(this IMethodSymbol method, string name, [NotNullWhen(true)] out IParameterSymbol? parameter)
         {
             if (method is null)
             {
@@ -91,7 +91,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="type">The type fo the parameter.</param>
         /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, [NotNullWhen(true)]out IParameterSymbol? parameter)
+        public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, [NotNullWhen(true)] out IParameterSymbol? parameter)
         {
             if (method is null)
             {

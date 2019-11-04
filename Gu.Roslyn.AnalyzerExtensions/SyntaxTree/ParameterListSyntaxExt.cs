@@ -15,7 +15,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="parameter">The <see cref="ParameterSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFind(this ParameterListSyntax parameterList, string name, [NotNullWhen(true)]out ParameterSyntax? parameter)
+        public static bool TryFind(this ParameterListSyntax parameterList, string name, [NotNullWhen(true)] out ParameterSyntax? parameter)
         {
             if (parameterList is null ||
                 string.IsNullOrEmpty(name))

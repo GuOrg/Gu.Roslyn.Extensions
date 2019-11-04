@@ -57,7 +57,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="declaration">The <see cref="FieldDeclarationSyntax"/>.</param>
         /// <param name="name">The name.</param>
         /// <returns>True if the declaration is for a single variable.</returns>
-        public static bool TryGetName(this FieldDeclarationSyntax declaration, [NotNullWhen(true)]out string? name)
+        public static bool TryGetName(this FieldDeclarationSyntax declaration, [NotNullWhen(true)] out string? name)
         {
             name = null;
             if (declaration is null)
@@ -81,7 +81,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="result">The match.</param>
         /// <returns>True if a match as found.</returns>
-        public static bool TryFindVariable(this FieldDeclarationSyntax fieldDeclaration, string name, [NotNullWhen(true)]out VariableDeclaratorSyntax? result)
+        public static bool TryFindVariable(this FieldDeclarationSyntax fieldDeclaration, string name, [NotNullWhen(true)] out VariableDeclaratorSyntax? result)
         {
             result = null;
             if (fieldDeclaration is null)

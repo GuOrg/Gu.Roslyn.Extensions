@@ -43,7 +43,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="result"><see cref="SyntaxNodeExt.FirstAncestor{T}"/>.</param>
         /// <returns>True if not null.</returns>
-        public static bool TryFirstAncestor<T>(this SyntaxNode node, [NotNullWhen(true)]out T? result)
+        public static bool TryFirstAncestor<T>(this SyntaxNode node, [NotNullWhen(true)] out T? result)
             where T : SyntaxNode
         {
             result = node.FirstAncestor<T>();
@@ -57,7 +57,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="result"><see cref="SyntaxNode.FirstAncestorOrSelf{T}"/>.</param>
         /// <returns>True if not null.</returns>
-        public static bool TryFirstAncestorOrSelf<T>(this SyntaxNode node, [NotNullWhen(true)]out T? result)
+        public static bool TryFirstAncestorOrSelf<T>(this SyntaxNode node, [NotNullWhen(true)] out T? result)
             where T : SyntaxNode
         {
             result = node?.FirstAncestorOrSelf<T>();
@@ -128,7 +128,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="other">The second node.</param>
         /// <param name="ancestor">The ancestor.</param>
         /// <returns>True if a common ancestor was found.</returns>
-        public static bool SharesAncestor<T>(this SyntaxNode first, SyntaxNode other, [NotNullWhen(true)]out T? ancestor)
+        public static bool SharesAncestor<T>(this SyntaxNode first, SyntaxNode other, [NotNullWhen(true)] out T? ancestor)
             where T : SyntaxNode
         {
             var firstAncestor = FirstAncestor<T>(first);
@@ -153,7 +153,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="other">The second node.</param>
         /// <param name="ancestor">The ancestor.</param>
         /// <returns>True if a common ancestor was found.</returns>
-        public static bool TryFindSharedAncestorRecursive<T>(this SyntaxNode first, SyntaxNode other, [NotNullWhen(true)]out T? ancestor)
+        public static bool TryFindSharedAncestorRecursive<T>(this SyntaxNode first, SyntaxNode other, [NotNullWhen(true)] out T? ancestor)
             where T : SyntaxNode
         {
             var firstAncestor = FirstAncestor<T>(first);

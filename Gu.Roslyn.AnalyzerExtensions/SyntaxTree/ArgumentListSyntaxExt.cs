@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFind(this ArgumentListSyntax argumentList, IParameterSymbol parameter, [NotNullWhen(true)]out ArgumentSyntax? argument)
+        public static bool TryFind(this ArgumentListSyntax argumentList, IParameterSymbol parameter, [NotNullWhen(true)] out ArgumentSyntax? argument)
         {
             argument = null;
             if (argumentList is null ||
@@ -94,7 +94,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="name">The name.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
-        public static bool TryFindByNameColon(this ArgumentListSyntax argumentList, string name, [NotNullWhen(true)]out ArgumentSyntax? argument)
+        public static bool TryFindByNameColon(this ArgumentListSyntax argumentList, string name, [NotNullWhen(true)] out ArgumentSyntax? argument)
         {
             argument = null;
             if (argumentList is null)
