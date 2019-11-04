@@ -23,7 +23,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="value">The symbol if found.</param>
         /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetConstantValue<T>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [MaybeNullWhen(false)]out T value)
+        public static bool TryGetConstantValue<T>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [MaybeNullWhen(false)] out T value)
         {
             if (semanticModel is null)
             {

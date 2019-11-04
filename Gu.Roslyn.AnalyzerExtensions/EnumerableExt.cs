@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt<T>(this IEnumerable<T> source, int index, [MaybeNullWhen(false)]out T result)
+        public static bool TryElementAt<T>(this IEnumerable<T> source, int index, [MaybeNullWhen(false)] out T result)
         {
             result = default!;
             if (source is null)
@@ -50,7 +50,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this IEnumerable<T> source, [MaybeNullWhen(false)]out T result)
+        public static bool TrySingle<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default!;
             if (source is null)
@@ -82,7 +82,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)]out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default!;
@@ -123,7 +123,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)]out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default!;
@@ -165,7 +165,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)]out T result)
+        public static bool TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default!;
             if (source is null)
@@ -204,7 +204,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this IEnumerable<T> source, [MaybeNullWhen(false)]out T result)
+        public static bool TryFirst<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default!;
             if (source is null)
@@ -232,7 +232,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)]out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default!;
@@ -263,7 +263,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)]out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default!;
@@ -296,7 +296,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)]out T result)
+        public static bool TryFirst<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default!;
             if (source is null)
@@ -326,7 +326,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this IEnumerable<T> source, [MaybeNullWhen(false)]out T result)
+        public static bool TryLast<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default!;
             if (source is null)
@@ -359,7 +359,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)]out T result)
+        public static bool TryLast<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default!;
             if (source is null)
@@ -397,7 +397,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)]out TResult result)
+        public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default!;
@@ -436,7 +436,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)]out TResult result)
+        public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default!;
