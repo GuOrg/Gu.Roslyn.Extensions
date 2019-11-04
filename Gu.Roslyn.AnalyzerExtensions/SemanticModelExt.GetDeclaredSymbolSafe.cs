@@ -815,15 +815,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(node));
             }
 
-            switch (node)
+            return node switch
             {
-                case SingleVariableDesignationSyntax singleVariable:
-                    return GetDeclaredSymbolSafe(semanticModel, singleVariable, cancellationToken);
-                case DiscardDesignationSyntax discard:
-                    return GetDeclaredSymbolSafe(semanticModel, discard);
-            }
-
-            return null;
+                SingleVariableDesignationSyntax singleVariable => GetDeclaredSymbolSafe(semanticModel, singleVariable, cancellationToken),
+                DiscardDesignationSyntax discard => GetDeclaredSymbolSafe(semanticModel, discard),
+                _ => (ISymbol?)null,
+            };
         }
 
         /// <summary>
@@ -846,17 +843,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             // Working around https://github.com/dotnet/roslyn/issues/34031
             // This is not pretty.
-            switch (node.Parent)
+            return node.Parent switch
             {
-                case DeclarationExpressionSyntax declarationExpression:
-                    return semanticModel.SemanticModelFor(node)
-                                       ?.GetSpeculativeSymbolInfo(node.SpanStart, declarationExpression, SpeculativeBindingOption.BindAsExpression).Symbol as IDiscardSymbol;
-                case DeclarationPatternSyntax declarationPattern:
-                    return semanticModel.SemanticModelFor(node)
-                                       ?.GetSpeculativeSymbolInfo(node.SpanStart, SyntaxFactory.DeclarationExpression(declarationPattern.Type, node), SpeculativeBindingOption.BindAsExpression).Symbol as IDiscardSymbol;
-            }
+                DeclarationExpressionSyntax declarationExpression => semanticModel.SemanticModelFor(node)
+                                                                                  ?.GetSpeculativeSymbolInfo(node.SpanStart, declarationExpression, SpeculativeBindingOption.BindAsExpression).Symbol as IDiscardSymbol,
+                DeclarationPatternSyntax { Type: { } type } => semanticModel.SemanticModelFor(node)
+                                                                           ?.GetSpeculativeSymbolInfo(node.SpanStart, SyntaxFactory.DeclarationExpression(type, node), SpeculativeBindingOption.BindAsExpression).Symbol as IDiscardSymbol,
 
-            return null;
+                _ => null,
+            };
         }
 
         /// <summary>
@@ -878,20 +873,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(node));
             }
 
-            switch (node)
+            return node switch
             {
-                case FieldDeclarationSyntax fieldDeclaration:
-                    return GetDeclaredSymbolSafe(semanticModel, fieldDeclaration, cancellationToken);
-                case DeclarationExpressionSyntax declaration:
-                    return GetDeclaredSymbolSafe(semanticModel, declaration, cancellationToken);
-                case DiscardDesignationSyntax discardDesignation:
-                    return GetDeclaredSymbolSafe(semanticModel, discardDesignation, cancellationToken);
-                case VariableDeclarationSyntax variableDeclaration:
-                    return GetDeclaredSymbolSafe(semanticModel, variableDeclaration, cancellationToken);
-                default:
-                    return semanticModel.SemanticModelFor(node)
-                                       ?.GetDeclaredSymbol(node, cancellationToken);
-            }
+                FieldDeclarationSyntax fieldDeclaration => GetDeclaredSymbolSafe(semanticModel, fieldDeclaration, cancellationToken),
+                DeclarationExpressionSyntax declaration => GetDeclaredSymbolSafe(semanticModel, declaration, cancellationToken),
+                DiscardDesignationSyntax discardDesignation => GetDeclaredSymbolSafe(semanticModel, discardDesignation, cancellationToken),
+                VariableDeclarationSyntax variableDeclaration => GetDeclaredSymbolSafe(semanticModel, variableDeclaration, cancellationToken),
+                _ => semanticModel.SemanticModelFor(node)
+                                 ?.GetDeclaredSymbol(node, cancellationToken),
+            };
         }
     }
 }

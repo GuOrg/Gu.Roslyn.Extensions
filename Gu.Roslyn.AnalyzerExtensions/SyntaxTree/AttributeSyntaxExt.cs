@@ -56,7 +56,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
-                return arguments.TryElementAt(index, out argument) &&
+                return arguments.TryElementAt<AttributeArgumentSyntax>(index, out argument) &&
                        argument.NameColon is null &&
                        argument.NameEquals is null;
             }

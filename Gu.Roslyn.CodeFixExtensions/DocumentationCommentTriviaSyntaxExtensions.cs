@@ -345,7 +345,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return comment.ReplaceNode(old, returns);
             }
 
-            if (comment.Content.TryLastOfType(out XmlElementSyntax existing))
+            if (comment.Content.TryLastOfType<XmlNodeSyntax, XmlElementSyntax>(out XmlElementSyntax? existing))
             {
                 return comment.InsertAfter(existing, returns);
             }

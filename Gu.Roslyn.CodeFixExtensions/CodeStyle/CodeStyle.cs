@@ -31,7 +31,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(document));
             }
 
-            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyFieldAccess, cancellationToken).ConfigureAwait(false) is CodeStyleOption<bool> option)
+            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyFieldAccess, cancellationToken).ConfigureAwait(false) is { } option)
             {
                 return option.Value ? CodeStyleResult.Yes : CodeStyleResult.No;
             }
@@ -75,7 +75,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(document));
             }
 
-            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyEventAccess, cancellationToken).ConfigureAwait(false) is CodeStyleOption<bool> option)
+            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyEventAccess, cancellationToken).ConfigureAwait(false) is { } option)
             {
                 return option.Value ? CodeStyleResult.Yes : CodeStyleResult.No;
             }
@@ -119,7 +119,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(document));
             }
 
-            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyPropertyAccess, cancellationToken).ConfigureAwait(false) is CodeStyleOption<bool> option)
+            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyPropertyAccess, cancellationToken).ConfigureAwait(false) is { } option)
             {
                 return option.Value ? CodeStyleResult.Yes : CodeStyleResult.No;
             }
@@ -163,7 +163,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(document));
             }
 
-            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyMethodAccess, cancellationToken).ConfigureAwait(false) is CodeStyleOption<bool> option)
+            if (await FindInEditorConfigAsync(document, CodeStyleOptions.QualifyMethodAccess, cancellationToken).ConfigureAwait(false) is { } option)
             {
                 return option.Value ? CodeStyleResult.Yes : CodeStyleResult.No;
             }
@@ -322,7 +322,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
-            if (optionSet.GetOption(key, document.Project.Language) is CodeStyleOption<T> option &&
+            if (optionSet.GetOption(key, document.Project.Language) is { } option &&
                 !ReferenceEquals(option, key.DefaultValue))
             {
                 return option;

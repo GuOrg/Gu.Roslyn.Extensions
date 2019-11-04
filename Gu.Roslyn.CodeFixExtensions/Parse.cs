@@ -87,7 +87,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static XmlElementSyntax XmlElementSyntax(string text, string? leadingWhitespace = null)
         {
             if (DocumentationCommentTriviaSyntax(text.WithLeadingWhiteSpace("/// "), leadingWhitespace ?? string.Empty) is var comment &&
-                comment.Content.TrySingleOfType(out XmlElementSyntax element))
+                comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(out XmlElementSyntax? element))
             {
                 return element;
             }
@@ -154,8 +154,8 @@ namespace Gu.Roslyn.CodeFixExtensions
         public static AttributeListSyntax AttributeList(string text, string? leadingWhitespace = null)
         {
             var code = $"{text.WithLeadingWhiteSpace(leadingWhitespace)}\r\n{leadingWhitespace}public class C {{}}";
-            if (SyntaxFactory.ParseCompilationUnit(code) is CompilationUnitSyntax compilationUnit &&
-                compilationUnit.Members.TrySingleOfType(out ClassDeclarationSyntax member) &&
+            if (SyntaxFactory.ParseCompilationUnit(code) is { } compilationUnit &&
+                compilationUnit.Members.TrySingleOfType<MemberDeclarationSyntax, ClassDeclarationSyntax>(out ClassDeclarationSyntax? member) &&
                 member.AttributeLists.TrySingle(out var attributeList))
             {
                 return attributeList;

@@ -1,10 +1,10 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Extension methods that avoids allocations.
@@ -19,10 +19,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt<T>(this IReadOnlyList<T> source, int index, out T result)
+        public static bool TryElementAt<T>(this IReadOnlyList<T> source, int index, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -44,10 +44,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this IReadOnlyList<T> source, out T result)
+        public static bool TrySingle<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -69,11 +69,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -107,11 +107,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -146,10 +146,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TrySingle<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -182,10 +182,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this IReadOnlyList<T> source, out T result)
+        public static bool TryFirst<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -211,7 +211,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
             result = default(TResult);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -237,11 +237,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirstOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -267,10 +267,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TryFirst<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -294,10 +294,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this IReadOnlyList<T> source, out T result)
+        public static bool TryLast<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -320,11 +320,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -350,11 +350,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -380,10 +380,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TryLast<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
-            if (source is null)
+            if (source == null)
             {
                 return false;
             }
@@ -410,7 +410,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt<T>(this ImmutableArray<T> source, int index, out T result)
+        public static bool TryElementAt<T>(this ImmutableArray<T> source, int index, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
             if (index < 0 ||
@@ -430,7 +430,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this ImmutableArray<T> source, out T result)
+        public static bool TrySingle<T>(this ImmutableArray<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
             if (source.Length == 1)
@@ -450,7 +450,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this ImmutableArray<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this ImmutableArray<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -483,7 +483,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -517,7 +517,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this ImmutableArray<T> source, Func<T, bool> predicate, out T result)
+        public static bool TrySingle<T>(this ImmutableArray<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
             for (var i = 0; i < source.Length; i++)
@@ -548,7 +548,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this ImmutableArray<T> source, out T result)
+        public static bool TryFirst<T>(this ImmutableArray<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
             if (source.Length == 0)
@@ -593,7 +593,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirstOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -618,7 +618,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this ImmutableArray<T> source, Func<T, bool> predicate, out T result)
+        public static bool TryFirst<T>(this ImmutableArray<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
             foreach (var item in source)
@@ -640,7 +640,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this ImmutableArray<T> source, out T result)
+        public static bool TryLast<T>(this ImmutableArray<T> source, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
             if (source.Length == 0)
@@ -661,7 +661,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this ImmutableArray<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this ImmutableArray<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -686,7 +686,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this ImmutableArray<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
             result = default(TResult);
@@ -711,7 +711,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this ImmutableArray<T> source, Func<T, bool> predicate, out T result)
+        public static bool TryLast<T>(this ImmutableArray<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
             result = default(T);
             for (var i = source.Length - 1; i >= 0; i--)
@@ -735,7 +735,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt(this ChildSyntaxList source, int index, out SyntaxNodeOrToken result)
+        public static bool TryElementAt(this ChildSyntaxList source, int index, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             if (index < 0 ||
@@ -754,7 +754,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle(this ChildSyntaxList source, out SyntaxNodeOrToken result)
+        public static bool TrySingle(this ChildSyntaxList source, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             if (source.Count == 1)
@@ -773,7 +773,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle(this ChildSyntaxList source, Func<SyntaxNodeOrToken, bool> predicate, out SyntaxNodeOrToken result)
+        public static bool TrySingle(this ChildSyntaxList source, Func<SyntaxNodeOrToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             for (var i = 0; i < source.Count; i++)
@@ -803,7 +803,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst(this ChildSyntaxList source, out SyntaxNodeOrToken result)
+        public static bool TryFirst(this ChildSyntaxList source, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             if (source.Count == 0)
@@ -822,7 +822,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst(this ChildSyntaxList source, Func<SyntaxNodeOrToken, bool> predicate, out SyntaxNodeOrToken result)
+        public static bool TryFirst(this ChildSyntaxList source, Func<SyntaxNodeOrToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             foreach (var item in source)
@@ -843,7 +843,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast(this ChildSyntaxList source, out SyntaxNodeOrToken result)
+        public static bool TryLast(this ChildSyntaxList source, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             if (source.Count == 0)
@@ -863,7 +863,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast(this ChildSyntaxList source, Func<SyntaxNodeOrToken, bool> predicate, out SyntaxNodeOrToken result)
+        public static bool TryLast(this ChildSyntaxList source, Func<SyntaxNodeOrToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             for (var i = source.Count - 1; i >= 0; i--)
@@ -909,7 +909,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this SeparatedSyntaxList<T> source, out T result)
+        public static bool TrySingle<T>(this SeparatedSyntaxList<T> source, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -930,7 +930,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this SeparatedSyntaxList<T> source, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -964,7 +964,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -999,7 +999,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this SeparatedSyntaxList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TrySingle<T>(this SeparatedSyntaxList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1031,7 +1031,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this SeparatedSyntaxList<T> source, out T result)
+        public static bool TryFirst<T>(this SeparatedSyntaxList<T> source, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1078,7 +1078,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirstOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1104,7 +1104,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this SeparatedSyntaxList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TryFirst<T>(this SeparatedSyntaxList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1127,7 +1127,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this SeparatedSyntaxList<T> source, out T result)
+        public static bool TryLast<T>(this SeparatedSyntaxList<T> source, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1149,7 +1149,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this SeparatedSyntaxList<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this SeparatedSyntaxList<T> source, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1175,7 +1175,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this SeparatedSyntaxList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1201,7 +1201,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this SeparatedSyntaxList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TryLast<T>(this SeparatedSyntaxList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1227,7 +1227,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt<T>(this SyntaxList<T> source, int index, out T result)
+        public static bool TryElementAt<T>(this SyntaxList<T> source, int index, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1248,7 +1248,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this SyntaxList<T> source, out T result)
+        public static bool TrySingle<T>(this SyntaxList<T> source, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1269,7 +1269,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this SyntaxList<T> source, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this SyntaxList<T> source, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1303,7 +1303,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TrySingleOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1338,7 +1338,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<T>(this SyntaxList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TrySingle<T>(this SyntaxList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1370,7 +1370,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this SyntaxList<T> source, out T result)
+        public static bool TryFirst<T>(this SyntaxList<T> source, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1417,7 +1417,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirstOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TryFirstOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1443,7 +1443,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<T>(this SyntaxList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TryFirst<T>(this SyntaxList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1466,7 +1466,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this SyntaxList<T> source, out T result)
+        public static bool TryLast<T>(this SyntaxList<T> source, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1488,7 +1488,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this SyntaxList<T> source, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this SyntaxList<T> source, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1514,7 +1514,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, out TResult result)
+        public static bool TryLastOfType<T, TResult>(this SyntaxList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where T : SyntaxNode
             where TResult : T
         {
@@ -1540,7 +1540,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<T>(this SyntaxList<T> source, Func<T, bool> predicate, out T result)
+        public static bool TryLast<T>(this SyntaxList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
@@ -1565,7 +1565,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt(this SyntaxNodeOrTokenList source, int index, out SyntaxNodeOrToken result)
+        public static bool TryElementAt(this SyntaxNodeOrTokenList source, int index, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             if (index < 0 ||
@@ -1584,7 +1584,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle(this SyntaxNodeOrTokenList source, out SyntaxNodeOrToken result)
+        public static bool TrySingle(this SyntaxNodeOrTokenList source, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             if (source.Count == 1)
@@ -1603,7 +1603,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle(this SyntaxNodeOrTokenList source, Func<SyntaxNodeOrToken, bool> predicate, out SyntaxNodeOrToken result)
+        public static bool TrySingle(this SyntaxNodeOrTokenList source, Func<SyntaxNodeOrToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             for (var i = 0; i < source.Count; i++)
@@ -1633,7 +1633,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst(this SyntaxNodeOrTokenList source, out SyntaxNodeOrToken result)
+        public static bool TryFirst(this SyntaxNodeOrTokenList source, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             if (source.Count == 0)
@@ -1652,7 +1652,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst(this SyntaxNodeOrTokenList source, Func<SyntaxNodeOrToken, bool> predicate, out SyntaxNodeOrToken result)
+        public static bool TryFirst(this SyntaxNodeOrTokenList source, Func<SyntaxNodeOrToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             foreach (var item in source)
@@ -1673,7 +1673,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast(this SyntaxNodeOrTokenList source, out SyntaxNodeOrToken result)
+        public static bool TryLast(this SyntaxNodeOrTokenList source, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             if (source.Count == 0)
@@ -1693,7 +1693,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast(this SyntaxNodeOrTokenList source, Func<SyntaxNodeOrToken, bool> predicate, out SyntaxNodeOrToken result)
+        public static bool TryLast(this SyntaxNodeOrTokenList source, Func<SyntaxNodeOrToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxNodeOrToken result)
         {
             result = default(SyntaxNodeOrToken);
             for (var i = source.Count - 1; i >= 0; i--)
@@ -1717,7 +1717,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt(this SyntaxTokenList source, int index, out SyntaxToken result)
+        public static bool TryElementAt(this SyntaxTokenList source, int index, [MaybeNullWhen(false)] out SyntaxToken result)
         {
             result = default(SyntaxToken);
             if (index < 0 ||
@@ -1736,7 +1736,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle(this SyntaxTokenList source, out SyntaxToken result)
+        public static bool TrySingle(this SyntaxTokenList source, [MaybeNullWhen(false)] out SyntaxToken result)
         {
             result = default(SyntaxToken);
             if (source.Count == 1)
@@ -1755,7 +1755,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle(this SyntaxTokenList source, Func<SyntaxToken, bool> predicate, out SyntaxToken result)
+        public static bool TrySingle(this SyntaxTokenList source, Func<SyntaxToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxToken result)
         {
             result = default(SyntaxToken);
             for (var i = 0; i < source.Count; i++)
@@ -1785,7 +1785,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst(this SyntaxTokenList source, out SyntaxToken result)
+        public static bool TryFirst(this SyntaxTokenList source, [MaybeNullWhen(false)] out SyntaxToken result)
         {
             result = default(SyntaxToken);
             if (source.Count == 0)
@@ -1804,7 +1804,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst(this SyntaxTokenList source, Func<SyntaxToken, bool> predicate, out SyntaxToken result)
+        public static bool TryFirst(this SyntaxTokenList source, Func<SyntaxToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxToken result)
         {
             result = default(SyntaxToken);
             foreach (var item in source)
@@ -1825,7 +1825,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast(this SyntaxTokenList source, out SyntaxToken result)
+        public static bool TryLast(this SyntaxTokenList source, [MaybeNullWhen(false)] out SyntaxToken result)
         {
             result = default(SyntaxToken);
             if (source.Count == 0)
@@ -1845,7 +1845,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast(this SyntaxTokenList source, Func<SyntaxToken, bool> predicate, out SyntaxToken result)
+        public static bool TryLast(this SyntaxTokenList source, Func<SyntaxToken, bool> predicate, [MaybeNullWhen(false)] out SyntaxToken result)
         {
             result = default(SyntaxToken);
             for (var i = source.Count - 1; i >= 0; i--)
@@ -1869,7 +1869,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt(this SyntaxTriviaList source, int index, out SyntaxTrivia result)
+        public static bool TryElementAt(this SyntaxTriviaList source, int index, [MaybeNullWhen(false)] out SyntaxTrivia result)
         {
             result = default(SyntaxTrivia);
             if (index < 0 ||
@@ -1888,7 +1888,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle(this SyntaxTriviaList source, out SyntaxTrivia result)
+        public static bool TrySingle(this SyntaxTriviaList source, [MaybeNullWhen(false)] out SyntaxTrivia result)
         {
             result = default(SyntaxTrivia);
             if (source.Count == 1)
@@ -1907,7 +1907,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle(this SyntaxTriviaList source, Func<SyntaxTrivia, bool> predicate, out SyntaxTrivia result)
+        public static bool TrySingle(this SyntaxTriviaList source, Func<SyntaxTrivia, bool> predicate, [MaybeNullWhen(false)] out SyntaxTrivia result)
         {
             result = default(SyntaxTrivia);
             for (var i = 0; i < source.Count; i++)
@@ -1937,7 +1937,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst(this SyntaxTriviaList source, out SyntaxTrivia result)
+        public static bool TryFirst(this SyntaxTriviaList source, [MaybeNullWhen(false)] out SyntaxTrivia result)
         {
             result = default(SyntaxTrivia);
             if (source.Count == 0)
@@ -1956,7 +1956,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst(this SyntaxTriviaList source, Func<SyntaxTrivia, bool> predicate, out SyntaxTrivia result)
+        public static bool TryFirst(this SyntaxTriviaList source, Func<SyntaxTrivia, bool> predicate, [MaybeNullWhen(false)] out SyntaxTrivia result)
         {
             result = default(SyntaxTrivia);
             foreach (var item in source)
@@ -1977,7 +1977,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast(this SyntaxTriviaList source, out SyntaxTrivia result)
+        public static bool TryLast(this SyntaxTriviaList source, [MaybeNullWhen(false)] out SyntaxTrivia result)
         {
             result = default(SyntaxTrivia);
             if (source.Count == 0)
@@ -1997,7 +1997,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast(this SyntaxTriviaList source, Func<SyntaxTrivia, bool> predicate, out SyntaxTrivia result)
+        public static bool TryLast(this SyntaxTriviaList source, Func<SyntaxTrivia, bool> predicate, [MaybeNullWhen(false)] out SyntaxTrivia result)
         {
             result = default(SyntaxTrivia);
             for (var i = source.Count - 1; i >= 0; i--)

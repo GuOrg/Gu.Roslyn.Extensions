@@ -37,10 +37,9 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             var updated = AddUsing(compilationUnit, SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(type.ContainingNamespace.ToDisplayString())), semanticModel);
-            if (type is INamedTypeSymbol namedType &&
-                namedType.IsGenericType)
+            if (type is INamedTypeSymbol { IsGenericType: true } genericType)
             {
-                foreach (var argument in namedType.TypeArguments)
+                foreach (var argument in genericType.TypeArguments)
                 {
                     updated = AddUsing(updated, argument, semanticModel);
                 }
@@ -73,7 +72,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new System.ArgumentNullException(nameof(usingDirective));
             }
 
-            if (compilationUnit.Members.TrySingleOfType(out NamespaceDeclarationSyntax ns) &&
+            if (compilationUnit.Members.TrySingleOfType<MemberDeclarationSyntax, NamespaceDeclarationSyntax>(out NamespaceDeclarationSyntax? ns) &&
                 UsingDirectiveComparer.IsSameOrContained(ns, usingDirective))
             {
                 return compilationUnit;

@@ -123,7 +123,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             attribute = null;
-            return symbol.GetAttributes().TrySingle(x => x.AttributeClass == attributeType, out attribute);
+            return symbol.GetAttributes().TrySingle<AttributeData>(x => x.AttributeClass == attributeType, out attribute);
         }
 
         /// <summary>

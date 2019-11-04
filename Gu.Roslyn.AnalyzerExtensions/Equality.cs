@@ -437,14 +437,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                            parameters[2].Type == QualifiedType.System.StringComparison;
                 }
 
-                switch (candidate.Expression)
+                return candidate.Expression switch
                 {
-                    case MemberAccessExpressionSyntax memberAccess:
-                        return MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
-                               string.Equals(last.ValueText, "String", StringComparison.OrdinalIgnoreCase);
-                    default:
-                        return false;
-                }
+                    MemberAccessExpressionSyntax { Expression: { } expression } => MemberPath.TryFindLast(expression, out var last) &&
+                                                                                   string.Equals(last.ValueText, "String", StringComparison.OrdinalIgnoreCase),
+                    _ => false,
+                };
             }
         }
 
@@ -683,15 +681,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(expression));
             }
 
-            switch (expression.Parent)
+            return expression.Parent switch
             {
-                case ParenthesizedExpressionSyntax paren:
-                    return IsNegated(paren);
-                case PrefixUnaryExpressionSyntax unary when unary.IsKind(SyntaxKind.LogicalNotExpression):
-                    return true;
-                default:
-                    return false;
-            }
+                ParenthesizedExpressionSyntax paren => IsNegated(paren),
+                PrefixUnaryExpressionSyntax unary => unary.IsKind(SyntaxKind.LogicalNotExpression),
+                _ => false,
+            };
         }
 
         private static bool TryGetInstance(InvocationExpressionSyntax invocation, [NotNullWhen(true)] out ExpressionSyntax? result)

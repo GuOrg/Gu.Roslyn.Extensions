@@ -150,13 +150,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             bool DesignatesLocal(VariableDesignationSyntax candidate)
             {
-                switch (candidate)
+                return candidate switch
                 {
-                    case SingleVariableDesignationSyntax variable:
-                        return IsMatch(variable.Identifier);
-                    default:
-                        return true;
-                }
+                    SingleVariableDesignationSyntax variable => IsMatch(variable.Identifier),
+                    _ => true,
+                };
             }
 
             bool IsMatch(SyntaxToken identifier) => identifier.Text == name || identifier.ValueText == name;

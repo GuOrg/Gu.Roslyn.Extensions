@@ -7,6 +7,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Microsoft.CodeAnalysis;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Extension methods that avoids allocations.
@@ -43,7 +44,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt<#= genericArg #>(this <#= colName #> source, int index, out <#= itemName #> result)<#= constraint #>
+        public static bool TryElementAt<#= genericArg #>(this <#= colName #> source, int index, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
             result = default(<#= itemName #>);
 <# this.WriteIfNullReturnFalse(types); #>
@@ -64,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<#= genericArg #>(this <#= colName #> source, out <#= itemName #> result)<#= constraint #>
+        public static bool TrySingle<#= genericArg #>(this <#= colName #> source, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
             result = default(<#= itemName #>);
 <# this.WriteIfNullReturnFalse(types); #>
@@ -86,7 +87,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
+        public static bool TrySingleOfType<T, TResult>(this <#= colName #> source, [MaybeNullWhen(false)] out TResult result)<#= constraint #>
             where TResult : T
         {
             result = default(TResult);
@@ -120,7 +121,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingleOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, out TResult result)<#= constraint #>
+        public static bool TrySingleOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)<#= constraint #>
             where TResult : T
         {
             result = default(TResult);
@@ -156,7 +157,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The single element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TrySingle<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, out <#= itemName #> result)<#= constraint #>
+        public static bool TrySingle<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
             result = default(<#= itemName #>);
 <# this.WriteIfNullReturnFalse(types); #>
@@ -188,7 +189,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The first element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<#= genericArg #>(this <#= colName #> source, out <#= itemName #> result)<#= constraint #>
+        public static bool TryFirst<#= genericArg #>(this <#= colName #> source, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
             result = default(<#= itemName #>);
 <# this.WriteIfNullReturnFalse(types); #>
@@ -236,7 +237,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirstOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, out TResult result)<#= constraint #>
+        public static bool TryFirstOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)<#= constraint #>
             where TResult : T
         {
             result = default(TResult);
@@ -263,7 +264,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The first element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirst<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, out <#= itemName #> result)<#= constraint #>
+        public static bool TryFirst<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
             result = default(<#= itemName #>);
 <# this.WriteIfNullReturnFalse(types); #>
@@ -286,7 +287,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The last element if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<#= genericArg #>(this <#= colName #> source, out <#= itemName #> result)<#= constraint #>
+        public static bool TryLast<#= genericArg #>(this <#= colName #> source, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
             result = default(<#= itemName #>);
 <# this.WriteIfNullReturnFalse(types); #>
@@ -309,7 +310,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
+        public static bool TryLastOfType<T, TResult>(this <#= colName #> source, [MaybeNullWhen(false)] out TResult result)<#= constraint #>
             where TResult : T
         {
             result = default(TResult);
@@ -335,7 +336,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The filter</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLastOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, out TResult result)<#= constraint #>
+        public static bool TryLastOfType<T, TResult>(this <#= colName #> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)<#= constraint #>
             where TResult : T
         {
             result = default(TResult);
@@ -362,7 +363,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="predicate">The predicate.</param>
         /// <param name="result">The last element matching the predicate, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryLast<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, out <#= itemName #> result)<#= constraint #>
+        public static bool TryLast<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
             result = default(<#= itemName #>);
 <# this.WriteIfNullReturnFalse(types); #>
