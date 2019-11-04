@@ -45,9 +45,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         }
 
                         return false;
-                    case ParenthesizedLambdaExpressionSyntax lambda when HasParameter(lambda.ParameterList):
-                    case SimpleLambdaExpressionSyntax simpleLambda when simpleLambda.Parameter?.Identifier.Text == name:
-                    case LocalFunctionStatementSyntax localFunction when HasParameter(localFunction.ParameterList):
+                    case ParenthesizedLambdaExpressionSyntax { ParameterList: { } lambdaParameters }
+                        when HasParameter(lambdaParameters):
+                    case SimpleLambdaExpressionSyntax { Parameter: { Identifier: { ValueText: { } valueText } } }
+                        when valueText == name:
+                    case LocalFunctionStatementSyntax { ParameterList: { } parameterList }
+                        when HasParameter(parameterList):
                         return true;
                 }
 
@@ -129,10 +132,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                             {
                                 switch (node)
                                 {
-                                    case DeclarationExpressionSyntax declaration when declaration.Designation is SingleVariableDesignationSyntax variable &&
-                                                                                      IsMatch(variable.Identifier):
+                                    case DeclarationExpressionSyntax { Designation: SingleVariableDesignationSyntax { Identifier: { } identifier } }
+                                        when IsMatch(identifier):
                                         return true;
-                                    case DeclarationPatternSyntax declaration when DesignatesLocal(declaration.Designation):
+                                    case DeclarationPatternSyntax { Designation: { } designation }
+                                        when DesignatesLocal(designation):
                                         return true;
                                 }
                             }
