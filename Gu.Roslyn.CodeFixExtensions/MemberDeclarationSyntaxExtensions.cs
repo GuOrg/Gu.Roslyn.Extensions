@@ -14,7 +14,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add <paramref name="text"/> as leading trivia to <paramref name="member"/>.
         /// </summary>
         /// <typeparam name="TMember">The type of the member to add docs to.</typeparam>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="member">The <typeparamref name="TMember"/>.</param>
         /// <param name="text">The text to parse into <see cref="SyntaxTriviaList"/>.</param>
         /// <param name="adjustLeadingWhitespace">If true leading whitespaces is adjusted to match <paramref name="member"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
@@ -41,7 +41,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add docs as leading trivia to <paramref name="member"/>.
         /// </summary>
         /// <typeparam name="TMember">The type of the member to add docs to.</typeparam>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="member">The <typeparamref name="TMember"/>.</param>
         /// <param name="docs">The <see cref="DocumentationCommentTriviaSyntax"/>.</param>
         /// <returns>The <paramref name="member"/> with docs in leading trivia.</returns>
         public static TMember WithDocs<TMember>(this TMember member, DocumentationCommentTriviaSyntax docs)
@@ -75,7 +75,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Adjust leading whitespace for <paramref name="member"/> to match StyleCop.
         /// </summary>
         /// <typeparam name="TMember">The type of <paramref name="member"/>.</typeparam>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="member">The <typeparamref name="TMember"/>.</param>
         /// <param name="previous">The previous member or null if <paramref name="member"/> is the first in the type.</param>
         /// <returns><paramref name="member"/> with adjusted leading newline.</returns>
         public static TMember AdjustLeadingNewLine<TMember>(this TMember member, TMember? previous)

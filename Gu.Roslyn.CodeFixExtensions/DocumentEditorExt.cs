@@ -20,7 +20,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// </summary>
         /// <typeparam name="T">The type of the node.</typeparam>
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <param name="replacement">The replacement factory.</param>
         /// <returns>The <see cref="DocumentEditor"/> that was passed in.</returns>
         public static DocumentEditor ReplaceNode<T>(this DocumentEditor editor, T node, Func<T, SyntaxNode> replacement)

@@ -27,7 +27,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Rewrite <paramref name="typeDeclaration"/> so that members are sorted according to how StyleCop wants it.
         /// </summary>
         /// <typeparam name="T">The type of <paramref name="typeDeclaration"/>.</typeparam>
-        /// <param name="typeDeclaration">The <see cref="TypeDeclarationSyntax"/>.</param>
+        /// <param name="typeDeclaration">The <typeparamref name="T"/>.</param>
         /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns><paramref name="typeDeclaration"/> with members sorted according to how StyleCop wants it.</returns>
         public static T Sort<T>(T typeDeclaration, IComparer<MemberDeclarationSyntax>? comparer)

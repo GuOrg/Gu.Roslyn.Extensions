@@ -111,9 +111,19 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <returns>A signed integer that indicates if the node is before or after the other in the document.</returns>
         public static int CompareSpanStart(SyntaxNode x, SyntaxNode y)
         {
-            if (x?.SyntaxTree is SyntaxTree treeX &&
-                y?.SyntaxTree is SyntaxTree treeY &&
-                treeX.FilePath == treeY.FilePath)
+            if (x is null)
+            {
+                throw new ArgumentNullException(nameof(x));
+            }
+
+            if (y is null)
+            {
+                throw new ArgumentNullException(nameof(y));
+            }
+
+            if (x.SyntaxTree is { FilePath: { } xPath } &&
+                y.SyntaxTree is { FilePath: { } yPath } &&
+                xPath == yPath)
             {
                 return x.SpanStart.CompareTo(y.SpanStart);
             }

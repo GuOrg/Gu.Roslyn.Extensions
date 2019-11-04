@@ -377,7 +377,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 var found = false;
                 do
                 {
-                    if (e.Current is T item &&
+                    if (e.Current is { } item &&
                         predicate(item))
                     {
                         result = item;

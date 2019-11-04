@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.CodeFixExtensions
 {
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using Gu.Roslyn.AnalyzerExtensions;
@@ -55,11 +56,10 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             switch (node.Parent)
             {
-                case ConditionalAccessExpressionSyntax conditionalAccess when conditionalAccess.Parent.IsKind(SyntaxKind.ExpressionStatement) &&
-                                                                              conditionalAccess.WhenNotNull.IsKind(SyntaxKind.InvocationExpression):
+                case ConditionalAccessExpressionSyntax { Parent: ExpressionStatementSyntax _, WhenNotNull: InvocationExpressionSyntax _ }:
                 case ArgumentSyntax _:
-                case InvocationExpressionSyntax invocation when invocation.Parent.IsKind(SyntaxKind.ExpressionStatement):
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression == node:
+                case InvocationExpressionSyntax { Parent: ExpressionStatementSyntax _ }:
+                case MemberAccessExpressionSyntax { Expression: { } expression } when expression == node:
                     if (IsInstanceEvent() &&
                         !Scope.HasLocal(node, node.Identifier.ValueText) &&
                         !Scope.HasParameter(node, node.Identifier.ValueText))
@@ -68,8 +68,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     }
 
                     break;
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Name == node &&
-                                                                    memberAccess.Expression.IsKind(SyntaxKind.ThisExpression) &&
+                case MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _, Name: { } name } when name == node &&
                                                                     IsInstanceEvent():
                     this.Update(CodeStyleResult.Yes);
                     break;
@@ -84,17 +83,13 @@ namespace Gu.Roslyn.CodeFixExtensions
 
                 static bool IsStatic(MemberDeclarationSyntax candidate)
                 {
-                    switch (candidate)
+                    return candidate switch
                     {
-                        case BaseMethodDeclarationSyntax declaration:
-                            return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                        case BasePropertyDeclarationSyntax declaration:
-                            return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                        case EventFieldDeclarationSyntax declaration:
-                            return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                        default:
-                            return true;
-                    }
+                        BaseMethodDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword),
+                        BasePropertyDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword),
+                        EventFieldDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword),
+                        _ => true,
+                    };
                 }
             }
         }

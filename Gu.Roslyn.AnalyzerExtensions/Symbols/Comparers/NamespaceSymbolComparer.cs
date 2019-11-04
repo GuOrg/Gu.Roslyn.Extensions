@@ -65,8 +65,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return false;
                 }
 
-                x = x.ContainingNamespace;
-                if (x.IsGlobalNamespace)
+                if (x is { ContainingNamespace: { IsGlobalNamespace: false } containingNamespace })
+                {
+                    x = containingNamespace;
+                }
+                else
                 {
                     return false;
                 }
@@ -93,7 +96,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public int GetHashCode(INamespaceSymbol obj)
         {
-            return obj?.MetadataName.GetHashCode() ?? 0;
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            return obj.MetadataName.GetHashCode();
         }
     }
 }

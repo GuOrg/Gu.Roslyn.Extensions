@@ -77,8 +77,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         {
             if (y.Modifiers.Any(SyntaxKind.ConstKeyword, SyntaxKind.StaticKeyword) &&
                 x.Declaration.Variables.TryLast(out var variable) &&
-                variable.Initializer is EqualsValueClauseSyntax initializer &&
-                !(initializer.Value is LiteralExpressionSyntax))
+                variable.Initializer is { Value: { } value } initializer &&
+                !(value is LiteralExpressionSyntax))
             {
                 using (var walker = IdentifierNameWalker.Borrow(initializer))
                 {

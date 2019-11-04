@@ -369,7 +369,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add leading elastic line feed to <paramref name="node"/>.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <returns><paramref name="node"/> with leading elastic line feed.</returns>
         public static T WithLeadingElasticLineFeed<T>(this T node)
             where T : SyntaxNode
@@ -393,7 +393,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add leading elastic line feed to <paramref name="node"/>.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <returns><paramref name="node"/> with leading elastic line feed.</returns>
         public static T WithLeadingElasticSpace<T>(this T node)
             where T : SyntaxNode
@@ -417,7 +417,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add leading line feed to <paramref name="node"/>.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <returns><paramref name="node"/> with leading line feed.</returns>
         public static T WithLeadingLineFeed<T>(this T node)
             where T : SyntaxNode
@@ -441,7 +441,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add leading line feed to <paramref name="node"/>.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <returns><paramref name="node"/> with leading line feed.</returns>
         public static T WithoutLeadingLineFeed<T>(this T node)
             where T : SyntaxNode
@@ -466,7 +466,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add trailing elastic line feed to <paramref name="node"/>.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <returns><paramref name="node"/> with trailing elastic line feed.</returns>
         public static T WithTrailingElasticLineFeed<T>(this T node)
             where T : SyntaxNode
@@ -490,7 +490,7 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// Add trailing line feed to <paramref name="node"/>.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
         /// <returns><paramref name="node"/> with trailing line feed.</returns>
         public static T WithTrailingLineFeed<T>(this T node)
             where T : SyntaxNode

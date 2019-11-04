@@ -215,6 +215,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             switch (node.Kind())
             {
                 case SyntaxKind.LogicalNotExpression:
@@ -237,6 +242,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitArgument(ArgumentSyntax node)
         {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             if (node.RefOrOutKeyword.IsEither(SyntaxKind.RefKeyword, SyntaxKind.OutKeyword))
             {
                 this.refOrOutArguments.Add(node);

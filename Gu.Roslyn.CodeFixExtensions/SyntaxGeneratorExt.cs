@@ -78,7 +78,9 @@ namespace Gu.Roslyn.CodeFixExtensions
                         containingType = (TypeDeclarationSyntax)generator.ReplaceNode(containingType, containingType.Members[i], existing.WithLeadingLineFeed());
                     }
 
+#pragma warning disable CA1062 /// Already checked
                     return (TypeDeclarationSyntax)generator.InsertNodesBefore(containingType, containingType.Members[i], new[] { member });
+#pragma warning restore CA1062 // Validate arguments of public methods
                 }
             }
 

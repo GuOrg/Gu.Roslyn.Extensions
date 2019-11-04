@@ -52,6 +52,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             if (this.SearchScope != SearchScope.Member &&
                 node.Initializer is null &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&

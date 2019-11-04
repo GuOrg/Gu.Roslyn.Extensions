@@ -54,7 +54,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 return compare;
             }
 
-            compare = CompareSetterAccessability(x, y);
+            compare = CompareSetterAccessibility(x, y);
             if (compare != 0)
             {
                 return compare;
@@ -81,8 +81,8 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         private static bool IsInitializedWith(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
         {
             if (y.Modifiers.Any(SyntaxKind.StaticKeyword) &&
-                x.Initializer is EqualsValueClauseSyntax initializer &&
-                !(initializer.Value is LiteralExpressionSyntax))
+                x.Initializer is { Value: { } value } initializer &&
+                !(value is LiteralExpressionSyntax))
             {
                 using (var walker = IdentifierNameWalker.Borrow(initializer))
                 {
@@ -99,7 +99,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
             return false;
         }
 
-        private static int CompareSetterAccessability(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+        private static int CompareSetterAccessibility(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
         {
             if (x.TryGetSetter(out var xSetter))
             {

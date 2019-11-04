@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
@@ -24,12 +25,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -49,12 +50,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -74,12 +75,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -99,12 +100,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -124,12 +125,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -149,12 +150,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -174,12 +175,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -199,12 +200,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -224,12 +225,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -249,12 +250,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -274,12 +275,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -299,12 +300,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -324,12 +325,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -349,12 +350,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -374,12 +375,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
@@ -398,12 +399,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node);
@@ -423,12 +424,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken) ??
@@ -447,12 +448,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return semanticModel.SemanticModelFor(node)
@@ -470,16 +471,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
-            if (node?.Declaration is VariableDeclarationSyntax variableDeclaration &&
-                variableDeclaration.Variables.TrySingle(out var variable))
+            if (node.Declaration is { Variables: { } variables } &&
+                variables.TrySingle(out var variable))
             {
                 return (IFieldSymbol?)semanticModel.SemanticModelFor(node)
                                                   ?.GetDeclaredSymbol(variable, cancellationToken);
@@ -499,12 +500,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return semanticModel.SemanticModelFor(node)
@@ -522,12 +523,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return semanticModel.SemanticModelFor(node)
@@ -545,16 +546,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
-            if (node?.Declaration is VariableDeclarationSyntax variableDeclaration &&
-                variableDeclaration.Variables.TrySingle(out var variable))
+            if (node.Declaration is { Variables: { } variables } &&
+                variables.TrySingle(out var variable))
             {
                 return semanticModel.SemanticModelFor(node)
                                    ?.GetDeclaredSymbol(variable, cancellationToken) as IEventSymbol;
@@ -574,12 +575,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return semanticModel.SemanticModelFor(node)
@@ -597,12 +598,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return semanticModel.SemanticModelFor(node)
@@ -620,12 +621,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return semanticModel.SemanticModelFor(node)
@@ -643,12 +644,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return semanticModel.SemanticModelFor(node)
@@ -666,12 +667,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return (IParameterSymbol?)GetDeclaredSymbolSafe(semanticModel, (SyntaxNode)node, cancellationToken);
@@ -688,17 +689,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node?.Variables is null)
-            {
-                return null;
+                throw new ArgumentNullException(nameof(node));
             }
 
             if (node.Variables.TrySingle(out var variable))
@@ -721,12 +717,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(node));
             }
 
             return semanticModel.SemanticModelFor(node)
@@ -744,12 +740,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return GetDeclaredSymbolSafe(semanticModel, node.Designation, cancellationToken);
@@ -766,12 +762,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return GetDeclaredSymbolSafe(semanticModel, node.Designation, cancellationToken);
@@ -788,12 +784,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             return (ILocalSymbol?)semanticModel.SemanticModelFor(node)
@@ -811,12 +807,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(node));
             }
 
             switch (node)
@@ -840,12 +836,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(node));
             }
 
             // Working around https://github.com/dotnet/roslyn/issues/34031
@@ -874,12 +870,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (node is null)
             {
-                throw new System.ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(node));
             }
 
             switch (node)

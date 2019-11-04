@@ -141,6 +141,32 @@ namespace N
             }
         }
 
+        [Test]
+        public static void IsInstanceEqualsConditional()
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    class C
+    {
+        bool M(C x, C y) => x?.Equals(y);
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var expression = (ConditionalAccessExpressionSyntax)syntaxTree.FindMethodDeclaration("M(C x, C y)").ExpressionBody.Expression;
+            Assert.AreEqual(true, Equality.IsInstanceEquals(expression, default, default, out var left, out var right));
+            Assert.AreEqual("x",  left.ToString());
+            Assert.AreEqual("y", right.ToString());
+
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true, Equality.IsInstanceEquals(expression, semanticModel, CancellationToken.None, out left, out right));
+            Assert.AreEqual("x", left.ToString());
+            Assert.AreEqual("y", right.ToString());
+        }
+
         [TestCase("Equals(text, null)",                 false)]
         [TestCase("object.Equals(text, null)",          false)]
         [TestCase("Object.Equals(text, null)",          false)]

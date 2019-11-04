@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,7 +20,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (nodeInScope is null)
             {
-                throw new System.ArgumentNullException(nameof(nodeInScope));
+                throw new ArgumentNullException(nameof(nodeInScope));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
             }
 
             var scope = nodeInScope.Parent;
@@ -66,7 +72,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (nodeInScope is null)
             {
-                throw new System.ArgumentNullException(nameof(nodeInScope));
+                throw new ArgumentNullException(nameof(nodeInScope));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
             }
 
             var scope = nodeInScope.Parent;
@@ -154,6 +165,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the node is in static context where this is not accessible.</returns>
         public static bool IsInStaticContext(this SyntaxNode node)
         {
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             if (node.TryFirstAncestor<AttributeSyntax>(out _))
             {
                 return true;
@@ -161,26 +177,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (node.TryFirstAncestor(out MemberDeclarationSyntax? memberDeclaration))
             {
-                switch (memberDeclaration)
+                return memberDeclaration switch
                 {
-                    case FieldDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword) ||
-                               (declaration.Declaration is { Variables: { } variables } &&
-                                variables.TryLast(out var last) &&
-                                last.Initializer.Contains(node));
-                    case BaseFieldDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);
-                    case PropertyDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
-                               declaration.Initializer?.Contains(node) == true;
-                    case BasePropertyDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-                    case BaseMethodDeclarationSyntax declaration:
-                        return declaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
-                               node.TryFirstAncestor<ConstructorInitializerSyntax>(out _);
-                    default:
-                        return true;
-                }
+                    FieldDeclarationSyntax { Declaration: { Variables: { } variables } } declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword) ||
+                                                                                                        (variables.TryLast(out var last) &&
+                                                                                                         last.Initializer.Contains(node)),
+                    BaseFieldDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword),
+                    PropertyDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
+                                                             declaration.Initializer?.Contains(node) == true,
+                    BasePropertyDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword),
+                    BaseMethodDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
+                                                               node.TryFirstAncestor<ConstructorInitializerSyntax>(out _),
+                    _ => true,
+                };
             }
 
             return true;
@@ -194,10 +203,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>Null if the execution order could not be figured out.</returns>
         public static ExecutedBefore IsExecutedBefore(this StatementSyntax statement, StatementSyntax other)
         {
-            if (statement is null ||
-                other is null)
+            if (statement is null)
             {
-                return ExecutedBefore.Unknown;
+                throw new ArgumentNullException(nameof(statement));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
             }
 
             if (SyntaxExecutionContext.IsInLambda(statement, other, out var executedBefore))
@@ -251,9 +264,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return ExecutedBefore.No;
                 }
 
-                if (statement.Parent is BlockSyntax block &&
-                    (block.Statements.TryFirstOfType(out ReturnStatementSyntax _) ||
-                     block.Statements.TryFirstOfType(out ThrowStatementSyntax _)))
+                if (statement.Parent is BlockSyntax { Statements: { } statements } &&
+                    (statements.TryFirstOfType(out ReturnStatementSyntax _) ||
+                     statements.TryFirstOfType(out ThrowStatementSyntax _)))
                 {
                     return ExecutedBefore.No;
                 }
@@ -334,12 +347,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (statement is null)
             {
-                throw new System.ArgumentNullException(nameof(statement));
+                throw new ArgumentNullException(nameof(statement));
             }
 
             if (other is null)
             {
-                throw new System.ArgumentNullException(nameof(other));
+                throw new ArgumentNullException(nameof(other));
             }
 
             if (SyntaxExecutionContext.IsInLambda(statement, other, out var executedBefore))
@@ -363,10 +376,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>Null if it could not be determined.</returns>
         public static ExecutedBefore IsExecutedBefore(this ExpressionSyntax node, ExpressionSyntax other)
         {
-            if (node is null ||
-                other is null)
+            if (node is null)
             {
-                return ExecutedBefore.Unknown;
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
             }
 
             if (ReferenceEquals(node, other))
@@ -411,10 +428,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>Null if it could not be determined.</returns>
         public static ExecutedBefore IsExecutedBefore(this ExpressionSyntax node, StatementSyntax other)
         {
-            if (node is null ||
-                other is null)
+            if (node is null)
             {
-                return ExecutedBefore.Unknown;
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
             }
 
             if (SyntaxExecutionContext.IsInLambda(node, other, out var executedBefore))
@@ -438,11 +459,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="statement"/> or statement.Parent contains the block <paramref name="other"/> is in.</returns>
         private static bool IsInParentBlock(this StatementSyntax statement, StatementSyntax other)
         {
-            if (statement is null || other is null)
-            {
-                return false;
-            }
-
             if (ReferenceEquals(statement, other) ||
                 ReferenceEquals(statement.Parent, other.Parent))
             {

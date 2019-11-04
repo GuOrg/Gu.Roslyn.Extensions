@@ -25,6 +25,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetConstantValue<T>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [MaybeNullWhen(false)]out T value)
         {
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
             if (node is null)
             {
                 throw new ArgumentNullException(nameof(node));
@@ -46,7 +51,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 // We can't use GetTypeInfo() here as it brings in System.Reflection.Extensions that does not work in VS.
-                if (default(T) is Enum &&
+                if (default(T)! is Enum &&
                     Enum.GetUnderlyingType(typeof(T)) == optional.Value.GetType())
                 {
                     // ReSharper disable once PossibleInvalidCastException
@@ -70,6 +75,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)]out ITypeSymbol? type)
         {
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
             if (node is null)
             {
                 throw new ArgumentNullException(nameof(node));
@@ -103,9 +113,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetNamedType(this SemanticModel semanticModel, AttributeSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
         {
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
             if (expected is null)
             {
-                throw new System.ArgumentNullException(nameof(expected));
+                throw new ArgumentNullException(nameof(expected));
             }
 
             if (node is null)
@@ -114,7 +129,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             type = null;
-            return node?.Name is TypeSyntax typeSyntax &&
+            return node.Name is { } typeSyntax &&
                    semanticModel.TryGetNamedType(typeSyntax, expected, cancellationToken, out type);
         }
 
@@ -130,9 +145,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetNamedType(this SemanticModel semanticModel, TypeSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
         {
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
             if (expected is null)
             {
                 throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
             }
 
             type = null;
@@ -152,6 +177,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
         {
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
             if (node is null)
             {
                 throw new ArgumentNullException(nameof(node));
@@ -182,9 +212,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a boxed instance can be cast.</returns>
         public static bool IsRepresentationPreservingConversion(this SemanticModel semanticModel, ExpressionSyntax expression, ITypeSymbol destination)
         {
-            if (expression is null || destination is null)
+            if (semanticModel is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
             }
 
             var conversion = semanticModel.SemanticModelFor(expression)
@@ -204,15 +244,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (conversion.IsUnboxing)
             {
-                switch (expression)
+                return expression switch
                 {
-                    case CastExpressionSyntax cast:
-                        return IsRepresentationPreservingConversion(semanticModel, cast.Expression, destination);
-                    case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
-                        return IsRepresentationPreservingConversion(semanticModel, binary.Left, destination);
-                }
-
-                return false;
+                    CastExpressionSyntax { Expression: { } right } => IsRepresentationPreservingConversion(semanticModel, right, destination),
+                    BinaryExpressionSyntax { Left: { } left } binary => binary.IsKind(SyntaxKind.AsExpression) &&
+                                                                        IsRepresentationPreservingConversion(semanticModel, left, destination),
+                    _ => false,
+                };
             }
 
             return conversion.IsImplicit;
