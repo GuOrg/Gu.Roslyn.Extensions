@@ -253,16 +253,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return type switch
             {
-                PredefinedTypeSyntax predefinedType => predefinedType.Keyword.ValueText == this.Alias,
-                ArrayTypeSyntax array => this is QualifiedArrayType arrayType &&
-                           arrayType.ElementType.Equals(array.ElementType),
-                NullableTypeSyntax nullable => this is QualifiedGenericType qualifiedGenericType &&
-                           qualifiedGenericType.TypeArguments.TrySingle(out var typeArg) &&
-                           qualifiedGenericType.Type == "Nullable`1" &&
-                           typeArg.Equals(nullable.ElementType),
+                PredefinedTypeSyntax { Keyword: { } keyword } => keyword.ValueText == this.Alias,
+                ArrayTypeSyntax array => this is QualifiedArrayType { ElementType: { } elementType } &&
+                                         elementType.Equals(array.ElementType),
+                NullableTypeSyntax { ElementType: { } elementType } => this is QualifiedGenericType { Type: "Nullable`1", TypeArguments: { Length: 1 } typeArguments } &&
+                                                                       typeArguments.TrySingle(out var typeArg) &&
+                                                                       typeArg.Equals(elementType),
                 GenericNameSyntax genericName => this.Type.IsParts(genericName.Identifier.ValueText, "`", genericName.Arity.ToString(CultureInfo.InvariantCulture)),
                 SimpleNameSyntax simple => this.NameEquals(simple.Identifier.ValueText) ||
-                           Aliased(simple),
+                                           Aliased(simple),
                 QualifiedNameSyntax qualified => this.Equals(qualified.Right) &&
                            this.Namespace.Matches(qualified.Left),
 

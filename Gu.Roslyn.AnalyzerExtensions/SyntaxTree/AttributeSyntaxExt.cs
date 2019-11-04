@@ -16,14 +16,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match as found.</returns>
         public static bool TrySingleArgument(this AttributeSyntax attribute, [NotNullWhen(true)] out AttributeArgumentSyntax? argument)
         {
-            var argumentList = attribute?.ArgumentList;
-            if (argumentList is null)
+            if (attribute is null)
             {
-                argument = null;
-                return false;
+                throw new System.ArgumentNullException(nameof(attribute));
             }
 
-            return argumentList.Arguments.TrySingle(out argument);
+            argument = null;
+            return attribute is { ArgumentList: { Arguments: { } arguments } } &&
+                   arguments.TrySingle(out argument);
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new System.ArgumentNullException(nameof(attribute));
             }
 
-            if (attribute.ArgumentList is AttributeArgumentListSyntax argumentList)
+            if (attribute.ArgumentList is { Arguments: { } arguments })
             {
-                foreach (var candidate in attribute.ArgumentList.Arguments)
+                foreach (var candidate in arguments)
                 {
                     if (candidate.NameColon is NameColonSyntax nameColon &&
                         nameColon.Name.Identifier.ValueText == name)
@@ -60,7 +60,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
-                return argumentList.Arguments.TryElementAt(index, out argument) &&
+                return arguments.TryElementAt(index, out argument) &&
                        argument.NameColon is null &&
                        argument.NameEquals is null;
             }
