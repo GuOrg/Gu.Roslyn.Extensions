@@ -92,13 +92,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 case IParameterSymbol _:
                     return IsEquivalentTo(x.ContainingSymbol, y.ContainingSymbol);
-                case IPropertySymbol property when property.OverriddenProperty is IPropertySymbol overridden:
+                case IPropertySymbol { OverriddenProperty: { } overridden }:
                     return IsEquivalentTo(x, overridden);
-                case IEventSymbol eventSymbol when eventSymbol.OverriddenEvent is IEventSymbol overridden:
+                case IEventSymbol { OverriddenEvent: { } overridden }:
                     return IsEquivalentTo(x, overridden);
-                case IMethodSymbol methodSymbol when methodSymbol.OverriddenMethod is IMethodSymbol overridden:
+                case IMethodSymbol { OverriddenMethod: { } overridden }:
                     return IsEquivalentTo(x, overridden);
-                case IMethodSymbol ym when x is IMethodSymbol xm && xm.IsExtensionMethod && ym.IsExtensionMethod:
+                case IMethodSymbol { IsExtensionMethod: true } ym
+                    when x is IMethodSymbol { IsExtensionMethod: true } xm:
                     return xm.ReducedFrom?.Equals(ym) == true ||
                            xm.Equals(ym.ReducedFrom);
             }
@@ -115,8 +116,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a single attribute of type <paramref name="attributeType"/> declared on <paramref name="symbol"/>.</returns>
         public static bool TryGetAttribute(this ISymbol symbol, QualifiedType attributeType, [NotNullWhen(true)]out AttributeData? attribute)
         {
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            if (attributeType is null)
+            {
+                throw new System.ArgumentNullException(nameof(attributeType));
+            }
+
             attribute = null;
-            return symbol?.GetAttributes().TrySingle(x => x.AttributeClass == attributeType, out attribute) ?? false;
+            return symbol.GetAttributes().TrySingle(x => x.AttributeClass == attributeType, out attribute);
         }
 
         /// <summary>

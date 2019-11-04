@@ -154,11 +154,10 @@ namespace N
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindMemberAccessExpression("this.number");
             var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
-            AssignmentExpressionSyntax result;
             var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
             if (scope != SearchScope.Member)
             {
-                Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
+                Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out var result));
                 Assert.AreEqual("this.number = value", result.ToString());
                 Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.number = value", result.ToString());

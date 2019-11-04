@@ -20,14 +20,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one declaration was found.</returns>
         public static bool TrySingleDeclaration(this IFieldSymbol field, CancellationToken cancellationToken, [NotNullWhen(true)]out FieldDeclarationSyntax? declaration)
         {
-            declaration = null;
-            if (field != null &&
-                field.DeclaringSyntaxReferences.TrySingle(out var reference))
+            if (field is null)
             {
-                declaration = reference.GetSyntax(cancellationToken).FirstAncestorOrSelf<FieldDeclarationSyntax>();
+                throw new System.ArgumentNullException(nameof(field));
             }
 
-            return declaration != null;
+            declaration = null;
+            return field.DeclaringSyntaxReferences.TrySingle(out var reference) &&
+                   reference.GetSyntax(cancellationToken)
+                            .TryFirstAncestorOrSelf(out declaration);
         }
 
         /// <summary>
@@ -39,12 +40,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one declaration was found.</returns>
         public static bool TrySingleDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out BasePropertyDeclarationSyntax? declaration)
         {
-            declaration = null;
-            if (property != null &&
-                property.DeclaringSyntaxReferences.TrySingle(out var reference))
+            if (property is null)
             {
-                declaration = reference.GetSyntax(cancellationToken) as BasePropertyDeclarationSyntax;
+                throw new System.ArgumentNullException(nameof(property));
             }
+
+            declaration = property.DeclaringSyntaxReferences.TrySingle(out var reference)
+                ? reference.GetSyntax(cancellationToken) as BasePropertyDeclarationSyntax
+                : null;
 
             return declaration != null;
         }
@@ -52,18 +55,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try to get the single declaration of a property.
         /// </summary>
-        /// <param name="symbol">The <see cref="IEventSymbol"/>. </param>
+        /// <param name="event">The <see cref="IEventSymbol"/>. </param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleDeclaration(this IEventSymbol symbol, CancellationToken cancellationToken, [NotNullWhen(true)]out MemberDeclarationSyntax? declaration)
+        public static bool TrySingleDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)]out MemberDeclarationSyntax? declaration)
         {
-            declaration = null;
-            if (symbol != null &&
-                symbol.DeclaringSyntaxReferences.TrySingle(out var reference))
+            if (@event is null)
             {
-                declaration = reference.GetSyntax(cancellationToken) as MemberDeclarationSyntax;
+                throw new System.ArgumentNullException(nameof(@event));
             }
+
+            declaration = @event.DeclaringSyntaxReferences.TrySingle(out var reference)
+                ? reference.GetSyntax(cancellationToken) as MemberDeclarationSyntax
+                : null;
 
             return declaration != null;
         }
@@ -71,18 +76,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try to get the single declaration of an event.
         /// </summary>
-        /// <param name="symbol">The <see cref="IEventSymbol"/>. </param>
+        /// <param name="event">The <see cref="IEventSymbol"/>. </param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleEventDeclaration(this IEventSymbol symbol, CancellationToken cancellationToken, [NotNullWhen(true)]out EventDeclarationSyntax? declaration)
+        public static bool TrySingleEventDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)]out EventDeclarationSyntax? declaration)
         {
-            declaration = null;
-            if (symbol != null &&
-                symbol.DeclaringSyntaxReferences.TrySingle(out var reference))
+            if (@event is null)
             {
-                declaration = reference.GetSyntax(cancellationToken) as EventDeclarationSyntax;
+                throw new System.ArgumentNullException(nameof(@event));
             }
+
+            declaration = @event.DeclaringSyntaxReferences.TrySingle(out var reference)
+                ? reference.GetSyntax(cancellationToken) as EventDeclarationSyntax
+                : null;
 
             return declaration != null;
         }
@@ -90,18 +97,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Try to get the single declaration of an event.
         /// </summary>
-        /// <param name="symbol">The <see cref="IEventSymbol"/>.</param>
+        /// <param name="event">The <see cref="IEventSymbol"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="declaration">The declaration.</param>
         /// <returns>True if one declaration was found.</returns>
-        public static bool TrySingleEventFieldDeclaration(this IEventSymbol symbol, CancellationToken cancellationToken, [NotNullWhen(true)]out EventFieldDeclarationSyntax? declaration)
+        public static bool TrySingleEventFieldDeclaration(this IEventSymbol @event, CancellationToken cancellationToken, [NotNullWhen(true)]out EventFieldDeclarationSyntax? declaration)
         {
-            declaration = null;
-            if (symbol != null &&
-                symbol.DeclaringSyntaxReferences.TrySingle(out var reference))
+            if (@event is null)
             {
-                declaration = reference.GetSyntax(cancellationToken) as EventFieldDeclarationSyntax;
+                throw new System.ArgumentNullException(nameof(@event));
             }
+
+            declaration = @event.DeclaringSyntaxReferences.TrySingle(out var reference)
+                ? reference.GetSyntax(cancellationToken) as EventFieldDeclarationSyntax
+                : null;
 
             return declaration != null;
         }
@@ -115,6 +124,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one declaration was found.</returns>
         public static bool TrySingleMethodDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)]out MethodDeclarationSyntax? declaration)
         {
+            if (method is null)
+            {
+                throw new System.ArgumentNullException(nameof(method));
+            }
+
             return TrySingleDeclaration(method, cancellationToken, out declaration);
         }
 
@@ -127,6 +141,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one declaration was found.</returns>
         public static bool TrySingleAccessorDeclaration(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)]out AccessorDeclarationSyntax? declaration)
         {
+            if (method is null)
+            {
+                throw new System.ArgumentNullException(nameof(method));
+            }
+
             return TrySingleDeclaration(method, cancellationToken, out declaration);
         }
 
@@ -141,12 +160,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingleDeclaration<T>(this IMethodSymbol method, CancellationToken cancellationToken, [NotNullWhen(true)]out T? declaration)
             where T : SyntaxNode
         {
-            declaration = null;
-            if (method != null &&
-                method.DeclaringSyntaxReferences.TrySingle(out var reference))
+            if (method is null)
             {
-                declaration = reference.GetSyntax(cancellationToken) as T;
+                throw new System.ArgumentNullException(nameof(method));
             }
+
+            declaration = method.DeclaringSyntaxReferences.TrySingle(out var reference)
+                ? reference.GetSyntax(cancellationToken) as T
+                : null;
 
             return declaration != null;
         }
@@ -160,12 +181,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one declaration was found.</returns>
         public static bool TrySingleDeclaration(this IParameterSymbol parameter, CancellationToken cancellationToken, [NotNullWhen(true)]out ParameterSyntax? declaration)
         {
-            declaration = null;
-            if (parameter != null &&
-                parameter.DeclaringSyntaxReferences.TrySingle(out var reference))
+            if (parameter is null)
             {
-                declaration = reference.GetSyntax(cancellationToken) as ParameterSyntax;
+                throw new System.ArgumentNullException(nameof(parameter));
             }
+
+            declaration = parameter.DeclaringSyntaxReferences.TrySingle(out var reference)
+                ? reference.GetSyntax(cancellationToken) as ParameterSyntax
+                : null;
 
             return declaration != null;
         }
@@ -180,12 +203,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one declaration was found.</returns>
         public static bool TrySingleDeclaration(this ILocalSymbol local, CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? declaration)
         {
-            declaration = null;
-            if (local != null &&
-                local.DeclaringSyntaxReferences.TrySingle(out var reference))
+            if (local is null)
             {
-                declaration = reference.GetSyntax(cancellationToken);
+                throw new System.ArgumentNullException(nameof(local));
             }
+
+            declaration = local.DeclaringSyntaxReferences.TrySingle(out var reference)
+                ? reference.GetSyntax(cancellationToken)
+                : null;
 
             return declaration != null;
         }
@@ -202,19 +227,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingleDeclaration<T>(this ISymbol symbol, CancellationToken cancellationToken, [NotNullWhen(true)]out T? declaration)
             where T : SyntaxNode
         {
-            declaration = null;
             if (symbol is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(symbol));
             }
 
-            if (symbol.DeclaringSyntaxReferences.TrySingle(out var reference))
-            {
-                declaration = reference.GetSyntax(cancellationToken).FirstAncestorOrSelf<T>();
-                return declaration != null;
-            }
+            declaration = symbol.DeclaringSyntaxReferences.TrySingle(out var reference)
+                ? reference.GetSyntax(cancellationToken) as T
+                : null;
 
-            return false;
+            return declaration != null;
         }
     }
 }

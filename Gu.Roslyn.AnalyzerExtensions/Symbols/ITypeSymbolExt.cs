@@ -18,9 +18,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetSingleTypeArgument(this ITypeSymbol type, [NotNullWhen(true)]out ITypeSymbol? typeArgument)
         {
             typeArgument = null;
-            return type is INamedTypeSymbol namedType &&
-                   namedType.IsGenericType &&
-                   namedType.TypeArguments.TrySingle(out typeArgument);
+            return type is INamedTypeSymbol { IsGenericType: true, TypeArguments: { Length: 1 } typeArguments } &&
+                   typeArguments.TrySingle(out typeArgument);
         }
     }
 }

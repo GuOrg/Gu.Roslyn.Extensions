@@ -21,8 +21,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a declaration was found.</returns>
         public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out SyntaxNode? declaration)
         {
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
             declaration = null;
-            return property?.GetMethod is IMethodSymbol getMethod &&
+            return property.GetMethod is { } getMethod &&
                    getMethod.TrySingleDeclaration(cancellationToken, out declaration);
         }
 
@@ -35,8 +40,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a declaration was found.</returns>
         public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out AccessorDeclarationSyntax? getter)
         {
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
             getter = null;
-            return property?.GetMethod != null &&
+            return property.GetMethod != null &&
                    property.TrySingleDeclaration(cancellationToken, out var declaration) &&
                    declaration.TryGetGetter(out getter);
         }
@@ -50,8 +60,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a declaration was found.</returns>
         public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)]out AccessorDeclarationSyntax? setter)
         {
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
             setter = null;
-            return property?.SetMethod != null &&
+            return property.SetMethod != null &&
                    property.TrySingleDeclaration(cancellationToken, out var declaration) &&
                    declaration.TryGetSetter(out setter);
         }
@@ -66,7 +81,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (property is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(property));
             }
 
             return property.SetMethod is null &&
@@ -81,12 +96,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the property is an auto property.</returns>
         public static bool IsAutoProperty(this IPropertySymbol property)
         {
-            if (property?.ContainingType is INamedTypeSymbol containingType)
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
+            if (property.ContainingType is { } containingType)
             {
                 foreach (var member in containingType.GetMembers())
                 {
-                    if (member is IFieldSymbol field &&
-                        field.AssociatedSymbol is ISymbol associatedSymbol &&
+                    if (member is IFieldSymbol { AssociatedSymbol: IPropertySymbol associatedSymbol } &&
                         associatedSymbol.Equals(property))
                     {
                         return true;

@@ -55,7 +55,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (this.SearchScope != SearchScope.Member &&
                 node.Initializer is null &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
-                ctor.ContainingType is INamedTypeSymbol containingType &&
+                ctor.ContainingType is { } containingType &&
                 Constructor.TryFindDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
                 defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax? defaultCtorDeclaration))
             {
@@ -149,24 +149,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 if (this.IsPropertyGetAndSet(node))
                 {
-                    if (property.GetMethod.TrySingleAccessorDeclaration(this.CancellationToken, out var getter))
+                    if (property.TryGetGetMethodDeclaration(this.CancellationToken, out var getter))
                     {
                         this.Visit(getter);
                     }
 
-                    if (property.SetMethod.TrySingleAccessorDeclaration(this.CancellationToken, out var setter))
+                    if (property.TryGetSetter(this.CancellationToken, out var setter))
                     {
                         this.Visit(setter);
                     }
                 }
                 else if (this.IsPropertySet(node))
                 {
-                    if (property.SetMethod.TrySingleAccessorDeclaration(this.CancellationToken, out var setter))
+                    if (property.TryGetSetter(this.CancellationToken, out var setter))
                     {
                         this.Visit(setter);
                     }
                 }
-                else if (property.GetMethod.TrySingleDeclaration(this.CancellationToken, out SyntaxNode? getter))
+                else if (property.TryGetGetMethodDeclaration(this.CancellationToken, out var getter))
                 {
                     this.Visit(getter);
                 }
@@ -196,8 +196,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             var walker = Borrow(create);
 
             // Not pretty below here, throwing is perhaps nicer, dunno.
-            walker.SearchScope = scope == SearchScope.Member &&
-                           node is TypeDeclarationSyntax ? SearchScope.Type : scope;
+            walker.SearchScope = scope == SearchScope.Member && node is TypeDeclarationSyntax ? SearchScope.Type : scope;
             if (walker.SearchScope != SearchScope.Member)
             {
                 if (node is TypeDeclarationSyntax typeDeclaration &&
@@ -275,8 +274,20 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="node"/> is found to be a property set.</returns>
         protected virtual bool IsPropertySet(IdentifierNameSyntax node)
         {
-            return node.TryFirstAncestor(out AssignmentExpressionSyntax? assignment) &&
-                   assignment.Left.Contains(node);
+            return node switch
+            {
+                { Parent: AssignmentExpressionSyntax assignment } => assignment.Left == node,
+                { Parent: MemberAccessExpressionSyntax { Expression: InstanceExpressionSyntax _, Parent: AssignmentExpressionSyntax assignment } } => assignment.Left.Contains(node),
+                _ => this.SearchScope switch
+                {
+                    SearchScope.Member => false,
+                    SearchScope.Instance => false,
+                    SearchScope.Type => false,
+                    SearchScope.Recursive => node.TryFirstAncestor(out AssignmentExpressionSyntax? assignment) &&
+                                             assignment.Left.Contains(node),
+                    _ => throw new InvalidOperationException($"Unhandled scope: {this.SearchScope}")
+                },
+            };
         }
 
         /// <summary>
@@ -286,8 +297,22 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="node"/> is found to be a property set.</returns>
         protected virtual bool IsPropertyGetAndSet(IdentifierNameSyntax node)
         {
-            return node.TryFirstAncestor(out PrefixUnaryExpressionSyntax _) ||
-                   node.TryFirstAncestor(out PostfixUnaryExpressionSyntax _);
+            return node switch
+            {
+                { Parent: PrefixUnaryExpressionSyntax _ } => true,
+                { Parent: PostfixUnaryExpressionSyntax _ } => true,
+                { Parent: MemberAccessExpressionSyntax { Expression: InstanceExpressionSyntax { }, Parent: PrefixUnaryExpressionSyntax _ } } => true,
+                { Parent: MemberAccessExpressionSyntax { Expression: InstanceExpressionSyntax { }, Parent: PostfixUnaryExpressionSyntax _ } } => true,
+                _ => this.SearchScope switch
+                {
+                    SearchScope.Member => false,
+                    SearchScope.Instance => false,
+                    SearchScope.Type => false,
+                    SearchScope.Recursive => node.TryFirstAncestor(out PrefixUnaryExpressionSyntax? _) ||
+                                             node.TryFirstAncestor(out PostfixUnaryExpressionSyntax? _),
+                    _ => throw new InvalidOperationException($"Unhandled scope: {this.SearchScope}")
+                },
+            };
         }
 
         /// <summary>
@@ -315,8 +340,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (this.SearchScope == SearchScope.Instance &&
-                node.Parent is MemberAccessExpressionSyntax memberAccess &&
-                memberAccess.Expression?.IsEither(SyntaxKind.IdentifierName, SyntaxKind.SimpleMemberAccessExpression) == true)
+                node.Parent is MemberAccessExpressionSyntax { Expression: { } expression } &&
+                expression.IsEither(SyntaxKind.IdentifierName, SyntaxKind.SimpleMemberAccessExpression) == true)
             {
                 return false;
             }
@@ -361,9 +386,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
-                if (node.Declaration is VariableDeclarationSyntax declaration &&
+                if (node.Declaration is { } declaration &&
                     declaration.Variables.TryLast(out var variable) &&
-                    variable.Initializer is EqualsValueClauseSyntax equalsValueClause)
+                    variable.Initializer is { } equalsValueClause)
                 {
                     this.Initializers.Add(equalsValueClause);
                 }
@@ -371,7 +396,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
             {
-                if (node.Initializer is EqualsValueClauseSyntax equalsValueClause)
+                if (node.Initializer is { } equalsValueClause)
                 {
                     this.Initializers.Add(equalsValueClause);
                 }

@@ -41,6 +41,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="type"/> is assignable to <paramref name="qualifiedType1"/> or <paramref name="qualifiedType2"/>.</returns>
         public static bool IsAssignableToEither(this ITypeSymbol type, QualifiedType qualifiedType1, QualifiedType qualifiedType2, Compilation compilation)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (qualifiedType1 is null)
+            {
+                throw new ArgumentNullException(nameof(qualifiedType1));
+            }
+
             return type.IsAssignableTo(qualifiedType1, compilation) ||
                    type.IsAssignableTo(qualifiedType2, compilation);
         }
@@ -52,8 +62,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the type is awaitable.</returns>
         public static bool IsAwaitable(this ITypeSymbol type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             return type.TryFindFirstMethod("GetAwaiter", x => x.Parameters.Length == 0, out var method) &&
-                   method.ReturnType is ITypeSymbol returnType &&
+                   method.ReturnType is { } returnType &&
                    returnType.TryFindFirstMethod("GetResult", x => x.Parameters.Length == 0, out _) &&
                    returnType.TryFindProperty("IsCompleted", out _);
         }
@@ -67,9 +82,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsAssignableTo(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
         {
-            if (source is null || destination is null)
+            if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (compilation is null)
+            {
+                throw new ArgumentNullException(nameof(compilation));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
             }
 
             return compilation.ClassifyConversion(source, destination).IsImplicit;
@@ -111,9 +136,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ITypeSymbol source, ITypeSymbol destination, Compilation compilation)
         {
-            if (source is null || destination is null)
+            if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            if (compilation is null)
+            {
+                throw new ArgumentNullException(nameof(compilation));
             }
 
             return compilation.ClassifyConversion(source, destination).IsIdentity;
@@ -128,9 +163,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="destination"/>. </returns>
         public static bool IsSameType(this ITypeSymbol source, QualifiedType destination, Compilation compilation)
         {
-            if (source is null || destination is null)
+            if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            if (compilation is null)
+            {
+                throw new ArgumentNullException(nameof(compilation));
             }
 
             return IsSameType(source, destination.GetTypeSymbol(compilation), compilation);
@@ -144,9 +189,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="source"/> is <paramref name="qualifiedType"/>. </returns>
         public static bool Is(this ITypeSymbol source, QualifiedType qualifiedType)
         {
-            if (source is null || qualifiedType is null)
+            if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (qualifiedType is null)
+            {
+                throw new ArgumentNullException(nameof(qualifiedType));
             }
 
             if (source is ITypeParameterSymbol typeParameterSymbol)
@@ -192,9 +242,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Obsolete("Use IsAssignableTo or conversion.")]
         public static bool Is(this ITypeSymbol source, ITypeSymbol destination)
         {
-            if (source is null || destination is null)
+            if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
             }
 
             if (destination == QualifiedType.System.Object ||
@@ -316,10 +371,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Obsolete("Use IsAssignableTo, candidate for removal")]
         public static bool IsNullable(this ITypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (nullableType is null ||
-                value is null)
+            if (nullableType is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(nullableType));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return nullableType is INamedTypeSymbol namedType &&
@@ -337,14 +401,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Obsolete("Use IsAssignableTo, candidate for removal")]
         public static bool IsNullable(this INamedTypeSymbol nullableType, ExpressionSyntax value, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (nullableType is null ||
-                value is null)
+            if (nullableType is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(nullableType));
             }
 
-            if (nullableType.IsGenericType &&
-                nullableType.Name == "Nullable" &&
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (nullableType is { IsGenericType: true, Name: "Nullable" } &&
                 nullableType.TypeArguments.TrySingle(out var typeArg))
             {
                 if (value.IsKind(SyntaxKind.NullLiteralExpression))
