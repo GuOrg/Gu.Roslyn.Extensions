@@ -86,8 +86,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 foreach (var declaration in walker.localDeclarations)
                 {
-                    if (declaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
-                        variableDeclaration.Variables.TryFirst(x => x.Initializer != null, out var variable) &&
+                    if (declaration.Declaration is { Variables: { } variables } &&
+                        variables.TryFirst(x => x.Initializer != null, out var variable) &&
                         IsMatch(currentSymbol, variable.Initializer.Value, semanticModel, cancellationToken) &&
                         semanticModel.TryGetSymbol(variable, cancellationToken, out ILocalSymbol? local))
                     {
@@ -137,7 +137,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     foreach (var candidate in walker.assignments)
                     {
                         if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out IPropertySymbol? property) &&
-                            property.SetMethod is IMethodSymbol setMethod &&
+                            property.SetMethod is { } setMethod &&
                             setMethod.Parameters.TrySingle(out var parameter) &&
                             setMethod.TrySingleDeclaration(cancellationToken, out AccessorDeclarationSyntax? setter) &&
                             (setter.Body != null || setter.ExpressionBody != null) &&
@@ -288,27 +288,37 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             switch (expression)
             {
-                case ConditionalExpressionSyntax conditional:
-                    return IsMatch(symbol, conditional.WhenTrue, semanticModel, cancellationToken) ||
-                           IsMatch(symbol, conditional.WhenFalse, semanticModel, cancellationToken);
-                case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.CoalesceExpression):
-                    return IsMatch(symbol, binary.Left, semanticModel, cancellationToken) ||
-                           IsMatch(symbol, binary.Right, semanticModel, cancellationToken);
-                case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
-                    return IsMatch(symbol, binary.Left, semanticModel, cancellationToken);
-                case CastExpressionSyntax cast:
-                    return IsMatch(symbol, cast.Expression, semanticModel, cancellationToken);
-                case ObjectCreationExpressionSyntax objectCreation when objectCreation.ArgumentList != null && objectCreation.ArgumentList.Arguments.TryFirst(x => SymbolComparer.Equals(symbol, semanticModel.GetSymbolSafe(x.Expression, cancellationToken)), out ArgumentSyntax _):
-                    return true;
+                case ConditionalExpressionSyntax { WhenTrue: { } whenTrue, WhenFalse: { } whenFalse }:
+                    return IsMatch(symbol, whenTrue, semanticModel, cancellationToken) ||
+                           IsMatch(symbol, whenFalse, semanticModel, cancellationToken);
+                case BinaryExpressionSyntax { Left: { } left, Right: { } right } binary
+                    when binary.IsKind(SyntaxKind.CoalesceExpression):
+                    return IsMatch(symbol, left, semanticModel, cancellationToken) ||
+                           IsMatch(symbol, right, semanticModel, cancellationToken);
+                case BinaryExpressionSyntax { Left: { } left } binary
+                    when binary.IsKind(SyntaxKind.AsExpression):
+                    return IsMatch(symbol, left, semanticModel, cancellationToken);
+                case CastExpressionSyntax { Expression: { } castee }:
+                    return IsMatch(symbol, castee, semanticModel, cancellationToken);
+                case ObjectCreationExpressionSyntax { ArgumentList: { Arguments: { } arguments } }:
+                    foreach (ArgumentSyntax argument in arguments)
+                    {
+                        if (IsMatch(symbol, argument.Expression, semanticModel, cancellationToken))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
                 default:
                     if (symbol.IsEither<ILocalSymbol, IParameterSymbol>())
                     {
                         return expression is IdentifierNameSyntax identifierName &&
-                               identifierName.Identifier.ValueText == symbol.Name &&
-                               SymbolComparer.Equals(symbol, semanticModel.GetSymbolSafe(expression, cancellationToken));
+                               identifierName.IsSymbol(symbol, semanticModel, cancellationToken);
                     }
 
-                    return SymbolComparer.Equals(symbol, semanticModel.GetSymbolSafe(expression, cancellationToken));
+                    return semanticModel.TryGetSymbol(expression, cancellationToken, out var candidateSymbol) &&
+                           SymbolComparer.Equals(symbol, candidateSymbol);
             }
         }
     }

@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
 
@@ -113,12 +114,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (symbol is null)
             {
-                throw new System.ArgumentNullException(nameof(symbol));
+                throw new ArgumentNullException(nameof(symbol));
             }
 
             if (attributeType is null)
             {
-                throw new System.ArgumentNullException(nameof(attributeType));
+                throw new ArgumentNullException(nameof(attributeType));
             }
 
             attribute = null;
@@ -134,7 +135,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (symbol is null)
             {
-                throw new System.ArgumentNullException(nameof(symbol));
+                throw new ArgumentNullException(nameof(symbol));
             }
 
             return symbol.TryGetAttribute(QualifiedType.System.CodeDom.Compiler.GeneratedCodeAttribute, out _);
@@ -149,7 +150,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (symbol is null)
             {
-                throw new System.ArgumentNullException(nameof(symbol));
+                throw new ArgumentNullException(nameof(symbol));
             }
 
             return symbol.TryGetAttribute(QualifiedType.System.Runtime.CompilerServices.CompilerGeneratedAttribute, out _);

@@ -113,7 +113,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if found equal.</returns>
         public static bool operator ==(BaseTypeSyntax left, QualifiedType right)
         {
-            return right?.Equals(left?.Type) == true;
+            if (left is null || right is null)
+            {
+                return left is null && right is null;
+            }
+
+            return right.Equals(left.Type) == true;
         }
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>

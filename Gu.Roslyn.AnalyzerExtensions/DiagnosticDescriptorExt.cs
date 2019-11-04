@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -17,12 +18,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (descriptor is null)
             {
-                throw new System.ArgumentNullException(nameof(descriptor));
+                throw new ArgumentNullException(nameof(descriptor));
             }
 
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             if (semanticModel.Compilation.Options.SpecificDiagnosticOptions.TryGetValue(descriptor.Id, out var report))

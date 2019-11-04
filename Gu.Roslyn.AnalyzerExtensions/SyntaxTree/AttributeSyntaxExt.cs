@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             argument = null;
-            return attribute is { ArgumentList: { Arguments: { } arguments } } &&
+            return attribute is { ArgumentList: { Arguments: { Count: 1 } arguments } } &&
                    arguments.TrySingle(out argument);
         }
 

@@ -16,14 +16,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a local name was found.</returns>
         public static bool TryGetLocalName(this XmlElementSyntax element, [NotNullWhen(true)] out string? localName)
         {
-            localName = null;
-            if (element?.StartTag is XmlElementStartTagSyntax startTag &&
-                startTag.Name is XmlNameSyntax nameSyntax)
+            if (element is null)
             {
-                localName = nameSyntax.LocalName.Text;
+                throw new System.ArgumentNullException(nameof(element));
             }
 
-            return localName != null;
+            if (element.StartTag is { Name: { LocalName: { Text: { } text } } })
+            {
+                localName = text;
+                return true;
+            }
+
+            localName = null;
+            return false;
         }
 
         /// <summary>
@@ -36,6 +41,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the elements local name matches <paramref name="localName"/>.</returns>
         public static bool HasLocalName(this XmlElementSyntax element, string localName)
         {
+            if (element is null)
+            {
+                throw new System.ArgumentNullException(nameof(element));
+            }
+
             return element.TryGetLocalName(out var candidate) &&
                    candidate == localName;
         }
@@ -48,9 +58,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a name attribute was found.</returns>
         public static bool TryGetNameAttribute(this XmlElementSyntax element, [NotNullWhen(true)] out XmlNameAttributeSyntax? attribute)
         {
+            if (element is null)
+            {
+                throw new System.ArgumentNullException(nameof(element));
+            }
+
+            if (element.StartTag is { Attributes: { } attributes })
+            {
+                return attributes.TrySingleOfType(out attribute);
+            }
+
             attribute = null;
-            return element?.StartTag is XmlElementStartTagSyntax startTag &&
-                   startTag.Attributes.TrySingleOfType(out attribute);
+            return false;
         }
 
         /// <summary>
@@ -64,8 +83,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool HasNameAttribute(this XmlElementSyntax element, string name)
         {
             return element.TryGetNameAttribute(out var attribute) &&
-                   attribute.Identifier is IdentifierNameSyntax identifier &&
-                   identifier.Identifier.ValueText == name;
+                   attribute.Identifier is { Identifier: { ValueText: { } valueText } } &&
+                   valueText == name;
         }
     }
 }

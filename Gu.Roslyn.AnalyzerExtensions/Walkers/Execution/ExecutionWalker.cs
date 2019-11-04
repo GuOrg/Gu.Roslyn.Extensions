@@ -25,12 +25,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets or sets the <see cref="SemanticModel"/>.
         /// </summary>
-        protected SemanticModel SemanticModel { get; set; }
+        protected SemanticModel SemanticModel { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the containing <see cref="ITypeSymbol"/> of the current context.
         /// </summary>
-        protected ITypeSymbol ContainingType { get; set; }
+        protected ITypeSymbol ContainingType { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the <see cref="CancellationToken"/>.
@@ -375,8 +375,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected override void Clear()
         {
             this.visited.Clear();
-            this.SemanticModel = null;
-            this.ContainingType = null;
+            this.SemanticModel = null!;
+            this.ContainingType = null!;
             this.CancellationToken = CancellationToken.None;
         }
 
@@ -391,8 +391,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
-                if (node.Declaration is { } declaration &&
-                    declaration.Variables.TryLast(out var variable) &&
+                if (node.Declaration is { Variables: { } variables } &&
+                    variables.TryLast(out var variable) &&
                     variable.Initializer is { } equalsValueClause)
                 {
                     this.Initializers.Add(equalsValueClause);

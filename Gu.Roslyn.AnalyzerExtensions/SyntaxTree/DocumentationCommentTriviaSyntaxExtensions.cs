@@ -22,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             element = null;
-            return comment.Content.TrySingleOfType(x => x.HasLocalName("summary"), out element) == true;
+            return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "summary" } } } }, out element);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             element = null;
-            return comment.Content.TrySingleOfType(x => x.HasLocalName("returns"), out element) == true;
+            return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "returns" } } } }, out element);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             element = null;
-            return comment.Content.TrySingleOfType(x => x.HasLocalName("param") && x.HasNameAttribute(parameterName), out element) == true;
+            return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "param" } } } } && x.HasNameAttribute(parameterName), out element);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             element = null;
-            return comment.Content.TrySingleOfType(x => x.HasLocalName("typeparam") && x.HasNameAttribute(parameterName), out element) == true;
+            return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "typeparam" } } } } && x.HasNameAttribute(parameterName), out element);
         }
     }
 }

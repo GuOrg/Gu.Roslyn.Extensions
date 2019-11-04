@@ -3,6 +3,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -887,7 +888,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="index">The index.</param>
         /// <param name="result">The element at index if found, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryElementAt<T>(this SeparatedSyntaxList<T> source, int index, out T result)
+        public static bool TryElementAt<T>(this SeparatedSyntaxList<T> source, int index, [MaybeNullWhen(false)] out T result)
             where T : SyntaxNode
         {
             result = default(T);
