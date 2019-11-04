@@ -75,14 +75,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(candidate));
             }
 
-            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
-                argumentList.Arguments.Count == 2 &&
+            if (candidate.ArgumentList is { Arguments: { Count: 2 } arguments } &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
                 IsCorrectSymbol() != false)
             {
-                left = argumentList.Arguments[0].Expression;
-                right = argumentList.Arguments[1].Expression;
+                left = arguments[0].Expression;
+                right = arguments[1].Expression;
                 return true;
             }
 
@@ -102,10 +101,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 if (semanticModel != null)
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
-                           method.IsStatic &&
-                           method.Parameters.Length == 2 &&
-                           method.Parameters[0].Type == QualifiedType.System.Object &&
-                           method.Parameters[1].Type == QualifiedType.System.Object;
+                           method is { IsStatic: true, Parameters: { Length: 2 } parameters } &&
+                           parameters[0].Type == QualifiedType.System.Object &&
+                           parameters[1].Type == QualifiedType.System.Object;
                 }
 
                 return null;
@@ -130,14 +128,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(candidate));
             }
 
-            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
-                argumentList.Arguments.Count == 1 &&
+            if (candidate.ArgumentList is { Arguments: { Count: 1 } arguments } &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
                 TryGetInstance(candidate, out instance) &&
                 IsCorrectSymbol())
             {
-                other = argumentList.Arguments[0].Expression;
+                other = arguments[0].Expression;
                 return true;
             }
 
@@ -259,14 +256,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(candidate));
             }
 
-            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
-                argumentList.Arguments.Count == 2 &&
+            if (candidate.ArgumentList is { Arguments: { Count: 2 } arguments } &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "ReferenceEquals" &&
                 IsCorrectSymbol() != false)
             {
-                left = argumentList.Arguments[0].Expression;
-                right = argumentList.Arguments[1].Expression;
+                left = arguments[0].Expression;
+                right = arguments[1].Expression;
                 return true;
             }
 
@@ -279,10 +275,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 if (semanticModel != null)
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
-                           method.IsStatic &&
-                           method.Parameters.Length == 2 &&
-                           method.Parameters[0].Type == QualifiedType.System.Object &&
-                           method.Parameters[1].Type == QualifiedType.System.Object;
+                           method is { IsStatic: true, Parameters: { Length: 2 } parameters } &&
+                           parameters[0].Type == QualifiedType.System.Object &&
+                           parameters[1].Type == QualifiedType.System.Object;
                 }
 
                 return null;
@@ -307,14 +302,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(candidate));
             }
 
-            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
-                argumentList.Arguments.Count == 2 &&
+            if (candidate.ArgumentList is { Arguments: { Count: 2 } arguments } &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
                 IsCorrectSymbol() != false)
             {
-                left = argumentList.Arguments[0].Expression;
-                right = argumentList.Arguments[1].Expression;
+                left = arguments[0].Expression;
+                right = arguments[1].Expression;
                 return true;
             }
 
@@ -328,10 +322,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            method.ContainingType == QualifiedType.System.Runtime.CompilerServices.RuntimeHelpers &&
-                           method.IsStatic &&
-                           method.Parameters.Length == 2 &&
-                           method.Parameters[0].Type == QualifiedType.System.Object &&
-                           method.Parameters[1].Type == QualifiedType.System.Object;
+                           method is { IsStatic: true, Parameters: { Length: 2 } parameters } &&
+                           parameters[0].Type == QualifiedType.System.Object &&
+                           parameters[1].Type == QualifiedType.System.Object;
                 }
 
                 switch (candidate.Expression)
@@ -362,14 +355,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(candidate));
             }
 
-            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
-                argumentList.Arguments.Count == 2 &&
+            if (candidate.ArgumentList is { Arguments: { Count: 2 } arguments } &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
                 IsCorrectSymbol() != false)
             {
-                left = argumentList.Arguments[0].Expression;
-                right = argumentList.Arguments[1].Expression;
+                left = arguments[0].Expression;
+                right = arguments[1].Expression;
                 return true;
             }
 
@@ -383,10 +375,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            method.ContainingType == QualifiedType.System.Nullable &&
-                           method.IsStatic &&
-                           method.Parameters.Length == 2 &&
-                           method.Parameters[0].Type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T &&
-                           method.Parameters[1].Type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+                           method is { IsStatic: true, Parameters: { Length: 2 } parameters } &&
+                           parameters[0].Type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T &&
+                           parameters[1].Type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
                 }
 
                 switch (candidate.Expression)
@@ -418,15 +409,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(candidate));
             }
 
-            if (candidate.ArgumentList is ArgumentListSyntax argumentList &&
-                argumentList.Arguments.Count == 3 &&
+            if (candidate.ArgumentList is { Arguments: { Count: 3 } arguments } &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
                 IsCorrectSymbol())
             {
-                left = argumentList.Arguments[0].Expression;
-                right = argumentList.Arguments[1].Expression;
-                stringComparison = argumentList.Arguments[2].Expression;
+                left = arguments[0].Expression;
+                right = arguments[1].Expression;
+                stringComparison = arguments[2].Expression;
                 return true;
             }
 
@@ -441,18 +431,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            method.ContainingType == QualifiedType.System.String &&
-                           method.IsStatic &&
-                           method.Parameters.Length == 3 &&
-                           method.Parameters[0].Type.SpecialType == SpecialType.System_String &&
-                           method.Parameters[1].Type.SpecialType == SpecialType.System_String &&
-                           method.Parameters[2].Type == QualifiedType.System.StringComparison;
+                           method is { IsStatic: true, Parameters: { Length: 3 } parameters } &&
+                           parameters[0].Type.SpecialType == SpecialType.System_String &&
+                           parameters[1].Type.SpecialType == SpecialType.System_String &&
+                           parameters[2].Type == QualifiedType.System.StringComparison;
                 }
 
                 switch (candidate.Expression)
                 {
-                    case MemberAccessExpressionSyntax memberAccess when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
-                                                                        string.Equals(last.ValueText, "String", StringComparison.OrdinalIgnoreCase):
-                        return true;
+                    case MemberAccessExpressionSyntax memberAccess:
+                        return MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
+                               string.Equals(last.ValueText, "String", StringComparison.OrdinalIgnoreCase);
                     default:
                         return false;
                 }
@@ -482,15 +471,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(semanticModel));
             }
 
-            if (candidate?.ArgumentList is ArgumentListSyntax argumentList &&
-                argumentList.Arguments.Count == 2 &&
+            if (candidate.ArgumentList is { Arguments: { Count: 2 } arguments } &&
                 candidate.TryGetMethodName(out var name) &&
                 name == "Equals" &&
                 TryGetInstance(candidate, out comparer) &&
                 IsCorrectSymbol())
             {
-                left = argumentList.Arguments[0].Expression;
-                right = argumentList.Arguments[1].Expression;
+                left = arguments[0].Expression;
+                right = arguments[1].Expression;
                 return true;
             }
 
@@ -502,9 +490,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             bool IsCorrectSymbol()
             {
                 return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
-                       method.ContainingType.Is(QualifiedType.System.Collections.Generic.IEqualityComparerOfT) &&
-                       !method.IsStatic &&
-                       method.Parameters.Length == 2;
+                       method is { IsStatic: false, Parameters: { Length: 2 } } &&
+                       method.ContainingType.Is(QualifiedType.System.Collections.Generic.IEqualityComparerOfT);
             }
         }
 
@@ -652,17 +639,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             foreach (var member in candidate.Members)
             {
-                if (member is MethodDeclarationSyntax method &&
-                    method.Modifiers.Any(SyntaxKind.OverrideKeyword) &&
-                    method.ParameterList is ParameterListSyntax parameterList)
+                if (member is MethodDeclarationSyntax { ParameterList: { Parameters: { } parameters } } method &&
+                    method.Modifiers.Any(SyntaxKind.OverrideKeyword))
                 {
-                    if (parameterList.Parameters.Count == 0 &&
+                    if (parameters.Count == 0 &&
                         method.Identifier.ValueText == nameof(GetHashCode))
                     {
                         return true;
                     }
 
-                    if (parameterList.Parameters.TrySingle(out var parameter) &&
+                    if (parameters.TrySingle(out var parameter) &&
                         parameter.Type == QualifiedType.System.Object &&
                         method.Identifier.ValueText == nameof(Equals))
                     {
@@ -708,15 +694,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
         }
 
-        private static bool TryGetInstance(InvocationExpressionSyntax invocation, [NotNullWhen(true)]out ExpressionSyntax? result)
+        private static bool TryGetInstance(InvocationExpressionSyntax invocation, [NotNullWhen(true)] out ExpressionSyntax? result)
         {
-            switch (invocation.Expression)
+            switch (invocation)
             {
-                case MemberAccessExpressionSyntax memberAccess:
-                    result = memberAccess.Expression;
+                case { Expression: MemberAccessExpressionSyntax { Expression: { } expression } }:
+                    result = expression;
                     return true;
-                case MemberBindingExpressionSyntax _ when invocation.Parent is ConditionalAccessExpressionSyntax conditionalAccess:
-                    result = conditionalAccess.Expression;
+                case { Expression: MemberBindingExpressionSyntax _, Parent: ConditionalAccessExpressionSyntax { Expression: { } expression } }:
+                    result = expression;
                     return true;
                 default:
                     result = null;

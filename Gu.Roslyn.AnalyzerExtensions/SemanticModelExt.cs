@@ -25,6 +25,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetConstantValue<T>(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [MaybeNullWhen(false)]out T value)
         {
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             if (semanticModel.GetConstantValueSafe(node, cancellationToken) is Optional<object> optional &&
                 optional.HasValue)
             {
@@ -37,7 +42,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 if (optional.Value is null)
                 {
                     value = default!;
-                    return default(T) is null;
+                    return value is null;
                 }
 
                 // We can't use GetTypeInfo() here as it brings in System.Reflection.Extensions that does not work in VS.
@@ -65,7 +70,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)]out ITypeSymbol? type)
         {
-            if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is ITypeSymbol temp)
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is { } temp)
             {
                 type = temp;
                 return true;
@@ -96,6 +106,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (expected is null)
             {
                 throw new System.ArgumentNullException(nameof(expected));
+            }
+
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
             }
 
             type = null;
@@ -137,6 +152,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)]out INamedTypeSymbol? type)
         {
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is INamedTypeSymbol temp)
             {
                 type = temp;
@@ -258,10 +278,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 foreach (var metadataReference in semanticModel.Compilation.References)
                 {
-                    if (metadataReference is CompilationReference compilationReference &&
-                        compilationReference.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
+                    if (metadataReference is CompilationReference { Compilation: { } compilation } &&
+                        compilation.ContainsSyntaxTree(expression.SyntaxTree))
                     {
-                        return compilationReference.Compilation.GetSemanticModel(expression.SyntaxTree);
+                        return compilation.GetSemanticModel(expression.SyntaxTree);
                     }
                 }
 

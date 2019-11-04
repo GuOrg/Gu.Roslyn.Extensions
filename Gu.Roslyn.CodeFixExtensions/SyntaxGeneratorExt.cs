@@ -46,7 +46,9 @@ namespace Gu.Roslyn.CodeFixExtensions
                 member = member.WithLeadingTrivia(SyntaxFactory.Whitespace(containingType.LeadingWhitespace() + "    "));
             }
 
+#pragma warning disable CA1062 // Already checked
             if (!member.HasTrailingTrivia)
+#pragma warning restore CA1062 // Validate arguments of public methods
             {
                 member = member.WithTrailingLineFeed();
             }

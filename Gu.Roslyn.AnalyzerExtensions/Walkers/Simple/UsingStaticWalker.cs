@@ -1,6 +1,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis;
@@ -74,7 +75,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="type">The type name. using Name = System.Type.</param>
         /// <param name="result">The alias if found.</param>
         /// <returns>True if an alias was found.</returns>
-        public static bool TryGet(SyntaxTree tree, QualifiedType type, out UsingDirectiveSyntax result)
+        public static bool TryGet(SyntaxTree tree, QualifiedType type, [NotNullWhen(true)] out UsingDirectiveSyntax? result)
         {
             result = null;
             if (tree is null ||

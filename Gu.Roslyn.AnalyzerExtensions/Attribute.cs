@@ -24,8 +24,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (compilation is null)
             {
-                result = null;
-                return false;
+                throw new ArgumentNullException(nameof(compilation));
+            }
+
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return TryFind(compilation.AttributeLists, expected, semanticModel, cancellationToken, out result);
@@ -44,8 +53,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (typeDeclaration is null)
             {
-                result = null;
-                return false;
+                throw new ArgumentNullException(nameof(typeDeclaration));
+            }
+
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return TryFind(typeDeclaration.AttributeLists, expected, semanticModel, cancellationToken, out result);
@@ -64,8 +82,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (declaration is null)
             {
-                result = null;
-                return false;
+                throw new ArgumentNullException(nameof(declaration));
+            }
+
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return TryFind(declaration.AttributeLists, expected, semanticModel, cancellationToken, out result);
@@ -84,8 +111,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (declaration is null)
             {
-                result = null;
-                return false;
+                throw new ArgumentNullException(nameof(declaration));
+            }
+
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return TryFind(declaration.AttributeLists, expected, semanticModel, cancellationToken, out result);
@@ -104,8 +140,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (declaration is null)
             {
-                result = null;
-                return false;
+                throw new ArgumentNullException(nameof(declaration));
+            }
+
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return TryFind(declaration.AttributeLists, expected, semanticModel, cancellationToken, out result);
@@ -124,8 +169,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (declaration is null)
             {
-                result = null;
-                return false;
+                throw new ArgumentNullException(nameof(declaration));
+            }
+
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return TryFind(declaration.AttributeLists, expected, semanticModel, cancellationToken, out result);
@@ -144,8 +198,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (declaration is null)
             {
-                result = null;
-                return false;
+                throw new ArgumentNullException(nameof(declaration));
+            }
+
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return TryFind(declaration.AttributeLists, expected, semanticModel, cancellationToken, out result);
@@ -164,8 +227,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (declaration is null)
             {
-                result = null;
-                return false;
+                throw new ArgumentNullException(nameof(declaration));
+            }
+
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             return TryFind(declaration.AttributeLists, expected, semanticModel, cancellationToken, out result);
@@ -232,8 +304,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return true;
             }
 
-            if (attribute.Name is QualifiedNameSyntax qualifiedName &&
-                qualifiedName.Right is SimpleNameSyntax typeName)
+            if (attribute.Name is QualifiedNameSyntax { Right: SimpleNameSyntax typeName })
             {
                 name = typeName.Identifier.ValueText;
                 return true;

@@ -34,27 +34,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The string used in code for representing <paramref name="accessibility"/>.</returns>
         public static string ToCodeString(this Accessibility accessibility)
         {
-            switch (accessibility)
+            return accessibility switch
             {
-                case Accessibility.NotApplicable:
-                    break;
-                case Accessibility.Private:
-                    return "private";
-                case Accessibility.ProtectedAndInternal:
-                    return "private protected";
-                case Accessibility.Protected:
-                    return "protected";
-                case Accessibility.Internal:
-                    return "internal";
-                case Accessibility.ProtectedOrInternal:
-                    return "internal protected";
-                case Accessibility.Public:
-                    return "public";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(accessibility), accessibility, null);
-            }
-
-            return string.Empty;
+                Accessibility.Private => "private",
+                Accessibility.ProtectedAndInternal => "private protected",
+                Accessibility.Protected => "protected",
+                Accessibility.Internal => "internal",
+                Accessibility.ProtectedOrInternal => "internal protected",
+                Accessibility.Public => "public",
+                _ => throw new ArgumentOutOfRangeException(nameof(accessibility), accessibility, null),
+            };
         }
     }
 }

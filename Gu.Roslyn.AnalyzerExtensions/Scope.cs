@@ -79,12 +79,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         return false;
                     case BlockSyntax block when DeclaresLocal(block):
                         return true;
-                    case SwitchSectionSyntax switchSection:
-                        foreach (var label in switchSection.Labels)
+                    case SwitchSectionSyntax { Labels: var labels }:
+                        foreach (var label in labels)
                         {
-                            if (label is CasePatternSwitchLabelSyntax casePattern &&
-                                casePattern.Pattern is DeclarationPatternSyntax declarationPattern &&
-                                DesignatesLocal(declarationPattern.Designation))
+                            if (label is CasePatternSwitchLabelSyntax { Pattern: DeclarationPatternSyntax { Designation: { } designation } } &&
+                                DesignatesLocal(designation))
                             {
                                 return true;
                             }
@@ -104,7 +103,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     switch (statement)
                     {
-                        case LocalDeclarationStatementSyntax localDeclaration when localDeclaration.Declaration is VariableDeclarationSyntax declaration:
+                        case LocalDeclarationStatementSyntax { Declaration: { } declaration }:
                             foreach (var variable in declaration.Variables)
                             {
                                 if (IsMatch(variable.Identifier))
@@ -114,7 +113,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                             }
 
                             break;
-                        case IfStatementSyntax ifStatement when ifStatement.Condition is ExpressionSyntax condition:
+                        case IfStatementSyntax { Condition: { } condition }:
                             foreach (SyntaxNode node in condition.DescendantNodes())
                             {
                                 switch (node)
@@ -166,8 +165,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     case FieldDeclarationSyntax declaration:
                         return declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword) ||
-                               (declaration.Declaration is { } variableDeclaration &&
-                                variableDeclaration.Variables.TryLast(out var last) &&
+                               (declaration.Declaration is { Variables: { } variables } &&
+                                variables.TryLast(out var last) &&
                                 last.Initializer.Contains(node));
                     case BaseFieldDeclarationSyntax declaration:
                         return declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword);

@@ -218,16 +218,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 switch (node)
                 {
-                    case BinaryExpressionSyntax binary when binary.IsKind(SyntaxKind.AsExpression):
+                    case BinaryExpressionSyntax binary
+                        when binary.IsKind(SyntaxKind.AsExpression):
                         base.Visit(binary.Left);
                         return;
                     case CastExpressionSyntax cast:
                         base.Visit(cast.Expression);
                         return;
-                    case InvocationExpressionSyntax invocation when invocation.Expression.IsEither(SyntaxKind.IdentifierName, SyntaxKind.PredefinedType):
+                    case InvocationExpressionSyntax { Expression: IdentifierNameSyntax _ }:
+                    case InvocationExpressionSyntax { Expression: PredefinedTypeSyntax _ }:
                         return;
-                    case InvocationExpressionSyntax invocation when invocation.Expression is MemberAccessExpressionSyntax memberAccess:
-                        this.Visit(memberAccess.Expression);
+                    case InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Expression: { } expression } }:
+                        this.Visit(expression);
                         return;
                 }
 

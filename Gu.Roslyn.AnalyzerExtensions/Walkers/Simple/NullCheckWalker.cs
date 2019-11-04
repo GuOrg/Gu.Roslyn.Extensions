@@ -2,6 +2,7 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -65,7 +66,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="check">The null check.</param>
         /// <returns>True if a null check was found.</returns>
-        public bool TryGetFirst(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken, out ExpressionSyntax check)
+        public bool TryGetFirst(IParameterSymbol parameter, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out ExpressionSyntax? check)
         {
             foreach (var binaryExpression in this.binaryExpressions)
             {

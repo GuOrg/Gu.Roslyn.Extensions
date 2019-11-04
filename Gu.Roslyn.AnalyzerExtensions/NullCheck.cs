@@ -75,9 +75,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             switch (candidate)
             {
-                case IsPatternExpressionSyntax node when node.Pattern is ConstantPatternSyntax constantPattern &&
-                                                         constantPattern.Expression.IsKind(SyntaxKind.NullLiteralExpression):
-                    value = node.Expression;
+                case IsPatternExpressionSyntax { Expression: { } expression, Pattern: ConstantPatternSyntax { Expression: { } constant } }
+                    when constant.IsKind(SyntaxKind.NullLiteralExpression):
+                    value = expression;
                     return true;
                 case BinaryExpressionSyntax node when node.IsKind(SyntaxKind.CoalesceExpression):
                     value = node.Left;
