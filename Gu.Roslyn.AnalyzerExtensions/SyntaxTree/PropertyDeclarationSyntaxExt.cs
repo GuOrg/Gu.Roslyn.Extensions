@@ -1,5 +1,6 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -21,8 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (property is null)
             {
-                backingField = null;
-                return false;
+                throw new ArgumentNullException(nameof(property));
             }
 
             if (TrySingleReturned(property, out var returned) &&
@@ -30,10 +30,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 switch (returned)
                 {
-                    case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is ThisExpressionSyntax:
-                        return type.TryFindField(memberAccess.Name.Identifier.ValueText, out backingField);
-                    case IdentifierNameSyntax identifierName:
-                        return type.TryFindField(identifierName.Identifier.ValueText, out backingField);
+                    case MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _, Name: { Identifier: { ValueText: { } name } } }:
+                        return type.TryFindField(name, out backingField);
+                    case IdentifierNameSyntax { Identifier: { ValueText: { } name } }:
+                        return type.TryFindField(name, out backingField);
                 }
             }
 
@@ -49,43 +49,34 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a single return was found.</returns>
         public static bool TrySingleReturned(this PropertyDeclarationSyntax property, [NotNullWhen(true)] out ExpressionSyntax? result)
         {
-            result = null;
             if (property is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(property));
             }
 
-            var expressionBody = property.ExpressionBody;
-            if (expressionBody != null)
+            switch (property)
             {
-                result = expressionBody.Expression;
-                return result != null;
+                case { ExpressionBody: { Expression: { } expression } }:
+                    result = expression;
+                    return true;
             }
 
             if (property.TryGetGetter(out var getter))
             {
-                expressionBody = getter.ExpressionBody;
-                if (expressionBody != null)
+                switch (getter)
                 {
-                    result = expressionBody.Expression;
-                    return result != null;
-                }
-
-                var body = getter.Body;
-                if (body is null ||
-                    body.Statements.Count == 0)
-                {
-                    return false;
-                }
-
-                if (body.Statements.TrySingle(out var statement) &&
-                    statement is ReturnStatementSyntax returnStatement)
-                {
-                    result = returnStatement.Expression;
-                    return result != null;
+                    case { ExpressionBody: { Expression: { } expression } }:
+                        result = expression;
+                        return true;
+                    case { Body: { Statements: { Count: 1 } statements } }
+                        when statements.TrySingle(out var statement) &&
+                             statement is ReturnStatementSyntax { Expression: { } expression }:
+                        result = expression;
+                        return true;
                 }
             }
 
+            result = null;
             return false;
         }
     }

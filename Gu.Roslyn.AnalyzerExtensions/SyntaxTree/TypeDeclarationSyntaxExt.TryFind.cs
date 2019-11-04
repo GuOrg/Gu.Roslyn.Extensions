@@ -19,10 +19,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindField(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)] out FieldDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
             }
 
             foreach (var member in type.Members)
@@ -35,6 +39,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            match = null;
             return false;
         }
 
@@ -46,10 +51,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindConstructor(this TypeDeclarationSyntax type, [NotNullWhen(true)] out ConstructorDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
             }
 
             foreach (var member in type.Members)
@@ -61,6 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            match = null;
             return false;
         }
 
@@ -73,10 +78,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindConstructor(this TypeDeclarationSyntax type, Func<ConstructorDeclarationSyntax, bool> predicate, [NotNullWhen(true)] out ConstructorDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             foreach (var member in type.Members)
@@ -89,6 +98,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            match = null;
             return false;
         }
 
@@ -101,25 +111,32 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindEvent(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)] out MemberDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
             }
 
             foreach (var member in type.Members)
             {
                 switch (member)
                 {
-                    case EventDeclarationSyntax declaration when declaration.Identifier.ValueText == name:
+                    case EventDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration
+                        when valueText == name:
                         match = declaration;
                         return true;
-                    case EventFieldDeclarationSyntax eventField when eventField.Declaration.Variables.TrySingle(x => x.Identifier.ValueText == name, out _):
+                    case EventFieldDeclarationSyntax { Declaration: { Variables: { } variables } } eventField
+                        when variables.TrySingle(x => x.Identifier.ValueText == name, out _):
                         match = eventField;
                         return true;
                 }
             }
 
+            match = null;
             return false;
         }
 
@@ -132,22 +149,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindProperty(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)] out PropertyDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
             }
 
             foreach (var member in type.Members)
             {
-                if (member is PropertyDeclarationSyntax declaration &&
-                    declaration.Identifier.ValueText == name)
+                if (member is PropertyDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration &&
+                    valueText == name)
                 {
                     match = declaration;
                     return true;
                 }
             }
 
+            match = null;
             return false;
         }
 
@@ -159,10 +181,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindIndexer(this TypeDeclarationSyntax type, [NotNullWhen(true)] out IndexerDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
             }
 
             foreach (var member in type.Members)
@@ -174,6 +195,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            match = null;
             return false;
         }
 
@@ -186,22 +208,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)] out MethodDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
             }
 
             foreach (var member in type.Members)
             {
-                if (member is MethodDeclarationSyntax declaration &&
-                    declaration.Identifier.ValueText == name)
+                if (member is MethodDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration &&
+                    valueText == name)
                 {
                     match = declaration;
                     return true;
                 }
             }
 
+            match = null;
             return false;
         }
 
@@ -215,16 +242,25 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindMethod(this TypeDeclarationSyntax type, string name, Func<MethodDeclarationSyntax, bool> predicate, [NotNullWhen(true)] out MethodDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             foreach (var member in type.Members)
             {
-                if (member is MethodDeclarationSyntax declaration &&
-                    declaration.Identifier.ValueText == name &&
+                if (member is MethodDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration &&
+                    valueText == name &&
                     predicate(declaration))
                 {
                     match = declaration;
@@ -232,6 +268,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            match = null;
             return false;
         }
 
@@ -244,10 +281,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindMethod(this TypeDeclarationSyntax type, Func<MethodDeclarationSyntax, bool> predicate, [NotNullWhen(true)] out MethodDeclarationSyntax? match)
         {
-            match = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             foreach (var member in type.Members)
@@ -260,6 +301,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
+            match = null;
             return false;
         }
     }

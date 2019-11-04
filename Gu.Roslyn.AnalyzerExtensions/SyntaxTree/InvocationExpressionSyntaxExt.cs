@@ -1,10 +1,10 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (invocation is null)
             {
-                throw new System.ArgumentNullException(nameof(invocation));
+                throw new ArgumentNullException(nameof(invocation));
             }
 
             if (invocation.Parent is ArgumentSyntax ||
@@ -49,18 +49,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (invocation is null)
             {
-                throw new System.ArgumentNullException(nameof(invocation));
+                throw new ArgumentNullException(nameof(invocation));
             }
 
-            switch (invocation.Expression)
+            return invocation.Expression switch
             {
-                case IdentifierNameSyntax _:
-                    return true;
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is ThisExpressionSyntax:
-                    return true;
-            }
-
-            return MemberPath.IsEmpty(invocation);
+                IdentifierNameSyntax _ => true,
+                MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _ } => true,
+                _ => MemberPath.IsEmpty(invocation),
+            };
         }
 
         /// <summary>
@@ -72,18 +69,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (invocation is null)
             {
-                throw new System.ArgumentNullException(nameof(invocation));
+                throw new ArgumentNullException(nameof(invocation));
             }
 
-            switch (invocation.Expression)
+            return invocation.Expression switch
             {
-                case IdentifierNameSyntax _:
-                    return true;
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression is InstanceExpressionSyntax:
-                    return true;
-            }
-
-            return MemberPath.IsEmpty(invocation);
+                IdentifierNameSyntax _ => true,
+                MemberAccessExpressionSyntax { Expression: InstanceExpressionSyntax _ } => true,
+                _ => MemberPath.IsEmpty(invocation),
+            };
         }
 
         /// <summary>
@@ -94,39 +88,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the name was found.</returns>
         public static bool TryGetMethodName(this InvocationExpressionSyntax invocation, [NotNullWhen(true)] out string? name)
         {
-            name = null;
             if (invocation is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(invocation));
             }
 
-            switch (invocation.Kind())
+            switch (invocation.Expression)
             {
-                case SyntaxKind.InvocationExpression:
-                case SyntaxKind.SimpleMemberAccessExpression:
-                case SyntaxKind.TypeOfExpression:
-                    if (invocation.Expression is SimpleNameSyntax simple)
-                    {
-                        name = simple.Identifier.ValueText;
-                        return true;
-                    }
-
-                    if (invocation.Expression is MemberAccessExpressionSyntax memberAccess &&
-                        memberAccess.Name is SimpleNameSyntax member)
-                    {
-                        name = member.Identifier.ValueText;
-                        return true;
-                    }
-
-                    if (invocation.Expression is MemberBindingExpressionSyntax memberBinding &&
-                        memberBinding.Name is SimpleNameSyntax bound)
-                    {
-                        name = bound.Identifier.ValueText;
-                        return true;
-                    }
-
-                    return false;
+                case SimpleNameSyntax { Identifier: { ValueText: { } valueText } }:
+                    name = valueText;
+                    return true;
+                case MemberAccessExpressionSyntax { Name: { Identifier: { ValueText: { } valueText } } }:
+                    name = valueText;
+                    return true;
+                case MemberBindingExpressionSyntax { Name: { Identifier: { ValueText: { } valueText } } }:
+                    name = valueText;
+                    return true;
                 default:
+                    name = null;
                     return false;
             }
         }
@@ -144,12 +123,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (expected is null)
             {
-                throw new System.ArgumentNullException(nameof(expected));
+                throw new ArgumentNullException(nameof(expected));
             }
 
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             target = null;
@@ -180,12 +159,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (expected is null)
             {
-                throw new System.ArgumentNullException(nameof(expected));
+                throw new ArgumentNullException(nameof(expected));
             }
 
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             argument = null;
@@ -212,12 +191,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (expected is null)
             {
-                throw new System.ArgumentNullException(nameof(expected));
+                throw new ArgumentNullException(nameof(expected));
             }
 
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             argument0 = null;
@@ -260,12 +239,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (expected is null)
             {
-                throw new System.ArgumentNullException(nameof(expected));
+                throw new ArgumentNullException(nameof(expected));
             }
 
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             argument0 = null;
@@ -315,12 +294,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (expected is null)
             {
-                throw new System.ArgumentNullException(nameof(expected));
+                throw new ArgumentNullException(nameof(expected));
             }
 
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             argument0 = null;
@@ -348,7 +327,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (invocation is null)
             {
-                throw new System.ArgumentNullException(nameof(invocation));
+                throw new ArgumentNullException(nameof(invocation));
             }
 
             return invocation.TryGetMethodName(out var name) &&
@@ -364,7 +343,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (invocation is null)
             {
-                throw new System.ArgumentNullException(nameof(invocation));
+                throw new ArgumentNullException(nameof(invocation));
             }
 
             return invocation.TryGetMethodName(out var name) &&
@@ -380,13 +359,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, [NotNullWhen(true)] out ArgumentSyntax? argument)
         {
+            if (invocation is null)
+            {
+                throw new ArgumentNullException(nameof(invocation));
+            }
+
             if (parameter is null)
             {
-                throw new System.ArgumentNullException(nameof(parameter));
+                throw new ArgumentNullException(nameof(parameter));
             }
 
             argument = null;
-            return invocation?.ArgumentList is ArgumentListSyntax argumentList &&
+            return invocation.ArgumentList is { } argumentList &&
                    argumentList.TryFind(parameter, out argument);
         }
 
@@ -399,13 +383,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one or more were found.</returns>
         public static bool TryFindArgumentParams(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
         {
+            if (invocation is null)
+            {
+                throw new ArgumentNullException(nameof(invocation));
+            }
+
             if (parameter is null)
             {
-                throw new System.ArgumentNullException(nameof(parameter));
+                throw new ArgumentNullException(nameof(parameter));
             }
 
             arguments = default;
-            return invocation?.ArgumentList is ArgumentListSyntax argumentList &&
+            return invocation.ArgumentList is { } argumentList &&
                    argumentList.TryFindParams(parameter, out arguments);
         }
 
@@ -419,9 +408,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the declaration was found.</returns>
         public static bool TryGetTargetDeclaration(this InvocationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out MethodDeclarationSyntax? declaration)
         {
+            if (invocation is null)
+            {
+                throw new ArgumentNullException(nameof(invocation));
+            }
+
             if (semanticModel is null)
             {
-                throw new System.ArgumentNullException(nameof(semanticModel));
+                throw new ArgumentNullException(nameof(semanticModel));
             }
 
             declaration = null;

@@ -108,7 +108,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             while (node.TryFirstAncestor<AnonymousFunctionExpressionSyntax>(out var lambda))
             {
                 if (semanticModel.GetTypeInfoSafe(lambda, cancellationToken) is TypeInfo typeInfo &&
-                    typeInfo.ConvertedType is ITypeSymbol convertedType &&
+                    typeInfo.ConvertedType is { } convertedType &&
                     convertedType.IsAssignableTo(QualifiedType.System.Linq.Expression, semanticModel.Compilation))
                 {
                     return true;

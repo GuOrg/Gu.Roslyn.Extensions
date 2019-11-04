@@ -20,8 +20,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindArgument(this ObjectCreationExpressionSyntax objectCreation, IParameterSymbol parameter, [NotNullWhen(true)] out ArgumentSyntax? argument)
         {
+            if (objectCreation is null)
+            {
+                throw new System.ArgumentNullException(nameof(objectCreation));
+            }
+
+            if (parameter is null)
+            {
+                throw new System.ArgumentNullException(nameof(parameter));
+            }
+
             argument = null;
-            return objectCreation?.ArgumentList is ArgumentListSyntax argumentList &&
+            return objectCreation.ArgumentList is { } argumentList &&
                   argumentList.TryFind(parameter, out argument);
         }
 
@@ -34,8 +44,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one or more were found.</returns>
         public static bool TryFindArgumentParams(this ObjectCreationExpressionSyntax creation, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
         {
+            if (creation is null)
+            {
+                throw new System.ArgumentNullException(nameof(creation));
+            }
+
+            if (parameter is null)
+            {
+                throw new System.ArgumentNullException(nameof(parameter));
+            }
+
             arguments = default;
-            return creation?.ArgumentList is ArgumentListSyntax argumentList &&
+            return creation.ArgumentList is { } argumentList &&
                    argumentList.TryFindParams(parameter, out arguments);
         }
 
@@ -49,6 +69,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the declaration was found.</returns>
         public static bool TryGetTargetDeclaration(this ObjectCreationExpressionSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out ConstructorDeclarationSyntax? declaration)
         {
+            if (invocation is null)
+            {
+                throw new System.ArgumentNullException(nameof(invocation));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             declaration = null;
             return semanticModel.TryGetSymbol(invocation, cancellationToken, out var symbol) &&
                    symbol.TrySingleDeclaration(cancellationToken, out declaration);

@@ -1,6 +1,5 @@
 namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
@@ -22,11 +21,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the argument expression was a constant string.</returns>
         public static bool TryGetStringValue(this ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out string? text)
         {
-            text = null;
             if (expression is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(expression));
             }
+
+            if (semanticModel is null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
+            text = null;
 
             switch (expression)
             {
@@ -36,19 +41,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case LiteralExpressionSyntax literal when literal.IsKind(SyntaxKind.NullLiteralExpression):
                     text = null;
                     return true;
-                case CastExpressionSyntax cast:
-                    return TryGetStringValue(cast.Expression, semanticModel, cancellationToken, out text);
-                case InvocationExpressionSyntax invocation when invocation.IsNameOf():
-                    if (invocation.ArgumentList != null &&
-                        invocation.ArgumentList.Arguments.TrySingle(out var nameofArg))
+                case CastExpressionSyntax { Expression: { } cast }:
+                    return TryGetStringValue(cast, semanticModel, cancellationToken, out text);
+                case InvocationExpressionSyntax { ArgumentList: { Arguments: { Count: 1 } arguments } } invocation when invocation.IsNameOf():
+                    if (arguments.TrySingle(out var nameofArg))
                     {
                         switch (nameofArg.Expression)
                         {
                             case IdentifierNameSyntax identifierName:
                                 text = identifierName.Identifier.ValueText;
                                 return true;
-                            case MemberAccessExpressionSyntax memberAccess:
-                                text = memberAccess.Name.Identifier.ValueText;
+                            case MemberAccessExpressionSyntax { Name: { Identifier: { } identifier } }:
+                                text = identifier.ValueText;
                                 return true;
                             default:
                                 var constantValue = semanticModel.GetConstantValueSafe(invocation, cancellationToken);
@@ -64,18 +68,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
 
                     return false;
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Name.Identifier.ValueText == "Empty":
-                    switch (memberAccess.Expression)
-                    {
-                        case PredefinedTypeSyntax predefinedType when predefinedType.Keyword.ValueText == "string":
-                            text = string.Empty;
-                            return true;
-                        case IdentifierNameSyntax source when string.Equals(source.Identifier.ValueText, "string", StringComparison.OrdinalIgnoreCase):
-                            text = string.Empty;
-                            return true;
-                    }
-
-                    return false;
+                case MemberAccessExpressionSyntax { Expression: PredefinedTypeSyntax { Keyword: { ValueText: "string" } }, Name: { Identifier: { ValueText: "Empty" } } }:
+                case MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier: { ValueText: "string" } }, Name: { Identifier: { ValueText: "Empty" } } }:
+                case MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier: { ValueText: "String" } }, Name: { Identifier: { ValueText: "Empty" } } }:
+                case MemberAccessExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name: { Identifier: { ValueText: "string" } } }, Name: { Identifier: { ValueText: "Empty" } } }:
+                case MemberAccessExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name: { Identifier: { ValueText: "String" } } }, Name: { Identifier: { ValueText: "Empty" } } }:
+                    text = string.Empty;
+                    return true;
             }
 
             return semanticModel.TryGetConstantValue(expression, cancellationToken, out text);

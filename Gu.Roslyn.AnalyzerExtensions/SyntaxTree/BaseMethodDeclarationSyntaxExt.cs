@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (declaration is null)
             {
-                return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
+                throw new System.ArgumentNullException(nameof(declaration));
             }
 
             if (declaration.Modifiers.Any(SyntaxKind.PrivateKeyword))
@@ -67,29 +67,43 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this BaseMethodDeclarationSyntax method, ArgumentSyntax argument, [NotNullWhen(true)] out ParameterSyntax? parameter)
         {
-            parameter = null;
-            if (argument is null ||
-                method is null)
+            if (method is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(method));
             }
 
-            if (method.ParameterList is ParameterListSyntax parameterList)
+            if (argument is null)
             {
-                if (argument.NameColon is NameColonSyntax nameColon)
+                throw new System.ArgumentNullException(nameof(argument));
+            }
+
+            parameter = null;
+
+            if (method.ParameterList is { Parameters: { } parameters })
+            {
+                if (argument.NameColon is { Name: { Identifier: { } name } })
                 {
-                    return parameterList.TryFind(nameColon.Name.Identifier.ValueText, out parameter);
+                    foreach (var candidate in parameters)
+                    {
+                        if (candidate.Identifier.ValueText == name.ValueText)
+                        {
+                            parameter = candidate;
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
 
-                if (argument.Parent is ArgumentListSyntax argumentList)
+                if (argument.Parent is ArgumentListSyntax { Arguments: { } arguments })
                 {
-                    var index = argumentList.Arguments.IndexOf(argument);
-                    if (method.ParameterList.Parameters.TryElementAt(index, out parameter))
+                    var index = arguments.IndexOf(argument);
+                    if (parameters.TryElementAt(index, out parameter))
                     {
                         return true;
                     }
 
-                    parameter = method.ParameterList.Parameters.Last();
+                    parameter = parameters.Last();
                     foreach (var modifier in parameter.Modifiers)
                     {
                         if (modifier.IsKind(SyntaxKind.ParamsKeyword))

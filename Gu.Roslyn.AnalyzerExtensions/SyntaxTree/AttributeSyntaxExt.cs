@@ -45,18 +45,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 foreach (var candidate in arguments)
                 {
-                    if (candidate.NameColon is NameColonSyntax nameColon &&
-                        nameColon.Name.Identifier.ValueText == name)
+                    switch (candidate)
                     {
-                        argument = candidate;
-                        return true;
-                    }
-
-                    if (candidate.NameEquals is NameEqualsSyntax nameEquals &&
-                        nameEquals.Name.Identifier.ValueText == name)
-                    {
-                        argument = candidate;
-                        return true;
+                        case { NameColon: { Name: { Identifier: { } nameColon } } }
+                            when nameColon.ValueText == name:
+                        case { NameEquals: { Name: { Identifier: { } nameEquals } } }
+                            when nameEquals.ValueText == name:
+                            argument = candidate;
+                            return true;
                     }
                 }
 
