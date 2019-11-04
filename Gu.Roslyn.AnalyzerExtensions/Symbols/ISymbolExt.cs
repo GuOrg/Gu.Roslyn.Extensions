@@ -88,23 +88,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return IsEquivalentTo(x, y.OriginalDefinition);
             }
 
-            switch (y)
+            return y switch
             {
-                case IParameterSymbol _:
-                    return IsEquivalentTo(x.ContainingSymbol, y.ContainingSymbol);
-                case IPropertySymbol { OverriddenProperty: { } overridden }:
-                    return IsEquivalentTo(x, overridden);
-                case IEventSymbol { OverriddenEvent: { } overridden }:
-                    return IsEquivalentTo(x, overridden);
-                case IMethodSymbol { OverriddenMethod: { } overridden }:
-                    return IsEquivalentTo(x, overridden);
-                case IMethodSymbol { IsExtensionMethod: true } ym
-                    when x is IMethodSymbol { IsExtensionMethod: true } xm:
-                    return xm.ReducedFrom?.Equals(ym) == true ||
-                           xm.Equals(ym.ReducedFrom);
-            }
+                IParameterSymbol _ => IsEquivalentTo(x.ContainingSymbol, y.ContainingSymbol),
+                IPropertySymbol { OverriddenProperty: { } overridden } => IsEquivalentTo(x, overridden),
+                IEventSymbol { OverriddenEvent: { } overridden } => IsEquivalentTo(x, overridden),
+                IMethodSymbol { OverriddenMethod: { } overridden } => IsEquivalentTo(x, overridden),
+                IMethodSymbol { IsExtensionMethod: true } ym
+                    when x is IMethodSymbol { IsExtensionMethod: true } xm => xm.ReducedFrom?.Equals(ym) == true ||
+                           xm.Equals(ym.ReducedFrom),
 
-            return false;
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -135,13 +130,29 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <returns>True if the attribute is defined on the symbol.</returns>
-        public static bool HasGeneratedCodeAttribute(this ISymbol symbol) => symbol.TryGetAttribute(QualifiedType.System.CodeDom.Compiler.GeneratedCodeAttribute, out _);
+        public static bool HasGeneratedCodeAttribute(this ISymbol symbol)
+        {
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return symbol.TryGetAttribute(QualifiedType.System.CodeDom.Compiler.GeneratedCodeAttribute, out _);
+        }
 
         /// <summary>
         /// Check if <paramref name="symbol"/> has [System.Runtime.CompilerServices.CompilerGeneratedAttribute].
         /// </summary>
         /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <returns>True if the attribute is defined on the symbol.</returns>
-        public static bool HasCompilerGeneratedAttribute(this ISymbol symbol) => symbol.TryGetAttribute(QualifiedType.System.Runtime.CompilerServices.CompilerGeneratedAttribute, out _);
+        public static bool HasCompilerGeneratedAttribute(this ISymbol symbol)
+        {
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return symbol.TryGetAttribute(QualifiedType.System.Runtime.CompilerServices.CompilerGeneratedAttribute, out _);
+        }
     }
 }
