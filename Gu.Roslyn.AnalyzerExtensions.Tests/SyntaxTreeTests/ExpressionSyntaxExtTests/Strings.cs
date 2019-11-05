@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ExpressionSyntaxExt
         [TestCase("String.Empty", "")]
         [TestCase("System.String.Empty", "")]
         [TestCase("nameof(C)", "C")]
-        public static void IsAssignableTo(string stringCode, string expected)
+        public static void TryGetStringValue(string stringCode, string expected)
         {
             var code = @"
 namespace N
