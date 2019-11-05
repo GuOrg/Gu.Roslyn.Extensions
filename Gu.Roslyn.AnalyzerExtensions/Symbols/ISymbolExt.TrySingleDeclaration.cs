@@ -233,7 +233,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             declaration = symbol.DeclaringSyntaxReferences.TrySingle(out var reference)
-                ? reference.GetSyntax(cancellationToken) as T
+                ? reference.GetSyntax(cancellationToken).FirstAncestorOrSelf<T>()
                 : null;
 
             return declaration != null;

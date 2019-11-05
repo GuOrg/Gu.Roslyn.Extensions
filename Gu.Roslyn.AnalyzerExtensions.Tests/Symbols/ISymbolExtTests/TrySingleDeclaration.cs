@@ -171,6 +171,32 @@ namespace N
             Assert.AreEqual(node, match);
         }
 
+        [Test]
+        public static void LocalAsType()
+        {
+            var code = @"
+namespace N
+{
+    public class C
+    {
+        public C()
+        {
+            var value = 1;
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.Find<VariableDeclaratorSyntax>("value");
+            var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
+            Assert.AreEqual(true, symbol.TrySingleDeclaration(CancellationToken.None, out LocalDeclarationStatementSyntax statement));
+            Assert.AreEqual("var value = 1;", statement.ToString());
+
+            Assert.AreEqual(true,             symbol.TrySingleDeclaration(CancellationToken.None, out VariableDeclaratorSyntax declarator));
+            Assert.AreEqual("value = 1", declarator.ToString());
+        }
+
         [TestCase("value1")]
         [TestCase("value2")]
         public static void OutLocal(string name)
