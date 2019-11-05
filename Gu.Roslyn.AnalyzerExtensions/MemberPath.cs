@@ -151,24 +151,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a name was found.</returns>
         public static bool TryGetMemberName(this ExpressionSyntax expression, [NotNullWhen(true)] out string? name)
         {
-            name = null;
             switch (expression)
             {
-                case IdentifierNameSyntax identifierName:
-                    name = identifierName.Identifier.ValueText;
-                    break;
-                case MemberAccessExpressionSyntax memberAccess:
-                    name = memberAccess.Name.Identifier.ValueText;
-                    break;
-                case MemberBindingExpressionSyntax memberBinding:
-                    name = memberBinding.Name.Identifier.ValueText;
-                    break;
-                case ConditionalAccessExpressionSyntax conditionalAccess:
-                    TryGetMemberName(conditionalAccess.WhenNotNull, out name);
-                    break;
+                case IdentifierNameSyntax { Identifier: { ValueText: { } valueText } }:
+                    name = valueText;
+                    return true;
+                case MemberAccessExpressionSyntax { Name: { Identifier: { ValueText: { } valueText } } }:
+                    name = valueText;
+                    return true;
+                case MemberBindingExpressionSyntax { Name: { Identifier: { ValueText: { } valueText } } }:
+                    name = valueText;
+                    return true;
+                case ConditionalAccessExpressionSyntax { WhenNotNull: { } whenNotNull }:
+                    return TryGetMemberName(whenNotNull, out name);
             }
 
-            return name != null;
+            name = null;
+            return false;
         }
 
         /// <summary>
