@@ -25,8 +25,7 @@ namespace N
             1;
         }
     }
-}";
-            code = code.AssertReplace("1", text);
+}".AssertReplace("1", text);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
@@ -47,8 +46,7 @@ namespace N
             1;
         }
     }
-}";
-            code = code.AssertReplace("1", text);
+}".AssertReplace("1", text);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
@@ -70,8 +68,7 @@ namespace N
             1;
         }
     }
-}";
-            code = code.AssertReplace("1", text);
+}".AssertReplace("1", text);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
