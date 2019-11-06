@@ -4,6 +4,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <CodeAnalysisRuleSet>Gu.Roslyn.AnalyzerExtensions.Tests.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>;IDE0001</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
