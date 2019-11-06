@@ -11,16 +11,17 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.8.5-dev</Version>
+    <Version>0.8.6-dev</Version>
     <Authors>Johan Larsson</Authors>
-    <Description>Helpers &amp; extensions for writing roslyn analyzers.</Description>
+    <Description>Helpers &amp; extensions for writing Roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
-    <PackageTags>roslyn analyzer</PackageTags>
+    <PackageTags>Roslyn analyzer</PackageTags>
     <PackageReleaseNotes>
       FEATURE: nullable enable
+      BUGFIX: IsAssignableTo returns false if symbol is not in metadata.
     </PackageReleaseNotes>
   </PropertyGroup>
 
