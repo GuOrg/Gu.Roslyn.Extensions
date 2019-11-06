@@ -1,7 +1,9 @@
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ITypeSymbolExtTests
 {
     using System;
+    using System.Collections.Generic;
     using Gu.Roslyn.Asserts;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
@@ -64,6 +66,27 @@ namespace N
             var source = property.Type;
             var qualifiedType = QualifiedType.FromType(destination);
             Assert.AreEqual(true, source.IsAssignableTo(qualifiedType, compilation));
+        }
+
+        [TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.IEnumerable))]
+        [TestCase("System.Collections.Generic.IEnumerable<int>", typeof(System.Collections.Generic.IEnumerable<int>))]
+        public static void QualifiedTypeFromTypeNoMetadataReferences(string typeString, Type destination)
+        {
+            var code = @"
+namespace N
+{
+    public class C
+    {
+        public int Value { get; }
+    }
+}".AssertReplace("int", typeString);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, new List<MetadataReference>());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
+            var source = property.Type;
+            var qualifiedType = QualifiedType.FromType(destination);
+            Assert.AreEqual(false, source.IsAssignableTo(qualifiedType, compilation));
         }
 
         [TestCase("int value", "System.Int32")]

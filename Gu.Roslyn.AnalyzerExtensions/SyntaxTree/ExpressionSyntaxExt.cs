@@ -113,7 +113,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            return IsAssignableTo(expression, destination.GetTypeSymbol(semanticModel.Compilation), semanticModel);
+            return destination.GetTypeSymbol(semanticModel.Compilation) is { } destinationSymbol &&
+                   IsAssignableTo(expression, destinationSymbol, semanticModel);
         }
 
         /// <summary>
@@ -149,7 +150,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            return IsSameType(expression, destination.GetTypeSymbol(semanticModel.Compilation), semanticModel);
+            return destination.GetTypeSymbol(semanticModel.Compilation) is { } destinationType &&
+                   IsSameType(expression, destinationType, semanticModel);
         }
 
         /// <summary>

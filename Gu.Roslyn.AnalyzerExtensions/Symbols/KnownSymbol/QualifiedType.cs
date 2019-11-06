@@ -179,7 +179,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="compilation">The <see cref="Compilation"/>.</param>
         /// <returns>The <see cref="INamedTypeSymbol"/>.</returns>
-        public virtual ITypeSymbol GetTypeSymbol(Compilation compilation)
+        public virtual ITypeSymbol? GetTypeSymbol(Compilation compilation)
         {
             if (compilation is null)
             {

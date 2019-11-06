@@ -124,7 +124,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(compilation));
             }
 
-            return IsAssignableTo(source, destination.GetTypeSymbol(compilation), compilation);
+            return destination.GetTypeSymbol(compilation) is { } destinationType &&
+                   IsAssignableTo(source, destinationType, compilation);
         }
 
         /// <summary>
@@ -178,7 +179,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(compilation));
             }
 
-            return IsSameType(source, destination.GetTypeSymbol(compilation), compilation);
+            return destination.GetTypeSymbol(compilation) is { } destinationSymbol &&
+                   IsSameType(source, destinationSymbol, compilation);
         }
 
         /// <summary>

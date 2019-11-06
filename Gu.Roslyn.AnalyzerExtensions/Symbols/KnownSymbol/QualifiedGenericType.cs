@@ -44,14 +44,38 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public ImmutableArray<QualifiedType> TypeArguments { get; }
 
         /// <inheritdoc />
-        public override ITypeSymbol GetTypeSymbol(Compilation compilation)
+        public override ITypeSymbol? GetTypeSymbol(Compilation compilation)
         {
             if (compilation is null)
             {
                 throw new ArgumentNullException(nameof(compilation));
             }
 
-            return compilation.GetTypeByMetadataName(this.metaDataName).Construct(this.TypeArguments.Select(x => x.GetTypeSymbol(compilation)).ToArray());
+            if (compilation.GetTypeByMetadataName(this.metaDataName) is { } typeDef &&
+                TryGetTypeArguments(out var args))
+            {
+                return typeDef.Construct(args);
+            }
+
+            return null;
+
+            bool TryGetTypeArguments(out ITypeSymbol[] args)
+            {
+                args = new ITypeSymbol[this.TypeArguments.Length];
+                for (int i = 0; i < this.TypeArguments.Length; i++)
+                {
+                    if (this.TypeArguments[i].GetTypeSymbol(compilation) is { } arg)
+                    {
+                        args[i] = arg;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
 
         private static string TypeName(string fullName)
