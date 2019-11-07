@@ -57,9 +57,35 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return Microsoft.CodeAnalysis.Accessibility.Internal;
         }
 
-        public static AccessorDeclarationSyntax? Getter(this BasePropertyDeclarationSyntax property) => property.AccessorList?.Accessors.FirstOrDefault(SyntaxKind.GetAccessorDeclaration);
+        /// <summary>
+        /// Tries to get the get accessor.
+        /// </summary>
+        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
+        /// <returns><see cref="AccessorDeclarationSyntax"/> if <paramref name="property"/> has a get accessor.</returns>
+        public static AccessorDeclarationSyntax? Getter(this BasePropertyDeclarationSyntax property)
+        {
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
 
-        public static AccessorDeclarationSyntax? Setter(this BasePropertyDeclarationSyntax property) => property.AccessorList?.Accessors.FirstOrDefault(SyntaxKind.SetAccessorDeclaration);
+            return property.AccessorList?.Accessors.FirstOrDefault(SyntaxKind.GetAccessorDeclaration);
+        }
+
+        /// <summary>
+        /// Tries to get the get accessor.
+        /// </summary>
+        /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
+        /// <returns><see cref="AccessorDeclarationSyntax"/> if <paramref name="property"/> has a get accessor.</returns>
+        public static AccessorDeclarationSyntax? Setter(this BasePropertyDeclarationSyntax property)
+        {
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
+            return property.AccessorList?.Accessors.FirstOrDefault(SyntaxKind.SetAccessorDeclaration);
+        }
 
         /// <summary>
         /// Tries to get the get accessor.
