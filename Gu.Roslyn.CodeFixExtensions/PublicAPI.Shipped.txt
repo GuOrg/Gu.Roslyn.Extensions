@@ -49,6 +49,7 @@ Gu.Roslyn.CodeFixExtensions.SortMembersRewriter
 Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.SortMembersRewriter() -> void
 Gu.Roslyn.CodeFixExtensions.StringExt
 Gu.Roslyn.CodeFixExtensions.SyntaxGeneratorExt
+Gu.Roslyn.CodeFixExtensions.SyntaxListExt
 Gu.Roslyn.CodeFixExtensions.SyntaxNodeExt
 Gu.Roslyn.CodeFixExtensions.Trivia
 Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker
@@ -57,6 +58,7 @@ Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.UsingDirectives
 abstract Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixProvider.RegisterCodeFixesAsync(Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext context) -> System.Threading.Tasks.Task
 override Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction.GetChangedDocumentAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.CodeAnalysis.Document>
 override Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.VisitConstructorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.CompilationStyleWalker<T>.Clear() -> void
@@ -65,10 +67,34 @@ override Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Equals(object 
 override Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.GetHashCode() -> int
 override Gu.Roslyn.CodeFixExtensions.DocumentEditorFixAllProvider.GetFixAsync(Microsoft.CodeAnalysis.CodeFixes.FixAllContext fixAllContext) -> System.Threading.Tasks.Task<Microsoft.CodeAnalysis.CodeActions.CodeAction>
 override Gu.Roslyn.CodeFixExtensions.DocumentEditorFixAllProvider.GetSupportedFixAllScopes() -> System.Collections.Generic.IEnumerable<Microsoft.CodeAnalysis.CodeFixes.FixAllScope>
+override Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.VisitConstructorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.VisitConstructorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
-override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitInvocationExpression(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitConstructorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyMethodAccessWalker.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.VisitConstructorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.QualifyPropertyAccessWalker.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitAccessorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
 override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
 override Gu.Roslyn.CodeFixExtensions.SealRewriter.VisitEventDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
@@ -86,7 +112,10 @@ override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitFieldDeclaration(M
 override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
 override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
 override Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> Microsoft.CodeAnalysis.SyntaxNode
+override Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.VisitConstructorDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node) -> void
+override Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.VisitEnumDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax node) -> void
 override Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> void
@@ -147,6 +176,7 @@ static Gu.Roslyn.CodeFixExtensions.DocumentationCommentTriviaSyntaxExtensions.Wi
 static Gu.Roslyn.CodeFixExtensions.DocumentationCommentTriviaSyntaxExtensions.WithSummaryText(this Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax comment, string text) -> Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax
 static Gu.Roslyn.CodeFixExtensions.DocumentationCommentTriviaSyntaxExtensions.WithTypeParam(this Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax comment, Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax typeparam) -> Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax
 static Gu.Roslyn.CodeFixExtensions.DocumentationCommentTriviaSyntaxExtensions.WithTypeParamText(this Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax comment, string parameterName, string text) -> Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax
+static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.AdjustLeadingNewLine<TMember>(this TMember member, TMember previous) -> TMember
 static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithAttributeList(this Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax member, Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax attributeList) -> Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithAttributeList(this Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax member, Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax attributeList) -> Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithAttributeList(this Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax member, Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax attributeList) -> Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax
@@ -189,8 +219,8 @@ static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithAttribu
 static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithAttributeListText(this Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true) -> Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithAttributeListText(this Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax member, string text, bool adjustLeadingWhitespace = true) -> Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithAttributeListText(this Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax member, string text) -> Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax
-static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithDocs<TNode>(this TNode member, Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax docs) -> TNode
-static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithDocumentationText<TNode>(this TNode member, string text, bool adjustLeadingWhitespace = true) -> TNode
+static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithDocs<TMember>(this TMember member, Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax docs) -> TMember
+static Gu.Roslyn.CodeFixExtensions.MemberDeclarationSyntaxExtensions.WithDocumentationText<TMember>(this TMember member, string text, bool adjustLeadingWhitespace = true) -> TMember
 static Gu.Roslyn.CodeFixExtensions.Parse.AttributeList(string text, string leadingWhitespace = null) -> Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax
 static Gu.Roslyn.CodeFixExtensions.Parse.ConstructorDeclaration(string code, string leadingWhitespace = null) -> Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.Parse.DocumentationCommentTriviaSyntax(string text, string leadingWhitespace = null) -> Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax
@@ -216,15 +246,34 @@ static Gu.Roslyn.CodeFixExtensions.SortMembersRewriter.Sort<T>(T typeDeclaration
 static Gu.Roslyn.CodeFixExtensions.StringExt.ToFirstCharLower(this string text) -> string
 static Gu.Roslyn.CodeFixExtensions.StringExt.ToFirstCharUpper(this string text) -> string
 static Gu.Roslyn.CodeFixExtensions.StringExt.WithLeadingWhiteSpace(this string text, string leadingWhitespace) -> string
-static Gu.Roslyn.CodeFixExtensions.SyntaxGeneratorExt.AddSorted(this Microsoft.CodeAnalysis.Editing.SyntaxGenerator generator, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member) -> Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax
+static Gu.Roslyn.CodeFixExtensions.SyntaxGeneratorExt.AddSorted(this Microsoft.CodeAnalysis.Editing.SyntaxGenerator generator, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax containingType, Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member, System.Collections.Generic.IComparer<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> comparer = null) -> Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax
+static Gu.Roslyn.CodeFixExtensions.SyntaxListExt.Move<T>(this Microsoft.CodeAnalysis.SyntaxList<T> list, int oldIndex, int newIndex) -> Microsoft.CodeAnalysis.SyntaxList<T>
 static Gu.Roslyn.CodeFixExtensions.SyntaxNodeExt.TryFindNode<T>(this Microsoft.CodeAnalysis.SyntaxNode syntaxRoot, Microsoft.CodeAnalysis.Diagnostic diagnostic, out T node) -> bool
+static Gu.Roslyn.CodeFixExtensions.SyntaxNodeExt.TryFindNode<T>(this Microsoft.CodeAnalysis.SyntaxNode syntaxRoot, Microsoft.CodeAnalysis.Location location, out T node) -> bool
 static Gu.Roslyn.CodeFixExtensions.SyntaxNodeExt.TryFindNodeOrAncestor<T>(this Microsoft.CodeAnalysis.SyntaxNode syntaxRoot, Microsoft.CodeAnalysis.Diagnostic diagnostic, out T node) -> bool
+static Gu.Roslyn.CodeFixExtensions.SyntaxNodeExt.TryFindNodeOrAncestor<T>(this Microsoft.CodeAnalysis.SyntaxNode syntaxRoot, Microsoft.CodeAnalysis.Location location, out T node) -> bool
+static Gu.Roslyn.CodeFixExtensions.Trivia.AppendLeadingTrivia<T>(this T node, System.Collections.Generic.IEnumerable<Microsoft.CodeAnalysis.SyntaxTrivia> trivia) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.AppendLeadingTrivia<T>(this T node, params Microsoft.CodeAnalysis.SyntaxTrivia[] trivia) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.AppendTrailingTrivia<T>(this T node, System.Collections.Generic.IEnumerable<Microsoft.CodeAnalysis.SyntaxTrivia> trivia) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.AppendTrailingTrivia<T>(this T node, params Microsoft.CodeAnalysis.SyntaxTrivia[] trivia) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.LeadingWhitespace(this Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax accessor) -> string
+static Gu.Roslyn.CodeFixExtensions.Trivia.LeadingWhitespace(this Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member) -> string
+static Gu.Roslyn.CodeFixExtensions.Trivia.PrependLeadingTrivia<T>(this T node, System.Collections.Generic.IEnumerable<Microsoft.CodeAnalysis.SyntaxTrivia> trivia) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.PrependLeadingTrivia<T>(this T node, params Microsoft.CodeAnalysis.SyntaxTrivia[] trivia) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.PrependTrailingTrivia<T>(this T node, System.Collections.Generic.IEnumerable<Microsoft.CodeAnalysis.SyntaxTrivia> trivia) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.PrependTrailingTrivia<T>(this T node, params Microsoft.CodeAnalysis.SyntaxTrivia[] trivia) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.TryGetLeadingNewLine(this Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member, out Microsoft.CodeAnalysis.SyntaxTrivia trivia) -> bool
+static Gu.Roslyn.CodeFixExtensions.Trivia.TryGetLeadingTrivia(this Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member, out Microsoft.CodeAnalysis.SyntaxTriviaList trivia) -> bool
+static Gu.Roslyn.CodeFixExtensions.Trivia.TryGetTrailingNewLine(this Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member, out Microsoft.CodeAnalysis.SyntaxTrivia trivia) -> bool
+static Gu.Roslyn.CodeFixExtensions.Trivia.TryGetTrailingTrivia(this Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member, out Microsoft.CodeAnalysis.SyntaxTriviaList trivia) -> bool
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithLeadingElasticLineFeed<T>(this T node) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.WithLeadingElasticSpace<T>(this T node) -> T
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithLeadingLineFeed<T>(this T node) -> T
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithLeadingTriviaFrom<T>(this T target, Microsoft.CodeAnalysis.SyntaxNode source) -> T
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithTrailingElasticLineFeed<T>(this T node) -> T
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithTrailingLineFeed<T>(this T node) -> T
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithTrailingTriviaFrom<T>(this T target, Microsoft.CodeAnalysis.SyntaxNode source) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.WithoutLeadingLineFeed<T>(this T node) -> T
 static Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
 static Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
 static Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult

@@ -65,9 +65,6 @@ Gu.Roslyn.AnalyzerExtensions.IPropertySymbolExt
 Gu.Roslyn.AnalyzerExtensions.ISymbolExt
 Gu.Roslyn.AnalyzerExtensions.ISymbolExt
 Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker.IdentifierNames.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker.TryFind(string name, out Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax identifierName) -> bool
