@@ -214,7 +214,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns><see cref="IndexerDeclarationSyntax"/> if a match was found.</returns>
         public static IndexerDeclarationSyntax? FindIndexer(this TypeDeclarationSyntax type, Func<IndexerDeclarationSyntax, bool> predicate)
         {
-            return TryFindIndexer(type, out var match) ? match : null;
+            return TryFindIndexer(type, predicate, out var match) ? match : null;
         }
 
         /// <summary>
