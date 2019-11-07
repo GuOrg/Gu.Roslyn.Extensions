@@ -20,8 +20,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the argument expression was a constant string.</returns>
         public static bool TryGetStringValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out string? result)
         {
+            if (argument is null)
+            {
+                throw new System.ArgumentNullException(nameof(argument));
+            }
+
             result = null;
-            return argument?.Expression is ExpressionSyntax expression &&
+            return argument?.Expression is { } expression &&
                    expression.TryGetStringValue(semanticModel, cancellationToken, out result);
         }
 
@@ -35,6 +40,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the call is typeof() and we could figure out the type.</returns>
         public static bool TryGetTypeofValue(this ArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out ITypeSymbol? result)
         {
+            if (argument is null)
+            {
+                throw new System.ArgumentNullException(nameof(argument));
+            }
+
             result = null;
             return argument?.Expression is TypeOfExpressionSyntax expression &&
                    semanticModel.TryGetType(expression.Type, cancellationToken, out result);
@@ -49,6 +59,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this ArgumentSyntax argument, BaseMethodDeclarationSyntax method, [NotNullWhen(true)] out ParameterSyntax? parameter)
         {
+            if (argument is null)
+            {
+                throw new System.ArgumentNullException(nameof(argument));
+            }
+
             return method.TryFindParameter(argument, out parameter);
         }
 
@@ -61,6 +76,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this ArgumentSyntax argument, IMethodSymbol method, [NotNullWhen(true)] out IParameterSymbol? parameter)
         {
+            if (argument is null)
+            {
+                throw new System.ArgumentNullException(nameof(argument));
+            }
+
             return method.TryFindParameter(argument, out parameter);
         }
     }

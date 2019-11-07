@@ -15,6 +15,39 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
+        /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
+        public static IParameterSymbol? FindParameter(this IMethodSymbol method, ArgumentSyntax argument)
+        {
+            return TryFindParameter(method, argument, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Find the matching parameter for the argument.
+        /// </summary>
+        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
+        public static IParameterSymbol? FindParameter(this IMethodSymbol method, string name)
+        {
+            return TryFindParameter(method, name, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Find the matching parameter for the argument.
+        /// </summary>
+        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+        /// <param name="type">The type of the parameter.</param>
+        /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
+        public static IParameterSymbol? FindParameter(this IMethodSymbol method, QualifiedType type)
+        {
+            return TryFindParameter(method, type, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Find the matching parameter for the argument.
+        /// </summary>
+        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+        /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, [NotNullWhen(true)] out IParameterSymbol? parameter)
@@ -88,7 +121,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Find the parameter by type.
         /// </summary>
         /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
-        /// <param name="type">The type fo the parameter.</param>
+        /// <param name="type">The type of the parameter.</param>
         /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
         /// <returns>True if a matching parameter was found.</returns>
         public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, [NotNullWhen(true)] out IParameterSymbol? parameter)

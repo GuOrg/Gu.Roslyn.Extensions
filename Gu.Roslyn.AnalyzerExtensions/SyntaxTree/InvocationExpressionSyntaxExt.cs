@@ -355,6 +355,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+        /// <returns><see cref="ArgumentSyntax"/> if a match was found.</returns>
+        public static ArgumentSyntax? FindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter)
+        {
+            return TryFindArgument(invocation, parameter, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Get the argument that matches <paramref name="parameter"/>.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
         /// <returns>True if a match was found.</returns>
         public static bool TryFindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter, [NotNullWhen(true)] out ArgumentSyntax? argument)
