@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.8.6-dev</Version>
+    <Version>0.8.7-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -22,6 +22,7 @@
     <PackageReleaseNotes>
       FEATURE: nullable enable
       BUGFIX: IsAssignableTo returns false if symbol is not in metadata.
+      FEATURE: Nullable API.
     </PackageReleaseNotes>
   </PropertyGroup>
 
