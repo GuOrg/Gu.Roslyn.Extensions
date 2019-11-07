@@ -15,6 +15,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name.</param>
+        /// <returns><see cref="FieldDeclarationSyntax"/> if a match was found.</returns>
+        public static FieldDeclarationSyntax? FindField(this TypeDeclarationSyntax type, string name)
+        {
+            return TryFindField(type, name, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Find a <see cref="FieldDeclarationSyntax"/> by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
         public static bool TryFindField(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)] out FieldDeclarationSyntax? match)
@@ -44,7 +55,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Find a <see cref="ConstructorDeclarationSyntax"/>.
+        /// Find the first <see cref="ConstructorDeclarationSyntax"/>.
         /// </summary>
         /// <param name="type">The containing type.</param>
         /// <param name="match">The match.</param>
@@ -103,6 +114,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Find a <see cref="MemberDeclarationSyntax"/> by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name.</param>
+        /// <returns><see cref="MemberDeclarationSyntax"/> if a match was found.</returns>
+        public static MemberDeclarationSyntax? FindEvent(this TypeDeclarationSyntax type, string name)
+        {
+            return TryFindEvent(type, name, out var match) ? match : null;
+        }
+
+        /// <summary>
         /// Find a <see cref="EventDeclarationSyntax"/> or <see cref="EventFieldDeclarationSyntax"/> by name.
         /// </summary>
         /// <param name="type">The containing type.</param>
@@ -145,6 +167,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name.</param>
+        /// <returns><see cref="PropertyDeclarationSyntax"/> if a match was found.</returns>
+        public static PropertyDeclarationSyntax? FindProperty(this TypeDeclarationSyntax type, string name)
+        {
+            return TryFindProperty(type, name, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Find a <see cref="PropertyDeclarationSyntax"/> by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name.</param>
         /// <param name="match">The match.</param>
         /// <returns>True if a match was found.</returns>
         public static bool TryFindProperty(this TypeDeclarationSyntax type, string name, [NotNullWhen(true)] out PropertyDeclarationSyntax? match)
@@ -174,6 +207,17 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Find the first <see cref="IndexerDeclarationSyntax"/> by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <returns><see cref="IndexerDeclarationSyntax"/> if a match was found.</returns>
+        public static IndexerDeclarationSyntax? FindIndexer(this TypeDeclarationSyntax type, Func<IndexerDeclarationSyntax, bool> predicate)
+        {
+            return TryFindIndexer(type, out var match) ? match : null;
+        }
+
+        /// <summary>
         /// Find a <see cref="IndexerDeclarationSyntax"/> by name.
         /// </summary>
         /// <param name="type">The containing type.</param>
@@ -200,7 +244,69 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
-        /// Find a <see cref="MethodDeclarationSyntax"/> by name.
+        /// Find a <see cref="IndexerDeclarationSyntax"/> by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <param name="match">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindIndexer(this TypeDeclarationSyntax type, Func<IndexerDeclarationSyntax, bool> predicate, [NotNullWhen(true)] out IndexerDeclarationSyntax? match)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            foreach (var member in type.Members)
+            {
+                if (member is IndexerDeclarationSyntax declaration &&
+                    predicate(declaration))
+                {
+                    match = declaration;
+                    return true;
+                }
+            }
+
+            match = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Find the first <see cref="MethodDeclarationSyntax"/> by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name.</param>
+        /// <returns><see cref="MethodDeclarationSyntax"/> if a match was found.</returns>
+        public static MethodDeclarationSyntax? FindMethod(this TypeDeclarationSyntax type, string name)
+        {
+            return TryFindMethod(type, name, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Find the first <see cref="MethodDeclarationSyntax"/> by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <returns><see cref="MethodDeclarationSyntax"/> if a match was found.</returns>
+        public static MethodDeclarationSyntax? FindMethod(this TypeDeclarationSyntax type, string name, Func<MethodDeclarationSyntax, bool> predicate)
+        {
+            return TryFindMethod(type, name, predicate, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Find the first <see cref="MethodDeclarationSyntax"/> by name.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <returns><see cref="MethodDeclarationSyntax"/> if a match was found.</returns>
+        public static MethodDeclarationSyntax? FindMethod(this TypeDeclarationSyntax type, Func<MethodDeclarationSyntax, bool> predicate)
+        {
+            return TryFindMethod(type, predicate, out var match) ? match : null;
+        }
+
+        /// <summary>
+        /// Find the first <see cref="MethodDeclarationSyntax"/> by name.
         /// </summary>
         /// <param name="type">The containing type.</param>
         /// <param name="name">The name.</param>

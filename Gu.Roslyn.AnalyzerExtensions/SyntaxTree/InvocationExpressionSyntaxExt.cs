@@ -321,16 +321,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Check if the invocation is nameof().
         /// </summary>
-        /// <param name="invocation">The invocation.</param>
+        /// <param name="node">The invocation.</param>
         /// <returns>True if the invocation is nameof().</returns>
-        public static bool IsNameOf(this InvocationExpressionSyntax invocation)
+        public static bool IsNameOf(this InvocationExpressionSyntax node)
         {
-            if (invocation is null)
+            if (node is null)
             {
-                throw new ArgumentNullException(nameof(invocation));
+                throw new ArgumentNullException(nameof(node));
             }
 
-            return invocation.TryGetMethodName(out var name) &&
+            return node.TryGetMethodName(out var name) &&
                    name == "nameof";
         }
 
@@ -353,12 +353,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Get the argument that matches <paramref name="parameter"/>.
         /// </summary>
-        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="node">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
         /// <returns><see cref="ArgumentSyntax"/> if a match was found.</returns>
-        public static ArgumentSyntax? FindArgument(this InvocationExpressionSyntax invocation, IParameterSymbol parameter)
+        public static ArgumentSyntax? FindArgument(this InvocationExpressionSyntax node, IParameterSymbol parameter)
         {
-            return TryFindArgument(invocation, parameter, out var match) ? match : null;
+            return TryFindArgument(node, parameter, out var match) ? match : null;
         }
 
         /// <summary>
@@ -407,6 +407,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
             arguments = default;
             return invocation.ArgumentList is { } argumentList &&
                    argumentList.TryFindParams(parameter, out arguments);
+        }
+
+        /// <summary>
+        /// Try getting the declaration of the invoked method.
+        /// </summary>
+        /// <param name="node">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns><see cref="MethodDeclarationSyntax"/> if the declaration was found.</returns>
+        public static MethodDeclarationSyntax? TargetDeclaration(this InvocationExpressionSyntax node, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            return TryGetTargetDeclaration(node, semanticModel, cancellationToken, out var declaration) ? declaration : null;
         }
 
         /// <summary>
