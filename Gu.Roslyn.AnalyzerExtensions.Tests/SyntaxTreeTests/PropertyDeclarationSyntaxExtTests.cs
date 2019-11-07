@@ -36,6 +36,35 @@ namespace N
             Assert.AreEqual(getter, result.ToString());
         }
 
+        [TestCase("Value1", "get { return this.value1; }")]
+        [TestCase("Value2", "private get { return value2; }")]
+        public static void Getter(string propertyName, string getter)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public class C
+    {
+        private int value1;
+        private int value2;
+
+        public int Value1
+        {
+            get { return this.value1; }
+            set { this.value1 = value; }
+        }
+
+        public int Value2
+        {
+            private get { return value2; }
+            set { value2 = value; }
+        }
+    }
+}");
+            var property = syntaxTree.FindPropertyDeclaration(propertyName);
+            Assert.AreEqual(getter, property.Getter().ToString());
+        }
+
         [TestCase("Value1", "set { this.value1 = value; }")]
         [TestCase("Value2", "private set { value2 = value; }")]
         public static void TryGetSetter(string propertyName, string setter)
@@ -64,6 +93,35 @@ namespace N
             var property = syntaxTree.FindPropertyDeclaration(propertyName);
             Assert.AreEqual(true, property.TryGetSetter(out var result));
             Assert.AreEqual(setter, result.ToString());
+        }
+
+        [TestCase("Value1", "set { this.value1 = value; }")]
+        [TestCase("Value2", "private set { value2 = value; }")]
+        public static void Setter(string propertyName, string setter)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public class C
+    {
+        private int value1;
+        private int value2;
+
+        public int Value1
+        {
+            get { return this.value1; }
+            set { this.value1 = value; }
+        }
+
+        public int Value2
+        {
+            get { return value2; }
+            private set { value2 = value; }
+        }
+    }
+}");
+            var property = syntaxTree.FindPropertyDeclaration(propertyName);
+            Assert.AreEqual(setter, property.Setter().ToString());
         }
 
         [TestCase("GetOnly", true)]

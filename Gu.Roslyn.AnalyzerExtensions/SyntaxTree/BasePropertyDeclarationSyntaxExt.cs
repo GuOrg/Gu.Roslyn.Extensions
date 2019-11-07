@@ -57,6 +57,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return Microsoft.CodeAnalysis.Accessibility.Internal;
         }
 
+        public static AccessorDeclarationSyntax? Getter(this BasePropertyDeclarationSyntax property) => property.AccessorList?.Accessors.FirstOrDefault(SyntaxKind.GetAccessorDeclaration);
+
+        public static AccessorDeclarationSyntax? Setter(this BasePropertyDeclarationSyntax property) => property.AccessorList?.Accessors.FirstOrDefault(SyntaxKind.SetAccessorDeclaration);
+
         /// <summary>
         /// Tries to get the get accessor.
         /// </summary>
@@ -65,8 +69,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="property"/> has a get accessor.</returns>
         public static bool TryGetGetter(this BasePropertyDeclarationSyntax property, [NotNullWhen(true)] out AccessorDeclarationSyntax? result)
         {
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
             result = null;
-            return property?.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.GetAccessorDeclaration), out result) == true;
+            return property.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.GetAccessorDeclaration), out result) == true;
         }
 
         /// <summary>
@@ -77,8 +86,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="property"/> has a get accessor.</returns>
         public static bool TryGetSetter(this BasePropertyDeclarationSyntax property, [NotNullWhen(true)] out AccessorDeclarationSyntax? result)
         {
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
             result = null;
-            return property?.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.SetAccessorDeclaration), out result) == true;
+            return property.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.SetAccessorDeclaration), out result) == true;
         }
 
         /// <summary>
@@ -88,10 +102,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="property"/> is an auto property.</returns>
         public static bool IsGetOnly(this BasePropertyDeclarationSyntax property)
         {
-            return property.TryGetGetter(out var getter) &&
-                   getter.Body is null &&
-                   getter.ExpressionBody is null &&
-                   !property.TryGetSetter(out _);
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
+            return property is { AccessorList: { Accessors: { Count: 1 } accessors } } &&
+                   accessors[0] is { Body: null, ExpressionBody: null } accessor &&
+                   accessor.IsKind(SyntaxKind.GetAccessorDeclaration);
         }
 
         /// <summary>
@@ -101,6 +119,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <paramref name="property"/> is an auto property.</returns>
         public static bool IsAutoProperty(this BasePropertyDeclarationSyntax property)
         {
+            if (property is null)
+            {
+                throw new System.ArgumentNullException(nameof(property));
+            }
+
             if (property.TryGetGetter(out var getter) &&
                 getter.Body is null &&
                 getter.ExpressionBody is null)
