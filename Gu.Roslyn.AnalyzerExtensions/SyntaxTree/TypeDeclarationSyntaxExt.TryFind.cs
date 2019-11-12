@@ -55,6 +55,39 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <summary>
+        /// Find the first <see cref="FieldDeclarationSyntax"/> matching <paramref name="predicate"/>.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <param name="match">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindField(this TypeDeclarationSyntax type, Func<FieldDeclarationSyntax, bool> predicate, [NotNullWhen(true)] out FieldDeclarationSyntax? match)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (var member in type.Members)
+            {
+                if (member is FieldDeclarationSyntax declaration &&
+                    predicate(declaration))
+                {
+                    match = declaration;
+                    return true;
+                }
+            }
+
+            match = null;
+            return false;
+        }
+
+        /// <summary>
         /// Find the first <see cref="ConstructorDeclarationSyntax"/>.
         /// </summary>
         /// <param name="type">The containing type.</param>
@@ -196,6 +229,39 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 if (member is PropertyDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration &&
                     valueText == name)
+                {
+                    match = declaration;
+                    return true;
+                }
+            }
+
+            match = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Find the first <see cref="PropertyDeclarationSyntax"/> matching <paramref name="predicate"/>.
+        /// </summary>
+        /// <param name="type">The containing type.</param>
+        /// <param name="predicate">The filter.</param>
+        /// <param name="match">The match.</param>
+        /// <returns>True if a match was found.</returns>
+        public static bool TryFindProperty(this TypeDeclarationSyntax type, Func<PropertyDeclarationSyntax, bool> predicate, [NotNullWhen(true)] out PropertyDeclarationSyntax? match)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (var member in type.Members)
+            {
+                if (member is PropertyDeclarationSyntax declaration &&
+                    predicate(declaration))
                 {
                     match = declaration;
                     return true;
