@@ -84,6 +84,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try to get the invoked method's name.
         /// </summary>
         /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
+        /// <returns>The name of the invoked method.</returns>
+        public static string? MethodName(this InvocationExpressionSyntax invocation)
+        {
+            return TryGetMethodName(invocation, out var name) ? name : null;
+        }
+
+        /// <summary>
+        /// Try to get the invoked method's name.
+        /// </summary>
+        /// <param name="invocation">The <see cref="InvocationExpressionSyntax"/>.</param>
         /// <param name="name">The name of the invoked method.</param>
         /// <returns>True if the name was found.</returns>
         public static bool TryGetMethodName(this InvocationExpressionSyntax invocation, [NotNullWhen(true)] out string? name)
