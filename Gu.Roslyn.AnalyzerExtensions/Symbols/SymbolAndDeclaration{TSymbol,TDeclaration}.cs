@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using Microsoft.CodeAnalysis;
@@ -29,7 +29,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="symbol">The <typeparamref name="TSymbol"/>.</param>
         /// <param name="declaration">The <typeparamref name="TDeclaration"/>.</param>
-        internal SymbolAndDeclaration(TSymbol symbol, TDeclaration declaration)
+        public SymbolAndDeclaration(TSymbol symbol, TDeclaration declaration)
         {
             this.Symbol = symbol ?? throw new ArgumentNullException(nameof(symbol));
             this.Declaration = declaration ?? throw new ArgumentNullException(nameof(declaration));

@@ -6,12 +6,13 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     public sealed class Recursion : IDisposable
     {
         private static readonly ConcurrentQueue<Recursion> Cache = new ConcurrentQueue<Recursion>();
-        private readonly HashSet<(string, SyntaxNode)> visited = new HashSet<(string, SyntaxNode)>();
+        private readonly HashSet<(string, string, SyntaxNode)> visited = new HashSet<(string, string, SyntaxNode)>();
 
         private Recursion()
         {
@@ -53,36 +54,91 @@
             this.CancellationToken = CancellationToken.None;
         }
 
-        public MethodDeclarationSyntax? Target(InvocationExpressionSyntax node, [CallerMemberName] string caller = null)
+        public SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string caller = null)
         {
-            if (this.visited.Add((caller, node)) &&
-                node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var target))
-            {
-                return target;
-            }
-
-            return null;
-        }
-
-        public ConstructorDeclarationSyntax? Target(ObjectCreationExpressionSyntax node, [CallerMemberName] string caller = null)
-        {
-            if (this.visited.Add((caller, node)) &&
-                node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var target))
-            {
-                return target;
-            }
-
-            return null;
-        }
-
-        public T? Target<T>(ExpressionSyntax node, [CallerMemberName] string caller = null)
-            where T : SyntaxNode
-        {
-            if (this.visited.Add((caller, node)) &&
+            if (this.visited.Add((caller, nameof(MethodDeclarationSyntax), node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol) &&
-                symbol.TrySingleDeclaration(this.CancellationToken, out T? declaration))
+                SymbolAndDeclaration.TryCreate(symbol, this.CancellationToken, out SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax> symbolAndDeclaration))
             {
-                return declaration;
+                return symbolAndDeclaration;
+            }
+
+            return null;
+        }
+
+        public SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax>? Target(ObjectCreationExpressionSyntax node, [CallerMemberName] string caller = null)
+        {
+            if (this.visited.Add((caller, nameof(ConstructorDeclarationSyntax), node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol) &&
+                SymbolAndDeclaration.TryCreate(symbol, this.CancellationToken, out SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax> symbolAndDeclaration))
+            {
+                return symbolAndDeclaration;
+            }
+
+            return null;
+        }
+
+        public SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax>? Target(ConstructorInitializerSyntax node, [CallerMemberName] string caller = null)
+        {
+            if (this.visited.Add((caller, nameof(ConstructorDeclarationSyntax), node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol) &&
+                SymbolAndDeclaration.TryCreate(symbol, this.CancellationToken, out SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax> symbolAndDeclaration))
+            {
+                return symbolAndDeclaration;
+            }
+
+            return null;
+        }
+
+        public SymbolAndDeclaration<IParameterSymbol, BaseMethodDeclarationSyntax>? Target(ArgumentSyntax node, [CallerMemberName] string caller = null)
+        {
+            if (this.visited.Add((caller, nameof(BaseMethodDeclarationSyntax), node)) &&
+                node is { Parent: ArgumentListSyntax { Parent: { } parent } } &&
+                this.SemanticModel.TryGetSymbol(parent, this.CancellationToken, out IMethodSymbol? method) &&
+                method.TryFindParameter(node, out var symbol) &&
+                method.TrySingleDeclaration(this.CancellationToken, out BaseMethodDeclarationSyntax? declaration))
+            {
+                return new SymbolAndDeclaration<IParameterSymbol, BaseMethodDeclarationSyntax>(symbol, declaration);
+            }
+
+            return null;
+        }
+
+        public SymbolAndDeclaration<IParameterSymbol, AccessorDeclarationSyntax>? PropertySet(ExpressionSyntax node, [CallerMemberName] string caller = null)
+        {
+            if (this.visited.Add((caller, nameof(this.PropertySet), node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IPropertySymbol? property) &&
+                property is { SetMethod: { Parameters: { Length: 1 } } set } &&
+                set.TrySingleAccessorDeclaration(this.CancellationToken, out var declaration))
+            {
+                return new SymbolAndDeclaration<IParameterSymbol, AccessorDeclarationSyntax>(set.Parameters[0], declaration);
+            }
+
+            return null;
+        }
+
+        public SymbolAndDeclaration<IMethodSymbol, CSharpSyntaxNode>? PropertyGet(ExpressionSyntax node, [CallerMemberName] string caller = null)
+        {
+            if (this.visited.Add((caller, nameof(this.PropertyGet), node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IPropertySymbol? property) &&
+                property is { GetMethod: { } get } &&
+                get.TrySingleDeclaration(this.CancellationToken, out CSharpSyntaxNode? declaration))
+            {
+                return new SymbolAndDeclaration<IMethodSymbol, CSharpSyntaxNode>(get, declaration);
+            }
+
+            return null;
+        }
+
+        public SymbolAndDeclaration<TSymbol, TDeclaration>? Target<TSymbol, TDeclaration>(ExpressionSyntax node, [CallerMemberName] string caller = null)
+            where TSymbol : class, ISymbol
+            where TDeclaration : CSharpSyntaxNode
+        {
+            if (this.visited.Add((caller, typeof(TSymbol).Name + typeof(TDeclaration).Name, node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out TSymbol? symbol) &&
+                symbol.TrySingleDeclaration(this.CancellationToken, out TDeclaration? declaration))
+            {
+                return new SymbolAndDeclaration<TSymbol, TDeclaration>(symbol, declaration);
             }
 
             return null;
