@@ -69,7 +69,7 @@
         /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
         /// </summary>
         /// <param name="candidate">The <see cref="IdentifierNameSyntax"/>.</param>
-        /// <param name="symbol">The <see cref="IsSymbol"/>.</param>
+        /// <param name="symbol">The <see cref="ISymbol"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
@@ -88,6 +88,84 @@
             return candidate.Identifier.ValueText == symbol.Name &&
                    semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
                    candidateSymbol.IsEquivalentTo(symbol);
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is <paramref name="symbol"/>.
+        /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
+        /// </summary>
+        /// <param name="candidate">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="QualifiedField"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
+        public static bool IsSymbol(this IdentifierNameSyntax candidate, QualifiedField symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (candidate is null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return candidate.Identifier.ValueText == symbol.Name &&
+                   semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                   candidateSymbol == symbol;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is <paramref name="symbol"/>.
+        /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
+        /// </summary>
+        /// <param name="candidate">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="QualifiedProperty"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
+        public static bool IsSymbol(this IdentifierNameSyntax candidate, QualifiedProperty symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (candidate is null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return candidate.Identifier.ValueText == symbol.Name &&
+                   semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                   candidateSymbol == symbol;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is <paramref name="symbol"/>.
+        /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
+        /// </summary>
+        /// <param name="candidate">The <see cref="IdentifierNameSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="QualifiedMethod"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
+        public static bool IsSymbol(this IdentifierNameSyntax candidate, QualifiedMethod symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (candidate is null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return candidate.Identifier.ValueText == symbol.Name &&
+                   semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                   candidateSymbol == symbol;
         }
     }
 }

@@ -238,7 +238,7 @@
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out TSymbol? symbol) &&
-                symbol.TrySingleDeclaration(this.CancellationToken, out TDeclaration? declaration))
+                symbol.TrySingleDeclaration<TDeclaration>(this.CancellationToken, out var declaration))
             {
                 return new SymbolAndDeclaration<TSymbol, TDeclaration>(symbol, declaration);
             }

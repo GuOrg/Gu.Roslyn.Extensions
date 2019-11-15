@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -40,6 +40,104 @@ namespace Gu.Roslyn.AnalyzerExtensions
             target = null;
             return candidate?.Name is IdentifierNameSyntax identifierName &&
                    identifierName.TryGetTarget(expected, semanticModel, cancellationToken, out target);
+        }
+
+
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is <paramref name="symbol"/>.
+        /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
+        /// </summary>
+        /// <param name="candidate">The <see cref="MemberAccessExpressionSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="QualifiedField"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
+        public static bool IsSymbol(this MemberAccessExpressionSyntax candidate, QualifiedField symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (candidate is null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return candidate switch
+            {
+                { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
+                { Name: { Identifier: { ValueText: { } valueText } } name } => valueText == symbol.Name &&
+                                                                               semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                                                                               candidateSymbol == symbol,
+                _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                     candidateSymbol == symbol,
+            };
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is <paramref name="symbol"/>.
+        /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
+        /// </summary>
+        /// <param name="candidate">The <see cref="MemberAccessExpressionSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="QualifiedProperty"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
+        public static bool IsSymbol(this MemberAccessExpressionSyntax candidate, QualifiedProperty symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (candidate is null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return candidate switch
+            {
+                { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
+                { Name: { Identifier: { ValueText: { } valueText } } name } => valueText == symbol.Name &&
+                                                                               semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                                                                               candidateSymbol == symbol,
+                _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                     candidateSymbol == symbol,
+            };
+        }
+
+        /// <summary>
+        /// Check if <paramref name="candidate"/> is <paramref name="symbol"/>.
+        /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
+        /// </summary>
+        /// <param name="candidate">The <see cref="MemberAccessExpressionSyntax"/>.</param>
+        /// <param name="symbol">The <see cref="QualifiedMethod"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>True  if <paramref name="candidate"/> is <paramref name="symbol"/>.</returns>
+        public static bool IsSymbol(this MemberAccessExpressionSyntax candidate, QualifiedMethod symbol, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (candidate is null)
+            {
+                throw new System.ArgumentNullException(nameof(candidate));
+            }
+
+            if (symbol is null)
+            {
+                throw new System.ArgumentNullException(nameof(symbol));
+            }
+
+            return candidate switch
+            {
+                { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
+                { Name: { Identifier: { ValueText: { } valueText } } name } => valueText == symbol.Name &&
+                                                                               semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                                                                               candidateSymbol == symbol,
+                _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                     candidateSymbol == symbol,
+            };
         }
     }
 }
