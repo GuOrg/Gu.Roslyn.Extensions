@@ -1,8 +1,7 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -15,8 +14,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public abstract class ExecutionWalker<T> : PooledWalker<T>
         where T : ExecutionWalker<T>
     {
-        private readonly HashSet<SyntaxNode> visited = new HashSet<SyntaxNode>();
-
         /// <summary>
         /// Gets or sets if the walker should walk declarations of invoked methods etc.
         /// </summary>
@@ -25,7 +22,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets or sets the <see cref="SemanticModel"/>.
         /// </summary>
-        protected SemanticModel SemanticModel { get; set; } = null!;
+        protected SemanticModel SemanticModel => this.Recursion.SemanticModel;
 
         /// <summary>
         /// Gets or sets the containing <see cref="ITypeSymbol"/> of the current context.
@@ -35,7 +32,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets or sets the <see cref="CancellationToken"/>.
         /// </summary>
-        protected CancellationToken CancellationToken { get; set; }
+        protected CancellationToken CancellationToken => this.Recursion.CancellationToken;
+
+        /// <summary>
+        /// Gets the <see cref="Recursion"/>.
+        /// </summary>
+        protected Recursion Recursion { get; private set; } = null!;
 
         /// <inheritdoc />
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
@@ -81,8 +83,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 case SearchScope.Instance:
                 case SearchScope.Type:
                 case SearchScope.Recursive:
-                    if (this.visited.Add(node) &&
-                        node.TryGetTargetDeclaration(this.SemanticModel, this.CancellationToken, out var declaration))
+                    if (this.Recursion.Target(node) is { Declaration: { } declaration })
                     {
                         this.Visit(declaration);
                     }
@@ -102,36 +103,41 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return;
             }
 
-            if (this.visited.Add(node) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var target))
+            if (this.Recursion.ContainingType(node) is { Symbol: { } containingType, Declaration: { } containingTypeDeclaration } &&
+                ShouldVisit(containingType))
             {
-                if (this.SearchScope.IsEither(SearchScope.Instance, SearchScope.Type) &&
-                    !target.ContainingType.Equals(this.ContainingType))
+                using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
                 {
-                    base.VisitObjectCreationExpression(node);
-                    return;
-                }
-
-                if (target.ContainingType.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax? containingTypeDeclaration))
-                {
-                    using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+                    foreach (var memberInitializer in walker.Initializers)
                     {
-                        foreach (var initializer in walker.Initializers)
-                        {
-                            if (this.visited.Add(initializer))
-                            {
-                                this.Visit(initializer);
-                            }
-                        }
+                        this.Visit(memberInitializer);
                     }
                 }
 
-                if (target.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax? declaration))
+                base.Visit(node.Type);
+                if (node.ArgumentList is { } argumentList)
+                {
+                    base.VisitArgumentList(argumentList);
+                }
+
+                if (this.Recursion.Target(node) is { Symbol: { }, Declaration: { } declaration })
                 {
                     this.Visit(declaration);
                 }
 
-                base.VisitObjectCreationExpression(node);
+                if (node.Initializer is { } objectInitializer)
+                {
+                    base.VisitInitializerExpression(objectInitializer);
+                }
+            }
+
+            bool ShouldVisit(ITypeSymbol type)
+            {
+                return this.SearchScope switch
+                {
+                    SearchScope.Recursive => true,
+                    _ => type.Equals(this.ContainingType),
+                };
             }
         }
 
@@ -139,10 +145,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             base.VisitInvocationExpression(node);
-            if (this.TryGetTargetSymbol(node, out IMethodSymbol? target) &&
-                target.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration))
+            if (this.TryGetTargetSymbol<IMethodSymbol, MethodDeclarationSyntax>(node, out var target))
             {
-                this.Visit(declaration);
+                this.Visit(target.Declaration);
             }
         }
 
@@ -150,28 +155,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             base.VisitIdentifierName(node);
-            if (this.TryGetTargetSymbol(node, out IPropertySymbol? property))
+            if (this.TryGetTargetSymbol<IPropertySymbol, PropertyDeclarationSyntax>(node, out var symbolAndDeclaration))
             {
                 if (this.IsPropertyGetAndSet(node))
                 {
-                    if (property.TryGetGetMethodDeclaration(this.CancellationToken, out var getter))
-                    {
-                        this.Visit(getter);
-                    }
-
-                    if (property.TryGetSetter(this.CancellationToken, out var setter))
-                    {
-                        this.Visit(setter);
-                    }
+                    this.Visit(symbolAndDeclaration.Declaration.Getter());
+                    this.Visit(symbolAndDeclaration.Declaration.Setter());
                 }
                 else if (this.IsPropertySet(node))
                 {
-                    if (property.TryGetSetter(this.CancellationToken, out var setter))
-                    {
-                        this.Visit(setter);
-                    }
+                    this.Visit(symbolAndDeclaration.Declaration.Setter());
                 }
-                else if (property.TryGetGetMethodDeclaration(this.CancellationToken, out var getter))
+                else if (symbolAndDeclaration.Symbol.TryGetGetMethodDeclaration(this.CancellationToken, out var getter))
                 {
                     this.Visit(getter);
                 }
@@ -181,8 +176,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
-            this.Visit(node?.Right);
-            this.Visit(node?.Left);
+            if (node is { Left: { } left, Right: { } right })
+            {
+                this.Visit(right);
+                this.Visit(left);
+            }
         }
 
 #pragma warning disable CA1068 // CancellationToken parameters must come last
@@ -216,8 +214,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
             }
 
-            walker.SemanticModel = semanticModel;
-            walker.CancellationToken = cancellationToken;
+#pragma warning disable IDISP003 // Dispose previous before re-assigning.
+            walker.Recursion = Recursion.Borrow(semanticModel, cancellationToken);
+#pragma warning restore IDISP003 // Dispose previous before re-assigning.
             walker.Visit(node);
             walker.SearchScope = scope;
             return walker;
@@ -324,13 +323,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// Try getting the target symbol for the node. Check if visited and that the symbol matches <see cref="SearchScope"/>.
         /// </summary>
         /// <typeparam name="TSymbol">The expected type.</typeparam>
+        /// <typeparam name="TDeclaration">The expected declaration type.</typeparam>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
-        /// <param name="symbol">The symbol if a match.</param>
+        /// <param name="target">The symbol and declaratyion if a match.</param>
         /// <returns>True if a symbol was found.</returns>
-        protected virtual bool TryGetTargetSymbol<TSymbol>(SyntaxNode node, [NotNullWhen(true)] out TSymbol? symbol)
+        protected virtual bool TryGetTargetSymbol<TSymbol, TDeclaration>(SyntaxNode node, out SymbolAndDeclaration<TSymbol, TDeclaration> target)
             where TSymbol : class, ISymbol
+            where TDeclaration : CSharpSyntaxNode
         {
-            symbol = null;
+            target = default;
             if (node is null ||
                 this.SearchScope == SearchScope.Member)
             {
@@ -345,16 +346,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (this.SearchScope == SearchScope.Instance &&
-                node.Parent is MemberAccessExpressionSyntax { Expression: { } expression } &&
-                expression.IsEither(SyntaxKind.IdentifierName, SyntaxKind.SimpleMemberAccessExpression) == true)
+                node.Parent is MemberAccessExpressionSyntax { Expression: InstanceExpressionSyntax expression } &&
+                expression.IsEither(SyntaxKind.IdentifierName, SyntaxKind.SimpleMemberAccessExpression))
             {
                 return false;
             }
 
-            if (this.visited.Add(node) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out symbol))
+            if (this.Recursion.Target<TSymbol, TDeclaration>(node) is { Symbol: { } symbol } symbolAndDeclaration)
             {
-                if (this.SearchScope == SearchScope.Instance && symbol.IsStatic)
+                if (this.SearchScope == SearchScope.Instance &&
+                    symbol.IsStatic)
                 {
                     return false;
                 }
@@ -365,6 +366,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return false;
                 }
 
+                target = symbolAndDeclaration;
                 return true;
             }
 
@@ -374,10 +376,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         protected override void Clear()
         {
-            this.visited.Clear();
-            this.SemanticModel = null!;
+            this.Recursion.Dispose();
+            this.Recursion = null!;
             this.ContainingType = null!;
-            this.CancellationToken = CancellationToken.None;
         }
 
         private class TypeDeclarationWalker : PooledWalker<TypeDeclarationWalker>

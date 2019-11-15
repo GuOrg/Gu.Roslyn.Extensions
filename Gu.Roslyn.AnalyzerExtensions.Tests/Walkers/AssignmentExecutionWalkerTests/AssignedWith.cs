@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTests
 {
     using System.Linq;
     using System.Threading;
@@ -6,7 +6,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTe
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using NUnit.Framework;
 
     public static class AssignedWith
@@ -35,7 +34,7 @@ namespace N
             var value = syntaxTree.FindParameter("arg");
             var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
             Assert.AreEqual(true, semanticModel.TryGetSymbol(value, CancellationToken.None, out var symbol));
-            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
+            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.value = arg", result.ToString());
             using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
             {
@@ -67,7 +66,7 @@ namespace N
             var value = syntaxTree.FindParameter("arg");
             var ctor = syntaxTree.FindConstructorDeclaration("C(T arg)");
             Assert.AreEqual(true, semanticModel.TryGetSymbol(value, CancellationToken.None, out var symbol));
-            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
+            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.value = arg", result.ToString());
             using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
             {
@@ -98,11 +97,11 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            ArgumentSyntax argument = syntaxTree.FindArgument("n");
+            var argument = syntaxTree.FindArgument("n");
             Assert.AreEqual(true, semanticModel.TryGetSymbol(argument.Parent.Parent, CancellationToken.None, out IMethodSymbol method));
             Assert.AreEqual(true, method.TryFindParameter(argument, out var symbol));
             var ctor = syntaxTree.FindConstructorDeclaration("C(T arg)");
-            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
+            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.value = arg", result.ToString());
             using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
             {
@@ -134,7 +133,7 @@ namespace N
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var ctor = syntaxTree.FindConstructorDeclaration("C(int arg)");
             var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindParameter("int arg"), CancellationToken.None);
-            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
+            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.value = temp", result.ToString());
             using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
             {
@@ -168,7 +167,7 @@ namespace N
             var value = syntaxTree.FindParameter("stream");
             var ctor = syntaxTree.FindConstructorDeclaration("C(Stream stream)");
             var symbol = semanticModel.GetDeclaredSymbol(value, CancellationToken.None);
-            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out AssignmentExpressionSyntax result));
+            Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.reader = new StreamReader(stream)", result.ToString());
             using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
             {

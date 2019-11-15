@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTests
 {
     using System.Linq;
     using System.Threading;
@@ -72,11 +72,10 @@ namespace N
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindMemberAccessExpression("this.value");
             var ctor = syntaxTree.FindConstructorDeclaration("C()");
-            AssignmentExpressionSyntax result;
             var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
             if (scope != SearchScope.Member)
             {
-                Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
+                Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out var result));
                 Assert.AreEqual("this.value = arg", result.ToString());
                 Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.value = arg", result.ToString());
@@ -198,11 +197,10 @@ namespace N
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var value = syntaxTree.FindMemberAccessExpression("this.number");
             var ctor = syntaxTree.FindConstructorDeclaration("C()");
-            AssignmentExpressionSyntax result;
             var field = semanticModel.GetSymbolSafe(value, CancellationToken.None);
             if (scope != SearchScope.Member)
             {
-                Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
+                Assert.AreEqual(true, AssignmentExecutionWalker.FirstFor(field, ctor, scope, semanticModel, CancellationToken.None, out var result));
                 Assert.AreEqual("this.number = 3", result.ToString());
                 Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.number = 3", result.ToString());

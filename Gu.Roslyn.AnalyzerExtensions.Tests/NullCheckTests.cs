@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;

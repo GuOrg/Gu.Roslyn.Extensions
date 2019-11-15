@@ -207,7 +207,7 @@
             {
                 foreach (var candidate in walker.Assignments)
                 {
-                    if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out ISymbol? assignedSymbol) &&
+                    if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out var assignedSymbol) &&
                         SymbolComparer.Equals(symbol.OriginalDefinition, assignedSymbol))
                     {
                         assignment = candidate;

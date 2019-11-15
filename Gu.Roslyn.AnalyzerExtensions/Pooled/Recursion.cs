@@ -16,9 +16,9 @@
     public sealed class Recursion : IDisposable
     {
         private static readonly ConcurrentQueue<Recursion> Cache = new ConcurrentQueue<Recursion>();
-        private readonly HashSet<(string?, int, SyntaxNode)> visited = new HashSet<(string?, int,  SyntaxNode)>();
+        private readonly HashSet<(string?, int, SyntaxNode)> visited = new HashSet<(string?, int, SyntaxNode)>();
 
-        private Recursion()
+        internal Recursion()
         {
         }
 
@@ -45,7 +45,7 @@
                 recursion = new Recursion();
             }
 
-            recursion.SemanticModel = semanticModel;
+            recursion.SemanticModel = semanticModel ?? throw new ArgumentNullException(nameof(semanticModel));
             recursion.CancellationToken = cancellationToken;
             return recursion;
         }
@@ -53,9 +53,8 @@
         /// <inheritdoc/>
         public void Dispose()
         {
-            this.visited.Clear();
-            this.SemanticModel = null!;
-            this.CancellationToken = CancellationToken.None;
+            this.Clear();
+            Cache.Enqueue(this);
         }
 
         /// <summary>
@@ -209,8 +208,29 @@
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{INamedTypeSymbol,TypeDeclarationSyntax}"/>.</returns>
+        public SymbolAndDeclaration<INamedTypeSymbol, TypeDeclarationSyntax>? ContainingType(SyntaxNode node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        {
+            if (this.visited.Add((caller, line, node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out ISymbol? symbol) &&
+                symbol.ContainingSymbol is INamedTypeSymbol type &&
+                type.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax? declaration))
+            {
+                return new SymbolAndDeclaration<INamedTypeSymbol, TypeDeclarationSyntax>(type, declaration);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</returns>
-        public SymbolAndDeclaration<TSymbol, TDeclaration>? Target<TSymbol, TDeclaration>(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public SymbolAndDeclaration<TSymbol, TDeclaration>? Target<TSymbol, TDeclaration>(SyntaxNode node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
             where TSymbol : class, ISymbol
             where TDeclaration : CSharpSyntaxNode
         {
@@ -222,6 +242,28 @@
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Clear the inner set.
+        /// </summary>
+        public void Clear()
+        {
+            this.visited.Clear();
+            this.SemanticModel = null!;
+            this.CancellationToken = CancellationToken.None;
+        }
+
+        /// <summary>
+        /// Clear the inner set.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        public void Restart(SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            this.visited.Clear();
+            this.SemanticModel = semanticModel ?? throw new ArgumentNullException(nameof(semanticModel));
+            this.CancellationToken = cancellationToken;
         }
     }
 }

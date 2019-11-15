@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
 {
     using System.Linq;
     using System.Threading;
@@ -253,10 +253,10 @@ namespace N
             }
         }
 
-        [TestCase(SearchScope.Member, "2")]
-        [TestCase(SearchScope.Instance, "1, 2")]
-        [TestCase(SearchScope.Type, "1, 2")]
-        [TestCase(SearchScope.Recursive, "1, 2")]
+        [TestCase(SearchScope.Member, "3")]
+        [TestCase(SearchScope.Instance, "1, 2, 3")]
+        [TestCase(SearchScope.Type, "1, 2, 3")]
+        [TestCase(SearchScope.Recursive, "1, 2, 3")]
         public static void PropertyInitializerBeforeConstructor(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
@@ -264,10 +264,11 @@ namespace N
 {
     public sealed class C
     {
-        public static readonly C Default = new C() { Value2 = 2 };
+        public static readonly C Default = new C() { Value2 = 3 };
 
         public C()
         {
+            this.Value1 = 2;
         }
 
         public int Value1 { get; set; } = 1;
@@ -277,7 +278,7 @@ namespace N
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindExpression("new C() { Value2 = 2 }");
+            var node = syntaxTree.FindExpression("new C() { Value2 = 3 }");
             using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
             {
                 Assert.AreEqual(expected, string.Join(", ", walker.Literals));
@@ -288,7 +289,7 @@ namespace N
         [TestCase(SearchScope.Instance, "1, 2")]
         [TestCase(SearchScope.Type, "1, 2")]
         [TestCase(SearchScope.Recursive, "1, 2")]
-        public static void PropertyInitializerBeforeDefaultCtor(SearchScope scope, string expected)
+        public static void PropertyInitializerDefaultCtor(SearchScope scope, string expected)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N

@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <CodeAnalysisRuleSet>Gu.Roslyn.AnalyzerExtensions.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);IDE0009</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
