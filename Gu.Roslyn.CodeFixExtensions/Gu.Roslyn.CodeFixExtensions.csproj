@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.8.7-dev</Version>
+    <Version>0.9.0-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -20,9 +20,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer codefix</PackageTags>
     <PackageReleaseNotes>
-      FEATURE: nullable enable
-      BUGFIX: IsAssignableTo returns false if symbol is not in metadata.
-      FEATURE: Nullable API.
+      FEATURE: Recursion, helper for walking safely.
+      BREAKING: Minor changes to signature of ExecutionWalker
     </PackageReleaseNotes>
   </PropertyGroup>
 
