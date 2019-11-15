@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis;
@@ -78,6 +78,11 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new System.ArgumentNullException(nameof(node));
             }
 
+            if (node.Modifiers.Any(SyntaxKind.OverrideKeyword))
+            {
+                return node;
+            }
+
             if (TryUpdate(node.Modifiers, out var modifiers))
             {
                 node = node.WithModifiers(modifiers);
@@ -112,6 +117,11 @@ namespace Gu.Roslyn.CodeFixExtensions
             if (node is null)
             {
                 throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (node.Modifiers.Any(SyntaxKind.OverrideKeyword))
+            {
+                return node;
             }
 
             if (TryUpdate(node.Modifiers, out var modifiers))

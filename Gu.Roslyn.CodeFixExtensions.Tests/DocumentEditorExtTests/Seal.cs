@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
 {
     using System.Linq;
     using System.Threading.Tasks;
@@ -96,14 +96,22 @@ namespace N
             var code = @"
 namespace N
 {
-    using System.Collections.ObjectModel;
-
-    public class C : Collection<int>
+    public class BaseClass
     {
-        protected override void ClearItems()
-        {
-            base.ClearItems();
-        }
+        public virtual int P1 { get; protected set }
+
+        protected virtual int P2 { get; set }
+
+        protected virtual void M() { }
+    }
+
+    public class C : BaseClass
+    {
+        public override int P1 { get; protected set; }
+
+        protected override int P2 { get; set }
+
+        protected override void M() { }
     }
 }";
             var sln = CodeFactory.CreateSolution(code);
@@ -112,14 +120,22 @@ namespace N
             var expected = @"
 namespace N
 {
-    using System.Collections.ObjectModel;
-
-    public sealed class C : Collection<int>
+    public class BaseClass
     {
-        protected override void ClearItems()
-        {
-            base.ClearItems();
-        }
+        public virtual int P1 { get; protected set }
+
+        protected virtual int P2 { get; set }
+
+        protected virtual void M() { }
+    }
+
+    public sealed class C : BaseClass
+    {
+        public override int P1 { get; protected set; }
+
+        protected override int P2 { get; set }
+
+        protected override void M() { }
     }
 }";
             _ = editor.Seal(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
