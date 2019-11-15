@@ -381,7 +381,7 @@
         /// <inheritdoc />
         protected override void Clear()
         {
-            this.Recursion.Dispose();
+            this.Recursion?.Dispose();
             this.Recursion = null!;
             this.ContainingType = null!;
         }
