@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 {
     using System.Reflection;
     using System.Threading;
@@ -138,6 +138,31 @@ namespace N
             Assert.AreEqual(true, invocation.TryGetTarget(method, new QualifiedParameter("name", QualifiedType.FromType(typeof(string))), semanticModel, CancellationToken.None, out var target, out var arg));
             Assert.AreEqual("System.Reflection.Assembly.GetType(string)", target.ToString());
             Assert.AreEqual("\"System.Int32\"", arg.ToString());
+        }
+
+        [Test]
+        public static void IsSymbol()
+        {
+            var code = @"
+namespace N
+{
+    public class C
+    {
+        public C(object o)
+        {
+            _ = o.ToString();
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var invocation = syntaxTree.FindInvocation("o.ToString()");
+            var method = new QualifiedMethod(new QualifiedType(typeof(object).FullName), "ToString");
+            Assert.AreEqual(true, invocation.IsSymbol(method, semanticModel, CancellationToken.None));
+
+            method = new QualifiedMethod(new QualifiedType(typeof(object).FullName), "Equals");
+            Assert.AreEqual(false, invocation.IsSymbol(method, semanticModel, CancellationToken.None));
         }
     }
 }

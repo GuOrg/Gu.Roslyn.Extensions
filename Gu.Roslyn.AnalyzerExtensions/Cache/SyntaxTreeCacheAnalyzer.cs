@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Immutable;
     using Microsoft.CodeAnalysis;
@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     {
         private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
             id: "SyntaxTreeCacheAnalyzer",
-            title: "Controls caching of for example Semantic models for syntax trees.",
+            title: "Controls caching of for example semantic models for syntax trees.",
             messageFormat: "Controls caching of for example Semantic models for syntax trees.",
             category: "Caching",
             defaultSeverity: DiagnosticSeverity.Hidden,

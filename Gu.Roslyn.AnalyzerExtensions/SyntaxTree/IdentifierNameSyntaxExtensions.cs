@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -86,7 +86,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return candidate.Identifier.ValueText == symbol.Name &&
-                   semanticModel.TryGetSymbol(candidate, cancellationToken, out ISymbol? candidateSymbol) &&
+                   semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
                    candidateSymbol.IsEquivalentTo(symbol);
         }
     }
