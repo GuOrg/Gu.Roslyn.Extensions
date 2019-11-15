@@ -20,7 +20,7 @@
         protected SearchScope SearchScope { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="SemanticModel"/>.
+        /// Gets the <see cref="SemanticModel"/>.
         /// </summary>
         protected SemanticModel SemanticModel => this.Recursion.SemanticModel;
 
@@ -30,7 +30,7 @@
         protected ITypeSymbol ContainingType { get; set; } = null!;
 
         /// <summary>
-        /// Gets or sets the <see cref="CancellationToken"/>.
+        /// Gets the <see cref="CancellationToken"/>.
         /// </summary>
         protected CancellationToken CancellationToken => this.Recursion.CancellationToken;
 
@@ -97,6 +97,11 @@
         /// <inheritdoc />
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             if (this.SearchScope == SearchScope.Member)
             {
                 base.VisitObjectCreationExpression(node);
@@ -114,7 +119,7 @@
                     }
                 }
 
-                this.Visit(node!.Type);
+                this.Visit(node.Type);
                 if (node.ArgumentList is { } argumentList)
                 {
                     this.VisitArgumentList(argumentList);

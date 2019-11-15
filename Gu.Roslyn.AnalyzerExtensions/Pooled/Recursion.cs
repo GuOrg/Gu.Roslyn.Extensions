@@ -18,7 +18,7 @@
         private static readonly ConcurrentQueue<Recursion> Cache = new ConcurrentQueue<Recursion>();
         private readonly HashSet<(string?, int, SyntaxNode)> visited = new HashSet<(string?, int, SyntaxNode)>();
 
-        internal Recursion()
+        private Recursion()
         {
         }
 
@@ -226,6 +226,8 @@
         /// Get the target symbol and declaration if exists.
         /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
         /// </summary>
+        /// <typeparam name="TSymbol">The type of symbol expected.</typeparam>
+        /// <typeparam name="TDeclaration">The type of declaration expected.</typeparam>
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
