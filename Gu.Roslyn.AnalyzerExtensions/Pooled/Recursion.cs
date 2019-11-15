@@ -9,10 +9,14 @@
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+    /// <summary>
+    /// A helper for walking syntax trees safely in case of recursion.
+    /// The target methods are only callable once for each node.
+    /// </summary>
     public sealed class Recursion : IDisposable
     {
         private static readonly ConcurrentQueue<Recursion> Cache = new ConcurrentQueue<Recursion>();
-        private readonly HashSet<(string, string, SyntaxNode)> visited = new HashSet<(string, string, SyntaxNode)>();
+        private readonly HashSet<(string?, int, SyntaxNode)> visited = new HashSet<(string?, int,  SyntaxNode)>();
 
         private Recursion()
         {
@@ -54,9 +58,17 @@
             this.CancellationToken = CancellationToken.None;
         }
 
-        public SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string caller = null)
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,MethodDeclarationSyntax}"/>.</returns>
+        public SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
-            if (this.visited.Add((caller, nameof(MethodDeclarationSyntax), node)) &&
+            if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol) &&
                 SymbolAndDeclaration.TryCreate(symbol, this.CancellationToken, out SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax> symbolAndDeclaration))
             {
@@ -66,9 +78,17 @@
             return null;
         }
 
-        public SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax>? Target(ObjectCreationExpressionSyntax node, [CallerMemberName] string caller = null)
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,ConstructorDeclarationSyntax}"/>.</returns>
+        public SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax>? Target(ObjectCreationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
-            if (this.visited.Add((caller, nameof(ConstructorDeclarationSyntax), node)) &&
+            if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol) &&
                 SymbolAndDeclaration.TryCreate(symbol, this.CancellationToken, out SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax> symbolAndDeclaration))
             {
@@ -78,9 +98,17 @@
             return null;
         }
 
-        public SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax>? Target(ConstructorInitializerSyntax node, [CallerMemberName] string caller = null)
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,ConstructorDeclarationSyntax}"/>.</returns>
+        public SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax>? Target(ConstructorInitializerSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
-            if (this.visited.Add((caller, nameof(ConstructorDeclarationSyntax), node)) &&
+            if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol) &&
                 SymbolAndDeclaration.TryCreate(symbol, this.CancellationToken, out SymbolAndDeclaration<IMethodSymbol, ConstructorDeclarationSyntax> symbolAndDeclaration))
             {
@@ -90,9 +118,17 @@
             return null;
         }
 
-        public SymbolAndDeclaration<IParameterSymbol, BaseMethodDeclarationSyntax>? Target(ArgumentSyntax node, [CallerMemberName] string caller = null)
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IParameterSymbol,BaseMethodDeclarationSyntax}"/>.</returns>
+        public SymbolAndDeclaration<IParameterSymbol, BaseMethodDeclarationSyntax>? Target(ArgumentSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
-            if (this.visited.Add((caller, nameof(BaseMethodDeclarationSyntax), node)) &&
+            if (this.visited.Add((caller, line, node)) &&
                 node is { Parent: ArgumentListSyntax { Parent: { } parent } } &&
                 this.SemanticModel.TryGetSymbol(parent, this.CancellationToken, out IMethodSymbol? method) &&
                 method.TryFindParameter(node, out var symbol) &&
@@ -104,9 +140,17 @@
             return null;
         }
 
-        public SymbolAndDeclaration<IParameterSymbol, AccessorDeclarationSyntax>? PropertySet(ExpressionSyntax node, [CallerMemberName] string caller = null)
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IParameterSymbol,AccessorDeclarationSyntax}"/>.</returns>
+        public SymbolAndDeclaration<IParameterSymbol, AccessorDeclarationSyntax>? PropertySet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
-            if (this.visited.Add((caller, nameof(this.PropertySet), node)) &&
+            if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IPropertySymbol? property) &&
                 property is { SetMethod: { Parameters: { Length: 1 } } set } &&
                 set.TrySingleAccessorDeclaration(this.CancellationToken, out var declaration))
@@ -117,9 +161,17 @@
             return null;
         }
 
-        public SymbolAndDeclaration<IMethodSymbol, CSharpSyntaxNode>? PropertyGet(ExpressionSyntax node, [CallerMemberName] string caller = null)
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
+        public SymbolAndDeclaration<IMethodSymbol, CSharpSyntaxNode>? PropertyGet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
-            if (this.visited.Add((caller, nameof(this.PropertyGet), node)) &&
+            if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IPropertySymbol? property) &&
                 property is { GetMethod: { } get } &&
                 get.TrySingleDeclaration(this.CancellationToken, out CSharpSyntaxNode? declaration))
@@ -130,11 +182,39 @@
             return null;
         }
 
-        public SymbolAndDeclaration<TSymbol, TDeclaration>? Target<TSymbol, TDeclaration>(ExpressionSyntax node, [CallerMemberName] string caller = null)
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
+        public SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax>? MethodGroup(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        {
+            if (this.visited.Add((caller, line, node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IMethodSymbol? symbol) &&
+                symbol.TrySingleMethodDeclaration(this.CancellationToken, out var declaration))
+            {
+                return new SymbolAndDeclaration<IMethodSymbol, MethodDeclarationSyntax>(symbol, declaration);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</returns>
+        public SymbolAndDeclaration<TSymbol, TDeclaration>? Target<TSymbol, TDeclaration>(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
             where TSymbol : class, ISymbol
             where TDeclaration : CSharpSyntaxNode
         {
-            if (this.visited.Add((caller, typeof(TSymbol).Name + typeof(TDeclaration).Name, node)) &&
+            if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out TSymbol? symbol) &&
                 symbol.TrySingleDeclaration(this.CancellationToken, out TDeclaration? declaration))
             {
