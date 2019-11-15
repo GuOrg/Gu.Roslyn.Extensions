@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
 
@@ -23,6 +23,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
             SymbolComparer.Default,
             TypeSymbolComparer.Default,
         };
+
+        /// <summary>
+        /// The result from this call is meant to be used in a using.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the set.</typeparam>
+        /// <returns>A <see cref="PooledSet{T}"/>.</returns>
+        public static PooledSet<T> Borrow<T>() => PooledSet<T>.Borrow();
 
         /// <summary>
         /// The result from this call is meant to be used in a using.

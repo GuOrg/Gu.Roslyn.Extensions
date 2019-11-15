@@ -1,6 +1,5 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using Gu.Roslyn.AnalyzerExtensions;

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Linq;
@@ -106,7 +106,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             if (typeparam.TryGetNameAttribute(out var attribute) &&
-                attribute.Identifier is IdentifierNameSyntax identifierName)
+                attribute.Identifier is { } identifierName)
             {
                 if (comment.TryGetTypeParam(identifierName.Identifier.ValueText, out var old))
                 {
@@ -236,7 +236,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             if (param.TryGetNameAttribute(out var attribute) &&
-                attribute.Identifier is IdentifierNameSyntax identifierName)
+                attribute.Identifier is { } identifierName)
             {
                 if (comment.TryGetParam(identifierName.Identifier.ValueText, out var old))
                 {

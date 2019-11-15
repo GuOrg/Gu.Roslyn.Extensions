@@ -108,7 +108,7 @@
 
             return With(symbol.OriginalDefinition, node);
 
-            AssignmentExecutionWalker With(ISymbol currentSymbol, SyntaxNode currentNode, Recursion? recursion = null)
+            AssignmentExecutionWalker With(ISymbol currentSymbol, SyntaxNode currentNode)
             {
                 var walker = Borrow(currentNode, SearchScope.Member, semanticModel, cancellationToken);
                 walker.assignments.RemoveAll(x => !IsMatch(currentSymbol, x.Right, semanticModel, cancellationToken));
@@ -120,7 +120,7 @@
                         IsMatch(currentSymbol, variable.Initializer.Value, semanticModel, cancellationToken) &&
                         semanticModel.TryGetSymbol(variable, cancellationToken, out ILocalSymbol? local))
                     {
-                        using (var localWalker = With(local, currentNode, recursion))
+                        using (var localWalker = With(local, currentNode))
                         {
                             walker.assignments.AddRange(localWalker.Assignments);
                         }
@@ -129,45 +129,42 @@
 
                 if (scope != SearchScope.Member)
                 {
-                    using (recursion = Recursion.Borrow(semanticModel, cancellationToken))
+                    foreach (var argument in walker.arguments)
                     {
-                        foreach (var argument in walker.arguments)
+                        if (argument is { Expression: IdentifierNameSyntax { Identifier: { ValueText: { } name } }, Parent: ArgumentListSyntax { Parent: { } } } &&
+                            name == currentSymbol.Name &&
+                            walker.Recursion.Target(argument) is { Symbol: { } parameter, Declaration: { } target })
                         {
-                            if (argument is { Expression: IdentifierNameSyntax { Identifier: { ValueText: { } name } }, Parent: ArgumentListSyntax { Parent: { } } } &&
-                                name == currentSymbol.Name &&
-                                recursion.Target(argument) is { Symbol: { } parameter, Declaration: { } target })
+                            using (var invocationWalker = With(parameter, target))
                             {
-                                using (var invocationWalker = With(parameter, target, recursion))
-                                {
-                                    walker.assignments.AddRange(invocationWalker.Assignments);
-                                }
+                                walker.assignments.AddRange(invocationWalker.Assignments);
+                            }
+                        }
+                    }
+
+                    while (TryWalkBackingField(out var assignment, out var setterWalker))
+                    {
+                        walker.assignments.Remove(assignment);
+                        walker.assignments.AddRange(setterWalker.assignments);
+                    }
+
+                    bool TryWalkBackingField(out AssignmentExpressionSyntax propertyAssignment, out AssignmentExecutionWalker setterWalker)
+                    {
+                        propertyAssignment = null!;
+                        setterWalker = null!;
+
+                        foreach (var candidate in walker.assignments)
+                        {
+                            if (candidate is { Left: { } left } &&
+                                walker.Recursion.PropertySet(left) is { Symbol: { } value, Declaration: { } setter })
+                            {
+                                propertyAssignment = candidate;
+                                setterWalker = With(value, setter);
+                                return true;
                             }
                         }
 
-                        while (TryWalkBackingField(out var assignment, out var setterWalker))
-                        {
-                            walker.assignments.Remove(assignment);
-                            walker.assignments.AddRange(setterWalker.assignments);
-                        }
-
-                        bool TryWalkBackingField(out AssignmentExpressionSyntax propertyAssignment, out AssignmentExecutionWalker setterWalker)
-                        {
-                            propertyAssignment = null!;
-                            setterWalker = null!;
-
-                            foreach (var candidate in walker.assignments)
-                            {
-                                if (candidate is { Left: { } left } &&
-                                    recursion!.PropertySet(left) is { Symbol: { } value, Declaration: { } setter })
-                                {
-                                    propertyAssignment = candidate;
-                                    setterWalker = With(value, setter, recursion);
-                                    return true;
-                                }
-                            }
-
-                            return false;
-                        }
+                        return false;
                     }
                 }
 

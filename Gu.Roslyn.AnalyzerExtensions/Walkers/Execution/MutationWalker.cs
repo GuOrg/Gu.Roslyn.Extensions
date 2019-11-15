@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -82,7 +82,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             bool IsFieldOrProperty(ExpressionSyntax expression)
             {
-                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol? symbol) &&
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out var symbol) &&
                        symbol.Equals(fieldOrProperty.Symbol);
             }
         }
@@ -144,7 +144,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             bool IsMatch(ExpressionSyntax expression)
             {
-                return semanticModel.TryGetSymbol(expression, cancellationToken, out ISymbol? symbol) &&
+                return semanticModel.TryGetSymbol(expression, cancellationToken, out var symbol) &&
                        symbol.Equals(localOrParameter.Symbol);
             }
         }

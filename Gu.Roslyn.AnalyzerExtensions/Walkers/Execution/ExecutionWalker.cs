@@ -114,10 +114,10 @@
                     }
                 }
 
-                base.Visit(node.Type);
+                this.Visit(node!.Type);
                 if (node.ArgumentList is { } argumentList)
                 {
-                    base.VisitArgumentList(argumentList);
+                    this.VisitArgumentList(argumentList);
                 }
 
                 if (this.Recursion.Target(node) is { Symbol: { }, Declaration: { } declaration })
@@ -127,7 +127,7 @@
 
                 if (node.Initializer is { } objectInitializer)
                 {
-                    base.VisitInitializerExpression(objectInitializer);
+                    this.VisitInitializerExpression(objectInitializer);
                 }
             }
 
