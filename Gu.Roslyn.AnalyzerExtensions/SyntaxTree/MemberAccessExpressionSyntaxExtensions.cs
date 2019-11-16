@@ -42,8 +42,6 @@
                    identifierName.TryGetTarget(expected, semanticModel, cancellationToken, out target);
         }
 
-
-
         /// <summary>
         /// Check if <paramref name="candidate"/> is <paramref name="symbol"/>.
         /// Optimized so that the stuff that can be checked in syntax mode is done before calling get symbol.
