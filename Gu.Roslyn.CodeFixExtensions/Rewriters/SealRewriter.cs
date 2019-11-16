@@ -78,11 +78,6 @@
                 throw new System.ArgumentNullException(nameof(node));
             }
 
-            if (node.Modifiers.Any(SyntaxKind.OverrideKeyword))
-            {
-                return node;
-            }
-
             if (TryUpdate(node.Modifiers, out var modifiers))
             {
                 node = node.WithModifiers(modifiers);
@@ -99,11 +94,18 @@
                 throw new System.ArgumentNullException(nameof(node));
             }
 
-            if (node.TryFirstAncestor(out BasePropertyDeclarationSyntax? parent) &&
-                parent.Modifiers.Any(SyntaxKind.PrivateKeyword) &&
-                node.Modifiers.TrySingle(x => x.IsKind(SyntaxKind.PrivateKeyword), out var modifier))
+            if (node.FirstAncestor<BasePropertyDeclarationSyntax>() is { } parent)
             {
-                return node.WithModifiers(node.Modifiers.Remove(modifier));
+                if (parent.Modifiers.Any(SyntaxKind.OverrideKeyword))
+                {
+                    return node;
+                }
+
+                if (parent.Modifiers.Any(SyntaxKind.PrivateKeyword) &&
+                    node.Modifiers.TrySingle(x => x.IsKind(SyntaxKind.PrivateKeyword), out var modifier))
+                {
+                    return node.WithModifiers(node.Modifiers.Remove(modifier));
+                }
             }
 
             return TryUpdate(node.Modifiers, out var modifiers)
@@ -119,11 +121,6 @@
                 throw new System.ArgumentNullException(nameof(node));
             }
 
-            if (node.Modifiers.Any(SyntaxKind.OverrideKeyword))
-            {
-                return node;
-            }
-
             if (TryUpdate(node.Modifiers, out var modifiers))
             {
                 return node.WithModifiers(modifiers);
@@ -134,6 +131,12 @@
 
         private static bool TryUpdate(SyntaxTokenList modifiers, out SyntaxTokenList result)
         {
+            if (modifiers.Any(SyntaxKind.OverrideKeyword))
+            {
+                result = modifiers;
+                return false;
+            }
+
             result = modifiers;
             if (modifiers.TrySingle(x => x.IsKind(SyntaxKind.VirtualKeyword), out var modifier))
             {
