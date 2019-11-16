@@ -133,7 +133,7 @@
         {
             if (modifiers.Any(SyntaxKind.OverrideKeyword))
             {
-                result = modifiers;
+                result = default;
                 return false;
             }
 
