@@ -83,7 +83,7 @@
                 case SearchScope.Instance:
                 case SearchScope.Type:
                 case SearchScope.Recursive:
-                    if (this.Recursion.Target(node) is { Declaration: { } declaration })
+                    if (this.Recursion.Target(node) is { Node: { } declaration })
                     {
                         this.Visit(declaration);
                     }
@@ -108,7 +108,7 @@
                 return;
             }
 
-            if (this.Recursion.ContainingType(node) is { Symbol: { } containingType, Declaration: { } containingTypeDeclaration } &&
+            if (this.Recursion.ContainingType(node) is { Symbol: { } containingType, Node: { } containingTypeDeclaration } &&
                 ShouldVisit(containingType))
             {
                 using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
@@ -125,7 +125,7 @@
                     this.VisitArgumentList(argumentList);
                 }
 
-                if (this.Recursion.Target(node) is { Symbol: { }, Declaration: { } declaration })
+                if (this.Recursion.Target(node) is { Symbol: { }, Node: { } declaration })
                 {
                     this.Visit(declaration);
                 }
@@ -150,9 +150,10 @@
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             base.VisitInvocationExpression(node);
-            if (this.TryGetTargetSymbol<IMethodSymbol, MethodDeclarationSyntax>(node, out var target))
+            if (this.TryGetTargetSymbol<IMethodSymbol, MethodDeclarationSyntax>(node, out var target) &&
+                target.Node is { } declaration)
             {
-                this.Visit(target.Declaration);
+                this.Visit(declaration);
             }
         }
 
@@ -160,18 +161,19 @@
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             base.VisitIdentifierName(node);
-            if (this.TryGetTargetSymbol<IPropertySymbol, PropertyDeclarationSyntax>(node, out var symbolAndDeclaration))
+            if (this.TryGetTargetSymbol<IPropertySymbol, PropertyDeclarationSyntax>(node, out var target) &&
+                target.Node is { } declaration)
             {
                 if (this.IsPropertyGetAndSet(node))
                 {
-                    this.Visit(symbolAndDeclaration.Declaration.Getter());
-                    this.Visit(symbolAndDeclaration.Declaration.Setter());
+                    this.Visit(declaration.Getter());
+                    this.Visit(declaration.Setter());
                 }
                 else if (this.IsPropertySet(node))
                 {
-                    this.Visit(symbolAndDeclaration.Declaration.Setter());
+                    this.Visit(declaration.Setter());
                 }
-                else if (symbolAndDeclaration.Symbol.TryGetGetMethodDeclaration(this.CancellationToken, out var getter))
+                else if (target.Symbol.TryGetGetMethodDeclaration(this.CancellationToken, out var getter))
                 {
                     this.Visit(getter);
                 }
@@ -332,7 +334,7 @@
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="target">The symbol and declaratyion if a match.</param>
         /// <returns>True if a symbol was found.</returns>
-        protected virtual bool TryGetTargetSymbol<TSymbol, TDeclaration>(SyntaxNode node, out SymbolAndDeclaration<TSymbol, TDeclaration> target)
+        protected virtual bool TryGetTargetSymbol<TSymbol, TDeclaration>(SyntaxNode node, out Target<TSymbol, TDeclaration> target)
             where TSymbol : class, ISymbol
             where TDeclaration : CSharpSyntaxNode
         {
@@ -357,7 +359,7 @@
                 return false;
             }
 
-            if (this.Recursion.Target<TSymbol, TDeclaration>(node) is { Symbol: { } symbol } symbolAndDeclaration)
+            if (this.Recursion.Target<TSymbol, TDeclaration>(node) is { Symbol: { } symbol, Node: { } } symbolAnrecursionTargetdDeclaration)
             {
                 if (this.SearchScope == SearchScope.Instance &&
                     symbol.IsStatic)
@@ -371,7 +373,7 @@
                     return false;
                 }
 
-                target = symbolAndDeclaration;
+                target = symbolAnrecursionTargetdDeclaration;
                 return true;
             }
 
