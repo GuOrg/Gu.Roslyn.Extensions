@@ -146,6 +146,26 @@
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
+        public Target<VariableDeclaratorSyntax, ILocalSymbol, SyntaxNode>? Target(VariableDeclaratorSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        {
+            if (this.visited.Add((caller, line, node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out ILocalSymbol? symbol))
+            {
+                _ = symbol.TryGetScope(this.CancellationToken, out var declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IParameterSymbol,AccessorDeclarationSyntax}"/>.</returns>
         public Target<ExpressionSyntax, IParameterSymbol, AccessorDeclarationSyntax>? PropertySet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
@@ -195,26 +215,6 @@
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IMethodSymbol? symbol))
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Get the target symbol and declaration if exists.
-        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
-        /// </summary>
-        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
-        /// <param name="caller">The invoking method.</param>
-        /// <param name="line">Line number in <paramref name="caller"/>.</param>
-        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
-        public Target<VariableDeclaratorSyntax, ILocalSymbol, SyntaxNode>? MethodGroup(VariableDeclaratorSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
-        {
-            if (this.visited.Add((caller, line, node)) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out ILocalSymbol? symbol))
-            {
-                _ = symbol.TryGetScope(this.CancellationToken, out var declaration);
                 return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
