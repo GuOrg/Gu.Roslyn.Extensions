@@ -65,13 +65,13 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,MethodDeclarationSyntax}"/>.</returns>
-        public Target<IMethodSymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<InvocationExpressionSyntax, IMethodSymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol))
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(symbol, declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
             return null;
@@ -85,13 +85,13 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,ConstructorDeclarationSyntax}"/>.</returns>
-        public Target<IMethodSymbol, ConstructorDeclarationSyntax>? Target(ObjectCreationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ObjectCreationExpressionSyntax, IMethodSymbol, ConstructorDeclarationSyntax>? Target(ObjectCreationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol))
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(symbol, declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
             return null;
@@ -105,13 +105,13 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,ConstructorDeclarationSyntax}"/>.</returns>
-        public Target<IMethodSymbol, ConstructorDeclarationSyntax>? Target(ConstructorInitializerSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ConstructorInitializerSyntax, IMethodSymbol, ConstructorDeclarationSyntax>? Target(ConstructorInitializerSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol))
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(symbol, declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
             return null;
@@ -125,7 +125,7 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IParameterSymbol,BaseMethodDeclarationSyntax}"/>.</returns>
-        public Target<IParameterSymbol, BaseMethodDeclarationSyntax>? Target(ArgumentSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ArgumentSyntax, IParameterSymbol, BaseMethodDeclarationSyntax>? Target(ArgumentSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 node is { Parent: ArgumentListSyntax { Parent: { } parent } } &&
@@ -133,7 +133,7 @@
                 method.TryFindParameter(node, out var symbol))
             {
                 _ = method.TrySingleDeclaration(this.CancellationToken, out BaseMethodDeclarationSyntax? declaration);
-                return Gu.Roslyn.AnalyzerExtensions.Target.Create(symbol, declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
             return null;
@@ -147,14 +147,14 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IParameterSymbol,AccessorDeclarationSyntax}"/>.</returns>
-        public Target<IParameterSymbol, AccessorDeclarationSyntax>? PropertySet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ExpressionSyntax, IParameterSymbol, AccessorDeclarationSyntax>? PropertySet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IPropertySymbol? property) &&
                 property is { SetMethod: { Parameters: { Length: 1 } } set })
             {
                 _ = set.TrySingleDeclaration(this.CancellationToken, out AccessorDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(set.Parameters[0], declaration);
+                return AnalyzerExtensions.Target.Create(node, set.Parameters[0], declaration);
             }
 
             return null;
@@ -168,14 +168,14 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
-        public Target<IMethodSymbol, CSharpSyntaxNode>? PropertyGet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ExpressionSyntax, IMethodSymbol, CSharpSyntaxNode>? PropertyGet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IPropertySymbol? property) &&
                 property is { GetMethod: { } get })
             {
                 _ = get.TrySingleDeclaration(this.CancellationToken, out CSharpSyntaxNode? declaration);
-                return AnalyzerExtensions.Target.Create(get, declaration);
+                return AnalyzerExtensions.Target.Create(node, get, declaration);
             }
 
             return null;
@@ -189,13 +189,13 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
-        public Target<IMethodSymbol, MethodDeclarationSyntax>? MethodGroup(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ExpressionSyntax, IMethodSymbol, MethodDeclarationSyntax>? MethodGroup(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IMethodSymbol? symbol))
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(symbol, declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
             return null;
@@ -209,13 +209,13 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
-        public Target<ILocalSymbol, SyntaxNode>? MethodGroup(VariableDeclaratorSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<VariableDeclaratorSyntax, ILocalSymbol, SyntaxNode>? MethodGroup(VariableDeclaratorSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out ILocalSymbol? symbol))
             {
                 _ = symbol.TryGetScope(this.CancellationToken, out var declaration);
-                return AnalyzerExtensions.Target.Create(symbol, declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
             return null;
@@ -225,18 +225,20 @@
         /// Get the target symbol and declaration if exists.
         /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
         /// </summary>
+        /// <typeparam name="TSource">The source node.</typeparam>
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{INamedTypeSymbol,TypeDeclarationSyntax}"/>.</returns>
-        public Target<INamedTypeSymbol, TypeDeclarationSyntax>? ContainingType(SyntaxNode node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<TSource, INamedTypeSymbol, TypeDeclarationSyntax>? ContainingType<TSource>(TSource node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+            where TSource : CSharpSyntaxNode
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out ISymbol? symbol) &&
                 symbol.ContainingSymbol is INamedTypeSymbol type)
             {
                 _ = type.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(type, declaration);
+                return AnalyzerExtensions.Target.Create(node, type, declaration);
             }
 
             return null;
@@ -246,13 +248,15 @@
         /// Get the target symbol and declaration if exists.
         /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
         /// </summary>
+        /// <typeparam name="TSource">The source node.</typeparam>
         /// <typeparam name="TSymbol">The type of symbol expected.</typeparam>
         /// <typeparam name="TDeclaration">The type of declaration expected.</typeparam>
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</returns>
-        public Target<TSymbol, TDeclaration>? Target<TSymbol, TDeclaration>(SyntaxNode node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<TSource, TSymbol, TDeclaration>? Target<TSource, TSymbol, TDeclaration>(TSource node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+            where TSource : CSharpSyntaxNode
             where TSymbol : class, ISymbol
             where TDeclaration : CSharpSyntaxNode
         {
@@ -260,7 +264,7 @@
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out TSymbol? symbol))
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out TDeclaration? declaration);
-                return AnalyzerExtensions.Target.Create(symbol, declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
             return null;
