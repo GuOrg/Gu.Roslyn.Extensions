@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Linq;
@@ -88,6 +88,22 @@ namespace Gu.Roslyn.CodeFixExtensions
         {
             if (DocumentationCommentTriviaSyntax(text.WithLeadingWhiteSpace("/// "), leadingWhitespace ?? string.Empty) is var comment &&
                 comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(out XmlElementSyntax? element))
+            {
+                return element;
+            }
+
+            throw new InvalidOperationException($"Failed parsing {text} into an XmlElementSyntax");
+        }
+
+        /// <summary>
+        /// Parse a <see cref="XmlEmptyElementSyntax"/> from a string.
+        /// </summary>
+        /// <param name="text">The element text including start and end tags.</param>
+        /// <returns>The <see cref="XmlEmptyElementSyntax"/>.</returns>
+        public static XmlEmptyElementSyntax XmlEmptyElementSyntax(string text)
+        {
+            if (DocumentationCommentTriviaSyntax(text.WithLeadingWhiteSpace("/// ")) is var comment &&
+                comment.Content.TrySingleOfType<XmlNodeSyntax, XmlEmptyElementSyntax>(out XmlEmptyElementSyntax? element))
             {
                 return element;
             }

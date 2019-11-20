@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
     using System.Linq;
     using Gu.Roslyn.Asserts;
@@ -66,6 +66,13 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests
         {
             var node = Parse.XmlElementSyntax(code, string.Empty);
             Assert.AreEqual(expected, node.ToFullString());
+        }
+
+        [TestCase("<see cref=\"Value\"/>")]
+        public static void XmlEleXmlEmptyElement(string code)
+        {
+            var node = Parse.XmlEmptyElementSyntax(code);
+            Assert.AreEqual(code, node.ToFullString());
         }
 
         [TestCase("/// <summary> Text </summary>")]
