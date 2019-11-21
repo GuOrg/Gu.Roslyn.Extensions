@@ -72,7 +72,6 @@
     <Rule Id="CA1303" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1013" Action="None" />
     <Rule Id="SA1633" Action="None" />
   </Rules>
 </RuleSet>
