@@ -1,5 +1,6 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -33,6 +34,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.assignments.Add(node);
             base.VisitAssignmentExpression(node);
         }
+
+        /// <summary>
+        /// Filters by <paramref name="match"/>.
+        /// </summary>
+        /// <param name="match">The predicate for finding items to remove.</param>
+        public void RemoveAll(Predicate<AssignmentExpressionSyntax> match) => this.assignments.RemoveAll(match);
 
         /// <inheritdoc/>
         protected override void Clear()
