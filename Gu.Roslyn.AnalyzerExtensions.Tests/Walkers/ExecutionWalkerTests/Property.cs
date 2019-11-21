@@ -1,11 +1,11 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
-    public static class WhenProperty
+    public static class Property
     {
         [TestCase(SearchScope.Member, "2, 3")]
         [TestCase(SearchScope.Instance, "1, 2, 3")]

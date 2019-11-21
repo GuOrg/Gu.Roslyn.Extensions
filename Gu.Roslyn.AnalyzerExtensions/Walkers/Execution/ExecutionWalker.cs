@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -27,7 +28,7 @@
         /// <summary>
         /// Gets or sets the containing <see cref="ITypeSymbol"/> of the current context.
         /// </summary>
-        protected ITypeSymbol ContainingType { get; set; } = null!;
+        protected INamedTypeSymbol ContainingType { get; set; } = null!;
 
         /// <summary>
         /// Gets the <see cref="CancellationToken"/>.
@@ -210,12 +211,12 @@
             if (walker.SearchScope != SearchScope.Member)
             {
                 if (node is TypeDeclarationSyntax typeDeclaration &&
-                    semanticModel.TryGetSymbol(typeDeclaration, cancellationToken, out var containingType))
+                    semanticModel.TryGetNamedType(typeDeclaration, cancellationToken, out var containingType))
                 {
                     walker.ContainingType = containingType;
                 }
                 else if (node.TryFirstAncestor(out TypeDeclarationSyntax? containingTypeDeclaration) &&
-                         semanticModel.TryGetSymbol(containingTypeDeclaration, cancellationToken, out containingType))
+                         semanticModel.TryGetNamedType(containingTypeDeclaration, cancellationToken, out containingType))
                 {
                     walker.ContainingType = containingType;
                 }
@@ -332,8 +333,10 @@
         /// <typeparam name="TDeclaration">The expected declaration type.</typeparam>
         /// <param name="node">The <typeparamref name="TSource"/>.</param>
         /// <param name="target">The symbol and declaration if a match.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>True if a symbol was found.</returns>
-        protected virtual bool TryGetTargetSymbol<TSource, TSymbol, TDeclaration>(TSource node, out Target<TSource, TSymbol, TDeclaration> target)
+        protected virtual bool TryGetTargetSymbol<TSource, TSymbol, TDeclaration>(TSource node, out Target<TSource, TSymbol, TDeclaration> target, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
             where TSource : CSharpSyntaxNode
             where TSymbol : class, ISymbol
             where TDeclaration : CSharpSyntaxNode
@@ -359,7 +362,7 @@
                 return false;
             }
 
-            if (this.Recursion.Target<TSource, TSymbol, TDeclaration>(node) is { Symbol: { } symbol, TargetNode: { } } t)
+            if (this.Recursion.Target<TSource, TSymbol, TDeclaration>(node, this.ContainingType, caller, line) is { Symbol: { } symbol, TargetNode: { } } t)
             {
                 if (this.SearchScope == SearchScope.Instance &&
                     symbol.IsStatic)

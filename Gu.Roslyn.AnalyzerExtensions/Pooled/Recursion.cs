@@ -271,6 +271,65 @@
         }
 
         /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <typeparam name="TSource">The source node.</typeparam>
+        /// <typeparam name="TSymbol">The type of symbol expected.</typeparam>
+        /// <typeparam name="TDeclaration">The type of declaration expected.</typeparam>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</returns>
+        public Target<TSource, TSymbol, TDeclaration>? Target<TSource, TSymbol, TDeclaration>(TSource node, INamedTypeSymbol containingType, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+            where TSource : CSharpSyntaxNode
+            where TSymbol : class, ISymbol
+            where TDeclaration : CSharpSyntaxNode
+        {
+            if (this.visited.Add((caller, line, node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out TSymbol? symbol))
+            {
+                if (!IsExplicitBase())
+                {
+                    switch (symbol)
+                    {
+                        case IEventSymbol @event
+                            when (@event.IsVirtual || @event.IsAbstract) &&
+                                 containingType.FindOverride(@event) is TSymbol overrider:
+                            symbol = overrider;
+                            break;
+                        case IPropertySymbol property
+                            when (property.IsVirtual || property.IsAbstract) &&
+                                 containingType.FindOverride(property) is TSymbol overrider:
+                            symbol = overrider;
+                            break;
+                        case IMethodSymbol method
+                            when (method.IsVirtual || method.IsAbstract) &&
+                                 containingType.FindOverride(method) is TSymbol overrider:
+                            symbol = overrider;
+                            break;
+                    }
+                }
+
+                _ = symbol.TrySingleDeclaration(this.CancellationToken, out TDeclaration? declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
+            }
+
+            return null;
+
+            bool IsExplicitBase()
+            {
+                return node switch
+                {
+                    InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Expression: BaseExpressionSyntax _ } } => true,
+                    MemberAccessExpressionSyntax { Expression: BaseExpressionSyntax _ } => true,
+                    _ => false,
+                };
+            }
+        }
+
+        /// <summary>
         /// Clear the inner set.
         /// </summary>
         public void Clear()
