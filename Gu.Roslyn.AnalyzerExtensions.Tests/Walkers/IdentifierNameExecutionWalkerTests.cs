@@ -29,10 +29,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("new C()");
-            using (var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.IdentifierNames));
-            }
+            using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.IdentifierNames));
         }
 
         [TestCase(SearchScope.Member, "ValuePropertyKey, DependencyProperty")]
@@ -67,10 +65,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("ValuePropertyKey.DependencyProperty");
-            using (var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.IdentifierNames));
-            }
+            using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.IdentifierNames));
         }
 
         [TestCase(SearchScope.Member)]
@@ -95,15 +91,13 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("M");
-            using (var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                CollectionAssert.AreEqual(new[] { "var", "P", "ToString" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
+            using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            CollectionAssert.AreEqual(new[] { "var", "P", "ToString" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
 
-                Assert.AreEqual(true, walker.TryFind("P", out var match));
-                Assert.AreEqual("P", match.Identifier.ValueText);
+            Assert.AreEqual(true, walker.TryFind("P", out var match));
+            Assert.AreEqual("P", match.Identifier.ValueText);
 
-                Assert.AreEqual(false, walker.TryFind("missing", out _));
-            }
+            Assert.AreEqual(false, walker.TryFind("missing", out _));
         }
 
         [TestCase(SearchScope.Member)]
@@ -128,15 +122,13 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("M");
-            using (var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                CollectionAssert.AreEqual(new[] { "P", "ToString" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
+            using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            CollectionAssert.AreEqual(new[] { "P", "ToString" }, walker.IdentifierNames.Select(x => x.Identifier.ValueText));
 
-                Assert.AreEqual(true, walker.TryFind("P", out var match));
-                Assert.AreEqual("P", match.Identifier.ValueText);
+            Assert.AreEqual(true, walker.TryFind("P", out var match));
+            Assert.AreEqual("P", match.Identifier.ValueText);
 
-                Assert.AreEqual(false, walker.TryFind("missing", out _));
-            }
+            Assert.AreEqual(false, walker.TryFind("missing", out _));
         }
     }
 }

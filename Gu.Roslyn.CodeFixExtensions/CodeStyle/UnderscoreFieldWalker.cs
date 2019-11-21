@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Threading;
@@ -25,11 +25,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="CodeStyleResult"/>.</returns>
         public static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
         {
-            using (var walker = Borrow(() => new UnderscoreFieldWalker()))
-            {
-                return await walker.CheckCoreAsync(containing, cancellationToken)
-                                   .ConfigureAwait(false);
-            }
+            using var walker = Borrow(() => new UnderscoreFieldWalker());
+            return await walker.CheckCoreAsync(containing, cancellationToken)
+                               .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -40,10 +38,8 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="CodeStyleResult"/>.</returns>
         public static CodeStyleResult Check(SyntaxTree containing, Compilation compilation)
         {
-            using (var walker = Borrow(() => new UnderscoreFieldWalker()))
-            {
-                return walker.CheckCore(containing, compilation);
-            }
+            using var walker = Borrow(() => new UnderscoreFieldWalker());
+            return walker.CheckCore(containing, compilation);
         }
 
         /// <inheritdoc />

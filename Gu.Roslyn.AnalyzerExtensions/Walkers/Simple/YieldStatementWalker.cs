@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
@@ -34,10 +34,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if <see cref="YieldStatementSyntax"/> was found.</returns>
         public static bool Any(MethodDeclarationSyntax methodDeclaration)
         {
-            using (var walker = Borrow(methodDeclaration))
-            {
-                return walker.yieldStatements.Count > 0;
-            }
+            using var walker = Borrow(methodDeclaration);
+            return walker.yieldStatements.Count > 0;
         }
 
         /// <inheritdoc/>

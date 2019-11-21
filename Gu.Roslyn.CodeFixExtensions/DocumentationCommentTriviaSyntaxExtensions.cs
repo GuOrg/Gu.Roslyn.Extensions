@@ -345,7 +345,7 @@
                 return comment.ReplaceNode(old, returns);
             }
 
-            if (comment.Content.TryLastOfType<XmlNodeSyntax, XmlElementSyntax>(out XmlElementSyntax? existing))
+            if (comment.Content.TryLastOfType<XmlNodeSyntax, XmlElementSyntax>(out var existing))
             {
                 return comment.InsertAfter(existing, returns);
             }

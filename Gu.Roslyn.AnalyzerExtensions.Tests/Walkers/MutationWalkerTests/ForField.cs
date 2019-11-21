@@ -33,12 +33,10 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
-            using (var walker = MutationWalker.For(field, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(mutation, walker.All().Single().ToString());
-                Assert.AreEqual(true, walker.TrySingle(out var single));
-                Assert.AreEqual(mutation, single.ToString());
-            }
+            using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
+            Assert.AreEqual(mutation, walker.All().Single().ToString());
+            Assert.AreEqual(true, walker.TrySingle(out var single));
+            Assert.AreEqual(mutation, single.ToString());
         }
 
         [Test]
@@ -58,12 +56,10 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
-            using (var walker = MutationWalker.For(field, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("value = 1", walker.All().Single().ToString());
-                Assert.AreEqual(true, walker.TrySingle(out var single));
-                Assert.AreEqual("value = 1", single.ToString());
-            }
+            using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
+            Assert.AreEqual("value = 1", walker.All().Single().ToString());
+            Assert.AreEqual(true, walker.TrySingle(out var single));
+            Assert.AreEqual("value = 1", single.ToString());
         }
 
         [Test]
@@ -91,12 +87,10 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
-            using (var walker = MutationWalker.For(field, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("ref this.value", walker.All().Single().ToString());
-                Assert.AreEqual(true, walker.TrySingle(out var single));
-                Assert.AreEqual("ref this.value", single.ToString());
-            }
+            using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
+            Assert.AreEqual("ref this.value", walker.All().Single().ToString());
+            Assert.AreEqual(true, walker.TrySingle(out var single));
+            Assert.AreEqual("ref this.value", single.ToString());
         }
 
         [Test]
@@ -124,12 +118,10 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
-            using (var walker = MutationWalker.For(field, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("out this.value", walker.All().Single().ToString());
-                Assert.AreEqual(true, walker.TrySingle(out var single));
-                Assert.AreEqual("out this.value", single.ToString());
-            }
+            using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
+            Assert.AreEqual("out this.value", walker.All().Single().ToString());
+            Assert.AreEqual(true, walker.TrySingle(out var single));
+            Assert.AreEqual("out this.value", single.ToString());
         }
     }
 }

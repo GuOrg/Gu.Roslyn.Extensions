@@ -37,10 +37,8 @@ namespace N
             Assert.AreEqual("this.value = arg", result.ToString());
             Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
             Assert.AreEqual("this.value = arg", result.ToString());
-            using (var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
-            }
+            using var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
         }
 
         [TestCase(SearchScope.Member)]
@@ -78,10 +76,8 @@ namespace N
                 Assert.AreEqual("this.value = arg", result.ToString());
                 Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.value = arg", result.ToString());
-                using (var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None))
-                {
-                    Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
-                }
+                using var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None);
+                Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
             }
             else
             {
@@ -117,10 +113,8 @@ namespace N
             Assert.AreEqual("this.value = 1", result.ToString());
             Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, bar, scope, semanticModel, CancellationToken.None, out result));
             Assert.AreEqual("this.value = 1", result.ToString());
-            using (var walker = AssignmentExecutionWalker.For(field, bar, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("this.value = 1", walker.Assignments.Single().ToString());
-            }
+            using var walker = AssignmentExecutionWalker.For(field, bar, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual("this.value = 1", walker.Assignments.Single().ToString());
         }
 
         [TestCase(SearchScope.Member)]
@@ -159,10 +153,8 @@ namespace N
                 Assert.AreEqual("this.number = value", result.ToString());
                 Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.number = value", result.ToString());
-                using (var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None))
-                {
-                    Assert.AreEqual("this.number = value", walker.Assignments.Single().ToString());
-                }
+                using var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None);
+                Assert.AreEqual("this.number = value", walker.Assignments.Single().ToString());
             }
             else
             {
@@ -203,10 +195,8 @@ namespace N
                 Assert.AreEqual("this.number = 3", result.ToString());
                 Assert.AreEqual(true, AssignmentExecutionWalker.SingleFor(field, ctor, scope, semanticModel, CancellationToken.None, out result));
                 Assert.AreEqual("this.number = 3", result.ToString());
-                using (var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None))
-                {
-                    Assert.AreEqual("this.number = 3", walker.Assignments.Single().ToString());
-                }
+                using var walker = AssignmentExecutionWalker.For(field, ctor, scope, semanticModel, CancellationToken.None);
+                Assert.AreEqual("this.number = 3", walker.Assignments.Single().ToString());
             }
             else
             {

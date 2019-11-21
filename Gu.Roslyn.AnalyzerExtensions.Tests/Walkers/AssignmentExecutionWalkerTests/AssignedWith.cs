@@ -36,10 +36,8 @@ namespace N
             Assert.AreEqual(true, semanticModel.TryGetSymbol(value, CancellationToken.None, out var symbol));
             Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.value = arg", result.ToString());
-            using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
-            }
+            using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
         }
 
         [TestCase(SearchScope.Member)]
@@ -68,10 +66,8 @@ namespace N
             Assert.AreEqual(true, semanticModel.TryGetSymbol(value, CancellationToken.None, out var symbol));
             Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.value = arg", result.ToString());
-            using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
-            }
+            using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
         }
 
         [TestCase(SearchScope.Member)]
@@ -103,10 +99,8 @@ namespace N
             var ctor = syntaxTree.FindConstructorDeclaration("C(T arg)");
             Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.value = arg", result.ToString());
-            using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
-            }
+            using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual("this.value = arg", walker.Assignments.Single().ToString());
         }
 
         [TestCase(SearchScope.Member)]
@@ -135,10 +129,8 @@ namespace N
             var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindParameter("int arg"), CancellationToken.None);
             Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.value = temp", result.ToString());
-            using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("this.value = temp", walker.Assignments.Single().ToString());
-            }
+            using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual("this.value = temp", walker.Assignments.Single().ToString());
         }
 
         [TestCase(SearchScope.Member)]
@@ -169,10 +161,8 @@ namespace N
             var symbol = semanticModel.GetDeclaredSymbol(value, CancellationToken.None);
             Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
             Assert.AreEqual("this.reader = new StreamReader(stream)", result.ToString());
-            using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("this.reader = new StreamReader(stream)", walker.Assignments.Single().ToString());
-            }
+            using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual("this.reader = new StreamReader(stream)", walker.Assignments.Single().ToString());
         }
 
         [TestCase(SearchScope.Member)]
@@ -207,18 +197,14 @@ namespace N
             {
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
                 Assert.AreEqual("this.value = chainedArg", result.ToString());
-                using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-                {
-                    Assert.AreEqual("this.value = chainedArg", walker.Assignments.Single().ToString());
-                }
+                using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+                Assert.AreEqual("this.value = chainedArg", walker.Assignments.Single().ToString());
             }
             else
             {
                 Assert.AreEqual(false, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out _));
-                using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-                {
-                    Assert.AreEqual(0, walker.Assignments.Count);
-                }
+                using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+                Assert.AreEqual(0, walker.Assignments.Count);
             }
         }
 
@@ -256,19 +242,15 @@ namespace N
             {
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
                 Assert.AreEqual("this.Number = arg", result.ToString());
-                using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-                {
-                    Assert.AreEqual("this.Number = arg", string.Join(", ", walker.Assignments));
-                }
+                using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+                Assert.AreEqual("this.Number = arg", string.Join(", ", walker.Assignments));
             }
             else
             {
                 Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
                 Assert.AreEqual("this.number = value", result.ToString());
-                using (var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None))
-                {
-                    Assert.AreEqual("this.number = value", string.Join(", ", walker.Assignments));
-                }
+                using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
+                Assert.AreEqual("this.number = value", string.Join(", ", walker.Assignments));
             }
         }
     }

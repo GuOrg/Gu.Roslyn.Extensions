@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -66,15 +66,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (tree.TryGetRoot(out var root))
             {
-                using (var walker = Borrow(root))
+                using var walker = Borrow(root);
+                foreach (var candidate in walker.aliases)
                 {
-                    foreach (var candidate in walker.aliases)
+                    if (candidate.Alias.Name.Identifier.ValueText == name)
                     {
-                        if (candidate.Alias.Name.Identifier.ValueText == name)
-                        {
-                            result = candidate;
-                            return true;
-                        }
+                        result = candidate;
+                        return true;
                     }
                 }
             }
@@ -100,15 +98,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (tree.TryGetRoot(out var root))
             {
-                using (var walker = Borrow(root))
+                using var walker = Borrow(root);
+                foreach (var candidate in walker.aliases)
                 {
-                    foreach (var candidate in walker.aliases)
+                    if (candidate.Name == type)
                     {
-                        if (candidate.Name == type)
-                        {
-                            result = candidate;
-                            return true;
-                        }
+                        result = candidate;
+                        return true;
                     }
                 }
             }

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -27,10 +27,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var walker = NullCheckWalker.Borrow(scope))
-            {
-                return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out _);
-            }
+            using var walker = NullCheckWalker.Borrow(scope);
+            return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out _);
         }
 
         /// <summary>
@@ -49,12 +47,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var walker = NullCheckWalker.Borrow(location.FirstAncestorOrSelf<MemberDeclarationSyntax>()))
-            {
-                return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
-                       location.TryFirstAncestorOrSelf(out ExpressionSyntax? expression) &&
-                       check.IsExecutedBefore(expression) == ExecutedBefore.Yes;
-            }
+            using var walker = NullCheckWalker.Borrow(location.FirstAncestorOrSelf<MemberDeclarationSyntax>());
+            return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
+                   location.TryFirstAncestorOrSelf(out ExpressionSyntax? expression) &&
+                   check.IsExecutedBefore(expression) == ExecutedBefore.Yes;
         }
 
         /// <summary>

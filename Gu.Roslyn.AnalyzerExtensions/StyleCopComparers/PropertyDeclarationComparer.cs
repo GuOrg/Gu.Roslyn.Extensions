@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
@@ -84,14 +84,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 x.Initializer is { Value: { } value } initializer &&
                 !(value is LiteralExpressionSyntax))
             {
-                using (var walker = IdentifierNameWalker.Borrow(initializer))
+                using var walker = IdentifierNameWalker.Borrow(initializer);
+                foreach (var identifierName in walker.IdentifierNames)
                 {
-                    foreach (var identifierName in walker.IdentifierNames)
+                    if (y.Identifier.ValueText == identifierName.Identifier.ValueText)
                     {
-                        if (y.Identifier.ValueText == identifierName.Identifier.ValueText)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }

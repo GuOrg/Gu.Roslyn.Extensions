@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -80,14 +80,12 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 variable.Initializer is { Value: { } value } initializer &&
                 !(value is LiteralExpressionSyntax))
             {
-                using (var walker = IdentifierNameWalker.Borrow(initializer))
+                using var walker = IdentifierNameWalker.Borrow(initializer);
+                foreach (var identifierName in walker.IdentifierNames)
                 {
-                    foreach (var identifierName in walker.IdentifierNames)
+                    if (y.Declaration.TryFindVariable(identifierName.Identifier.ValueText, out _))
                     {
-                        if (y.Declaration.TryFindVariable(identifierName.Identifier.ValueText, out _))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -150,21 +148,19 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
                 if (field.Declaration.Variables.TrySingle(out var variable) &&
                     field.Parent is TypeDeclarationSyntax type)
                 {
-                    using (var walker = Borrow(() => new SetterAssignmentWalker()))
+                    using var walker = Borrow(() => new SetterAssignmentWalker());
+                    foreach (var member in type.Members)
                     {
-                        foreach (var member in type.Members)
+                        if (member is PropertyDeclarationSyntax property &&
+                            property.TryGetSetter(out setter))
                         {
-                            if (member is PropertyDeclarationSyntax property &&
-                                property.TryGetSetter(out setter))
-                            {
-                                walker.Visit(setter);
-                            }
+                            walker.Visit(setter);
                         }
+                    }
 
-                        if (walker.assignments.TrySingle(IsAssigning, out var assignment))
-                        {
-                            setter = assignment.FirstAncestor<AccessorDeclarationSyntax>();
-                        }
+                    if (walker.assignments.TrySingle(IsAssigning, out var assignment))
+                    {
+                        setter = assignment.FirstAncestor<AccessorDeclarationSyntax>();
                     }
                 }
 

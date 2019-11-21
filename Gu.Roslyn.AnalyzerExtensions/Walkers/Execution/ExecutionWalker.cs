@@ -245,35 +245,33 @@
                 return;
             }
 
-            using (var walker = TypeDeclarationWalker.Borrow(node))
+            using var walker = TypeDeclarationWalker.Borrow(node);
+            foreach (var initializer in walker.Initializers)
             {
-                foreach (var initializer in walker.Initializers)
+                this.Visit(initializer);
+            }
+
+            foreach (var ctor in walker.Ctors)
+            {
+                if (this.SearchScope == SearchScope.Instance &&
+                    ctor.Modifiers.Any(SyntaxKind.StaticKeyword))
                 {
-                    this.Visit(initializer);
+                    continue;
                 }
 
-                foreach (var ctor in walker.Ctors)
-                {
-                    if (this.SearchScope == SearchScope.Instance &&
-                        ctor.Modifiers.Any(SyntaxKind.StaticKeyword))
-                    {
-                        continue;
-                    }
+                this.Visit(ctor);
+            }
 
-                    this.Visit(ctor);
-                }
+            foreach (var member in walker.Members)
+            {
+                this.Visit(member);
+            }
 
-                foreach (var member in walker.Members)
+            if (this.SearchScope == SearchScope.Recursive)
+            {
+                foreach (var type in walker.Types)
                 {
-                    this.Visit(member);
-                }
-
-                if (this.SearchScope == SearchScope.Recursive)
-                {
-                    foreach (var type in walker.Types)
-                    {
-                        this.Visit(type);
-                    }
+                    this.Visit(type);
                 }
             }
         }

@@ -16,63 +16,45 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         [Test]
         public static void UsingBorrowBorrowOrIncrementUsage()
         {
-            using (var set = PooledSet<int>.Borrow())
-            {
-                using (var meh = set.IncrementUsage())
-                {
-                    using (var meh1 = meh.IncrementUsage())
-                    {
-                    }
-                }
-            }
+            using var set = PooledSet<int>.Borrow();
+            using var meh = set.IncrementUsage();
+            using var meh1 = meh.IncrementUsage();
         }
 
         [TestCase(null)]
         public static void UsingBorrowOrIncrementUsageNull(PooledSet<int> arg)
         {
-            using (var set = arg.IncrementUsage())
-            {
-                using (var meh = set.IncrementUsage())
-                {
-                    using (var meh1 = meh.IncrementUsage())
-                    {
-                    }
-                }
-            }
+            using var set = arg.IncrementUsage();
+            using var meh = set.IncrementUsage();
+            using var meh1 = meh.IncrementUsage();
         }
 
         [Test]
         public static void UseSet()
         {
-            using (var set = ((PooledSet<int>)null).IncrementUsage())
-            {
-                UseSet(set);
-                UseSet(set);
-            }
+            using var set = ((PooledSet<int>)null).IncrementUsage();
+            UseSet(set);
+            UseSet(set);
         }
 
         [Test]
         public static void UsingBorrowAddForeach()
         {
-            using (var set = PooledSet<int>.Borrow())
+            using var set = PooledSet<int>.Borrow();
+            set.Add(1);
+            foreach (var i in set)
             {
-                set.Add(1);
-                foreach (var i in set)
-                {
-                }
             }
         }
 
         [Test]
         public static void UsingBorrowAddForeachCallId()
         {
-            using (var set = PooledSet<int>.Borrow())
+            using var set = PooledSet<int>.Borrow();
+            set.Add(1);
+            foreach (var i in set)
             {
-                set.Add(1);
-                foreach (var i in set)
-                {
-                    var j = Id(i);
-                }
+                var j = Id(i);
             }
         }
 

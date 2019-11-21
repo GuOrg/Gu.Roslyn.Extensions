@@ -30,12 +30,10 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.Find<ParameterSyntax>("value"));
-            using (var walker = MutationWalker.For(symbol, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(mutation, walker.All().Single().ToString());
-                Assert.AreEqual(true, walker.TrySingle(out var single));
-                Assert.AreEqual(mutation, single.ToString());
-            }
+            using var walker = MutationWalker.For(symbol, semanticModel, CancellationToken.None);
+            Assert.AreEqual(mutation, walker.All().Single().ToString());
+            Assert.AreEqual(true, walker.TrySingle(out var single));
+            Assert.AreEqual(mutation, single.ToString());
         }
     }
 }

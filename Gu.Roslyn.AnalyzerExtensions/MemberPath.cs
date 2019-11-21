@@ -1,4 +1,4 @@
-#pragma warning disable CA1034 // Nested types should not be visible
+﻿#pragma warning disable CA1034 // Nested types should not be visible
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
@@ -30,13 +30,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var xWalker = PathWalker.Borrow(x))
-            {
-                using (var yWalker = PathWalker.Borrow(y))
-                {
-                    return Equals(xWalker, yWalker);
-                }
-            }
+            using var xWalker = PathWalker.Borrow(x);
+            using var yWalker = PathWalker.Borrow(y);
+            return Equals(xWalker, yWalker);
         }
 
         /// <summary> Compares equality by path. </summary>
@@ -96,10 +92,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if root was found.</returns>
         public static bool TryFindRoot(ExpressionSyntax expression, out SyntaxToken token)
         {
-            using (var walker = PathWalker.Borrow(expression))
-            {
-                return walker.TryFirst(out token);
-            }
+            using var walker = PathWalker.Borrow(expression);
+            return walker.TryFirst(out token);
         }
 
         /// <summary>
@@ -110,10 +104,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if leaf was found.</returns>
         public static bool TryFindLast(ExpressionSyntax expression, out SyntaxToken token)
         {
-            using (var walker = PathWalker.Borrow(expression))
-            {
-                return walker.TryLast(out token);
-            }
+            using var walker = PathWalker.Borrow(expression);
+            return walker.TryLast(out token);
         }
 
         /// <summary>
@@ -124,10 +116,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the path was only one member this.C or C for example.</returns>
         public static bool TrySingle(ExpressionSyntax expression, out SyntaxToken token)
         {
-            using (var walker = PathWalker.Borrow(expression))
-            {
-                return walker.TrySingle(out token);
-            }
+            using var walker = PathWalker.Borrow(expression);
+            return walker.TrySingle(out token);
         }
 
         /// <summary>
@@ -137,10 +127,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the path is empty, this is true for this. and base. calls.</returns>
         public static bool IsEmpty(ExpressionSyntax expression)
         {
-            using (var walker = PathWalker.Borrow(expression))
-            {
-                return walker.Tokens.Count == 0;
-            }
+            using var walker = PathWalker.Borrow(expression);
+            return walker.Tokens.Count == 0;
         }
 
         /// <summary>
@@ -324,10 +312,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <returns>True if this path starts with the other or is equal.</returns>
             public bool StartsWith(ExpressionSyntax other)
             {
-                using (var walker = Borrow(other))
-                {
-                    return this.StartsWith(walker);
-                }
+                using var walker = Borrow(other);
+                return this.StartsWith(walker);
             }
 
             /// <inheritdoc />

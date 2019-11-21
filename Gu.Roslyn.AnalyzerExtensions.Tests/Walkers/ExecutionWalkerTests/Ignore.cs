@@ -29,10 +29,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(string.Empty, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(string.Empty, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member)]
@@ -57,10 +55,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(string.Empty, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(string.Empty, string.Join(", ", walker.Literals));
         }
     }
 }

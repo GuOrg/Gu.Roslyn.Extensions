@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System.Collections.Generic;
     using Gu.Roslyn.AnalyzerExtensions;
@@ -78,42 +78,40 @@ namespace Gu.Roslyn.CodeFixExtensions
                 return compilationUnit;
             }
 
-            using (var walker = UsingDirectiveWalker.Borrow(compilationUnit))
+            using var walker = UsingDirectiveWalker.Borrow(compilationUnit);
+            if (walker.UsingDirectives.Count == 0)
             {
-                if (walker.UsingDirectives.Count == 0)
+                if (walker.NamespaceDeclarations.TryFirst(out var namespaceDeclaration))
                 {
-                    if (walker.NamespaceDeclarations.TryFirst(out var namespaceDeclaration))
+                    if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel) != CodeStyleResult.No)
                     {
-                        if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel) != CodeStyleResult.No)
-                        {
-                            return compilationUnit.ReplaceNode(namespaceDeclaration, namespaceDeclaration.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
-                        }
-
-                        return compilationUnit.ReplaceNode(compilationUnit, compilationUnit.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
+                        return compilationUnit.ReplaceNode(namespaceDeclaration, namespaceDeclaration.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
                     }
 
+                    return compilationUnit.ReplaceNode(compilationUnit, compilationUnit.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
+                }
+
+                return compilationUnit;
+            }
+
+            UsingDirectiveSyntax? previous = null;
+            foreach (var directive in walker.UsingDirectives)
+            {
+                var compare = UsingDirectiveComparer.Compare(directive, usingDirective);
+                if (compare == 0)
+                {
                     return compilationUnit;
                 }
 
-                UsingDirectiveSyntax? previous = null;
-                foreach (var directive in walker.UsingDirectives)
+                if (compare > 0)
                 {
-                    var compare = UsingDirectiveComparer.Compare(directive, usingDirective);
-                    if (compare == 0)
-                    {
-                        return compilationUnit;
-                    }
-
-                    if (compare > 0)
-                    {
-                        return compilationUnit.InsertNodesBefore(directive, new[] { usingDirective.WithTrailingElasticLineFeed() });
-                    }
-
-                    previous = directive;
+                    return compilationUnit.InsertNodesBefore(directive, new[] { usingDirective.WithTrailingElasticLineFeed() });
                 }
 
-                return compilationUnit.InsertNodesAfter(previous, new[] { usingDirective.WithTrailingElasticLineFeed() });
+                previous = directive;
             }
+
+            return compilationUnit.InsertNodesAfter(previous, new[] { usingDirective.WithTrailingElasticLineFeed() });
         }
 
         private sealed class UsingDirectiveWalker : PooledWalker<UsingDirectiveWalker>

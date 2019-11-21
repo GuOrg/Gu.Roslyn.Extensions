@@ -22,13 +22,11 @@ namespace N
     }
 }");
             var node = syntaxTree.FindTypeDeclaration("C");
-            using (var walker = IdentifierTokenWalker.Borrow(node))
-            {
-                CollectionAssert.AreEqual(new[] { "C", "C", "var", "i" }, walker.IdentifierTokens.Select(x => x.ValueText));
-                Assert.AreEqual(true, walker.TryFind("i", out var match));
-                Assert.AreEqual("i", match.ValueText);
-                Assert.AreEqual(false, walker.TryFind("missing", out _));
-            }
+            using var walker = IdentifierTokenWalker.Borrow(node);
+            CollectionAssert.AreEqual(new[] { "C", "C", "var", "i" }, walker.IdentifierTokens.Select(x => x.ValueText));
+            Assert.AreEqual(true, walker.TryFind("i", out var match));
+            Assert.AreEqual("i", match.ValueText);
+            Assert.AreEqual(false, walker.TryFind("missing", out _));
         }
     }
 }

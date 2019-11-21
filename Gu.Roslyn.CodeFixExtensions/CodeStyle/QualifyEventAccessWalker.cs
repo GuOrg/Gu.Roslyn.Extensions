@@ -24,11 +24,9 @@
         /// <returns>The <see cref="CodeStyleResult"/>.</returns>
         public static async Task<CodeStyleResult> CheckAsync(Document containing, CancellationToken cancellationToken)
         {
-            using (var walker = Borrow(() => new QualifyEventAccessWalker()))
-            {
-                return await walker.CheckCoreAsync(containing, cancellationToken)
-                                   .ConfigureAwait(false);
-            }
+            using var walker = Borrow(() => new QualifyEventAccessWalker());
+            return await walker.CheckCoreAsync(containing, cancellationToken)
+                               .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -39,10 +37,8 @@
         /// <returns>The <see cref="CodeStyleResult"/>.</returns>
         public static CodeStyleResult Check(SyntaxTree containing, Compilation compilation)
         {
-            using (var walker = Borrow(() => new QualifyEventAccessWalker()))
-            {
-                return walker.CheckCore(containing, compilation);
-            }
+            using var walker = Borrow(() => new QualifyEventAccessWalker());
+            return walker.CheckCore(containing, compilation);
         }
 
         /// <inheritdoc />

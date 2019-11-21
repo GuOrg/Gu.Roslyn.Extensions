@@ -28,10 +28,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("1", walker.Literals.Single().ToString());
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual("1", walker.Literals.Single().ToString());
         }
 
         [TestCase(SearchScope.Member, "1, 2")]
@@ -59,10 +57,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindTypeDeclaration("C");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "1, 2")]
@@ -90,10 +86,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindTypeDeclaration("C");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "1, 3")]
@@ -122,10 +116,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "2")]
@@ -156,10 +148,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("public C()");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "2")]
@@ -191,10 +181,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("public C()");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "1, 2")]
@@ -219,10 +207,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindClassDeclaration("C");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "1, 2")]
@@ -247,10 +233,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindClassDeclaration("C");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "3")]
@@ -279,10 +263,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("new C() { Value2 = 3 }");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "2")]
@@ -306,10 +288,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("new C() { Value2 = 2 }");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
 
         [TestCase(SearchScope.Member, "2")]
@@ -333,10 +313,8 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("new C { Value2 = 2 }");
-            using (var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-            }
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
     }
 }

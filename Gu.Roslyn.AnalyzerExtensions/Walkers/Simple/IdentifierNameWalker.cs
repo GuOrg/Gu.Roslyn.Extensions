@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -101,10 +101,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (symbol != null)
             {
-                using (var walker = Borrow(node))
-                {
-                    return walker.TryFindFirst(symbol, semanticModel, cancellationToken, out identifierName);
-                }
+                using var walker = Borrow(node);
+                return walker.TryFindFirst(symbol, semanticModel, cancellationToken, out identifierName);
             }
 
             identifierName = null;
@@ -124,10 +122,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (symbol != null)
             {
-                using (var walker = Borrow(node))
-                {
-                    return walker.TryFindLast(symbol, semanticModel, cancellationToken, out identifierName);
-                }
+                using var walker = Borrow(node);
+                return walker.TryFindLast(symbol, semanticModel, cancellationToken, out identifierName);
             }
 
             identifierName = null;

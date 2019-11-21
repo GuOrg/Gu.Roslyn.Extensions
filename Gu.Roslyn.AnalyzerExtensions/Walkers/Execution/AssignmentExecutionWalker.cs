@@ -120,10 +120,8 @@
                         IsMatch(currentSymbol, variable.Initializer.Value, semanticModel, cancellationToken) &&
                         semanticModel.TryGetSymbol(variable, cancellationToken, out ILocalSymbol? local))
                     {
-                        using (var localWalker = With(local, currentNode))
-                        {
-                            walker.assignments.AddRange(localWalker.Assignments);
-                        }
+                        using var localWalker = With(local, currentNode);
+                        walker.assignments.AddRange(localWalker.Assignments);
                     }
                 }
 
@@ -135,10 +133,8 @@
                             name == currentSymbol.Name &&
                             walker.Recursion.Target(argument) is { Symbol: { } parameter, TargetNode: { } target })
                         {
-                            using (var invocationWalker = With(parameter, target))
-                            {
-                                walker.assignments.AddRange(invocationWalker.Assignments);
-                            }
+                            using var invocationWalker = With(parameter, target);
+                            walker.assignments.AddRange(invocationWalker.Assignments);
                         }
                     }
 
@@ -292,10 +288,8 @@
                 throw new ArgumentNullException(nameof(semanticModel));
             }
 
-            using (var walker = With(symbol.OriginalDefinition, node, scope, semanticModel, cancellationToken))
-            {
-                return walker.assignments.TryFirst(out assignment);
-            }
+            using var walker = With(symbol.OriginalDefinition, node, scope, semanticModel, cancellationToken);
+            return walker.assignments.TryFirst(out assignment);
         }
 
         /// <inheritdoc />

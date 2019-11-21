@@ -31,12 +31,10 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
-            using (var walker = MutationWalker.For(property, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual(mutation, walker.All().Single().ToString());
-                Assert.AreEqual(true, walker.TrySingle(out var single));
-                Assert.AreEqual(mutation, single.ToString());
-            }
+            using var walker = MutationWalker.For(property, semanticModel, CancellationToken.None);
+            Assert.AreEqual(mutation, walker.All().Single().ToString());
+            Assert.AreEqual(true, walker.TrySingle(out var single));
+            Assert.AreEqual(mutation, single.ToString());
         }
 
         [Test]
@@ -56,12 +54,10 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
-            using (var walker = MutationWalker.For(property, semanticModel, CancellationToken.None))
-            {
-                Assert.AreEqual("Value = 1", walker.All().Single().ToString());
-                Assert.AreEqual(true, walker.TrySingle(out var single));
-                Assert.AreEqual("Value = 1", single.ToString());
-            }
+            using var walker = MutationWalker.For(property, semanticModel, CancellationToken.None);
+            Assert.AreEqual("Value = 1", walker.All().Single().ToString());
+            Assert.AreEqual(true, walker.TrySingle(out var single));
+            Assert.AreEqual("Value = 1", single.ToString());
         }
     }
 }

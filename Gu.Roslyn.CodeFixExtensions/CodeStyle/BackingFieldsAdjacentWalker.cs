@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis;
@@ -21,12 +21,10 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <returns>The <see cref="CodeStyleResult"/>.</returns>
         public static CodeStyleResult Check(SyntaxTree containing, Compilation compilation, out bool newLineBetween)
         {
-            using (var walker = Borrow(() => new BackingFieldsAdjacentWalker()))
-            {
-                var result = walker.CheckCore(containing, compilation);
-                newLineBetween = walker.newLineBetween;
-                return result;
-            }
+            using var walker = Borrow(() => new BackingFieldsAdjacentWalker());
+            var result = walker.CheckCore(containing, compilation);
+            newLineBetween = walker.newLineBetween;
+            return result;
         }
 
         /// <inheritdoc />

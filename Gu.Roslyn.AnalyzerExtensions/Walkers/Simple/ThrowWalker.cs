@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
@@ -39,10 +39,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var walker = Borrow(node))
-            {
-                return walker.throwStatementsAndExpressions.Count > 0;
-            }
+            using var walker = Borrow(node);
+            return walker.throwStatementsAndExpressions.Count > 0;
         }
 
         /// <inheritdoc/>

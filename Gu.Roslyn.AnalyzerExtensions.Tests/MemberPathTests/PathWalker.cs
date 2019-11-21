@@ -47,10 +47,8 @@ namespace N
 }".AssertReplace("C.Inner", expression);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var value = syntaxTree.FindExpression(expression);
-            using (var walker = MemberPath.PathWalker.Borrow(value))
-            {
-                Assert.AreEqual(expected, string.Join(".", walker.Tokens.Select(x => x)));
-            }
+            using var walker = MemberPath.PathWalker.Borrow(value);
+            Assert.AreEqual(expected, string.Join(".", walker.Tokens.Select(x => x)));
         }
 
         [TestCase("Equals(1, 1)", "")]
@@ -141,10 +139,8 @@ namespace N
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var invocation = syntaxTree.FindMemberAccessExpression("this.Value");
-            using (var walker = MemberPath.PathWalker.Borrow(invocation))
-            {
-                Assert.AreEqual("Value", string.Join(".", walker.Tokens.Select(x => x)));
-            }
+            using var walker = MemberPath.PathWalker.Borrow(invocation);
+            Assert.AreEqual("Value", string.Join(".", walker.Tokens.Select(x => x)));
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -58,20 +58,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (e.MoveNext())
             {
-                if (e.MoveNext())
+                result = e.Current;
+                if (!e.MoveNext())
                 {
-                    result = e.Current;
-                    if (!e.MoveNext())
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-
-                result = default!;
-                return false;
             }
+
+            result = default!;
+            return false;
         }
 
         /// <summary>
@@ -91,27 +89,25 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (e.MoveNext())
             {
-                if (e.MoveNext())
+                if (e.Current is TResult item)
                 {
-                    if (e.Current is TResult item)
+                    while (e.MoveNext())
                     {
-                        while (e.MoveNext())
+                        if (e.Current is TResult)
                         {
-                            if (e.Current is TResult)
-                            {
-                                return false;
-                            }
+                            return false;
                         }
-
-                        result = item;
-                        return true;
                     }
-                }
 
-                return false;
+                    result = item;
+                    return true;
+                }
             }
+
+            return false;
         }
 
         /// <summary>
@@ -132,29 +128,27 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            while (e.MoveNext())
             {
-                while (e.MoveNext())
+                if (e.Current is TResult item &&
+                    predicate(item))
                 {
-                    if (e.Current is TResult item &&
-                        predicate(item))
+                    while (e.MoveNext())
                     {
-                        while (e.MoveNext())
+                        if (e.Current is TResult temp &&
+                            predicate(temp))
                         {
-                            if (e.Current is TResult temp &&
-                                predicate(temp))
-                            {
-                                return false;
-                            }
+                            return false;
                         }
-
-                        result = item;
-                        return true;
                     }
-                }
 
-                return false;
+                    result = item;
+                    return true;
+                }
             }
+
+            return false;
         }
 
         /// <summary>
@@ -212,16 +206,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (e.MoveNext())
             {
-                if (e.MoveNext())
-                {
-                    result = e.Current;
-                    return true;
-                }
-
-                return false;
+                result = e.Current;
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -241,17 +233,15 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (e.MoveNext() &&
+e.Current is TResult item)
             {
-                if (e.MoveNext() &&
-                    e.Current is TResult item)
-                {
-                    result = item;
-                    return true;
-                }
-
-                return false;
+                result = item;
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -272,20 +262,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            while (e.MoveNext())
             {
-                while (e.MoveNext())
+                if (e.Current is TResult item &&
+                    predicate(item))
                 {
-                    if (e.Current is TResult item &&
-                        predicate(item))
-                    {
-                        result = item;
-                        return true;
-                    }
+                    result = item;
+                    return true;
                 }
-
-                return false;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -334,21 +322,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (!e.MoveNext())
             {
-                if (!e.MoveNext())
-                {
-                    return false;
-                }
-
-                result = e.Current;
-                while (e.MoveNext())
-                {
-                    result = e.Current;
-                }
-
-                return true;
+                return false;
             }
+
+            result = e.Current;
+            while (e.MoveNext())
+            {
+                result = e.Current;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -367,26 +353,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (!e.MoveNext())
             {
-                if (!e.MoveNext())
-                {
-                    return false;
-                }
-
-                var found = false;
-                do
-                {
-                    if (e.Current is { } item &&
-                        predicate(item))
-                    {
-                        result = item;
-                        found = true;
-                    }
-                }
-                while (e.MoveNext());
-                return found;
+                return false;
             }
+
+            var found = false;
+            do
+            {
+                if (e.Current is { } item &&
+                    predicate(item))
+                {
+                    result = item;
+                    found = true;
+                }
+            }
+            while (e.MoveNext());
+            return found;
         }
 
         /// <summary>
@@ -406,25 +390,23 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (!e.MoveNext())
             {
-                if (!e.MoveNext())
-                {
-                    return false;
-                }
-
-                var found = false;
-                do
-                {
-                    if (e.Current is TResult item)
-                    {
-                        result = item;
-                        found = true;
-                    }
-                }
-                while (e.MoveNext());
-                return found;
+                return false;
             }
+
+            var found = false;
+            do
+            {
+                if (e.Current is TResult item)
+                {
+                    result = item;
+                    found = true;
+                }
+            }
+            while (e.MoveNext());
+            return found;
         }
 
         /// <summary>
@@ -445,26 +427,24 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            if (!e.MoveNext())
             {
-                if (!e.MoveNext())
-                {
-                    return false;
-                }
-
-                var found = false;
-                do
-                {
-                    if (e.Current is TResult item &&
-                        predicate(item))
-                    {
-                        result = item;
-                        found = true;
-                    }
-                }
-                while (e.MoveNext());
-                return found;
+                return false;
             }
+
+            var found = false;
+            do
+            {
+                if (e.Current is TResult item &&
+                    predicate(item))
+                {
+                    result = item;
+                    found = true;
+                }
+            }
+            while (e.MoveNext());
+            return found;
         }
     }
 }
