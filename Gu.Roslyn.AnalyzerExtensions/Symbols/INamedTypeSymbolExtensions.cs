@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using Microsoft.CodeAnalysis;
@@ -84,6 +84,97 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             return builder.Return();
+        }
+
+        /// <summary>
+        /// Find the first override of <paramref name="virtualOrAbstract"/>.
+        /// </summary>
+        /// <param name="type">The type to start searching from.</param>
+        /// <param name="virtualOrAbstract">The <see cref="IEventSymbol"/>.</param>
+        /// <returns>No <see langword="null"/>if an override was found.</returns>
+        public static IEventSymbol? FindOverride(this INamedTypeSymbol type, IEventSymbol virtualOrAbstract)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (virtualOrAbstract is null)
+            {
+                throw new ArgumentNullException(nameof(virtualOrAbstract));
+            }
+
+            return type.TryFindEventRecursive(virtualOrAbstract.Name, out var overrider) &&
+                   overrider.IsOverride
+                ? overrider
+                : null;
+        }
+
+        /// <summary>
+        /// Find the first override of <paramref name="virtualOrAbstract"/>.
+        /// </summary>
+        /// <param name="type">The type to start searching from.</param>
+        /// <param name="virtualOrAbstract">The <see cref="IPropertySymbol"/>.</param>
+        /// <returns>No <see langword="null"/>if an override was found.</returns>
+        public static IPropertySymbol? FindOverride(this INamedTypeSymbol type, IPropertySymbol virtualOrAbstract)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (virtualOrAbstract is null)
+            {
+                throw new ArgumentNullException(nameof(virtualOrAbstract));
+            }
+
+            return type.TryFindPropertyRecursive(virtualOrAbstract.Name, out var overrider) &&
+                   overrider.IsOverride
+                ? overrider
+                : null;
+        }
+
+        /// <summary>
+        /// Find the first override of <paramref name="virtualOrAbstract"/>.
+        /// </summary>
+        /// <param name="type">The type to start searching from.</param>
+        /// <param name="virtualOrAbstract">The <see cref="IMethodSymbol"/>.</param>
+        /// <returns>No <see langword="null"/>if an override was found.</returns>
+        public static IMethodSymbol? FindOverride(this INamedTypeSymbol type, IMethodSymbol virtualOrAbstract)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (virtualOrAbstract is null)
+            {
+                throw new ArgumentNullException(nameof(virtualOrAbstract));
+            }
+
+            return type.TryFindFirstMethodRecursive(virtualOrAbstract.Name, x => x.IsOverride && Matches(x), out var overrider)
+                ? overrider
+                : null;
+
+            bool Matches(IMethodSymbol candidate)
+            {
+                if (!candidate.ReturnType.Equals(virtualOrAbstract.ReturnType) ||
+                    candidate.Parameters.Length != virtualOrAbstract.Parameters.Length ||
+                    candidate.TypeParameters.Length != virtualOrAbstract.TypeParameters.Length)
+                {
+                    return false;
+                }
+
+                for (var i = 0; i < candidate.Parameters.Length; i++)
+                {
+                    if (!candidate.Parameters[i].Type.Equals(virtualOrAbstract.Parameters[i].Type))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
     }
 }
