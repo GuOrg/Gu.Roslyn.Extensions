@@ -13,6 +13,9 @@
     {
         private readonly List<Target<SyntaxNode, ISymbol, SyntaxNode>> targets = new List<Target<SyntaxNode, ISymbol, SyntaxNode>>();
 
+        /// <summary>
+        /// Gets the recursive <see cref="Target{TSource,TSymbol,TTarget}"/> found when walking the first level.
+        /// </summary>
         public IReadOnlyList<Target<SyntaxNode, ISymbol, SyntaxNode>> Targets => this.targets;
 
         /// <inheritdoc />
@@ -22,6 +25,7 @@
             base.Clear();
         }
 
+        /// <inheritdoc />
         protected override bool TryGetTargetSymbol<TSource, TSymbol, TDeclaration>(TSource node, out Target<TSource, TSymbol, TDeclaration> target, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (base.TryGetTargetSymbol(node, out target, caller, line) &&
