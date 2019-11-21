@@ -1,4 +1,4 @@
-#pragma warning disable GU0008 // Avoid relay properties.
+﻿#pragma warning disable GU0008 // Avoid relay properties.
 namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
@@ -92,6 +92,18 @@ namespace Gu.Roslyn.CodeFixExtensions
             this.context.RegisterCodeFix(
                 new DocumentEditorAction(title, this.context.Document, action, equivalenceKey.FullName ?? equivalenceKey.Name),
                 diagnostic);
+        }
+
+        /// <summary>
+        /// Add supplied <paramref name="action" /> to the list of fixes that will be offered to the user.
+        /// </summary>
+        /// <param name="title">Title of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />.</param>
+        /// <param name="action">The <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> that will be invoked to apply the fix.</param>
+        /// <param name="equivalenceKey">Optional value used to determine the equivalence of the <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" /> with other <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction" />s. See <see cref="Microsoft.CodeAnalysis.CodeActions.CodeAction.EquivalenceKey" />.</param>
+        /// <param name="diagnostic">The subset of <see cref="Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Diagnostics" /> being addressed / fixed by the <paramref name="action" />.</param>
+        public void RegisterCodeFix(string title, Action<DocumentEditor> action, string? equivalenceKey, Diagnostic diagnostic)
+        {
+            this.RegisterCodeFix(title, (e, _) => action(e), equivalenceKey, diagnostic);
         }
 
         /// <summary>
