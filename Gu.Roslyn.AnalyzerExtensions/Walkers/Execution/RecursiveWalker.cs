@@ -40,7 +40,7 @@
             {
                 return t switch
                 {
-                    { TargetNode: { } } => false,
+                    { TargetNode: null } => false,
                     { Symbol: IFieldSymbol _ } => false,
                     { Symbol: IPropertySymbol property } when property.IsAutoProperty() => false,
                     _ => true,
