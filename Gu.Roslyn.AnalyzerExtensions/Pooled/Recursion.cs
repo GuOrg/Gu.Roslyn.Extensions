@@ -47,6 +47,11 @@
         /// <returns>A <see cref="Recursion"/>.</returns>
         public static Recursion Borrow(SyntaxNode startLocation, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
+            if (startLocation is null)
+            {
+                throw new ArgumentNullException(nameof(startLocation));
+            }
+
             if (!Cache.TryDequeue(out var recursion))
             {
                 recursion = new Recursion();

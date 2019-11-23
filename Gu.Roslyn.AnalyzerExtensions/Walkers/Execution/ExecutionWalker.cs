@@ -361,9 +361,9 @@
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>True if a symbol was found.</returns>
         protected virtual bool TryGetTargetSymbol<TSource, TSymbol, TDeclaration>(TSource node, out Target<TSource, TSymbol, TDeclaration> target, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
-            where TSource : CSharpSyntaxNode
+            where TSource : SyntaxNode
             where TSymbol : class, ISymbol
-            where TDeclaration : CSharpSyntaxNode
+            where TDeclaration : SyntaxNode
         {
             target = default;
             if (node is null ||
