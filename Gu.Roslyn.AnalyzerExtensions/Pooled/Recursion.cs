@@ -52,13 +52,33 @@
                 throw new ArgumentNullException(nameof(startLocation));
             }
 
+            var type = startLocation.FirstAncestorOrSelf<TypeDeclarationSyntax>();
+            return Borrow(
+                (INamedTypeSymbol)semanticModel.GetDeclaredSymbol(type, cancellationToken),
+                semanticModel,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Get and instance from cache, dispose returns it.
+        /// </summary>
+        /// <param name="containingType">The <see cref="INamedTypeSymbol"/> where recursion starts..</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>A <see cref="Recursion"/>.</returns>
+        public static Recursion Borrow(INamedTypeSymbol containingType, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (containingType is null)
+            {
+                throw new ArgumentNullException(nameof(containingType));
+            }
+
             if (!Cache.TryDequeue(out var recursion))
             {
                 recursion = new Recursion();
             }
 
-            var type = startLocation.FirstAncestorOrSelf<TypeDeclarationSyntax>();
-            recursion.ContainingType = (INamedTypeSymbol)semanticModel.GetDeclaredSymbol(type, cancellationToken);
+            recursion.ContainingType = containingType;
             recursion.SemanticModel = semanticModel ?? throw new ArgumentNullException(nameof(semanticModel));
             recursion.CancellationToken = cancellationToken;
             return recursion;
