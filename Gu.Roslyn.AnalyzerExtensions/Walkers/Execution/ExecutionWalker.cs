@@ -26,9 +26,9 @@
         protected SemanticModel SemanticModel => this.Recursion.SemanticModel;
 
         /// <summary>
-        /// Gets or sets the containing <see cref="ITypeSymbol"/> of the current context.
+        /// Gets the containing <see cref="INamedTypeSymbol"/> where the recursion started.
         /// </summary>
-        protected INamedTypeSymbol ContainingType { get; set; } = null!;
+        protected INamedTypeSymbol ContainingType => this.Recursion.ContainingType;
 
         /// <summary>
         /// Gets the <see cref="CancellationToken"/>.
@@ -109,7 +109,7 @@
                 return;
             }
 
-            if (this.Recursion.ContainingType(node) is { Symbol: { } containingType, TargetNode: { } containingTypeDeclaration } &&
+            if (this.Recursion.Target(node.Type) is { Symbol: { } containingType, TargetNode: { } containingTypeDeclaration } &&
                 ShouldVisit(containingType))
             {
                 using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
@@ -208,22 +208,8 @@
 
             // Not pretty below here, throwing is perhaps nicer, dunno.
             walker.SearchScope = scope == SearchScope.Member && node is TypeDeclarationSyntax ? SearchScope.Type : scope;
-            if (walker.SearchScope != SearchScope.Member)
-            {
-                if (node is TypeDeclarationSyntax typeDeclaration &&
-                    semanticModel.TryGetNamedType(typeDeclaration, cancellationToken, out var containingType))
-                {
-                    walker.ContainingType = containingType;
-                }
-                else if (node.TryFirstAncestor(out TypeDeclarationSyntax? containingTypeDeclaration) &&
-                         semanticModel.TryGetNamedType(containingTypeDeclaration, cancellationToken, out containingType))
-                {
-                    walker.ContainingType = containingType;
-                }
-            }
-
 #pragma warning disable IDISP003 // Dispose previous before re-assigning.
-            walker.Recursion = Recursion.Borrow(semanticModel, cancellationToken);
+            walker.Recursion = Recursion.Borrow(node, semanticModel, cancellationToken);
 #pragma warning restore IDISP003 // Dispose previous before re-assigning.
             walker.Visit(node);
             walker.SearchScope = scope;
@@ -235,15 +221,13 @@
         /// </summary>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="scope">The scope to walk.</param>
-        /// <param name="containingType">The <see cref="INamedTypeSymbol"/> where walking started.</param>
         /// <param name="recursion">The <see cref="Recursion"/>.</param>
         /// <param name="create">The factory for creating a walker if not found in cache.</param>
         /// <returns>The walker that have visited <paramref name="node"/>.</returns>
-        protected static T BorrowAndVisit(SyntaxNode node, SearchScope scope, INamedTypeSymbol containingType, Recursion recursion, Func<T> create)
+        protected static T BorrowAndVisit(SyntaxNode node, SearchScope scope, Recursion recursion, Func<T> create)
         {
             var walker = Borrow(create);
             walker.SearchScope = scope;
-            walker.ContainingType = containingType;
             walker.Recursion = recursion;
             walker.Visit(node);
             walker.Recursion = null!;
@@ -264,7 +248,6 @@
         {
             var walker = Borrow(create);
             walker.SearchScope = scope;
-            walker.ContainingType = parent.ContainingType;
             walker.Recursion = parent.Recursion;
             walker.Visit(node);
             walker.Recursion = null!;
@@ -403,7 +386,7 @@
                 return false;
             }
 
-            if (this.Recursion.Target<TSource, TSymbol, TDeclaration>(node, this.ContainingType, caller, line) is { Symbol: { } symbol, TargetNode: { } } t)
+            if (this.Recursion.Target<TSource, TSymbol, TDeclaration>(node, caller, line) is { Symbol: { } symbol, TargetNode: { } } t)
             {
                 if (this.SearchScope == SearchScope.Instance &&
                     symbol.IsStatic)
@@ -429,7 +412,6 @@
         {
             this.Recursion?.Dispose();
             this.Recursion = null!;
-            this.ContainingType = null!;
         }
 
         private class TypeDeclarationWalker : PooledWalker<TypeDeclarationWalker>

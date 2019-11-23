@@ -23,6 +23,12 @@
         }
 
         /// <summary>
+        /// Gets the containing type where the recursion started.
+        /// This is used for override resolution.
+        /// </summary>
+        public INamedTypeSymbol ContainingType { get; private set; } = null!;
+
+        /// <summary>
         /// Gets the <see cref="SemanticModel"/>.
         /// </summary>
         public SemanticModel SemanticModel { get; private set; } = null!;
@@ -35,16 +41,19 @@
         /// <summary>
         /// Get and instance from cache, dispose returns it.
         /// </summary>
+        /// <param name="startLocation">The <see cref="SyntaxNode"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
         /// <returns>A <see cref="Recursion"/>.</returns>
-        public static Recursion Borrow(SemanticModel semanticModel, CancellationToken cancellationToken)
+        public static Recursion Borrow(SyntaxNode startLocation, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             if (!Cache.TryDequeue(out var recursion))
             {
                 recursion = new Recursion();
             }
 
+            var type = startLocation.FirstAncestorOrSelf<TypeDeclarationSyntax>();
+            recursion.ContainingType = (INamedTypeSymbol)semanticModel.GetDeclaredSymbol(type, cancellationToken);
             recursion.SemanticModel = semanticModel ?? throw new ArgumentNullException(nameof(semanticModel));
             recursion.CancellationToken = cancellationToken;
             return recursion;
@@ -68,7 +77,7 @@
         public Target<InvocationExpressionSyntax, IMethodSymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol))
+                this.EffectiveSymbol<IMethodSymbol>(node) is { } symbol)
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration);
                 return AnalyzerExtensions.Target.Create(node, symbol, declaration);
@@ -129,7 +138,7 @@
         {
             if (this.visited.Add((caller, line, node)) &&
                 node is { Parent: ArgumentListSyntax { Parent: { } parent } } &&
-                this.SemanticModel.TryGetSymbol(parent, this.CancellationToken, out IMethodSymbol? method) &&
+                this.EffectiveSymbol<IMethodSymbol>(parent) is { } method &&
                 method.TryFindParameter(node, out var symbol))
             {
                 _ = method.TrySingleDeclaration(this.CancellationToken, out BaseMethodDeclarationSyntax? declaration);
@@ -146,7 +155,7 @@
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
-        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
         public Target<VariableDeclaratorSyntax, ILocalSymbol, SyntaxNode>? Target(VariableDeclaratorSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
@@ -166,11 +175,44 @@
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{INamedTypeSymbol,TypeDeclarationSyntax}"/>.</returns>
+        public Target<TypeSyntax, ITypeSymbol, TypeDeclarationSyntax>? Target(TypeSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        {
+            if (this.visited.Add((caller, line, node)) &&
+                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out ITypeSymbol? symbol))
+            {
+                _ = symbol.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax? declaration);
+                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
+        public Target<ExpressionSyntax, ISymbol, SyntaxNode>? Target(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        {
+            return this.Target<ExpressionSyntax, ISymbol, SyntaxNode>(node, caller, line);
+        }
+
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IParameterSymbol,AccessorDeclarationSyntax}"/>.</returns>
         public Target<ExpressionSyntax, IParameterSymbol, AccessorDeclarationSyntax>? PropertySet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IPropertySymbol? property) &&
+                this.EffectiveSymbol<IPropertySymbol>(node) is { } property &&
                 property is { SetMethod: { Parameters: { Length: 1 } } set })
             {
                 _ = set.TrySingleDeclaration(this.CancellationToken, out AccessorDeclarationSyntax? declaration);
@@ -187,14 +229,14 @@
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
-        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
-        public Target<ExpressionSyntax, IMethodSymbol, CSharpSyntaxNode>? PropertyGet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
+        public Target<ExpressionSyntax, IMethodSymbol, SyntaxNode>? PropertyGet(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IPropertySymbol? property) &&
+                this.EffectiveSymbol<IPropertySymbol>(node) is { } property &&
                 property is { GetMethod: { } get })
             {
-                _ = get.TrySingleDeclaration(this.CancellationToken, out CSharpSyntaxNode? declaration);
+                _ = get.TrySingleDeclaration(this.CancellationToken, out SyntaxNode? declaration);
                 return AnalyzerExtensions.Target.Create(node, get, declaration);
             }
 
@@ -208,37 +250,14 @@
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
-        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,CSharpSyntaxNode}"/>.</returns>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
         public Target<ExpressionSyntax, IMethodSymbol, MethodDeclarationSyntax>? MethodGroup(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out IMethodSymbol? symbol))
+                this.EffectiveSymbol<IMethodSymbol>(node) is { } symbol)
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration);
                 return AnalyzerExtensions.Target.Create(node, symbol, declaration);
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Get the target symbol and declaration if exists.
-        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="TSource">The source node.</typeparam>
-        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
-        /// <param name="caller">The invoking method.</param>
-        /// <param name="line">Line number in <paramref name="caller"/>.</param>
-        /// <returns>A <see cref="SymbolAndDeclaration{INamedTypeSymbol,TypeDeclarationSyntax}"/>.</returns>
-        public Target<TSource, INamedTypeSymbol, TypeDeclarationSyntax>? ContainingType<TSource>(TSource node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
-            where TSource : CSharpSyntaxNode
-        {
-            if (this.visited.Add((caller, line, node)) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out ISymbol? symbol) &&
-                symbol.ContainingSymbol is INamedTypeSymbol type)
-            {
-                _ = type.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(node, type, declaration);
             }
 
             return null;
@@ -256,77 +275,18 @@
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</returns>
         public Target<TSource, TSymbol, TDeclaration>? Target<TSource, TSymbol, TDeclaration>(TSource node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
-            where TSource : CSharpSyntaxNode
+            where TSource : SyntaxNode
             where TSymbol : class, ISymbol
-            where TDeclaration : CSharpSyntaxNode
+            where TDeclaration : SyntaxNode
         {
             if (this.visited.Add((caller, line, node)) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out TSymbol? symbol))
+                this.EffectiveSymbol<TSymbol>(node) is { } symbol)
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out TDeclaration? declaration);
                 return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Get the target symbol and declaration if exists.
-        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="TSource">The source node.</typeparam>
-        /// <typeparam name="TSymbol">The type of symbol expected.</typeparam>
-        /// <typeparam name="TDeclaration">The type of declaration expected.</typeparam>
-        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
-        /// <param name="containingType">The containing type.</param>
-        /// <param name="caller">The invoking method.</param>
-        /// <param name="line">Line number in <paramref name="caller"/>.</param>
-        /// <returns>A <see cref="SymbolAndDeclaration{TSymbol,TDeclaration}"/>.</returns>
-        public Target<TSource, TSymbol, TDeclaration>? Target<TSource, TSymbol, TDeclaration>(TSource node, INamedTypeSymbol containingType, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
-            where TSource : CSharpSyntaxNode
-            where TSymbol : class, ISymbol
-            where TDeclaration : CSharpSyntaxNode
-        {
-            if (this.visited.Add((caller, line, node)) &&
-                this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out TSymbol? symbol))
-            {
-                if (!IsExplicitBase())
-                {
-                    switch (symbol)
-                    {
-                        case IEventSymbol @event
-                            when (@event.IsVirtual || @event.IsAbstract) &&
-                                 containingType.FindOverride(@event) is TSymbol overrider:
-                            symbol = overrider;
-                            break;
-                        case IPropertySymbol property
-                            when (property.IsVirtual || property.IsAbstract) &&
-                                 containingType.FindOverride(property) is TSymbol overrider:
-                            symbol = overrider;
-                            break;
-                        case IMethodSymbol method
-                            when (method.IsVirtual || method.IsAbstract) &&
-                                 containingType.FindOverride(method) is TSymbol overrider:
-                            symbol = overrider;
-                            break;
-                    }
-                }
-
-                _ = symbol.TrySingleDeclaration(this.CancellationToken, out TDeclaration? declaration);
-                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
-            }
-
-            return null;
-
-            bool IsExplicitBase()
-            {
-                return node switch
-                {
-                    InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Expression: BaseExpressionSyntax _ } } => true,
-                    MemberAccessExpressionSyntax { Expression: BaseExpressionSyntax _ } => true,
-                    _ => false,
-                };
-            }
         }
 
         /// <summary>
@@ -335,6 +295,7 @@
         public void Clear()
         {
             this.visited.Clear();
+            this.ContainingType = null!;
             this.SemanticModel = null!;
             this.CancellationToken = CancellationToken.None;
         }
@@ -349,6 +310,48 @@
             this.visited.Clear();
             this.SemanticModel = semanticModel ?? throw new ArgumentNullException(nameof(semanticModel));
             this.CancellationToken = cancellationToken;
+        }
+
+        private TSymbol? EffectiveSymbol<TSymbol>(SyntaxNode node)
+            where TSymbol : class, ISymbol
+        {
+            if (this.SemanticModel.TryGetSymbol<TSymbol>(node, this.CancellationToken, out var symbol))
+            {
+                if (IsExplicitBase())
+                {
+                    return symbol;
+                }
+
+                return symbol switch
+                {
+                    IEventSymbol @event
+                       when (@event.IsVirtual || @event.IsAbstract) &&
+                            this.ContainingType.FindOverride(@event) is TSymbol overrider
+                        => overrider,
+                    IPropertySymbol property
+                        when (property.IsVirtual || property.IsAbstract) &&
+                             this.ContainingType.FindOverride(property) is TSymbol overrider
+                        => overrider,
+                    IMethodSymbol method
+                        when (method.IsVirtual || method.IsAbstract) &&
+                             this.ContainingType.FindOverride(method) is TSymbol overrider
+                        => overrider,
+                    _ => symbol,
+                };
+            }
+
+            return null;
+
+            bool IsExplicitBase()
+            {
+                return node switch
+                {
+                    InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Expression: BaseExpressionSyntax _ } } => true,
+                    MemberAccessExpressionSyntax { Expression: BaseExpressionSyntax _ } => true,
+                    IdentifierNameSyntax { Parent: MemberAccessExpressionSyntax { Expression: BaseExpressionSyntax _ } } => true,
+                    _ => false,
+                };
+            }
         }
     }
 }
