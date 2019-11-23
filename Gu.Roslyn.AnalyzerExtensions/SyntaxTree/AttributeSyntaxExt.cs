@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -57,8 +57,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 return arguments.TryElementAt<AttributeArgumentSyntax>(index, out argument) &&
-                       argument.NameColon is null &&
-                       argument.NameEquals is null;
+                       argument is { NameColon: null, NameEquals: null };
             }
 
             argument = null;

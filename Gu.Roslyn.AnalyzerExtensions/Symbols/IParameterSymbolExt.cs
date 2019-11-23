@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
 
@@ -20,8 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new System.ArgumentNullException(nameof(parameter));
             }
 
-            if (parameter.HasExplicitDefaultValue &&
-                parameter.Type == QualifiedType.System.String)
+            if (parameter is { Type: { SpecialType: SpecialType.System_String }, HasExplicitDefaultValue: true })
             {
                 foreach (var attribute in parameter.GetAttributes())
                 {

@@ -66,9 +66,9 @@
             return candidate switch
             {
                 { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
-                { Name: { Identifier: { ValueText: { } valueText } } name } => valueText == symbol.Name &&
-                                                                               semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
-                                                                               candidateSymbol == symbol,
+                { Name: { Identifier: { ValueText: { } valueText } } } => valueText == symbol.Name &&
+                                                                          semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                                                                          candidateSymbol == symbol,
                 _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
                      candidateSymbol == symbol,
             };
@@ -98,9 +98,9 @@
             return candidate switch
             {
                 { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
-                { Name: { Identifier: { ValueText: { } valueText } } name } => valueText == symbol.Name &&
-                                                                               semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
-                                                                               candidateSymbol == symbol,
+                { Name: { Identifier: { ValueText: { } valueText } } } => valueText == symbol.Name &&
+                                                                          semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                                                                          candidateSymbol == symbol,
                 _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
                      candidateSymbol == symbol,
             };
@@ -130,9 +130,9 @@
             return candidate switch
             {
                 { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
-                { Name: { Identifier: { ValueText: { } valueText } } name } => valueText == symbol.Name &&
-                                                                               semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
-                                                                               candidateSymbol == symbol,
+                { Name: { Identifier: { ValueText: { } valueText } } } => valueText == symbol.Name &&
+                                                                          semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
+                                                                          candidateSymbol == symbol,
                 _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
                      candidateSymbol == symbol,
             };

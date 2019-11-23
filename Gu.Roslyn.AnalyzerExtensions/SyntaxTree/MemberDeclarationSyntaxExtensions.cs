@@ -1,7 +1,6 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -19,12 +18,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (member is null)
             {
-                comment = null;
-                return false;
+                throw new System.ArgumentNullException(nameof(member));
             }
 
             if (member.HasLeadingTrivia &&
-                member.GetLeadingTrivia() is SyntaxTriviaList triviaList &&
+                member.GetLeadingTrivia() is { } triviaList &&
                 triviaList.TrySingle(x => x.HasStructure && x.GetStructure() is DocumentationCommentTriviaSyntax, out var commentTrivia) &&
                 commentTrivia.GetStructure() is DocumentationCommentTriviaSyntax triviaSyntax)
             {

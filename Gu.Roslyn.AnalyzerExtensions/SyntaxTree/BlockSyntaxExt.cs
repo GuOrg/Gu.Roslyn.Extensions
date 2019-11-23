@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -29,19 +29,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
                 }
 
-                if (candidate is IfStatementSyntax ifStatement)
+                switch (candidate)
                 {
-                    if (ifStatement.Statement is BlockSyntax statementBlock &&
-                        ContainsGoto(statementBlock))
-                    {
+                    case IfStatementSyntax { Statement: BlockSyntax whenTrue } when ContainsGoto(whenTrue):
                         return true;
-                    }
-
-                    if (ifStatement.Else?.Statement is BlockSyntax elseBlock &&
-                        ContainsGoto(elseBlock))
-                    {
+                    case IfStatementSyntax { Else: { Statement: BlockSyntax elseBlock } } when ContainsGoto(elseBlock):
                         return true;
-                    }
                 }
             }
 

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
@@ -48,8 +48,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return Microsoft.CodeAnalysis.Accessibility.Protected;
             }
 
-            if (declaration is MethodDeclarationSyntax methodDeclaration &&
-                methodDeclaration.ExplicitInterfaceSpecifier != null)
+            if (declaration is MethodDeclarationSyntax { ExplicitInterfaceSpecifier: { } })
             {
                 // This will not always be right.
                 return Microsoft.CodeAnalysis.Accessibility.Public;
@@ -136,9 +135,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (method.ParameterList is ParameterListSyntax parameterList)
+            if (method.ParameterList is { Parameters: { } parameters })
             {
-                foreach (var candidate in parameterList.Parameters)
+                foreach (var candidate in parameters)
                 {
                     if (candidate.Identifier.ValueText == name)
                     {

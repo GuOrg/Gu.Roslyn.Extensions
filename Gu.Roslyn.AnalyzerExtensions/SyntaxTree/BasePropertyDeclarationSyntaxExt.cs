@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
@@ -151,13 +151,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             if (property.TryGetGetter(out var getter) &&
-                getter.Body is null &&
-                getter.ExpressionBody is null)
+                getter is { Body: null, ExpressionBody: null })
             {
                 if (property.TryGetSetter(out var setter))
                 {
-                    return setter.Body is null &&
-                           setter.ExpressionBody is null;
+                    return setter is { Body: null, ExpressionBody: null };
                 }
 
                 return true;

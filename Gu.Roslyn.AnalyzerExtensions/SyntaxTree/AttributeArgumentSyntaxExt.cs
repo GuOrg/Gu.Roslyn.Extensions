@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -20,8 +20,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the argument expression was a constant string.</returns>
         public static bool TryGetStringValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out string? result)
         {
+            if (argument is null)
+            {
+                throw new System.ArgumentNullException(nameof(argument));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             result = null;
-            return argument?.Expression is ExpressionSyntax expression &&
+            return argument?.Expression is { } expression &&
                    expression.TryGetStringValue(semanticModel, cancellationToken, out result);
         }
 
@@ -35,6 +45,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the call is typeof() and we could figure out the type.</returns>
         public static bool TryGetTypeofValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out ITypeSymbol? result)
         {
+            if (argument is null)
+            {
+                throw new System.ArgumentNullException(nameof(argument));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             result = null;
             return argument?.Expression is TypeOfExpressionSyntax expression &&
                    semanticModel.TryGetType(expression.Type, cancellationToken, out result);

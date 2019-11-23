@@ -24,20 +24,14 @@
                 throw new ArgumentNullException(nameof(invocation));
             }
 
-            if (invocation.Parent is ArgumentSyntax ||
-                invocation.Parent is EqualsValueClauseSyntax ||
-                invocation.Parent is AssignmentExpressionSyntax)
+            return invocation.Parent switch
             {
-                return false;
-            }
-
-            if (invocation.Parent is IfStatementSyntax ifStatement &&
-                ifStatement.Condition.Contains(invocation))
-            {
-                return false;
-            }
-
-            return true;
+                ArgumentSyntax _ => false,
+                EqualsValueClauseSyntax _ => false,
+                AssignmentExpressionSyntax _ => false,
+                IfStatementSyntax ifStatement => !ifStatement.Condition.Contains(invocation),
+                _ => true
+            };
         }
 
         /// <summary>

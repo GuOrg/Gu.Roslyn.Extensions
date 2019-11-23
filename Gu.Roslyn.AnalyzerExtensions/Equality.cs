@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -329,8 +329,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
                 switch (candidate.Expression)
                 {
-                    case MemberAccessExpressionSyntax memberAccess when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
-                                                                        last.ValueText == "RuntimeHelpers":
+                    case MemberAccessExpressionSyntax { Expression: { } expression } when MemberPath.TryFindLast(expression, out var last) &&
+                                                                                          last.ValueText == "RuntimeHelpers":
                         return null;
                     default:
                         return false;
@@ -666,7 +666,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool IsOverriden(INamedTypeSymbol candidate)
         {
             return candidate.TryFindFirstMethod(nameof(Equals), x => x.Parameters.TrySingle(out var parameter) && parameter.Type == QualifiedType.System.Object && x.IsOverride, out _) ||
-                   candidate.TryFindFirstMethod(nameof(GetHashCode), x => x.Parameters.Length == 0 && x.IsOverride, out _);
+                   candidate.TryFindFirstMethod(nameof(GetHashCode), x => x is { IsOverride: true, Parameters: { Length: 0 } }, out _);
         }
 
         /// <summary>

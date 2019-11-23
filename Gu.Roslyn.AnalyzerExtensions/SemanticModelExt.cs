@@ -1,4 +1,4 @@
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
@@ -35,8 +35,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(node));
             }
 
-            if (semanticModel.GetConstantValueSafe(node, cancellationToken) is Optional<object> optional &&
-                optional.HasValue)
+            if (semanticModel.GetConstantValueSafe(node, cancellationToken) is { HasValue: true } optional)
             {
                 if (optional.Value is T temp)
                 {

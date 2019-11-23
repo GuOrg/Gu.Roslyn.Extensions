@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
@@ -20,8 +20,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindArgument(this ConstructorInitializerSyntax initializer, IParameterSymbol parameter, [NotNullWhen(true)] out ArgumentSyntax? argument)
         {
+            if (initializer is null)
+            {
+                throw new System.ArgumentNullException(nameof(initializer));
+            }
+
+            if (parameter is null)
+            {
+                throw new System.ArgumentNullException(nameof(parameter));
+            }
+
             argument = null;
-            return initializer?.ArgumentList is ArgumentListSyntax argumentList &&
+            return initializer?.ArgumentList is { } argumentList &&
                    argumentList.TryFind(parameter, out argument);
         }
 
@@ -34,8 +44,18 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if one or more were found.</returns>
         public static bool TryFindArgumentParams(this ConstructorInitializerSyntax initializer, IParameterSymbol parameter, out ImmutableArray<ArgumentSyntax> arguments)
         {
+            if (initializer is null)
+            {
+                throw new System.ArgumentNullException(nameof(initializer));
+            }
+
+            if (parameter is null)
+            {
+                throw new System.ArgumentNullException(nameof(parameter));
+            }
+
             arguments = default;
-            return initializer?.ArgumentList is ArgumentListSyntax argumentList &&
+            return initializer?.ArgumentList is { } argumentList &&
                    argumentList.TryFindParams(parameter, out arguments);
         }
 
@@ -49,6 +69,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if the declaration was found.</returns>
         public static bool TryGetTargetDeclaration(this ConstructorInitializerSyntax invocation, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out ConstructorDeclarationSyntax? declaration)
         {
+            if (invocation is null)
+            {
+                throw new System.ArgumentNullException(nameof(invocation));
+            }
+
+            if (semanticModel is null)
+            {
+                throw new System.ArgumentNullException(nameof(semanticModel));
+            }
+
             declaration = null;
             return semanticModel.TryGetSymbol(invocation, cancellationToken, out var symbol) &&
                    symbol.TrySingleDeclaration(cancellationToken, out declaration);

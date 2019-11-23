@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using Microsoft.CodeAnalysis;
@@ -40,13 +40,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (right.Name is string name &&
+            if (right.Name is { } name &&
                 left.Name != name)
             {
                 return false;
             }
 
-            if (right.Type is QualifiedType type &&
+            if (right.Type is { } type &&
                 left.Type != type)
             {
                 return false;

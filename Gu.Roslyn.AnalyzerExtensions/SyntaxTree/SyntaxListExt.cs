@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using Microsoft.CodeAnalysis;
@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static T First<T>(this SyntaxList<T> list, SyntaxKind kind)
             where T : SyntaxNode
         {
-            foreach (T node in list)
+            foreach (var node in list)
             {
                 if (node.IsKind(kind))
                 {
@@ -40,7 +40,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static T? FirstOrDefault<T>(this SyntaxList<T> list, SyntaxKind kind)
             where T : SyntaxNode
         {
-            foreach (T node in list)
+            foreach (var node in list)
             {
                 if (node.IsKind(kind))
                 {

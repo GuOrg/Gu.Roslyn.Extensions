@@ -1,8 +1,7 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Immutable;
-    using System.Linq;
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -62,7 +61,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             bool TryGetTypeArguments(out ITypeSymbol[] args)
             {
                 args = new ITypeSymbol[this.TypeArguments.Length];
-                for (int i = 0; i < this.TypeArguments.Length; i++)
+                for (var i = 0; i < this.TypeArguments.Length; i++)
                 {
                     if (this.TypeArguments[i].GetTypeSymbol(compilation) is { } arg)
                     {
