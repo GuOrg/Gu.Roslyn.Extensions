@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
@@ -65,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (declaration.Declaration is VariableDeclarationSyntax variableDeclaration &&
+            if (declaration.Declaration is { } variableDeclaration &&
                 variableDeclaration.Variables.TrySingle(out var variable))
             {
                 name = variable.Identifier.ValueText;
