@@ -216,6 +216,32 @@
             return walker;
         }
 
+#pragma warning disable CA1068 // CancellationToken parameters must come last
+        /// <summary>
+        /// Returns a walker that have visited <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="scope">The scope to walk.</param>
+        /// <param name="containingType">The <see cref="INamedTypeSymbol"/> where walking starts.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="create">The factory for creating a walker if not found in cache.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>The walker that have visited <paramref name="node"/>.</returns>
+        protected static T BorrowAndVisit(SyntaxNode node, SearchScope scope, INamedTypeSymbol containingType, SemanticModel semanticModel, Func<T> create, CancellationToken cancellationToken)
+#pragma warning restore CA1068 // CancellationToken parameters must come last
+        {
+            var walker = Borrow(create);
+
+            // Not pretty below here, throwing is perhaps nicer, dunno.
+            walker.SearchScope = scope == SearchScope.Member && node is TypeDeclarationSyntax ? SearchScope.Type : scope;
+#pragma warning disable IDISP003 // Dispose previous before re-assigning.
+            walker.Recursion = Recursion.Borrow(containingType, semanticModel, cancellationToken);
+#pragma warning restore IDISP003 // Dispose previous before re-assigning.
+            walker.Visit(node);
+            walker.SearchScope = scope;
+            return walker;
+        }
+
         /// <summary>
         /// Returns a walker that have visited <paramref name="node"/>.
         /// </summary>

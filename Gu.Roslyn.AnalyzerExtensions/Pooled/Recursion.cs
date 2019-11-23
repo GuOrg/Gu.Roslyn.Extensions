@@ -4,6 +4,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -53,8 +54,14 @@
             }
 
             var type = startLocation.FirstAncestorOrSelf<TypeDeclarationSyntax>();
+            var typeSymbol = semanticModel.GetDeclaredSymbolSafe(type, cancellationToken) as INamedTypeSymbol;
+            if (typeSymbol is null)
+            {
+                throw new InvalidOperationException("Could not get an INamedTypeSymbol for startLocation");
+            }
+
             return Borrow(
-                (INamedTypeSymbol)semanticModel.GetDeclaredSymbol(type, cancellationToken),
+                (INamedTypeSymbol)typeSymbol,
                 semanticModel,
                 cancellationToken);
         }
