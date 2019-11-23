@@ -251,6 +251,27 @@
         }
 
         /// <summary>
+        /// Returns a walker that have visited <paramref name="node"/>.
+        /// </summary>
+        /// <typeparam name="TParent">The parent type.</typeparam>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="scope">The scope to walk.</param>
+        /// <param name="parent">The parent <see cref="ExecutionWalker{TParent}"/>.</param>
+        /// <param name="create">The factory for creating a walker if not found in cache.</param>
+        /// <returns>The walker that have visited <paramref name="node"/>.</returns>
+        protected static T BorrowAndVisit<TParent>(SyntaxNode node, SearchScope scope, ExecutionWalker<TParent> parent, Func<T> create)
+            where TParent : ExecutionWalker<TParent>
+        {
+            var walker = Borrow(create);
+            walker.SearchScope = scope;
+            walker.ContainingType = parent.ContainingType;
+            walker.Recursion = parent.Recursion;
+            walker.Visit(node);
+            walker.Recursion = null!;
+            return walker;
+        }
+
+        /// <summary>
         /// Called by <see cref="VisitClassDeclaration"/> and <see cref="VisitStructDeclaration"/>
         /// Walks the members in the following order:
         /// 1. Field and property initializers in document order.
