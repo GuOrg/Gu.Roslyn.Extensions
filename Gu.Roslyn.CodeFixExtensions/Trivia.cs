@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -457,6 +457,56 @@ namespace Gu.Roslyn.CodeFixExtensions
                 first.IsKind(SyntaxKind.EndOfLineTrivia))
             {
                 return node.WithLeadingTrivia(triviaList.Skip(1));
+            }
+
+            return node;
+        }
+
+        /// <summary>
+        /// Add leading line feed to <paramref name="node"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
+        /// <returns><paramref name="node"/> with leading line feed.</returns>
+        public static T WithoutTrailingLineFeed<T>(this T node)
+            where T : SyntaxNode
+        {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (node.HasTrailingTrivia &&
+                node.GetTrailingTrivia() is { } triviaList &&
+                triviaList.TryLast(out var first) &&
+                first.IsKind(SyntaxKind.EndOfLineTrivia))
+            {
+                return node.WithTrailingTrivia(triviaList.Take(triviaList.Count - 2));
+            }
+
+            return node;
+        }
+
+        /// <summary>
+        /// Add leading line feed to <paramref name="node"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+        /// <param name="node">The <typeparamref name="T"/>.</param>
+        /// <returns><paramref name="node"/> with leading line feed.</returns>
+        public static T WithoutTrailingWhiteSpace<T>(this T node)
+            where T : SyntaxNode
+        {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
+            if (node.HasTrailingTrivia &&
+                node.GetTrailingTrivia() is { } triviaList &&
+                triviaList.TryLast(out var first) &&
+                first.IsKind(SyntaxKind.WhitespaceTrivia))
+            {
+                return node.WithTrailingTrivia(triviaList.Take(triviaList.Count - 2));
             }
 
             return node;
