@@ -35,10 +35,12 @@
         /// </summary>
         protected CancellationToken CancellationToken => this.Recursion.CancellationToken;
 
+#pragma warning disable IDISP008 // Don't assign member with injected and created disposables.
         /// <summary>
         /// Gets the <see cref="Recursion"/>.
         /// </summary>
         protected Recursion Recursion { get; private set; } = null!;
+#pragma warning restore IDISP008 // Don't assign member with injected and created disposables.
 
         /// <inheritdoc />
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
