@@ -42,24 +42,6 @@
             base.Visit(node);
         }
 
-        /// <inheritdoc/>
-        public override void VisitReturnStatement(ReturnStatementSyntax node)
-        {
-            if (node?.Expression is { } expression)
-            {
-                this.returnValues.Add(expression);
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
-        {
-            if (node?.Expression is { } expression)
-            {
-                this.returnValues.Add(expression);
-            }
-        }
-
         /// <summary>
         /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
@@ -83,6 +65,24 @@
 
             using var walker = BorrowAndVisit(node, () => new ReturnValueWalker());
             return walker.returnValues.TrySingle(out returnValue);
+        }
+
+        /// <inheritdoc/>
+        public override void VisitReturnStatement(ReturnStatementSyntax node)
+        {
+            if (node?.Expression is { } expression)
+            {
+                this.returnValues.Add(expression);
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
+        {
+            if (node?.Expression is { } expression)
+            {
+                this.returnValues.Add(expression);
+            }
         }
 
         /// <inheritdoc/>
