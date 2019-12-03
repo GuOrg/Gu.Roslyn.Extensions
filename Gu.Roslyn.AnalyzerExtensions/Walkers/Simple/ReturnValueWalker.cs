@@ -23,25 +23,6 @@
         /// </summary>
         public IReadOnlyList<ExpressionSyntax> ReturnValues => this.returnValues;
 
-        /// <inheritdoc/>
-        public override void Visit(SyntaxNode node)
-        {
-            if (this.isSubNode)
-            {
-                switch (node.Kind())
-                {
-                    case SyntaxKind.SimpleLambdaExpression:
-                    case SyntaxKind.ParenthesizedLambdaExpression:
-                    case SyntaxKind.AnonymousMethodExpression:
-                    case SyntaxKind.LocalFunctionStatement:
-                        return;
-                }
-            }
-
-            this.isSubNode = true;
-            base.Visit(node);
-        }
-
         /// <summary>
         /// Get a walker that has visited <paramref name="node"/>.
         /// </summary>
@@ -65,6 +46,25 @@
 
             using var walker = BorrowAndVisit(node, () => new ReturnValueWalker());
             return walker.returnValues.TrySingle(out returnValue);
+        }
+
+        /// <inheritdoc/>
+        public override void Visit(SyntaxNode node)
+        {
+            if (this.isSubNode)
+            {
+                switch (node.Kind())
+                {
+                    case SyntaxKind.SimpleLambdaExpression:
+                    case SyntaxKind.ParenthesizedLambdaExpression:
+                    case SyntaxKind.AnonymousMethodExpression:
+                    case SyntaxKind.LocalFunctionStatement:
+                        return;
+                }
+            }
+
+            this.isSubNode = true;
+            base.Visit(node);
         }
 
         /// <inheritdoc/>

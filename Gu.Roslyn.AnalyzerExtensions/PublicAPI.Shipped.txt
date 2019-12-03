@@ -24,7 +24,6 @@ Gu.Roslyn.AnalyzerExtensions.ConstructorInitializerSyntaxExt
 Gu.Roslyn.AnalyzerExtensions.DiagnosticDescriptorExt
 Gu.Roslyn.AnalyzerExtensions.DocumentationCommentTriviaSyntaxExtensions
 Gu.Roslyn.AnalyzerExtensions.EnumerableExt
-Gu.Roslyn.AnalyzerExtensions.EnumerableExt
 Gu.Roslyn.AnalyzerExtensions.Equality
 Gu.Roslyn.AnalyzerExtensions.EventSymbolComparer
 Gu.Roslyn.AnalyzerExtensions.EventSymbolComparer.GetHashCode(Microsoft.CodeAnalysis.IEventSymbol obj) -> int
@@ -62,10 +61,6 @@ Gu.Roslyn.AnalyzerExtensions.INamedTypeSymbolExtensions
 Gu.Roslyn.AnalyzerExtensions.IParameterSymbolExt
 Gu.Roslyn.AnalyzerExtensions.IPropertySymbolExt
 Gu.Roslyn.AnalyzerExtensions.ISymbolExt
-Gu.Roslyn.AnalyzerExtensions.ISymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
 Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker.IdentifierNames.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>
@@ -254,6 +249,8 @@ Gu.Roslyn.AnalyzerExtensions.Recursion.Target<TSource, TSymbol, TDeclaration>(TS
 Gu.Roslyn.AnalyzerExtensions.RecursiveWalker<T>
 Gu.Roslyn.AnalyzerExtensions.RecursiveWalker<T>.RecursiveWalker() -> void
 Gu.Roslyn.AnalyzerExtensions.RecursiveWalker<T>.Targets.get -> System.Collections.Generic.IReadOnlyList<Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.SyntaxNode, Microsoft.CodeAnalysis.ISymbol, Microsoft.CodeAnalysis.SyntaxNode>>
+Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker
+Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.ReturnValues.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax>
 Gu.Roslyn.AnalyzerExtensions.Scope
 Gu.Roslyn.AnalyzerExtensions.Search
 Gu.Roslyn.AnalyzerExtensions.Search.Recursive = 1 -> Gu.Roslyn.AnalyzerExtensions.Search
@@ -264,8 +261,6 @@ Gu.Roslyn.AnalyzerExtensions.SearchScope.Member = 0 -> Gu.Roslyn.AnalyzerExtensi
 Gu.Roslyn.AnalyzerExtensions.SearchScope.Recursive = 3 -> Gu.Roslyn.AnalyzerExtensions.SearchScope
 Gu.Roslyn.AnalyzerExtensions.SearchScope.Type = 2 -> Gu.Roslyn.AnalyzerExtensions.SearchScope
 Gu.Roslyn.AnalyzerExtensions.SearchScopeExt
-Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
-Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
 Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
 Gu.Roslyn.AnalyzerExtensions.SeparatedSyntaxListExt
 Gu.Roslyn.AnalyzerExtensions.SpecificIdentifierNameWalker
@@ -360,8 +355,6 @@ Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.StructDeclarationComparer.StructD
 Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.UsingDirectiveComparer
 Gu.Roslyn.AnalyzerExtensions.StyleCopComparers.UsingDirectiveComparer.UsingDirectiveComparer() -> void
 Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration
-Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration
-Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration
 Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration<TSymbol, TDeclaration>
 Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration<TSymbol, TDeclaration>.Equals(Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration<TSymbol, TDeclaration> other) -> bool
 Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration<TSymbol, TDeclaration>.SymbolAndDeclaration(TSymbol symbol, TDeclaration declaration) -> void
@@ -452,6 +445,9 @@ override Gu.Roslyn.AnalyzerExtensions.QualifiedType.Equals(object obj) -> bool
 override Gu.Roslyn.AnalyzerExtensions.QualifiedType.GetHashCode() -> int
 override Gu.Roslyn.AnalyzerExtensions.RecursiveWalker<T>.Clear() -> void
 override Gu.Roslyn.AnalyzerExtensions.RecursiveWalker<T>.TryGetTargetSymbol<TSource, TSymbol, TDeclaration>(TSource node, out Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TDeclaration> target, string caller = null, int line = 0) -> bool
+override Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.Visit(Microsoft.CodeAnalysis.SyntaxNode node) -> void
+override Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.VisitArrowExpressionClause(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax node) -> void
+override Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.VisitReturnStatement(Microsoft.CodeAnalysis.CSharp.Syntax.ReturnStatementSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.SpecificIdentifierNameWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.StringBuilderPool.PooledStringBuilder.ToString() -> string
 override Gu.Roslyn.AnalyzerExtensions.StringLiteralWalker.VisitLiteralExpression(Microsoft.CodeAnalysis.CSharp.Syntax.LiteralExpressionSyntax node) -> void
@@ -867,6 +863,8 @@ static Gu.Roslyn.AnalyzerExtensions.QualifiedType.operator ==(Microsoft.CodeAnal
 static Gu.Roslyn.AnalyzerExtensions.QualifiedType.operator ==(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax left, Gu.Roslyn.AnalyzerExtensions.QualifiedType right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.QualifiedType.operator ==(Microsoft.CodeAnalysis.ITypeSymbol left, Gu.Roslyn.AnalyzerExtensions.QualifiedType right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Recursion.Borrow(Microsoft.CodeAnalysis.INamedTypeSymbol containingType, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.Recursion
+static Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.Borrow(Microsoft.CodeAnalysis.SyntaxNode node) -> Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker
+static Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.TrySingle(Microsoft.CodeAnalysis.SyntaxNode node, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax returnValue) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Scope.HasLocal(Microsoft.CodeAnalysis.SyntaxNode nodeInScope, string name) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Scope.HasParameter(Microsoft.CodeAnalysis.SyntaxNode nodeInScope, string name) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Scope.IsExecutedBefore(this Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax node, Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax other) -> Gu.Roslyn.AnalyzerExtensions.ExecutedBefore

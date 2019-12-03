@@ -26,6 +26,7 @@ Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.DocumentEditorCodeFixCo
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Equals(Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext other) -> bool
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.RegisterCodeFix(string title, System.Action<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken> action, System.Type equivalenceKey, Microsoft.CodeAnalysis.Diagnostic diagnostic) -> void
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.RegisterCodeFix(string title, System.Action<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken> action, string equivalenceKey, Microsoft.CodeAnalysis.Diagnostic diagnostic) -> void
+Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.RegisterCodeFix(string title, System.Action<Microsoft.CodeAnalysis.Editing.DocumentEditor> action, string equivalenceKey, Microsoft.CodeAnalysis.Diagnostic diagnostic) -> void
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.RegisterCodeFix(string title, System.Func<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken, System.Threading.Tasks.Task> action, string equivalenceKey, Microsoft.CodeAnalysis.Diagnostic diagnostic) -> void
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixContext.Span.get -> Microsoft.CodeAnalysis.Text.TextSpan
 Gu.Roslyn.CodeFixExtensions.DocumentEditorCodeFixProvider
@@ -229,6 +230,7 @@ static Gu.Roslyn.CodeFixExtensions.Parse.LeadingTrivia(string text, string leadi
 static Gu.Roslyn.CodeFixExtensions.Parse.MethodDeclaration(string code, string leadingWhitespace = null) -> Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.Parse.PropertyDeclaration(string code, string leadingWhitespace = null) -> Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax
 static Gu.Roslyn.CodeFixExtensions.Parse.XmlElementSyntax(string text, string leadingWhitespace = null) -> Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax
+static Gu.Roslyn.CodeFixExtensions.Parse.XmlEmptyElementSyntax(string text) -> Microsoft.CodeAnalysis.CSharp.Syntax.XmlEmptyElementSyntax
 static Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
 static Gu.Roslyn.CodeFixExtensions.QualifyEventAccessWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
 static Gu.Roslyn.CodeFixExtensions.QualifyFieldAccessWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
@@ -272,6 +274,8 @@ static Gu.Roslyn.CodeFixExtensions.Trivia.WithTrailingElasticLineFeed<T>(this T 
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithTrailingLineFeed<T>(this T node) -> T
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithTrailingTriviaFrom<T>(this T target, Microsoft.CodeAnalysis.SyntaxNode source) -> T
 static Gu.Roslyn.CodeFixExtensions.Trivia.WithoutLeadingLineFeed<T>(this T node) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.WithoutTrailingLineFeed<T>(this T node) -> T
+static Gu.Roslyn.CodeFixExtensions.Trivia.WithoutTrailingWhiteSpace<T>(this T node) -> T
 static Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
 static Gu.Roslyn.CodeFixExtensions.UnderscoreFieldWalker.CheckAsync(Microsoft.CodeAnalysis.Document containing, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.CodeFixExtensions.CodeStyleResult>
 static Gu.Roslyn.CodeFixExtensions.UsingDirectivesInsideNamespaceWalker.Check(Microsoft.CodeAnalysis.SyntaxTree containing, Microsoft.CodeAnalysis.Compilation compilation) -> Gu.Roslyn.CodeFixExtensions.CodeStyleResult
