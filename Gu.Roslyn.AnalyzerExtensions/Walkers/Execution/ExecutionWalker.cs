@@ -206,10 +206,16 @@
         protected static T BorrowAndVisit(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
 #pragma warning restore CA1068 // CancellationToken parameters must come last
         {
-            if (node.FirstAncestor<TypeDeclarationSyntax>() is { } containingTypeDeclaration &&
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            if (node.FirstAncestorOrSelf<TypeDeclarationSyntax>() is { } containingTypeDeclaration &&
                 semanticModel.TryGetNamedType(containingTypeDeclaration, cancellationToken, out var containingType))
             {
                 var walker = Borrow(create);
+
                 // Not pretty below here, throwing is perhaps nicer, dunno.
                 walker.SearchScope = scope == SearchScope.Member && node is TypeDeclarationSyntax ? SearchScope.Type : scope;
 #pragma warning disable IDISP003 // Dispose previous before re-assigning.
