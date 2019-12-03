@@ -40,33 +40,6 @@
         /// <summary>
         /// Get and instance from cache, dispose returns it.
         /// </summary>
-        /// <param name="startLocation">The <see cref="SyntaxNode"/>.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
-        /// <returns>A <see cref="Recursion"/>.</returns>
-        public static Recursion Borrow(SyntaxNode startLocation, SemanticModel semanticModel, CancellationToken cancellationToken)
-        {
-            if (startLocation is null)
-            {
-                throw new ArgumentNullException(nameof(startLocation));
-            }
-
-            var type = startLocation.FirstAncestorOrSelf<TypeDeclarationSyntax>();
-            var typeSymbol = semanticModel.GetDeclaredSymbolSafe(type, cancellationToken) as INamedTypeSymbol;
-            if (typeSymbol is null)
-            {
-                throw new InvalidOperationException("Could not get an INamedTypeSymbol for startLocation");
-            }
-
-            return Borrow(
-                (INamedTypeSymbol)typeSymbol,
-                semanticModel,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// Get and instance from cache, dispose returns it.
-        /// </summary>
         /// <param name="containingType">The <see cref="INamedTypeSymbol"/> where recursion starts..</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>

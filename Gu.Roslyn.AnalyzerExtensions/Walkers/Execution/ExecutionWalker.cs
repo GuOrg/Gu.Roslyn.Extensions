@@ -206,16 +206,21 @@
         protected static T BorrowAndVisit(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken, Func<T> create)
 #pragma warning restore CA1068 // CancellationToken parameters must come last
         {
-            var walker = Borrow(create);
-
-            // Not pretty below here, throwing is perhaps nicer, dunno.
-            walker.SearchScope = scope == SearchScope.Member && node is TypeDeclarationSyntax ? SearchScope.Type : scope;
+            if (node.FirstAncestor<TypeDeclarationSyntax>() is { } containingTypeDeclaration &&
+                semanticModel.TryGetNamedType(containingTypeDeclaration, cancellationToken, out var containingType))
+            {
+                var walker = Borrow(create);
+                // Not pretty below here, throwing is perhaps nicer, dunno.
+                walker.SearchScope = scope == SearchScope.Member && node is TypeDeclarationSyntax ? SearchScope.Type : scope;
 #pragma warning disable IDISP003 // Dispose previous before re-assigning.
-            walker.Recursion = Recursion.Borrow(node, semanticModel, cancellationToken);
+                walker.Recursion = Recursion.Borrow(containingType, semanticModel, cancellationToken);
 #pragma warning restore IDISP003 // Dispose previous before re-assigning.
-            walker.Visit(node);
-            walker.SearchScope = scope;
-            return walker;
+                walker.Visit(node);
+                walker.SearchScope = scope;
+                return walker;
+            }
+
+            return Borrow(create);
         }
 
 #pragma warning disable CA1068 // CancellationToken parameters must come last
@@ -254,6 +259,11 @@
         /// <returns>The walker that have visited <paramref name="node"/>.</returns>
         protected static T BorrowAndVisit(SyntaxNode node, SearchScope scope, Recursion recursion, Func<T> create)
         {
+            if (recursion is null)
+            {
+                return Borrow(create);
+            }
+
             var walker = Borrow(create);
             walker.SearchScope = scope;
             walker.Recursion = recursion;
