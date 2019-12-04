@@ -15,6 +15,9 @@
         private SemanticModel semanticModel = null!;
         private CancellationToken cancellationToken;
 
+        /// <summary>
+        /// Gets a collection with all usages of the symbol.
+        /// </summary>
         public IReadOnlyList<IdentifierNameSyntax> Usages => this.usages;
 
         /// <inheritdoc />
@@ -27,10 +30,25 @@
 
             bool IsMatch()
             {
-                return node is { } &&
-                       node.Identifier.ValueText == this.symbol.Name &&
+                return node != null &&
+                       NameMatches() &&
                        this.semanticModel.TryGetSymbol(node, this.cancellationToken, out var nodeSymbol) &&
                        nodeSymbol.Equals(this.symbol);
+
+                bool NameMatches()
+                {
+                    if (string.IsNullOrEmpty(node.Identifier.ValueText))
+                    {
+                        return false;
+                    }
+
+                    if (node.Identifier.ValueText[0] == '@')
+                    {
+                        return node.Identifier.ValueText.IsParts("@", this.symbol.Name);
+                    }
+
+                    return node.Identifier.ValueText == this.symbol.Name;
+                }
             }
         }
 
