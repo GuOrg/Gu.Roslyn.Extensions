@@ -20,38 +20,6 @@
         /// </summary>
         public IReadOnlyList<IdentifierNameSyntax> Usages => this.usages;
 
-        /// <inheritdoc />
-        public override void VisitIdentifierName(IdentifierNameSyntax node)
-        {
-            if (IsMatch())
-            {
-                this.usages.Add(node);
-            }
-
-            bool IsMatch()
-            {
-                return node != null &&
-                       NameMatches() &&
-                       this.semanticModel.TryGetSymbol(node, this.cancellationToken, out var nodeSymbol) &&
-                       nodeSymbol.Equals(this.symbol);
-
-                bool NameMatches()
-                {
-                    if (string.IsNullOrEmpty(node.Identifier.ValueText))
-                    {
-                        return false;
-                    }
-
-                    if (node.Identifier.ValueText[0] == '@')
-                    {
-                        return node.Identifier.ValueText.IsParts("@", this.symbol.Name);
-                    }
-
-                    return node.Identifier.ValueText == this.symbol.Name;
-                }
-            }
-        }
-
         /// <summary>
         /// Get all usages of <paramref name="localOrParameter"/>.
         /// </summary>
@@ -102,6 +70,38 @@
             walker.cancellationToken = cancellationToken;
             walker.Visit(scope);
             return walker;
+        }
+
+        /// <inheritdoc />
+        public override void VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            if (IsMatch())
+            {
+                this.usages.Add(node);
+            }
+
+            bool IsMatch()
+            {
+                return node != null &&
+                       NameMatches() &&
+                       this.semanticModel.TryGetSymbol(node, this.cancellationToken, out var nodeSymbol) &&
+                       nodeSymbol.Equals(this.symbol);
+
+                bool NameMatches()
+                {
+                    if (string.IsNullOrEmpty(node.Identifier.ValueText))
+                    {
+                        return false;
+                    }
+
+                    if (node.Identifier.ValueText[0] == '@')
+                    {
+                        return node.Identifier.ValueText.IsParts("@", this.symbol.Name);
+                    }
+
+                    return node.Identifier.ValueText == this.symbol.Name;
+                }
+            }
         }
 
         /// <inheritdoc />
