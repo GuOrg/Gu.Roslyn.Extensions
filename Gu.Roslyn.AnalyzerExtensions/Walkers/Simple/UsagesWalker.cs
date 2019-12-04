@@ -52,15 +52,6 @@
             }
         }
 
-        /// <inheritdoc />
-        protected override void Clear()
-        {
-            this.usages.Clear();
-            this.symbol = null!;
-            this.semanticModel = null!;
-            this.cancellationToken = CancellationToken.None;
-        }
-
         /// <summary>
         /// Get all usages of <paramref name="localOrParameter"/>.
         /// </summary>
@@ -111,6 +102,15 @@
             walker.cancellationToken = cancellationToken;
             walker.Visit(scope);
             return walker;
+        }
+
+        /// <inheritdoc />
+        protected override void Clear()
+        {
+            this.usages.Clear();
+            this.symbol = null!;
+            this.semanticModel = null!;
+            this.cancellationToken = CancellationToken.None;
         }
     }
 }

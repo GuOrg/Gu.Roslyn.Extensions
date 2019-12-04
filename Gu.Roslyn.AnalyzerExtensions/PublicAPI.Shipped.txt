@@ -53,6 +53,10 @@ Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.IsStatic.get -> bool
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.Name.get -> string
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.Symbol.get -> Microsoft.CodeAnalysis.ISymbol
 Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.Type.get -> Microsoft.CodeAnalysis.ITypeSymbol
+Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration
+Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.Equals(Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration other) -> bool
+Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.FieldOrPropertyAndDeclaration(Microsoft.CodeAnalysis.IFieldSymbol field, Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax declaration) -> void
+Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.FieldOrPropertyAndDeclaration(Microsoft.CodeAnalysis.IPropertySymbol property, Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax declaration) -> void
 Gu.Roslyn.AnalyzerExtensions.FieldSymbolComparer
 Gu.Roslyn.AnalyzerExtensions.FieldSymbolComparer.GetHashCode(Microsoft.CodeAnalysis.IFieldSymbol obj) -> int
 Gu.Roslyn.AnalyzerExtensions.ILocalSymbolExt
@@ -264,6 +268,7 @@ Gu.Roslyn.AnalyzerExtensions.SearchScopeExt
 Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
 Gu.Roslyn.AnalyzerExtensions.SeparatedSyntaxListExt
 Gu.Roslyn.AnalyzerExtensions.SpecificIdentifierNameWalker
+Gu.Roslyn.AnalyzerExtensions.SpecificIdentifierNameWalker.IdentifierNames.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>
 Gu.Roslyn.AnalyzerExtensions.StatementSyntaxExt
 Gu.Roslyn.AnalyzerExtensions.StringBuilderPool
 Gu.Roslyn.AnalyzerExtensions.StringBuilderPool.PooledStringBuilder
@@ -380,6 +385,9 @@ Gu.Roslyn.AnalyzerExtensions.ThrowWalker.ThrowStatementsAndExpressions.get -> Sy
 Gu.Roslyn.AnalyzerExtensions.TypeDeclarationSyntaxExt
 Gu.Roslyn.AnalyzerExtensions.TypeSymbolComparer
 Gu.Roslyn.AnalyzerExtensions.TypeSyntaxExt
+Gu.Roslyn.AnalyzerExtensions.UsagesWalker
+Gu.Roslyn.AnalyzerExtensions.UsagesWalker.Usages.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>
+Gu.Roslyn.AnalyzerExtensions.UsagesWalker.UsagesWalker() -> void
 Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker
 Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker.UsingDirectiveWalker() -> void
 Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker.UsingDirectives.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax>
@@ -416,6 +424,8 @@ override Gu.Roslyn.AnalyzerExtensions.ExecutionWalker<T>.VisitObjectCreationExpr
 override Gu.Roslyn.AnalyzerExtensions.ExecutionWalker<T>.VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.Equals(object obj) -> bool
 override Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.GetHashCode() -> int
+override Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.Equals(object obj) -> bool
+override Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.GetHashCode() -> int
 override Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.IdentifierNameWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.IdentifierTokenWalker.VisitToken(Microsoft.CodeAnalysis.SyntaxToken token) -> void
@@ -459,11 +469,14 @@ override Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Equals(o
 override Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.GetHashCode() -> int
 override Gu.Roslyn.AnalyzerExtensions.ThrowWalker.VisitThrowExpression(Microsoft.CodeAnalysis.CSharp.Syntax.ThrowExpressionSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.ThrowWalker.VisitThrowStatement(Microsoft.CodeAnalysis.CSharp.Syntax.ThrowStatementSyntax node) -> void
+override Gu.Roslyn.AnalyzerExtensions.UsagesWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker.VisitUsingDirective(Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.UsingStatementWalker.VisitUsingStatement(Microsoft.CodeAnalysis.CSharp.Syntax.UsingStatementSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.UsingStaticWalker.VisitUsingDirective(Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.VariableDeclaratorWalker.VisitVariableDeclarator(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclaratorSyntax node) -> void
 override Gu.Roslyn.AnalyzerExtensions.YieldStatementWalker.VisitYieldStatement(Microsoft.CodeAnalysis.CSharp.Syntax.YieldStatementSyntax node) -> void
+readonly Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.Declaration -> Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
+readonly Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.FieldOrProperty -> Gu.Roslyn.AnalyzerExtensions.FieldOrProperty
 readonly Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration<TSymbol, TDeclaration>.Declaration -> TDeclaration
 readonly Gu.Roslyn.AnalyzerExtensions.SymbolAndDeclaration<TSymbol, TDeclaration>.Symbol -> TSymbol
 static Gu.Roslyn.AnalyzerExtensions.AccessibilityExt.IsEither(this Microsoft.CodeAnalysis.Accessibility accessibility, Microsoft.CodeAnalysis.Accessibility x, Microsoft.CodeAnalysis.Accessibility y) -> bool
@@ -655,6 +668,9 @@ static Gu.Roslyn.AnalyzerExtensions.FieldDeclarationSyntaxExt.TryGetName(this Mi
 static Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.TryCreate(Microsoft.CodeAnalysis.ISymbol symbol, out Gu.Roslyn.AnalyzerExtensions.FieldOrProperty result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.operator !=(Gu.Roslyn.AnalyzerExtensions.FieldOrProperty left, Gu.Roslyn.AnalyzerExtensions.FieldOrProperty right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.FieldOrProperty.operator ==(Gu.Roslyn.AnalyzerExtensions.FieldOrProperty left, Gu.Roslyn.AnalyzerExtensions.FieldOrProperty right) -> bool
+static Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.TryCreate(Microsoft.CodeAnalysis.ISymbol memberSymbol, System.Threading.CancellationToken cancellationToken, out Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration fieldOrProperty) -> bool
+static Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.operator !=(Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration left, Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration right) -> bool
+static Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration.operator ==(Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration left, Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.FieldSymbolComparer.Equals(Microsoft.CodeAnalysis.IFieldSymbol x, Microsoft.CodeAnalysis.IFieldSymbol y) -> bool
 static Gu.Roslyn.AnalyzerExtensions.FieldSymbolComparer.Equals(object _, object __) -> bool
 static Gu.Roslyn.AnalyzerExtensions.ILocalSymbolExt.TryGetScope(this Microsoft.CodeAnalysis.ILocalSymbol local, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.SyntaxNode scope) -> bool
@@ -1045,6 +1061,9 @@ static Gu.Roslyn.AnalyzerExtensions.TypeSymbolComparer.Equals(Microsoft.CodeAnal
 static Gu.Roslyn.AnalyzerExtensions.TypeSymbolComparer.Equals(object _, object __) -> bool
 static Gu.Roslyn.AnalyzerExtensions.TypeSymbolComparer.GetHashCode(Microsoft.CodeAnalysis.ITypeSymbol obj) -> int
 static Gu.Roslyn.AnalyzerExtensions.TypeSyntaxExt.IsVoid(this Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type) -> bool
+static Gu.Roslyn.AnalyzerExtensions.UsagesWalker.Borrow(Gu.Roslyn.AnalyzerExtensions.FieldOrPropertyAndDeclaration fieldOrProperty, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.UsagesWalker
+static Gu.Roslyn.AnalyzerExtensions.UsagesWalker.Borrow(Gu.Roslyn.AnalyzerExtensions.LocalOrParameter localOrParameter, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.UsagesWalker
+static Gu.Roslyn.AnalyzerExtensions.UsagesWalker.Borrow(Microsoft.CodeAnalysis.ISymbol symbol, Microsoft.CodeAnalysis.SyntaxNode scope, Microsoft.CodeAnalysis.SemanticModel semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.UsagesWalker
 static Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker.Borrow(Microsoft.CodeAnalysis.SyntaxNode node) -> Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker
 static Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker.Borrow(Microsoft.CodeAnalysis.SyntaxTree tree) -> Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker
 static Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker.BorrowAsync(Microsoft.CodeAnalysis.SyntaxTree tree, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Gu.Roslyn.AnalyzerExtensions.UsingDirectiveWalker>

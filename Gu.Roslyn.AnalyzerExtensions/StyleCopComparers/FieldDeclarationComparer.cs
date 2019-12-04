@@ -177,9 +177,9 @@
                     return expression switch
                     {
                         IdentifierNameSyntax identifierName
-                        => identifierName.Identifier.ValueText == variable.Identifier.ValueText,
+                        => identifierName.Identifier.ValueText == variable!.Identifier.ValueText,
                         MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _, Name: { } name }
-                        => name.Identifier.ValueText == variable.Identifier.ValueText,
+                        => name.Identifier.ValueText == variable!.Identifier.ValueText,
                         _ => false,
                     };
                 }
