@@ -2,6 +2,7 @@
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
@@ -20,7 +21,7 @@
                 parameterOptions:
                 SymbolDisplayParameterOptions.IncludeExtensionThis |
                 SymbolDisplayParameterOptions.IncludeParamsRefOut |
-                SymbolDisplayParameterOptions.IncludeType|
+                SymbolDisplayParameterOptions.IncludeType |
                 SymbolDisplayParameterOptions.IncludeName,
                 miscellaneousOptions:
                 SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers |
@@ -133,6 +134,54 @@ namespace N
             Assert.AreEqual(node, target.Source);
             Assert.AreEqual("int x", target.Symbol.ToDisplayString(Format));
             Assert.AreEqual("public override int M(int x) => x;", target.TargetNode.ToString());
+        }
+
+        [Test]
+        public static void ExtensionMethod()
+        {
+            var tree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public static class C
+    {
+        public static int P => 1.M();
+
+        public static int M(this int n) => n;
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { tree });
+            var semanticModel = compilation.GetSemanticModel(tree);
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(tree.FindClassDeclaration("C"), CancellationToken.None, out var type));
+            using var recursion = Recursion.Borrow(type, semanticModel, CancellationToken.None);
+            var node = tree.FindInvocation("1.M()");
+            var target = recursion.Target(node).Value;
+            Assert.AreEqual("1", target.Source.ToString());
+            Assert.AreEqual("int n", target.Symbol.ToDisplayString(Format));
+            Assert.AreEqual("public static int M(this int n) => n;", target.TargetNode.ToString());
+        }
+
+        [Test]
+        public static void ExtensionMethodConditional()
+        {
+            var tree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public static class C
+    {
+        public static int M1(int? i) => i?.M2() ?? 0;
+
+        public static int M2(this int n) => n;
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { tree });
+            var semanticModel = compilation.GetSemanticModel(tree);
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(tree.FindClassDeclaration("C"), CancellationToken.None, out var type));
+            using var recursion = Recursion.Borrow(type, semanticModel, CancellationToken.None);
+            var node = tree.FindInvocation("i?.M2()");
+            var target = recursion.Target(node).Value;
+            Assert.AreEqual("i", target.Source.ToString());
+            Assert.AreEqual("int n", target.Symbol.ToDisplayString(Format));
+            Assert.AreEqual("public static int M2(this int n) => n;", target.TargetNode.ToString());
         }
     }
 }

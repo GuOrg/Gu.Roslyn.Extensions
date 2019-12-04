@@ -77,13 +77,24 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,MethodDeclarationSyntax}"/>.</returns>
-        public Target<InvocationExpressionSyntax, IMethodSymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ExpressionSyntax, ISymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.EffectiveSymbol<IMethodSymbol>(node) is { } symbol)
             {
                 _ = symbol.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration);
-                return AnalyzerExtensions.Target.Create(node, symbol, declaration);
+                if (symbol is { IsExtensionMethod: true, ReducedFrom: { } reducedFrom })
+                {
+                    switch (node)
+                    {
+                        case { Expression: MemberAccessExpressionSyntax { Expression: { } expression } }:
+                            return AnalyzerExtensions.Target.Create(expression, (ISymbol)reducedFrom.Parameters[0], declaration);
+                        case { Expression: MemberBindingExpressionSyntax _, Parent: ConditionalAccessExpressionSyntax { Expression: { } expression } }:
+                            return AnalyzerExtensions.Target.Create(expression, (ISymbol)reducedFrom.Parameters[0], declaration);
+                    }
+                }
+
+                return AnalyzerExtensions.Target.Create((ExpressionSyntax)node, (ISymbol)symbol, declaration);
             }
 
             return null;
@@ -201,7 +212,13 @@
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
         public Target<ExpressionSyntax, ISymbol, SyntaxNode>? Target(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
-            return this.Target<ExpressionSyntax, ISymbol, SyntaxNode>(node, caller, line);
+            return node switch
+            {
+                InvocationExpressionSyntax invocation
+                when this.Target(invocation, caller, line) is { } temp
+                => AnalyzerExtensions.Target.Create(temp.Source, (ISymbol)temp.Symbol, (SyntaxNode?)temp.TargetNode),
+                _ => this.Target<ExpressionSyntax, ISymbol, SyntaxNode>(node, caller, line),
+            };
         }
 
         /// <summary>
