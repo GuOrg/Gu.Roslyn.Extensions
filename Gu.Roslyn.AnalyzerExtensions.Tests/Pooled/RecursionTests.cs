@@ -7,6 +7,28 @@
 
     public static class RecursionTests
     {
+        private static readonly SymbolDisplayFormat Format =
+            new SymbolDisplayFormat(
+                globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.OmittedAsContaining,
+                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
+                propertyStyle: SymbolDisplayPropertyStyle.NameOnly,
+                genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+                memberOptions:
+                SymbolDisplayMemberOptions.IncludeParameters |
+                SymbolDisplayMemberOptions.IncludeContainingType |
+                SymbolDisplayMemberOptions.IncludeExplicitInterface,
+                parameterOptions:
+                SymbolDisplayParameterOptions.IncludeExtensionThis |
+                SymbolDisplayParameterOptions.IncludeParamsRefOut |
+                SymbolDisplayParameterOptions.IncludeType|
+                SymbolDisplayParameterOptions.IncludeName,
+                miscellaneousOptions:
+                SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers |
+                SymbolDisplayMiscellaneousOptions.UseSpecialTypes |
+                SymbolDisplayMiscellaneousOptions.UseAsterisksInMultiDimensionalArrays |
+                SymbolDisplayMiscellaneousOptions.UseErrorTypeSymbolName |
+                SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
+
         [Test]
         public static void Argument()
         {
@@ -27,7 +49,7 @@ namespace N
             var node = tree.FindArgument("1");
             var target = recursion.Target(node).Value;
             Assert.AreEqual(node, target.Source);
-            Assert.AreEqual("int n", $"{target.Symbol.Type} {target.Symbol.Name}");
+            Assert.AreEqual("int n", target.Symbol.ToDisplayString(Format));
             Assert.AreEqual("public int M(int n) => n;", target.TargetNode.ToString());
         }
 
@@ -51,7 +73,7 @@ namespace N
             var node = tree.FindArgument("1");
             var target = recursion.Target(node).Value;
             Assert.AreEqual(node, target.Source);
-            Assert.AreEqual("T n", $"{target.Symbol.Type} {target.Symbol.Name}");
+            Assert.AreEqual("T n", target.Symbol.ToDisplayString(Format));
             Assert.AreEqual("public T M<T>(T n) => n;", target.TargetNode.ToString());
         }
 
@@ -80,7 +102,7 @@ namespace N
             var node = tree.FindArgument("1");
             var target = recursion.Target(node).Value;
             Assert.AreEqual(node, target.Source);
-            Assert.AreEqual("int x", $"{target.Symbol.Type} {target.Symbol.Name}");
+            Assert.AreEqual("int x", target.Symbol.ToDisplayString(Format));
             Assert.AreEqual("public override int M(int x) => x;", target.TargetNode.ToString());
         }
 
@@ -109,7 +131,7 @@ namespace N
             var node = tree.FindArgument("1");
             var target = recursion.Target(node).Value;
             Assert.AreEqual(node, target.Source);
-            Assert.AreEqual("int x", $"{target.Symbol.Type} {target.Symbol.Name}");
+            Assert.AreEqual("int x", target.Symbol.ToDisplayString(Format));
             Assert.AreEqual("public override int M(int x) => x;", target.TargetNode.ToString());
         }
     }

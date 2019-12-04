@@ -331,15 +331,15 @@
                     IEventSymbol @event
                        when (@event.IsVirtual || @event.IsAbstract) &&
                             this.ContainingType.FindOverride(@event) is TSymbol overrider
-                        => overrider,
+                        => (TSymbol)overrider.OriginalDefinition,
                     IPropertySymbol property
                         when (property.IsVirtual || property.IsAbstract) &&
                              this.ContainingType.FindOverride(property) is TSymbol overrider
-                        => overrider,
+                        => (TSymbol)overrider.OriginalDefinition,
                     IMethodSymbol method
                         when (method.IsVirtual || method.IsAbstract) &&
                              this.ContainingType.FindOverride(method) is TSymbol overrider
-                        => overrider,
+                        => (TSymbol)overrider.OriginalDefinition,
                     _ => symbol,
                 };
             }
