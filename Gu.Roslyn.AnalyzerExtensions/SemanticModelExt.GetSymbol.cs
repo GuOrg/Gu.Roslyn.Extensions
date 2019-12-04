@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -412,8 +412,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 case AwaitExpressionSyntax awaitExpression:
                     return GetSymbolSafe(semanticModel, awaitExpression, cancellationToken);
-                case ElementAccessExpressionSyntax { Expression: { } expression } when semanticModel.TryGetType(expression, cancellationToken, out var type) &&
-                                                                      type is IArrayTypeSymbol arrayType:
+                case ElementAccessExpressionSyntax { Expression: { } expression }
+                    when semanticModel.TryGetType(expression, cancellationToken, out var type) &&
+                         type is IArrayTypeSymbol arrayType:
                     return arrayType;
                 default:
                     return semanticModel.SemanticModelFor(node)

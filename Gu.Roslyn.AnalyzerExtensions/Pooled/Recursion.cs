@@ -320,6 +320,7 @@
         {
             if (this.SemanticModel.TryGetSymbol<TSymbol>(node, this.CancellationToken, out var symbol))
             {
+                symbol = (TSymbol)symbol.OriginalDefinition;
                 if (IsExplicitBase())
                 {
                     return symbol;
