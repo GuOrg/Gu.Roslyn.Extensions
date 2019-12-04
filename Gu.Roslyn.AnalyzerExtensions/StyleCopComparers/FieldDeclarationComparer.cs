@@ -158,7 +158,7 @@
                         }
                     }
 
-                    if (walker.assignments.TrySingle(IsAssigning, out var assignment))
+                    if (walker.assignments.TrySingle(x => IsAssigning(x), out var assignment))
                     {
                         setter = assignment.FirstAncestor<AccessorDeclarationSyntax>();
                     }
@@ -168,25 +168,20 @@
 
                 bool IsAssigning(AssignmentExpressionSyntax assignment)
                 {
-                    return assignment.Right is IdentifierNameSyntax right &&
-                           right.Identifier.ValueText == "value" &&
-                           IsField(assignment.Left);
+                    return assignment is { Left: { } left, Right: IdentifierNameSyntax { Identifier: { ValueText: "value" } } } &&
+                           IsField(left);
                 }
 
                 bool IsField(ExpressionSyntax expression)
                 {
-                    if (expression is IdentifierNameSyntax identifierName)
+                    return expression switch
                     {
-                        return identifierName.Identifier.ValueText == variable.Identifier.ValueText;
-                    }
-
-                    if (expression is MemberAccessExpressionSyntax memberAccess &&
-                        memberAccess.Expression is ThisExpressionSyntax)
-                    {
-                        return memberAccess.Name.Identifier.ValueText == variable.Identifier.ValueText;
-                    }
-
-                    return false;
+                        IdentifierNameSyntax identifierName
+                        => identifierName.Identifier.ValueText == variable.Identifier.ValueText,
+                        MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _, Name: { } name }
+                        => name.Identifier.ValueText == variable.Identifier.ValueText,
+                        _ => false,
+                    };
                 }
             }
 

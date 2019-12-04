@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
@@ -19,7 +19,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <summary>
         /// Gets a collection with the <see cref="IdentifierNameSyntax"/> found when walking.
         /// </summary>
-        internal IReadOnlyList<IdentifierNameSyntax> IdentifierNames => this.identifierNames;
+        public IReadOnlyList<IdentifierNameSyntax> IdentifierNames => this.identifierNames;
 
         /// <summary>
         /// Get a walker that has visited <paramref name="node"/>.
