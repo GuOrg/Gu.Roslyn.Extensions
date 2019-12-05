@@ -26,7 +26,7 @@ namespace N
             using var recursion = Recursion.Borrow(type, semanticModel, CancellationToken.None);
             var node = tree.FindArgument("1");
             var target = recursion.Target(node).Value;
-            using var walker = UsagesWalker.Borrow(target.Symbol, target.TargetNode, semanticModel, CancellationToken.None);
+            using var walker = UsagesWalker.Borrow(target.Symbol, target.Declaration, semanticModel, CancellationToken.None);
             Assert.AreEqual("n", string.Join(", ", walker.Usages));
         }
 
@@ -49,12 +49,12 @@ namespace N
             using var recursion = Recursion.Borrow(type, semanticModel, CancellationToken.None);
             var invocation = tree.FindInvocation("1");
             var invocationTarget = recursion.Target(invocation).Value;
-            using var invocationWalker = UsagesWalker.Borrow(invocationTarget.Symbol, invocationTarget.TargetNode, semanticModel, CancellationToken.None);
+            using var invocationWalker = UsagesWalker.Borrow(invocationTarget.Symbol, invocationTarget.Declaration, semanticModel, CancellationToken.None);
             Assert.AreEqual("m", string.Join(", ", invocationWalker.Usages));
 
             var argument = tree.FindArgument("2");
             var argumentTarget = recursion.Target(argument).Value;
-            using var argumentWalker = UsagesWalker.Borrow(argumentTarget.Symbol, argumentTarget.TargetNode, semanticModel, CancellationToken.None);
+            using var argumentWalker = UsagesWalker.Borrow(argumentTarget.Symbol, argumentTarget.Declaration, semanticModel, CancellationToken.None);
             Assert.AreEqual("n", string.Join(", ", argumentWalker.Usages));
         }
 
@@ -77,12 +77,12 @@ namespace N
             using var recursion = Recursion.Borrow(type, semanticModel, CancellationToken.None);
             var argument = tree.FindArgument("1");
             var target = recursion.Target(argument).Value;
-            using var walker1 = UsagesWalker.Borrow(target.Symbol, target.TargetNode, semanticModel, CancellationToken.None);
+            using var walker1 = UsagesWalker.Borrow(target.Symbol, target.Declaration, semanticModel, CancellationToken.None);
             Assert.AreEqual("m", string.Join(", ", walker1.Usages));
 
             argument = tree.FindArgument("2");
             target = recursion.Target(argument).Value;
-            using var walker2 = UsagesWalker.Borrow(target.Symbol, target.TargetNode, semanticModel, CancellationToken.None);
+            using var walker2 = UsagesWalker.Borrow(target.Symbol, target.Declaration, semanticModel, CancellationToken.None);
             Assert.AreEqual("n", string.Join(", ", walker2.Usages));
         }
 
@@ -105,8 +105,36 @@ namespace N
             using var recursion = Recursion.Borrow(type, semanticModel, CancellationToken.None);
             var node = tree.FindArgument("1");
             var target = recursion.Target(node).Value;
-            using var walker = UsagesWalker.Borrow(target.Symbol, target.TargetNode, semanticModel, CancellationToken.None);
+            using var walker = UsagesWalker.Borrow(target.Symbol, target.Declaration, semanticModel, CancellationToken.None);
             Assert.AreEqual("n", string.Join(", ", walker.Usages));
+        }
+
+        [Test]
+        public static void RecursionTargetExtensionMethodArgumentsGeneric()
+        {
+            var tree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public static class C
+    {
+        public static bool P => 1.M<int>(2);
+
+        public static bool M<T>(this T m, T n) => Equals(m, n);
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { tree });
+            var semanticModel = compilation.GetSemanticModel(tree);
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(tree.FindClassDeclaration("C"), CancellationToken.None, out var type));
+            using var recursion = Recursion.Borrow(type, semanticModel, CancellationToken.None);
+            var invocation = tree.FindInvocation("1.M<int>(2");
+            var invocationTarget = recursion.Target(invocation).Value;
+            using var invocationWalker = UsagesWalker.Borrow(invocationTarget.Symbol, invocationTarget.Declaration, semanticModel, CancellationToken.None);
+            Assert.AreEqual("m", string.Join(", ", invocationWalker.Usages));
+
+            var argument = tree.FindArgument("2");
+            var argumentTarget = recursion.Target(argument).Value;
+            using var argumentWalker = UsagesWalker.Borrow(argumentTarget.Symbol, argumentTarget.Declaration, semanticModel, CancellationToken.None);
+            Assert.AreEqual("n", string.Join(", ", argumentWalker.Usages));
         }
     }
 }

@@ -86,7 +86,7 @@
                 case SearchScope.Instance:
                 case SearchScope.Type:
                 case SearchScope.Recursive:
-                    if (this.Recursion.Target(node) is { TargetNode: { } declaration })
+                    if (this.Recursion.Target(node) is { Declaration: { } declaration })
                     {
                         this.Visit(declaration);
                     }
@@ -111,7 +111,7 @@
                 return;
             }
 
-            if (this.Recursion.Target(node.Type) is { Symbol: { } containingType, TargetNode: { } containingTypeDeclaration } &&
+            if (this.Recursion.Target(node.Type) is { Symbol: { } containingType, Declaration: { } containingTypeDeclaration } &&
                 ShouldVisit(containingType))
             {
                 using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
@@ -128,7 +128,7 @@
                     this.VisitArgumentList(argumentList);
                 }
 
-                if (this.Recursion.Target(node) is { Symbol: { }, TargetNode: { } declaration })
+                if (this.Recursion.Target(node) is { Symbol: { }, Declaration: { } declaration })
                 {
                     this.Visit(declaration);
                 }
@@ -154,7 +154,7 @@
         {
             base.VisitInvocationExpression(node);
             if (this.TryGetTargetSymbol<InvocationExpressionSyntax, IMethodSymbol, MethodDeclarationSyntax>(node, out var target) &&
-                target.TargetNode is { } declaration)
+                target.Declaration is { } declaration)
             {
                 this.Visit(declaration);
             }
@@ -165,7 +165,7 @@
         {
             base.VisitIdentifierName(node);
             if (this.TryGetTargetSymbol<IdentifierNameSyntax, IPropertySymbol, PropertyDeclarationSyntax>(node, out var target) &&
-                target.TargetNode is { } declaration)
+                target.Declaration is { } declaration)
             {
                 if (this.IsPropertyGetAndSet(node))
                 {
@@ -430,7 +430,7 @@
                 return false;
             }
 
-            if (this.Recursion.Target<TSource, TSymbol, TDeclaration>(node, caller, line) is { Symbol: { } symbol, TargetNode: { } } t)
+            if (this.Recursion.Target<TSource, TSymbol, TDeclaration>(node, caller, line) is { Symbol: { } symbol, Declaration: { } } t)
             {
                 if (this.SearchScope == SearchScope.Instance &&
                     symbol.IsStatic)

@@ -31,7 +31,7 @@
             if (base.TryGetTargetSymbol(node, out target, caller, line) &&
                 IsRecursiveTarget(target))
             {
-                this.targets.Add(Target.Create<SyntaxNode, ISymbol, SyntaxNode>(node, target.Symbol, target.TargetNode));
+                this.targets.Add(Target.Create<SyntaxNode, ISymbol, SyntaxNode>(node, target.Symbol, target.Declaration));
             }
 
             return false;
@@ -40,7 +40,7 @@
             {
                 return t switch
                 {
-                    { TargetNode: null } => false,
+                    { Declaration: null } => false,
                     { Symbol: IFieldSymbol _ } => false,
                     { Symbol: IPropertySymbol property } when property.IsAutoProperty() => false,
                     _ => true,

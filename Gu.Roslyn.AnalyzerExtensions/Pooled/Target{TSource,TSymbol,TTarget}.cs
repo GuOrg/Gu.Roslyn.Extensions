@@ -75,7 +75,7 @@
         {
             return EqualityComparer<TSource>.Default.Equals(this.Source, other.Source) &&
                    EqualityComparer<TSymbol>.Default.Equals(this.Symbol, other.Symbol) &&
-                   EqualityComparer<TTarget>.Default.Equals(this.TargetNode, other.TargetNode);
+                   EqualityComparer<TTarget>.Default.Equals(this.Declaration, other.Declaration);
         }
 
         /// <inheritdoc/>
@@ -92,7 +92,7 @@
             {
                 var hashCode = EqualityComparer<TSource>.Default.GetHashCode(this.Source);
                 hashCode = (hashCode * 397) ^ EqualityComparer<TSymbol>.Default.GetHashCode(this.Symbol);
-                hashCode = (hashCode * 397) ^ (this.TargetNode is null ? 0 : EqualityComparer<TTarget>.Default.GetHashCode(this.TargetNode));
+                hashCode = (hashCode * 397) ^ (this.Declaration is null ? 0 : EqualityComparer<TTarget>.Default.GetHashCode(this.Declaration));
                 return hashCode;
             }
         }

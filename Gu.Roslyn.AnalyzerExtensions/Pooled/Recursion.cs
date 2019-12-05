@@ -216,7 +216,7 @@
             {
                 InvocationExpressionSyntax invocation
                 when this.Target(invocation, caller, line) is { } temp
-                => AnalyzerExtensions.Target.Create(temp.Source, (ISymbol)temp.Symbol, (SyntaxNode?)temp.TargetNode),
+                => AnalyzerExtensions.Target.Create(temp.Source, (ISymbol)temp.Symbol, (SyntaxNode?)temp.Declaration),
                 _ => this.Target<ExpressionSyntax, ISymbol, SyntaxNode>(node, caller, line),
             };
         }

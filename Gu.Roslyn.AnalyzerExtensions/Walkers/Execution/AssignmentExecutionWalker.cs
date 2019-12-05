@@ -131,7 +131,7 @@
                     {
                         if (argument is { Expression: IdentifierNameSyntax { Identifier: { ValueText: { } name } }, Parent: ArgumentListSyntax { Parent: { } } } &&
                             name == currentSymbol.Name &&
-                            walker.Recursion.Target(argument) is { Symbol: { } parameter, TargetNode: { } target })
+                            walker.Recursion.Target(argument) is { Symbol: { } parameter, Declaration: { } target })
                         {
                             using var invocationWalker = With(parameter, target);
                             walker.assignments.AddRange(invocationWalker.Assignments);
@@ -152,7 +152,7 @@
                         foreach (var candidate in walker.assignments)
                         {
                             if (candidate is { Left: { } left } &&
-                                walker.Recursion.PropertySet(left) is { Symbol: { } value, TargetNode: { } setter })
+                                walker.Recursion.PropertySet(left) is { Symbol: { } value, Declaration: { } setter })
                             {
                                 propertyAssignment = candidate;
                                 setterWalker = With(value, setter);

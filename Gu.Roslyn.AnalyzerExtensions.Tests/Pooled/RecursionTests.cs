@@ -53,7 +53,7 @@ namespace N
             var target = recursion.Target(node).Value;
             Assert.AreEqual(node, target.Source);
             Assert.AreEqual("int n", target.Symbol.ToDisplayString(Format));
-            Assert.AreEqual("public int M(int n) => n;", target.TargetNode.ToString());
+            Assert.AreEqual("public int M(int n) => n;", target.Declaration.ToString());
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace N
             var target = recursion.Target(node).Value;
             Assert.AreEqual(node, target.Source);
             Assert.AreEqual("T n", target.Symbol.ToDisplayString(Format));
-            Assert.AreEqual("public T M<T>(T n) => n;", target.TargetNode.ToString());
+            Assert.AreEqual("public T M<T>(T n) => n;", target.Declaration.ToString());
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace N
             var target = recursion.Target(node).Value;
             Assert.AreEqual(node, target.Source);
             Assert.AreEqual("int x", target.Symbol.ToDisplayString(Format));
-            Assert.AreEqual("public override int M(int x) => x;", target.TargetNode.ToString());
+            Assert.AreEqual("public override int M(int x) => x;", target.Declaration.ToString());
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace N
             var target = recursion.Target(node).Value;
             Assert.AreEqual(node, target.Source);
             Assert.AreEqual("int x", target.Symbol.ToDisplayString(Format));
-            Assert.AreEqual("public override int M(int x) => x;", target.TargetNode.ToString());
+            Assert.AreEqual("public override int M(int x) => x;", target.Declaration.ToString());
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace N
             var target = recursion.Target(node).Value;
             Assert.AreEqual("1", target.Source.ToString());
             Assert.AreEqual("int n", target.Symbol.ToDisplayString(Format));
-            Assert.AreEqual("public static int M(this int n) => n;", target.TargetNode.ToString());
+            Assert.AreEqual("public static int M(this int n) => n;", target.Declaration.ToString());
         }
 
         [Test]
@@ -183,7 +183,7 @@ namespace N
             var target = recursion.Target(node).Value;
             Assert.AreEqual("i", target.Source.ToString());
             Assert.AreEqual("int n", target.Symbol.ToDisplayString(Format));
-            Assert.AreEqual("public static int M2(this int n) => n;", target.TargetNode.ToString());
+            Assert.AreEqual("public static int M2(this int n) => n;", target.Declaration.ToString());
         }
     }
 }
