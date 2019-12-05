@@ -21,12 +21,12 @@
         /// </summary>
         /// <param name="source">The <typeparamref name="TSource"/>.</param>
         /// <param name="symbol">the symbol.</param>
-        /// <param name="targetNode">the declaration for <see cref="Symbol"/> or the scope if a <see cref="ILocalSymbol"/>.</param>
-        public Target(TSource source, TSymbol symbol, TTarget? targetNode)
+        /// <param name="declaration">the declaration for <see cref="Symbol"/> or the scope if a <see cref="ILocalSymbol"/>.</param>
+        public Target(TSource source, TSymbol symbol, TTarget? declaration)
         {
             this.Source = source;
             this.Symbol = symbol;
-            this.TargetNode = targetNode;
+            this.Declaration = declaration;
         }
 
         /// <summary>
@@ -43,7 +43,14 @@
         /// Gets the declaration for <see cref="Symbol"/> or the scope if a <see cref="ILocalSymbol"/>.
         /// Null if no declaration was found.
         /// </summary>
-        public TTarget? TargetNode { get; }
+        public TTarget? Declaration { get; }
+
+        /// <summary>
+        /// Gets the declaration for <see cref="Symbol"/> or the scope if a <see cref="ILocalSymbol"/>.
+        /// Null if no declaration was found.
+        /// </summary>
+        [Obsolete("Renamed to Declaration")]
+        public TTarget? TargetNode => this.Declaration;
 
         /// <summary>Check if <paramref name="left"/> is equal to <paramref name="right"/>.</summary>
         /// <param name="left">The left <see cref="Target{TSource, TSymbol, TTarget}"/>.</param>

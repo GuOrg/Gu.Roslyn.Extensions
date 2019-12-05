@@ -85,7 +85,7 @@
                 return node != null &&
                        NameMatches() &&
                        this.semanticModel.TryGetSymbol(node, this.cancellationToken, out var nodeSymbol) &&
-                       nodeSymbol.Equals(this.symbol);
+                       nodeSymbol.IsEquivalentTo(this.symbol);
 
                 bool NameMatches()
                 {

@@ -14,6 +14,7 @@
                 typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
                 propertyStyle: SymbolDisplayPropertyStyle.NameOnly,
                 genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+#pragma warning disable SA1118 // Parameter should not span multiple lines
                 memberOptions:
                 SymbolDisplayMemberOptions.IncludeParameters |
                 SymbolDisplayMemberOptions.IncludeContainingType |
@@ -29,6 +30,7 @@
                 SymbolDisplayMiscellaneousOptions.UseAsterisksInMultiDimensionalArrays |
                 SymbolDisplayMiscellaneousOptions.UseErrorTypeSymbolName |
                 SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
+#pragma warning restore SA1118 // Parameter should not span multiple lines
 
         [Test]
         public static void Argument()
