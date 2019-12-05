@@ -245,7 +245,7 @@ Gu.Roslyn.AnalyzerExtensions.Recursion.SemanticModel.get -> Microsoft.CodeAnalys
 Gu.Roslyn.AnalyzerExtensions.Recursion.Target(Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax node, string caller = null, int line = 0) -> Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax, Microsoft.CodeAnalysis.IParameterSymbol, Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax>?
 Gu.Roslyn.AnalyzerExtensions.Recursion.Target(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorInitializerSyntax node, string caller = null, int line = 0) -> Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorInitializerSyntax, Microsoft.CodeAnalysis.IMethodSymbol, Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax>?
 Gu.Roslyn.AnalyzerExtensions.Recursion.Target(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax node, string caller = null, int line = 0) -> Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax, Microsoft.CodeAnalysis.ISymbol, Microsoft.CodeAnalysis.SyntaxNode>?
-Gu.Roslyn.AnalyzerExtensions.Recursion.Target(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax node, string caller = null, int line = 0) -> Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax, Microsoft.CodeAnalysis.IMethodSymbol, Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax>?
+Gu.Roslyn.AnalyzerExtensions.Recursion.Target(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax node, string caller = null, int line = 0) -> Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax, Microsoft.CodeAnalysis.ISymbol, Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax>?
 Gu.Roslyn.AnalyzerExtensions.Recursion.Target(Microsoft.CodeAnalysis.CSharp.Syntax.ObjectCreationExpressionSyntax node, string caller = null, int line = 0) -> Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.CSharp.Syntax.ObjectCreationExpressionSyntax, Microsoft.CodeAnalysis.IMethodSymbol, Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax>?
 Gu.Roslyn.AnalyzerExtensions.Recursion.Target(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax node, string caller = null, int line = 0) -> Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax, Microsoft.CodeAnalysis.ITypeSymbol, Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax>?
 Gu.Roslyn.AnalyzerExtensions.Recursion.Target(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclaratorSyntax node, string caller = null, int line = 0) -> Gu.Roslyn.AnalyzerExtensions.Target<Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclaratorSyntax, Microsoft.CodeAnalysis.ILocalSymbol, Microsoft.CodeAnalysis.SyntaxNode>?
@@ -375,10 +375,11 @@ Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCacheAnalyzer
 Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCacheAnalyzer.SyntaxTreeCacheAnalyzer() -> void
 Gu.Roslyn.AnalyzerExtensions.Target
 Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>
+Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Declaration.get -> TTarget
 Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Equals(Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget> other) -> bool
 Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Source.get -> TSource
 Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Symbol.get -> TSymbol
-Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Target(TSource source, TSymbol symbol, TTarget targetNode) -> void
+Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Target(TSource source, TSymbol symbol, TTarget declaration) -> void
 Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.TargetNode.get -> TTarget
 Gu.Roslyn.AnalyzerExtensions.ThrowWalker
 Gu.Roslyn.AnalyzerExtensions.ThrowWalker.ThrowStatementsAndExpressions.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.SyntaxNode>
@@ -1033,7 +1034,7 @@ static Gu.Roslyn.AnalyzerExtensions.SyntaxTokenListExt.Any(this Microsoft.CodeAn
 static Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCache<TValue>.Begin(Microsoft.CodeAnalysis.Compilation compilation) -> System.IDisposable
 static Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCache<TValue>.End() -> void
 static Gu.Roslyn.AnalyzerExtensions.SyntaxTreeCache<TValue>.GetOrAdd(Microsoft.CodeAnalysis.SyntaxTree key, System.Func<Microsoft.CodeAnalysis.SyntaxTree, TValue> valueFactory) -> TValue
-static Gu.Roslyn.AnalyzerExtensions.Target.Create<TSource, TSymbol, TTarget>(TSource source, TSymbol symbol, TTarget targetNode) -> Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>
+static Gu.Roslyn.AnalyzerExtensions.Target.Create<TSource, TSymbol, TTarget>(TSource source, TSymbol symbol, TTarget declaration) -> Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>
 static Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.operator !=(Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget> left, Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget> right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.operator ==(Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget> left, Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget> right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.ThrowWalker.Borrow(Microsoft.CodeAnalysis.SyntaxNode node) -> Gu.Roslyn.AnalyzerExtensions.ThrowWalker
