@@ -2,24 +2,16 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
-- task: DotNetCoreCLI@2
-  displayName: restore
-  inputs:
-    command: 'restore'
 
-- task: DotNetCoreCLI@2
-  displayName: build
+- task: VSBuild@1
+  displayName: Build
   inputs:
-    command: 'build'
-    arguments: '--configuration $(buildConfiguration) --no-restore'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/restore'
 
-- task: DotNetCoreCLI@2
-  displayName: test
+- task: VSTest@2
   inputs:
-    command: 'test'
-    arguments: '--configuration $(buildConfiguration) --no-build'
+    configuration: '$(buildConfiguration)'
