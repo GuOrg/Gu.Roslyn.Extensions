@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Diagnostics;
@@ -69,12 +69,12 @@ namespace Gu.Roslyn.CodeFixExtensions
                 if (indexOf == 0)
                 {
                     var offset = start;
-                    while (text.StartsWith(offset + 1, leadingWhitespace))
+                    while (text.StartsWith(offset + 1, leadingWhitespace!))
                     {
                         offset++;
                     }
 
-                    return new Substring(offset + leadingWhitespace.Length, end);
+                    return new Substring(offset + leadingWhitespace!.Length, end);
                 }
 
                 if (indexOf > 0)

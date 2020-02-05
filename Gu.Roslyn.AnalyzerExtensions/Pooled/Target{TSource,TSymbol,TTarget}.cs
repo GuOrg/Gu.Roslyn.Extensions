@@ -75,7 +75,7 @@
         {
             return EqualityComparer<TSource>.Default.Equals(this.Source, other.Source) &&
                    EqualityComparer<TSymbol>.Default.Equals(this.Symbol, other.Symbol) &&
-                   EqualityComparer<TTarget>.Default.Equals(this.Declaration, other.Declaration);
+                   EqualityComparer<TTarget?>.Default.Equals(this.Declaration, other.Declaration);
         }
 
         /// <inheritdoc/>

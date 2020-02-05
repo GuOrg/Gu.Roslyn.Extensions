@@ -27,11 +27,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AnnotatedReferenceAssemblyVersion>3.0.0</AnnotatedReferenceAssemblyVersion>
-    <GenerateNullableAttributes>true</GenerateNullableAttributes>
-  </PropertyGroup>
-  
-  <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Gu.Roslyn.Extensions.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -42,15 +37,18 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Gu.Analyzers" Version="1.6.6.5-dev" PrivateAssets="all" />
-    <PackageReference Include="IDisposableAnalyzers" Version="3.1.0" PrivateAssets="all" />
+    <PackageReference Include="Gu.Analyzers" Version="1.6.7-dev" PrivateAssets="all" />
+    <PackageReference Include="IDisposableAnalyzers" Version="3.3.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.3.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="2.9.8" PrivateAssets="all" />
-    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113" PrivateAssets="all" />
-    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.97" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$3.1.0]" />
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.154" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
