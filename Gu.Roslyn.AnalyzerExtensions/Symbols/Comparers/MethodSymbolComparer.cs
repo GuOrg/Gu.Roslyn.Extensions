@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -33,7 +33,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             return x.MetadataName == y.MetadataName &&
                    NamedTypeSymbolComparer.Equals(x.ContainingType, y.ContainingType) &&
-                   TypeSymbolComparer.Equals(x.ReturnType, y.ReturnType) &&
                    ParametersMatches(x, y);
         }
 
