@@ -61,7 +61,7 @@ namespace N
         }
 
         [Test]
-        public static void GenericOut()
+        public static void TwoGenericOutClass()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -72,6 +72,65 @@ namespace N
         int M(out T t1, out T t2)
         {
             t1 = default;
+            t2 = default;
+            return 1;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var parameters = syntaxTree.FindMethodDeclaration("M").ParameterList.Parameters;
+            var symbol1 = semanticModel.GetDeclaredSymbol(parameters[0], CancellationToken.None);
+            var symbol2 = semanticModel.GetDeclaredSymbol(parameters[1], CancellationToken.None);
+            Assert.AreEqual(true,                                        SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
+            Assert.AreEqual(false,                                       SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
+            Assert.AreEqual(true,                                        ParameterSymbolComparer.Equals(symbol1, symbol1));
+            Assert.AreEqual(false,                                       ParameterSymbolComparer.Equals(symbol1, symbol2));
+            Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), ParameterSymbolComparer.Default.GetHashCode(symbol1));
+            Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), ParameterSymbolComparer.Default.GetHashCode(symbol2));
+        }
+
+        [Test]
+        public static void TwoGenericOut()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N
+{
+    class C
+    {
+        int M<T>(out T t1, out T t2)
+        {
+            t1 = default;
+            t2 = default;
+            return 1;
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var parameters = syntaxTree.FindMethodDeclaration("M").ParameterList.Parameters;
+            var symbol1 = semanticModel.GetDeclaredSymbol(parameters[0], CancellationToken.None);
+            var symbol2 = semanticModel.GetDeclaredSymbol(parameters[1], CancellationToken.None);
+            Assert.AreEqual(true,                                        SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
+            Assert.AreEqual(false,                                       SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
+            Assert.AreEqual(true,                                        ParameterSymbolComparer.Equals(symbol1, symbol1));
+            Assert.AreEqual(false,                                       ParameterSymbolComparer.Equals(symbol1, symbol2));
+            Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), ParameterSymbolComparer.Default.GetHashCode(symbol1));
+            Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), ParameterSymbolComparer.Default.GetHashCode(symbol2));
+        }
+
+        [Test]
+        public static void OneGenericOut()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N
+{
+    class C
+    {
+        int M<T>(int i1, out T t2)
+        {
             t2 = default;
             return 1;
         }
