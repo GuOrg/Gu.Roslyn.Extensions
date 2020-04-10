@@ -142,5 +142,34 @@ namespace N
             using var walker = MemberPath.PathWalker.Borrow(invocation);
             Assert.AreEqual("Value", string.Join(".", walker.Tokens.Select(x => x)));
         }
+
+        [TestCase("this.f!.P", "f.P")]
+        [TestCase("this.f!.P!", "f.P")]
+        [TestCase("this.f!.P!.f",  "f.P.f")]
+        [TestCase("this.f!.P!.f!", "f.P.f")]
+        public static void Bang(string expression, string expected)
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    public sealed class C
+    {
+        private readonly C? f;
+
+        public C? P => this.f;
+
+        public void M()
+        {
+            var temp = this.f!.P;
+        }
+    }
+}".AssertReplace("this.f!.P", expression);
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var value = syntaxTree.FindExpression(expression);
+            using var walker = MemberPath.PathWalker.Borrow(value);
+            Assert.AreEqual(expected, string.Join(".", walker.Tokens.Select(x => x)));
+        }
     }
 }

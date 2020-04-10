@@ -212,6 +212,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     case CastExpressionSyntax cast:
                         base.Visit(cast.Expression);
                         return;
+                    case PostfixUnaryExpressionSyntax { OperatorToken: { ValueText: "!" } } postfix:
+                        base.Visit(postfix.Operand);
+                        return;
                     case InvocationExpressionSyntax { Expression: IdentifierNameSyntax _ }:
                     case InvocationExpressionSyntax { Expression: PredefinedTypeSyntax _ }:
                         return;
