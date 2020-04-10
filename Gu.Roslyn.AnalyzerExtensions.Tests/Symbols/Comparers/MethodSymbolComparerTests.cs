@@ -1,4 +1,4 @@
-// ReSharper disable RedundantCast
+﻿// ReSharper disable RedundantCast
 #pragma warning disable IDE0004
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
 {
@@ -20,6 +20,7 @@ namespace N
     public class C
     {
         public int M1() => 1;
+
         public int M2() => 2;
     }
 }");
