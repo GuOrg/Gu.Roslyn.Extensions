@@ -12,7 +12,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.12.5-dev</Version>
+    <Version>0.12.6-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -21,6 +21,9 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer</PackageTags>
     <PackageReleaseNotes>
+      0.12.6
+      BUGFIX: Infinite recursion when comparing generic parameter.
+      0.12.5
       FEATURE: Recursion, helper for walking safely.
       BREAKING: Minor changes to signature of ExecutionWalker
     </PackageReleaseNotes>

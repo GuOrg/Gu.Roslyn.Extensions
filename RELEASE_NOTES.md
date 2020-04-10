@@ -1,3 +1,6 @@
+#### 0.12.6
+* BUGFIX: Infinite recursion when comparing generic parameter.
+
 #### 0.7
 FEATURE: Scope
 BREAKING: Rename SearchScope, was Scope
