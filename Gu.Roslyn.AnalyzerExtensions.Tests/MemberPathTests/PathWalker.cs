@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.MemberPathTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.MemberPathTests
 {
     using System.Linq;
     using Gu.Roslyn.Asserts;
@@ -7,24 +7,24 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.MemberPathTests
 
     public static class PathWalker
     {
-        [TestCase("C", "C")]
-        [TestCase("C.Inner", "C.Inner")]
-        [TestCase("C?.Inner", "C.Inner")]
-        [TestCase("C.Inner.C", "C.Inner.C")]
-        [TestCase("C.Inner.C.Inner", "C.Inner.C.Inner")]
-        [TestCase("this.C", "C")]
-        [TestCase("this?.C", "C")]
-        [TestCase("this.C.Inner", "C.Inner")]
-        [TestCase("this.C?.Inner", "C.Inner")]
-        [TestCase("this.C.Inner.C.Inner", "C.Inner.C.Inner")]
-        [TestCase("this.C?.Inner.C.Inner", "C.Inner.C.Inner")]
-        [TestCase("this.C?.Inner?.C.Inner", "C.Inner.C.Inner")]
-        [TestCase("this.C?.Inner?.C?.Inner", "C.Inner.C.Inner")]
-        [TestCase("this.C.Inner?.C.Inner", "C.Inner.C.Inner")]
-        [TestCase("this.C.Inner?.C?.Inner", "C.Inner.C.Inner")]
-        [TestCase("this.C.Inner.C?.Inner", "C.Inner.C.Inner")]
-        [TestCase("(meh as C)?.Inner", "meh.Inner")]
-        [TestCase("((C)meh)?.Inner", "meh.Inner")]
+        [TestCase("f", "f")]
+        [TestCase("f.P", "f.P")]
+        [TestCase("f?.P", "f.P")]
+        [TestCase("f.P.f", "f.P.f")]
+        [TestCase("f.P.f.P", "f.P.f.P")]
+        [TestCase("this.f", "f")]
+        [TestCase("this?.f", "f")]
+        [TestCase("this.f.P", "f.P")]
+        [TestCase("this.f?.P", "f.P")]
+        [TestCase("this.f.P.f.P", "f.P.f.P")]
+        [TestCase("this.f?.P.f.P", "f.P.f.P")]
+        [TestCase("this.f?.P?.f.P", "f.P.f.P")]
+        [TestCase("this.f?.P?.f?.P", "f.P.f.P")]
+        [TestCase("this.f.P?.f.P", "f.P.f.P")]
+        [TestCase("this.f.P?.f?.P", "f.P.f.P")]
+        [TestCase("this.f.P.f?.P", "f.P.f.P")]
+        [TestCase("(meh as C)?.P", "meh.P")]
+        [TestCase("((C)meh)?.P", "meh.P")]
         public static void PropertyOrField(string expression, string expected)
         {
             var code = @"
@@ -35,16 +35,16 @@ namespace N
     public sealed class C
     {
         private readonly object meh;
-        private readonly C C;
+        private readonly C f;
 
-        public C Inner => this.C;
+        public C P => this.f;
 
         public void M()
         {
-            var temp = C.Inner;
+            var temp = f.P;
         }
     }
-}".AssertReplace("C.Inner", expression);
+}".AssertReplace("f.P", expression);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var value = syntaxTree.FindExpression(expression);
             using var walker = MemberPath.PathWalker.Borrow(value);
@@ -56,35 +56,35 @@ namespace N
         [TestCase("object.Equals(1, 1)", "object")]
         [TestCase("ToString()", "")]
         [TestCase("this.ToString()", "")]
-        [TestCase("C.Dispose()", "C")]
-        [TestCase("C.ToString().ToString()", "C")]
-        [TestCase("C?.Dispose()", "C")]
-        [TestCase("Inner?.Dispose()", "Inner")]
-        [TestCase("C.Get<IComparable>(1)", "C")]
-        [TestCase("C?.Get<IComparable>(1)", "C")]
-        [TestCase("C.Get<System.IComparable>(1)", "C")]
-        [TestCase("C.Get<int>(1)", "C")]
-        [TestCase("this.C.Get<int>(1)", "C")]
-        [TestCase("this.C.Dispose()", "C")]
-        [TestCase("this.C.ToString().ToString()", "C")]
-        [TestCase("this.C?.Dispose()", "C")]
-        [TestCase("this?.C?.Dispose()", "C")]
-        [TestCase("this.C.Inner.Get<int>(1)", "C.Inner")]
-        [TestCase("this.C.Inner.C.Get<int>(1)", "C.Inner.C")]
-        [TestCase("this.C?.Get<int>(1)", "C")]
-        [TestCase("this.C?.C.Get<int>(1)", "C.C")]
-        [TestCase("this.Inner?.Inner.Get<int>(1)", "Inner.Inner")]
-        [TestCase("this.Inner?.C.Get<int>(1)", "Inner.C")]
-        [TestCase("this.Inner?.C?.Get<int>(1)", "Inner.C")]
-        [TestCase("this.Inner.C?.Get<int>(1)", "Inner.C")]
-        [TestCase("this.Inner?.C?.Inner?.Get<int>(1)", "Inner.C.Inner")]
+        [TestCase("f.Dispose()", "f")]
+        [TestCase("f.ToString().ToString()", "f")]
+        [TestCase("f?.Dispose()", "f")]
+        [TestCase("P?.Dispose()", "P")]
+        [TestCase("f.Get<IComparable>(1)", "f")]
+        [TestCase("f?.Get<IComparable>(1)", "f")]
+        [TestCase("f.Get<System.IComparable>(1)", "f")]
+        [TestCase("f.Get<int>(1)", "f")]
+        [TestCase("this.f.Get<int>(1)", "f")]
+        [TestCase("this.f.Dispose()", "f")]
+        [TestCase("this.f.ToString().ToString()", "f")]
+        [TestCase("this.f?.Dispose()", "f")]
+        [TestCase("this?.f?.Dispose()", "f")]
+        [TestCase("this.f.P.Get<int>(1)", "f.P")]
+        [TestCase("this.f.P.f.Get<int>(1)", "f.P.f")]
+        [TestCase("this.f?.Get<int>(1)", "f")]
+        [TestCase("this.f?.f.Get<int>(1)", "f.f")]
+        [TestCase("this.P?.P.Get<int>(1)", "P.P")]
+        [TestCase("this.P?.f.Get<int>(1)", "P.f")]
+        [TestCase("this.P?.f?.Get<int>(1)", "P.f")]
+        [TestCase("this.P.f?.Get<int>(1)", "P.f")]
+        [TestCase("this.P?.f?.P?.Get<int>(1)", "P.f.P")]
         [TestCase("((C)meh).Get<int>(1)", "meh")]
         [TestCase("((C)this.meh).Get<int>(1)", "meh")]
-        [TestCase("((C)this.Inner.meh).Get<int>(1)", "Inner.meh")]
+        [TestCase("((C)this.P.meh).Get<int>(1)", "P.meh")]
         [TestCase("(meh as C).Get<int>(1)", "meh")]
         [TestCase("(this.meh as C).Get<int>(1)", "meh")]
-        [TestCase("(this.Inner.meh as C).Get<int>(1)", "Inner.meh")]
-        [TestCase("(this.Inner.meh as C)?.Get<int>(1)", "Inner.meh")]
+        [TestCase("(this.P.meh as C).Get<int>(1)", "P.meh")]
+        [TestCase("(this.P.meh as C)?.Get<int>(1)", "P.meh")]
         [TestCase("(meh as C)?.Get<int>(1)", "meh")]
         public static void Invocation(string expression, string expected)
         {
@@ -96,18 +96,18 @@ namespace N
     public sealed class C : IDisposable
     {
         private readonly object meh;
-        private readonly C C;
+        private readonly C f;
 
-        public C Inner => this.C;
+        public C P => this.f;
 
         public void Dispose()
         {
-            var temp = this.C.Get<int>(1);
+            var temp = this.f.Get<int>(1);
         }
 
         private T Get<T>(int value) => default(T);
     }
-}".AssertReplace("this.C.Get<int>(1)", expression);
+}".AssertReplace("this.f.Get<int>(1)", expression);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             using (var walker = MemberPath.PathWalker.Borrow(syntaxTree.FindInvocation(expression)))
             {
