@@ -1,5 +1,4 @@
-﻿#nullable enable
-Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction
+﻿Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction
 Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction.Action.get -> System.Func<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken, System.Threading.Tasks.Task>
 Gu.Roslyn.CodeFixExtensions.AsyncDocumentEditorAction.AsyncDocumentEditorAction(string title, Microsoft.CodeAnalysis.Document document, System.Func<Microsoft.CodeAnalysis.Editing.DocumentEditor, System.Threading.CancellationToken, System.Threading.Tasks.Task> action, string equivalenceKey) -> void
 Gu.Roslyn.CodeFixExtensions.BackingFieldsAdjacentWalker
