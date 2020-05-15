@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
 {
     using System;
     using Gu.Roslyn.Asserts;
@@ -162,6 +162,45 @@ namespace N
             Assert.AreEqual(false, typeSyntax != qualifiedType);
 
             typeSyntax = syntaxTree.Find<AttributeSyntax>("[ObsoleteAttribute]").Name;
+            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(false, typeSyntax != qualifiedType);
+        }
+
+        [TestCase("TestAttribute")]
+        [TestCase("N.TestAttribute")]
+        public static void AliasedWithSameNameInContainingNamespace(string typeName)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N.A
+{
+    using TestAttribute = N.TestAttribute;
+
+    [TestAttribute]
+    internal class C
+    {
+    }
+}
+
+namespace N
+{
+    using System;
+
+    public class TestAttribute : Attribute
+    {
+    }
+}
+".AssertReplace("N.TestAttribute", typeName));
+            var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
+            TypeSyntax typeSyntax = syntaxTree.Find<UsingDirectiveSyntax>("TestAttribute").Name;
+            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(false, typeSyntax != qualifiedType);
+
+            typeSyntax = syntaxTree.Find<UsingDirectiveSyntax>("TestAttribute").Alias.Name;
+            Assert.AreEqual(true,  typeSyntax == qualifiedType);
+            Assert.AreEqual(false, typeSyntax != qualifiedType);
+
+            typeSyntax = syntaxTree.Find<AttributeSyntax>("[TestAttribute]").Name;
             Assert.AreEqual(true,  typeSyntax == qualifiedType);
             Assert.AreEqual(false, typeSyntax != qualifiedType);
         }
