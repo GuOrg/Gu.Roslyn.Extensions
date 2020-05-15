@@ -12,7 +12,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.12.7-dev</Version>
+    <Version>0.12.8-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -21,6 +21,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer</PackageTags>
     <PackageReleaseNotes>
+      0.12.8
+      BUGFIX: Handle using C = C
       0.12.7
       BUGFIX: MemberPath when nullable annotations
       0.12.6

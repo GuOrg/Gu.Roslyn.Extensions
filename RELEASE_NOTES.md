@@ -1,3 +1,6 @@
+#### 0.12.8
+* BUGFIX: Handle using C = C
+
 #### 0.12.6
 * BUGFIX: Infinite recursion when comparing generic parameter.
 
