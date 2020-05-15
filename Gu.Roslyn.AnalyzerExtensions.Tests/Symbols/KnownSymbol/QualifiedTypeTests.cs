@@ -193,16 +193,16 @@ namespace N
 ".AssertReplace("N.TestAttribute", typeName));
             var qualifiedType = QualifiedType.FromType(typeof(ObsoleteAttribute));
             TypeSyntax typeSyntax = syntaxTree.Find<UsingDirectiveSyntax>("TestAttribute").Name;
-            Assert.AreEqual(true,  typeSyntax == qualifiedType);
-            Assert.AreEqual(false, typeSyntax != qualifiedType);
+            Assert.AreEqual(false,  typeSyntax == qualifiedType);
+            Assert.AreEqual(true, typeSyntax != qualifiedType);
 
             typeSyntax = syntaxTree.Find<UsingDirectiveSyntax>("TestAttribute").Alias.Name;
-            Assert.AreEqual(true,  typeSyntax == qualifiedType);
-            Assert.AreEqual(false, typeSyntax != qualifiedType);
+            Assert.AreEqual(false, typeSyntax == qualifiedType);
+            Assert.AreEqual(true,  typeSyntax != qualifiedType);
 
             typeSyntax = syntaxTree.Find<AttributeSyntax>("[TestAttribute]").Name;
-            Assert.AreEqual(true,  typeSyntax == qualifiedType);
-            Assert.AreEqual(false, typeSyntax != qualifiedType);
+            Assert.AreEqual(false, typeSyntax == qualifiedType);
+            Assert.AreEqual(true,  typeSyntax != qualifiedType);
         }
 
         [TestCase("ObsoleteAttribute")]

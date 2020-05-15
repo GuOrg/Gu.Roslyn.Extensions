@@ -1,4 +1,4 @@
-#pragma warning disable CA1034 // Nested types should not be visible
+﻿#pragma warning disable CA1034 // Nested types should not be visible
 #pragma warning disable CA1720 // Identifier contains type name
 #pragma warning disable CA1724 // Type names should not match namespaces
 namespace Gu.Roslyn.AnalyzerExtensions
@@ -275,6 +275,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             bool Aliased(SimpleNameSyntax name)
             {
                 if (!name.Parent.IsKind(SyntaxKind.QualifiedName) &&
+                    !name.Parent.IsKind(SyntaxKind.UsingDirective) &&
                     AliasWalker.TryGet(type.SyntaxTree, this, out var directive))
                 {
                     return directive.Alias.Name.Identifier.Text == name.Identifier.Text;
