@@ -5,9 +5,7 @@
     <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
-    <CodeAnalysisRuleSet>Gu.Roslyn.Extensions.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);IDE0009</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

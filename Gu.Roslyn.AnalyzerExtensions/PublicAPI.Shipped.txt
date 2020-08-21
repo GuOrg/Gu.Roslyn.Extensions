@@ -1,5 +1,4 @@
-﻿#nullable enable
-Gu.Roslyn.AnalyzerExtensions.AbstractUsingDirectiveWalker<T>
+﻿Gu.Roslyn.AnalyzerExtensions.AbstractUsingDirectiveWalker<T>
 Gu.Roslyn.AnalyzerExtensions.AbstractUsingDirectiveWalker<T>.AbstractUsingDirectiveWalker() -> void
 Gu.Roslyn.AnalyzerExtensions.AccessibilityExt
 Gu.Roslyn.AnalyzerExtensions.AliasWalker

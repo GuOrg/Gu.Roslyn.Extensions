@@ -5,7 +5,6 @@
     <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
-    <CodeAnalysisRuleSet>Gu.Roslyn.CodeFixExtensions.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
