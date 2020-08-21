@@ -1,0 +1,12 @@
+[*.cs]
+
+# CA1062: In externally visible method 'void INamedTypeSymbolExtensionsTests.FullName(Type type)', validate parameter 'type' is non-null before using it. If appropriate, throw an ArgumentNullException when the argument is null or add a Code Contract precondition asserting non-null argument.
+dotnet_diagnostic.CA1062.severity = none
+# CA1716: Rename type Property so that it no longer conflicts with the reserved language keyword 'Property'. Using a reserved keyword as the name of a type makes it harder for consumers in other languages to use the type.
+dotnet_diagnostic.CA1716.severity = none
+
+# Default severity for analyzer diagnostics with category 'StyleCop.CSharp.DocumentationRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = none
+# SA0001: XML comment analysis is disabled due to project configuration
+dotnet_diagnostic.SA0001.severity = none
+
