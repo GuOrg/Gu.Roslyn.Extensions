@@ -90,6 +90,16 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindFirstMethod(this ITypeSymbol type, string name, [NotNullWhen(true)] out IMethodSymbol? result)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
             return type.TryFindFirstMember(name, out result);
         }
 
@@ -102,6 +112,16 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindFirstMethod(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
             return type.TryFindFirstMember(predicate, out result);
         }
 
@@ -114,6 +134,16 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindSingleMethod(this ITypeSymbol type, string name, [NotNullWhen(true)] out IMethodSymbol? result)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
             return type.TryFindSingleMember(name, out result);
         }
 
@@ -126,6 +156,16 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindSingleMethod(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
             return type.TryFindSingleMember(predicate, out result);
         }
 
@@ -139,6 +179,21 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindSingleMethod(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
             return type.TryFindSingleMember(name, predicate, out result);
         }
 
@@ -152,6 +207,21 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindFirstMethod(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
             return type.TryFindFirstMember(name, predicate, out result);
         }
 
@@ -164,6 +234,16 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindFirstMember(this ITypeSymbol type, string name, [NotNullWhen(true)] out ISymbol? result)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
             return type.TryFindFirstMember<ISymbol>(name, out result);
         }
 
@@ -178,15 +258,26 @@
         public static bool TryFindSingleMember<TMember>(this ITypeSymbol type, string name, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
             member = null;
-            if (type is null ||
-                string.IsNullOrEmpty(name))
+            if (name == string.Empty)
             {
                 return false;
             }
 
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return type.GetMembers(name)
                        .TrySingleOfType(out member);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <summary>
@@ -200,12 +291,17 @@
         public static bool TryFindSingleMember<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                predicate is null)
+            if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
             }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            member = null;
 
             foreach (var symbol in type.GetMembers())
             {
@@ -237,13 +333,22 @@
         public static bool TryFindSingleMember<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                predicate is null)
+            if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
             }
 
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            member = null;
             foreach (var symbol in type.GetMembers(name))
             {
                 if (symbol is TMember candidate &&
@@ -273,13 +378,17 @@
         public static bool TryFindFirstMember<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                predicate is null)
+            if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
             }
 
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            member = null;
             foreach (var symbol in type.GetMembers())
             {
                 if (symbol is TMember candidate &&
@@ -304,13 +413,19 @@
         public static bool TryFindFirstMember<TMember>(this ITypeSymbol type, string name, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
             if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
             }
 
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return type.GetMembers(name).TryFirstOfType(out member);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <summary>
@@ -325,12 +440,17 @@
         public static bool TryFindFirstMember<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                predicate is null)
+            if (type is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(type));
             }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            member = null;
 
             foreach (var symbol in type.GetMembers(name))
             {

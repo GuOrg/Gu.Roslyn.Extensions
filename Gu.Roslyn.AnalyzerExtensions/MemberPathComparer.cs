@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc />
-        bool IEqualityComparer<ExpressionSyntax>.Equals(ExpressionSyntax x, ExpressionSyntax y) => MemberPath.Equals(x, y);
+        bool IEqualityComparer<ExpressionSyntax>.Equals(ExpressionSyntax? x, ExpressionSyntax? y) => MemberPath.Equals(x, y);
 
         /// <inheritdoc />
         public int GetHashCode(ExpressionSyntax obj)

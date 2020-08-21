@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(ExpressionSyntax x, ExpressionSyntax y)
+        public static bool Equals(ExpressionSyntax? x, ExpressionSyntax? y)
         {
             if (ReferenceEquals(x, y))
             {
