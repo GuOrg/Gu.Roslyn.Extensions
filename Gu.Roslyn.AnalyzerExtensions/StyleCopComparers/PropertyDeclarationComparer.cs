@@ -15,7 +15,7 @@
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
         /// <param name="y">The second node to compare.</param>
-        public static int Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+        public static int Compare(PropertyDeclarationSyntax? x, PropertyDeclarationSyntax? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -76,7 +76,7 @@
         }
 
         /// <inheritdoc />
-        int IComparer<PropertyDeclarationSyntax>.Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y) => Compare(x, y);
+        int IComparer<PropertyDeclarationSyntax>.Compare(PropertyDeclarationSyntax? x, PropertyDeclarationSyntax? y) => Compare(x, y);
 
         private static bool IsInitializedWith(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
         {

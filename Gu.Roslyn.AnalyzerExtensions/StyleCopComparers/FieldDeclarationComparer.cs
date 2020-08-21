@@ -16,7 +16,7 @@
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
         /// <param name="y">The second node to compare.</param>
-        public static int Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        public static int Compare(FieldDeclarationSyntax? x, FieldDeclarationSyntax? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -71,7 +71,7 @@
         }
 
         /// <inheritdoc />
-        int IComparer<FieldDeclarationSyntax>.Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y) => Compare(x, y);
+        int IComparer<FieldDeclarationSyntax>.Compare(FieldDeclarationSyntax? x, FieldDeclarationSyntax? y) => Compare(x, y);
 
         private static bool IsInitializedWith(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {

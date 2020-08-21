@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -19,6 +19,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindField(this ITypeSymbol type, string name, [NotNullWhen(true)] out IFieldSymbol? field)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
             return type.TryFindSingleMember(name, out field);
         }
 
@@ -31,6 +41,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindEvent(this ITypeSymbol type, string name, [NotNullWhen(true)] out IEventSymbol? @event)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
             return type.TryFindFirstMember(name, out @event);
         }
 
@@ -43,6 +63,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a match was found.</returns>
         public static bool TryFindProperty(this ITypeSymbol type, string name, [NotNullWhen(true)] out IPropertySymbol? property)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+            }
+
             if (name == "Item[]")
             {
                 return type.TryFindFirstMember(x => x.IsIndexer, out property);

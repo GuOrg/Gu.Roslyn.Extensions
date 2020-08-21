@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System.Collections.Generic;
     using Microsoft.CodeAnalysis;
@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
         /// <param name="y">The second node to compare.</param>
-        public static int Compare(EnumDeclarationSyntax x, EnumDeclarationSyntax y)
+        public static int Compare(EnumDeclarationSyntax? x, EnumDeclarationSyntax? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -47,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         }
 
         /// <inheritdoc />
-        int IComparer<EnumDeclarationSyntax>.Compare(EnumDeclarationSyntax x, EnumDeclarationSyntax y) => Compare(x, y);
+        int IComparer<EnumDeclarationSyntax>.Compare(EnumDeclarationSyntax? x, EnumDeclarationSyntax? y) => Compare(x, y);
 
         private static Accessibility Accessibility(EnumDeclarationSyntax method)
         {

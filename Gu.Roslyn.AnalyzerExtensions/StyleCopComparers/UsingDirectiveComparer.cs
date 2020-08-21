@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System;
     using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
         /// <param name="y">The second node to compare.</param>
-        public static int Compare(UsingDirectiveSyntax x, UsingDirectiveSyntax y)
+        public static int Compare(UsingDirectiveSyntax? x, UsingDirectiveSyntax? y)
         {
             if (x is null)
             {
@@ -108,7 +108,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         }
 
         /// <inheritdoc />
-        int IComparer<UsingDirectiveSyntax>.Compare(UsingDirectiveSyntax x, UsingDirectiveSyntax y) => Compare(x, y);
+        int IComparer<UsingDirectiveSyntax>.Compare(UsingDirectiveSyntax? x, UsingDirectiveSyntax? y) => Compare(x, y);
 
         private static bool TryGetRoot(NameSyntax uds, [NotNullWhen(true)] out SimpleNameSyntax? name)
         {

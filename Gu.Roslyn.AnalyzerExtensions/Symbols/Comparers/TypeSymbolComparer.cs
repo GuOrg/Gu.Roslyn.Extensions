@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(ITypeSymbol x, ITypeSymbol y)
+        public static bool Equals(ITypeSymbol? x, ITypeSymbol? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -88,7 +88,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         }
 
         /// <inheritdoc />
-        bool IEqualityComparer<ITypeSymbol>.Equals(ITypeSymbol x, ITypeSymbol y) => Equals(x, y);
+        bool IEqualityComparer<ITypeSymbol>.Equals(ITypeSymbol? x, ITypeSymbol? y) => Equals(x, y);
 
         /// <inheritdoc />
         int IEqualityComparer<ITypeSymbol>.GetHashCode(ITypeSymbol obj)

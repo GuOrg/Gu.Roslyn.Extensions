@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
     using System;
     using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>
         /// <param name="x">The first node to compare.</param>
         /// <param name="y">The second node to compare.</param>
-        public static int Compare(MemberDeclarationSyntax x, MemberDeclarationSyntax y)
+        public static int Compare(MemberDeclarationSyntax? x, MemberDeclarationSyntax? y)
         {
             if (TryCompare<FieldDeclarationSyntax>(x, y, FieldDeclarationComparer.Compare, out var result) ||
                 TryCompare<ConstructorDeclarationSyntax>(x, y, ConstructorDeclarationComparer.Compare, out result) ||
@@ -148,7 +148,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         /// Return +1 if <paramref name="y"/> is of type <typeparamref name="T"/> and <paramref name="x"/> is not.
         /// Return 0 if neither of <paramref name="x"/> nor <paramref name="y"/> is of type <typeparamref name="T"/>.
         /// </returns>
-        public static bool TryCompare<T>(MemberDeclarationSyntax x, MemberDeclarationSyntax y, Func<T, T, int> compare, out int result)
+        public static bool TryCompare<T>(MemberDeclarationSyntax? x, MemberDeclarationSyntax? y, Func<T, T, int> compare, out int result)
             where T : MemberDeclarationSyntax
         {
             if (compare is null)
@@ -256,6 +256,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
         }
 
         /// <inheritdoc/>
-        int IComparer<MemberDeclarationSyntax>.Compare(MemberDeclarationSyntax x, MemberDeclarationSyntax y) => Compare(x, y);
+        int IComparer<MemberDeclarationSyntax>.Compare(MemberDeclarationSyntax? x, MemberDeclarationSyntax? y) => Compare(x, y);
     }
 }

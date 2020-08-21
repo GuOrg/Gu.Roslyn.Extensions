@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(ILocalSymbol x, ILocalSymbol y)
+        public static bool Equals(ILocalSymbol? x, ILocalSymbol? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -50,7 +50,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc />
-        bool IEqualityComparer<ILocalSymbol>.Equals(ILocalSymbol x, ILocalSymbol y) => Equals(x, y);
+        bool IEqualityComparer<ILocalSymbol>.Equals(ILocalSymbol? x, ILocalSymbol? y) => Equals(x, y);
 
         /// <inheritdoc />
         public int GetHashCode(ILocalSymbol obj)
