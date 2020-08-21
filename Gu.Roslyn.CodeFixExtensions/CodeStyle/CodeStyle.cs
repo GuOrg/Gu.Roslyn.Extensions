@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Threading;
@@ -323,7 +323,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             var optionSet = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
             if (optionSet.GetOption(key, document.Project.Language) is { } option &&
-                !ReferenceEquals(option, key.DefaultValue))
+                !Equals(option, key.DefaultValue))
             {
                 return option;
             }
