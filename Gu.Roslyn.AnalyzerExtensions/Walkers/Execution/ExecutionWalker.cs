@@ -363,7 +363,7 @@
                     SearchScope.Type => false,
                     SearchScope.Recursive => node.TryFirstAncestor(out AssignmentExpressionSyntax? assignment) &&
                                              assignment.Left.Contains(node),
-                    _ => throw new InvalidOperationException($"Unhandled scope: {this.SearchScope}")
+                    _ => throw new InvalidOperationException($"Unhandled scope: {this.SearchScope}"),
                 },
             };
         }
@@ -388,7 +388,7 @@
                     SearchScope.Type => false,
                     SearchScope.Recursive => node.TryFirstAncestor(out PrefixUnaryExpressionSyntax? _) ||
                                              node.TryFirstAncestor(out PostfixUnaryExpressionSyntax? _),
-                    _ => throw new InvalidOperationException($"Unhandled scope: {this.SearchScope}")
+                    _ => throw new InvalidOperationException($"Unhandled scope: {this.SearchScope}"),
                 },
             };
         }

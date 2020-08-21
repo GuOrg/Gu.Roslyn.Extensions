@@ -30,7 +30,7 @@
                 EqualsValueClauseSyntax _ => false,
                 AssignmentExpressionSyntax _ => false,
                 IfStatementSyntax ifStatement => !ifStatement.Condition.Contains(invocation),
-                _ => true
+                _ => true,
             };
         }
 

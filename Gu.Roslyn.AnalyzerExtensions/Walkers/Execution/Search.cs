@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     /// <summary>
     /// Controls how recursion is handled when walking.
@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public enum Search
     {
         /// <summary>
-        /// Search current scope only
+        /// Search current scope only.
         /// </summary>
         TopLevel,
 

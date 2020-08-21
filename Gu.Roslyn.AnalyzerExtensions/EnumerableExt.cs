@@ -19,25 +19,23 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryElementAt<T>(this IEnumerable<T> source, int index, [MaybeNullWhen(false)] out T result)
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default!;
             var current = 0;
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+            while (e.MoveNext())
             {
-                while (e.MoveNext())
+                if (current == index)
                 {
-                    if (current == index)
-                    {
-                        result = e.Current;
-                        return true;
-                    }
-
-                    current++;
+                    result = e.Current;
+                    return true;
                 }
+
+                current++;
             }
 
             return false;
@@ -52,12 +50,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default!;
             using var e = source.GetEnumerator();
             if (e.MoveNext())
             {
@@ -83,12 +81,12 @@
         public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default!;
             using var e = source.GetEnumerator();
             if (e.MoveNext())
             {
@@ -122,12 +120,17 @@
         public static bool TrySingleOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            result = default!;
             using var e = source.GetEnumerator();
             while (e.MoveNext())
             {
@@ -161,30 +164,33 @@
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
-            using (var e = source.GetEnumerator())
+            if (predicate is null)
             {
-                while (e.MoveNext())
-                {
-                    if (predicate(e.Current))
-                    {
-                        result = e.Current;
-                        while (e.MoveNext())
-                        {
-                            if (predicate(e.Current))
-                            {
-                                result = default!;
-                                return false;
-                            }
-                        }
+                throw new ArgumentNullException(nameof(predicate));
+            }
 
-                        return true;
+            result = default!;
+            using var e = source.GetEnumerator();
+            while (e.MoveNext())
+            {
+                if (predicate(e.Current))
+                {
+                    result = e.Current;
+                    while (e.MoveNext())
+                    {
+                        if (predicate(e.Current))
+                        {
+                            result = default!;
+                            return false;
+                        }
                     }
+
+                    return true;
                 }
             }
 
@@ -200,12 +206,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default!;
             using var e = source.GetEnumerator();
             if (e.MoveNext())
             {
@@ -227,15 +233,15 @@
         public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default!;
             using var e = source.GetEnumerator();
             if (e.MoveNext() &&
-e.Current is TResult item)
+                e.Current is TResult item)
             {
                 result = item;
                 return true;
@@ -256,12 +262,17 @@ e.Current is TResult item)
         public static bool TryFirstOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            result = default!;
             using var e = source.GetEnumerator();
             while (e.MoveNext())
             {
@@ -286,21 +297,24 @@ e.Current is TResult item)
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
-            using (var e = source.GetEnumerator())
+            if (predicate is null)
             {
-                while (e.MoveNext())
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            result = default!;
+            using var e = source.GetEnumerator();
+            while (e.MoveNext())
+            {
+                if (predicate(e.Current))
                 {
-                    if (predicate(e.Current))
-                    {
-                        result = e.Current;
-                        return true;
-                    }
+                    result = e.Current;
+                    return true;
                 }
             }
 
@@ -316,12 +330,12 @@ e.Current is TResult item)
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default!;
             using var e = source.GetEnumerator();
             if (!e.MoveNext())
             {
@@ -347,12 +361,17 @@ e.Current is TResult item)
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IEnumerable<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            result = default!;
             using var e = source.GetEnumerator();
             if (!e.MoveNext())
             {
@@ -384,12 +403,12 @@ e.Current is TResult item)
         public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default!;
             using var e = source.GetEnumerator();
             if (!e.MoveNext())
             {
@@ -421,12 +440,17 @@ e.Current is TResult item)
         public static bool TryLastOfType<T, TResult>(this IEnumerable<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default!;
             if (source is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            result = default!;
             using var e = source.GetEnumerator();
             if (!e.MoveNext())
             {

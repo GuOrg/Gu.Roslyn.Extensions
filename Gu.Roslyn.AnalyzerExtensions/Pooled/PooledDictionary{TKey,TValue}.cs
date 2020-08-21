@@ -1,9 +1,10 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -95,7 +96,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public bool Remove(TKey key) => this.inner.Remove(key);
 
         /// <inheritdoc />
-        public bool TryGetValue(TKey key, out TValue value) => this.inner.TryGetValue(key, out value);
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => this.inner.TryGetValue(key, out value);
 
         private static IEqualityComparer<TKey> GetComparer()
         {
