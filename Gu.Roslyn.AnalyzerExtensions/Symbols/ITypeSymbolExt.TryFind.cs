@@ -451,7 +451,6 @@
             }
 
             member = null;
-
             foreach (var symbol in type.GetMembers(name))
             {
                 if (symbol is TMember candidate &&
