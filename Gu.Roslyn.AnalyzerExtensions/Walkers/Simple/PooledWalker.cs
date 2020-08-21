@@ -63,7 +63,9 @@
                 throw new ArgumentNullException(nameof(create));
             }
 
+#pragma warning disable CA2000 // Dispose objects before losing scope
             if (!Cache.TryDequeue(out var walker))
+#pragma warning restore CA2000 // Dispose objects before losing scope
             {
                 walker = create();
             }

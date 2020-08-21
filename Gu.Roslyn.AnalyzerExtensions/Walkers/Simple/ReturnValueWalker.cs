@@ -40,12 +40,13 @@
         {
             if (node is null)
             {
-                returnValue = null;
-                return false;
+                throw new System.ArgumentNullException(nameof(node));
             }
 
             using var walker = BorrowAndVisit(node, () => new ReturnValueWalker());
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return walker.returnValues.TrySingle(out returnValue);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <inheritdoc/>

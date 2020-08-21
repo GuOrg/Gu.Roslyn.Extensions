@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
@@ -18,8 +18,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryGetSingleTypeArgument(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
         {
             typeArgument = null;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return type is INamedTypeSymbol { IsGenericType: true, TypeArguments: { Length: 1 } typeArguments } &&
                    typeArguments.TrySingle(out typeArgument);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
     }
 }

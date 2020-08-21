@@ -1,6 +1,5 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -19,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="text">The string contents of <paramref name="expression"/>.</param>
         /// <returns>True if the argument expression was a constant string.</returns>
-        public static bool TryGetStringValue(this ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out string? text)
+        public static bool TryGetStringValue(this ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken, out string? text)
         {
             if (expression is null)
             {

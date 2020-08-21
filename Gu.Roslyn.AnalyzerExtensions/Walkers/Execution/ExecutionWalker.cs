@@ -302,8 +302,8 @@
         /// Called by <see cref="VisitClassDeclaration"/> and <see cref="VisitStructDeclaration"/>
         /// Walks the members in the following order:
         /// 1. Field and property initializers in document order.
-        /// 2. Nonprivate constructors in document order
-        /// 3. Nonprivate members.
+        /// 2. Non-private constructors in document order
+        /// 3. Non-private members.
         /// 4. Nested types if scope is recursive.
         /// </summary>
         /// <param name="node">The <see cref="TypeDeclarationSyntax"/>.</param>

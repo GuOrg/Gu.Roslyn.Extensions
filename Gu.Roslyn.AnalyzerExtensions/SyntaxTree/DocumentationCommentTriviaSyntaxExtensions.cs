@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -22,7 +22,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             element = null;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "summary" } } } }, out element);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <summary>
@@ -39,7 +41,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             element = null;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "returns" } } } }, out element);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <summary>
@@ -62,7 +66,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             element = null;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "param" } } } } && x.HasNameAttribute(parameterName), out element);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <summary>
@@ -85,7 +91,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             element = null;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "typeparam" } } } } && x.HasNameAttribute(parameterName), out element);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
     }
 }

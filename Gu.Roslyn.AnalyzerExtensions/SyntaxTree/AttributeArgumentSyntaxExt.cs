@@ -18,7 +18,7 @@
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <param name="result">The string contents of <paramref name="argument"/>.</param>
         /// <returns>True if the argument expression was a constant string.</returns>
-        public static bool TryGetStringValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out string? result)
+        public static bool TryGetStringValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string? result)
         {
             if (argument is null)
             {

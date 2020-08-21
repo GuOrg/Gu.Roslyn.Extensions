@@ -22,8 +22,10 @@
             }
 
             argument = null;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return attribute is { ArgumentList: { Arguments: { Count: 1 } arguments } } &&
                    arguments.TrySingle(out argument);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <summary>

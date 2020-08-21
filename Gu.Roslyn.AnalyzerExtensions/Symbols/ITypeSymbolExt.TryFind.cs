@@ -269,7 +269,7 @@
             }
 
             member = null;
-            if (name == string.Empty)
+            if (name.Length == 0)
             {
                 return false;
             }

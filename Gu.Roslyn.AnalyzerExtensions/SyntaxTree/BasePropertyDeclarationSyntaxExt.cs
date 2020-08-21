@@ -19,7 +19,7 @@
         {
             if (declaration is null)
             {
-                return Microsoft.CodeAnalysis.Accessibility.NotApplicable;
+                throw new System.ArgumentNullException(nameof(declaration));
             }
 
             if (declaration.Modifiers.Any(SyntaxKind.PrivateKeyword))
@@ -101,7 +101,9 @@
             }
 
             result = null;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return property.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.GetAccessorDeclaration), out result) == true;
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <summary>
@@ -118,7 +120,9 @@
             }
 
             result = null;
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return property.AccessorList?.Accessors.TryFirst(x => x.IsKind(SyntaxKind.SetAccessorDeclaration), out result) == true;
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <summary>

@@ -54,19 +54,21 @@
         }
 
         /// <summary>
-        /// Check if <paramref name="candidate"/> is a nullcheck.
+        /// Check if <paramref name="candidate"/> is a null check.
         /// </summary>
         /// <param name="candidate">The <see cref="ExpressionSyntax"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>. If null only the name is checked.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
-        /// <param name="value">The nullchecked value.</param>
-        /// <returns>True if <paramref name="candidate"/> is a nullcheck.</returns>
+        /// <param name="value">The null checked value.</param>
+        /// <returns>True if <paramref name="candidate"/> is a null check.</returns>
         public static bool IsNullCheck(ExpressionSyntax candidate, SemanticModel? semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out ExpressionSyntax? value)
         {
             if (Equality.IsEqualsCheck(candidate, semanticModel, cancellationToken, out var left, out var right) &&
                 IsNullAndExpression(left, right, out value))
             {
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
                 return true;
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
             }
 
             switch (candidate)

@@ -289,7 +289,9 @@
             }
 
             using var walker = With(symbol.OriginalDefinition, node, scope, semanticModel, cancellationToken);
+#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return walker.assignments.TryFirst(out assignment);
+#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <inheritdoc />

@@ -1,4 +1,4 @@
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
@@ -321,6 +321,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             foreach (var member in type.Members)
