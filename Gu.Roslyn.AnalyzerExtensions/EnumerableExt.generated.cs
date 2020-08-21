@@ -21,12 +21,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryElementAt<T>(this IReadOnlyList<T> source, int index, [MaybeNullWhen(false)] out T result)
         {
-            result = default(T);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(T);
             if (index < 0 ||
                 source.Count <= index)
             {
@@ -46,12 +46,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
-            result = default(T);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(T);
             if (source.Count == 1)
             {
                 result = source[0];
@@ -72,12 +72,12 @@
         public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default(TResult);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(TResult);
             for (var i = 0; i < source.Count; i++)
             {
                 if (source[i] is TResult item)
@@ -110,12 +110,12 @@
         public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default(TResult);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(TResult);
             for (var i = 0; i < source.Count; i++)
             {
                 if (source[i] is TResult item &&
@@ -148,12 +148,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            result = default(T);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(T);
             for (var i = 0; i < source.Count; i++)
             {
                 var item = source[i];
@@ -184,12 +184,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
-            result = default(T);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(T);
             if (source.Count == 0)
             {
                 return false;
@@ -210,12 +210,12 @@
         public static bool TryFirstOfType<T, TResult>(this IReadOnlyList<T> source, out TResult result)
             where TResult : T
         {
-            result = default(TResult);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(TResult);
             for (var i = 0; i < source.Count; i++)
             {
                 if (source[i] is TResult item)
@@ -240,12 +240,12 @@
         public static bool TryFirstOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default(TResult);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(TResult);
             for (var i = 0; i < source.Count; i++)
             {
                 if (source[i] is TResult item &&
@@ -269,12 +269,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            result = default(T);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(T);
             foreach (var item in source)
             {
                 if (predicate(item))
@@ -296,12 +296,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
-            result = default(T);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(T);
             if (source.Count == 0)
             {
                 result = default(T);
@@ -323,12 +323,12 @@
         public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default(TResult);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(TResult);
             for (var i = source.Count - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item)
@@ -353,12 +353,12 @@
         public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            result = default(TResult);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(TResult);
             for (var i = source.Count - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item &&
@@ -382,12 +382,12 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            result = default(T);
             if (source == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(source));
             }
 
+            result = default(T);
             for (var i = source.Count - 1; i >= 0; i--)
             {
                 var item = source[i];
