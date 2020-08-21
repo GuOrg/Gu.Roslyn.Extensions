@@ -194,6 +194,7 @@
             {
                 if (IsEvent(y))
                 {
+#pragma warning disable CS8604 // Possible null reference argument. bug in Roslyn
                     result = CompareAccessibility(Accessibility(x), Accessibility(y));
                     if (result != 0)
                     {
@@ -207,6 +208,7 @@
                     }
 
                     result = CompareSpanStart(x, y);
+#pragma warning restore CS8604 // Possible null reference argument.
                     return true;
                 }
 
