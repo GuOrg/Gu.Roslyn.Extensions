@@ -1,6 +1,5 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
 {
-    using System.Collections.Generic;
     using System.Linq;
     using NUnit.Framework;
 
@@ -30,13 +29,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         }
 
         [Test]
-        public static void TryElementAtWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryElementAt(0, out var result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
         public static void TryFirst()
         {
             Assert.AreEqual(true, Enumerable.Range(1, 3).TryFirst(out var result));
@@ -47,13 +39,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         public static void TryFirstWhenEmpty()
         {
             Assert.AreEqual(false, Enumerable.Empty<int>().TryFirst(out var result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
-        public static void TryFirstWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryFirst(out var result));
             Assert.AreEqual(0, result);
         }
 
@@ -74,13 +59,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         }
 
         [Test]
-        public static void TryFirstWithPredicateWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryFirst(x => x == 2, out var result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
         public static void TryFirstOfType()
         {
             Assert.AreEqual(true, Enumerable.Range(1, 3).TryFirstOfType(out int result));
@@ -91,13 +69,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         public static void TryFirstOfTypeWhenEmpty()
         {
             Assert.AreEqual(false, Enumerable.Empty<int>().TryFirstOfType(out int result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
-        public static void TryFirstOfTypeWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryFirstOfType(out int result));
             Assert.AreEqual(0, result);
         }
 
@@ -114,13 +85,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         public static void TryFirstOfTypeWithPredicateWhenEmpty()
         {
             Assert.AreEqual(false, Enumerable.Empty<int>().TryFirstOfType(x => x == 2, out int result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
-        public static void TryFirstOfTypeWithPredicateWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryFirstOfType(x => x == 2, out int result));
             Assert.AreEqual(0, result);
         }
 
@@ -142,13 +106,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         public static void TrySingleWhenEmpty()
         {
             Assert.AreEqual(false, Enumerable.Empty<int>().TrySingle(out var result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
-        public static void TrySingleWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TrySingle(out var result));
             Assert.AreEqual(0, result);
         }
 
@@ -176,13 +133,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         }
 
         [Test]
-        public static void TrySingleWithPredicateWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TrySingle(out var result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
         public static void TrySingleOfType()
         {
             Assert.AreEqual(true, Enumerable.Range(1, 1).TrySingleOfType(out int result));
@@ -200,13 +150,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         public static void TrySingleOfTypeWhenEmpty()
         {
             Assert.AreEqual(false, Enumerable.Empty<int>().TrySingleOfType(out int result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
-        public static void TrySingleOfTypeWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TrySingleOfType(out int result));
             Assert.AreEqual(0, result);
         }
 
@@ -234,13 +177,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         }
 
         [Test]
-        public static void TrySingleOfTypeWithPredicateWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TrySingleOfType(out int result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
         public static void TryLast()
         {
             Assert.AreEqual(true, Enumerable.Range(1, 3).TryLast(out var result));
@@ -251,13 +187,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         public static void TryLastWhenEmpty()
         {
             Assert.AreEqual(false, Enumerable.Empty<int>().TryLast(out var result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
-        public static void TryLastWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryLast(out var result));
             Assert.AreEqual(0, result);
         }
 
@@ -278,13 +207,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         }
 
         [Test]
-        public static void TryLastWithPredicateWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryLast(x => x == 2, out var result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
         public static void TryLastOfType()
         {
             Assert.AreEqual(true, Enumerable.Range(1, 3).TryLastOfType(out int result));
@@ -295,13 +217,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         public static void TryLastOfTypeWhenEmpty()
         {
             Assert.AreEqual(false, Enumerable.Empty<int>().TryLastOfType(out int result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
-        public static void TryLastOfTypeWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryLastOfType(out int result));
             Assert.AreEqual(0, result);
         }
 
@@ -318,13 +233,6 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.EnumerableExtTests
         public static void TryLastOfTypeWithPredicateWhenEmpty()
         {
             Assert.AreEqual(false, Enumerable.Empty<int>().TryLastOfType(x => x == 2, out int result));
-            Assert.AreEqual(0, result);
-        }
-
-        [Test]
-        public static void TryLastOfTypeWithPredicateWhenNull()
-        {
-            Assert.AreEqual(false, ((IEnumerable<int>)null).TryLastOfType(x => x == 2, out int result));
             Assert.AreEqual(0, result);
         }
     }
