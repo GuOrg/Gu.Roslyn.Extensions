@@ -1,3 +1,6 @@
+#### 0.12.9
+* BUGFIX: Handle default CodeStyleOptions
+
 #### 0.12.8
 * BUGFIX: Handle using C = C
 

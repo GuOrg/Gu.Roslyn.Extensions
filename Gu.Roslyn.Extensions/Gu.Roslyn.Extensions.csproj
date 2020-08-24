@@ -10,7 +10,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.12.8-dev</Version>
+    <Version>0.12.9-dev</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -19,6 +19,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer codefix</PackageTags>
     <PackageReleaseNotes>
+      0.12.9
+      BUGFIX: Handle default CodeStyleOptions
       0.12.8
       BUGFIX: Handle using C = C
       0.12.7
