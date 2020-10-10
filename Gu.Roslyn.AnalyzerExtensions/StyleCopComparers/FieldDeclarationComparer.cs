@@ -155,6 +155,9 @@
                                 when invocation.TryGetMethodName(out var methodName) &&
                                      methodName == "SetValue"
                                 => true,
+                            { Parent: ArgumentSyntax { RefKindKeyword: { ValueText: "ref" }, Parent: ArgumentListSyntax { Arguments: { } arguments } } }
+                                when arguments.Count >= 2
+                                     => true,
                             _ => false,
                         };
                     }

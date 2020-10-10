@@ -49,15 +49,22 @@ namespace N
             @"
 namespace N
 {
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+
     class C
     {
         private static int static1;
         private static int static2;
+        private static int static3;
+        private static int static4;
 
         private int value1;
         private int value2;
         private int value3;
-
+        private int value4;
+        private int value5;
+        private int value6;
 
         public static int Static1
         {
@@ -67,8 +74,34 @@ namespace N
 
         public static int Static2
         {
-            get => static2;
-            set => static2 = value;
+            get
+            {
+                return static2;
+            }
+
+            set
+            {
+                static2 = value;
+            }
+        }
+
+        public static int Static3
+        {
+            get => static3;
+            set => static3 = value;
+        }
+
+        public static int Static4
+        {
+            get
+            {
+                return static4;
+            }
+
+            set
+            {
+                static4 = value;
+            }
         }
 
         public int Value1
@@ -79,14 +112,58 @@ namespace N
 
         public int Value2
         {
-            get => value2;
-            set => value2 = value;
+            get
+            {
+                return this.value2;
+            }
+
+            set
+            {
+                this.value2 = value;
+            }
         }
 
         public int Value3
         {
             get => value3;
-            set => value3 = value;
+            set => TrySet(ref value3, value);
+        }
+
+        public int Value4
+        {
+            get
+            {
+                return this.value4;
+            }
+
+            set
+            {
+                this.value4 = value;
+            }
+        }
+
+        public int Value5
+        {
+            get => this.value5;
+            set => this.TrySet(ref this.value5, value);
+        }
+
+        public int Value6
+        {
+            get => this.value6;
+            set => this.value6 = value;
+        }
+
+        private bool TrySet<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (!EqualityComparer<T>.Default.Equals(field, value))
+            {
+                field = value;
+                return true;
+            }
+
+            field = value;
+            return false;
         }
     }
 }",
@@ -159,33 +236,49 @@ namespace N
         [TestCaseSource(nameof(ModifiersSource))]
         public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(ModifiersSource))]
         public static void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(InitializedSource))]
         public static void InitializedWithOther(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(BackingFieldSource))]
         public static void BackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1, FieldDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
@@ -195,10 +288,14 @@ namespace N
         [TestCaseSource(nameof(DependencyPropertyBackingFieldSource))]
         public static void DependencyPropertyBackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
         }
 
         public static TestCaseData[] CreateTestCases(string code, bool stripLines)
