@@ -1,7 +1,9 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Gu.Roslyn.AnalyzerExtensions;
+    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -175,8 +177,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="containingType">The containing type.</param>
         /// <param name="event">The <see cref="EventDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="editor"/>.</returns>
-        public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventDeclarationSyntax @event)
+        public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventDeclarationSyntax @event, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
             if (editor is null)
             {
@@ -195,7 +198,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event));
+                (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event, comparer));
             return editor;
         }
 
@@ -205,8 +208,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="containingType">The containing type.</param>
         /// <param name="event">The <see cref="EventFieldDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="editor"/>.</returns>
-        public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventFieldDeclarationSyntax @event)
+        public static DocumentEditor AddEvent(this DocumentEditor editor, ClassDeclarationSyntax containingType, EventFieldDeclarationSyntax @event, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
             if (editor is null)
             {
@@ -225,7 +229,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event));
+                (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event, comparer));
             return editor;
         }
 
@@ -235,8 +239,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="containingType">The containing type.</param>
         /// <param name="property">The <see cref="BasePropertyDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="editor"/>.</returns>
-        public static DocumentEditor AddProperty(this DocumentEditor editor, TypeDeclarationSyntax containingType, BasePropertyDeclarationSyntax property)
+        public static DocumentEditor AddProperty(this DocumentEditor editor, TypeDeclarationSyntax containingType, BasePropertyDeclarationSyntax property, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
             if (editor is null)
             {
@@ -255,7 +260,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, property));
+                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, property, comparer));
             return editor;
         }
 
@@ -265,8 +270,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="containingType">The containing type.</param>
         /// <param name="method">The <see cref="MethodDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="editor"/>.</returns>
-        public static DocumentEditor AddMethod(this DocumentEditor editor, TypeDeclarationSyntax containingType, MethodDeclarationSyntax method)
+        public static DocumentEditor AddMethod(this DocumentEditor editor, TypeDeclarationSyntax containingType, MethodDeclarationSyntax method, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
             if (editor is null)
             {
@@ -285,7 +291,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, method));
+                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, method, comparer));
             return editor;
         }
 
@@ -295,8 +301,9 @@ namespace Gu.Roslyn.CodeFixExtensions
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="containingType">The containing type.</param>
         /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="editor"/>.</returns>
-        public static DocumentEditor AddMember(this DocumentEditor editor, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member)
+        public static DocumentEditor AddMember(this DocumentEditor editor, TypeDeclarationSyntax containingType, MemberDeclarationSyntax member, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
             if (editor is null)
             {
@@ -315,7 +322,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, member));
+                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, member, comparer));
             return editor;
         }
 
