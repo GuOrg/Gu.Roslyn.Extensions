@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
 
     public static class FieldDeclarationComparerTests
     {
-        private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
+        private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases(CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C
@@ -35,9 +35,29 @@ namespace N
         private int Private4 = 4;
         int Private5;
     }
-}");
+}")).ToArray();
 
-        private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases().ToArray();
+        private static readonly IReadOnlyList<TestCaseData> BackingFieldSource = CreateTestCases(CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    class C
+    {
+        private int value1;
+        private int value2;
+
+        public int Value1
+        {
+            get => value1;
+            set => value1 = value;
+        }
+
+        public int Value2
+        {
+            get => value2;
+            set => value2 = value;
+        }
+    }
+}")).ToArray();
 
         [TestCaseSource(nameof(TestCaseSource))]
         public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
@@ -77,44 +97,21 @@ namespace N
             Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
         }
 
-        [Test]
-        public static void BackingField()
+        [TestCaseSource(nameof(BackingFieldSource))]
+        public static void BackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        private int value2;
-        private int value1;
-
-        public int Value1
-        {
-            get => value1;
-            set => value1 = value;
+            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
         }
 
-        public int Value2
+        public static IEnumerable<TestCaseData> CreateTestCases(SyntaxTree tree)
         {
-            get => value2;
-            set => value2 = value;
-        }
-    }
-}");
-            var x = syntaxTree.FindFieldDeclaration("private int value2");
-            var y = syntaxTree.FindFieldDeclaration("private int value1");
-            Assert.AreEqual(1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
-        }
-
-        public static IEnumerable<TestCaseData> CreateTestCases()
-        {
-            var c = SyntaxTree.FindClassDeclaration("C");
-            foreach (var member1 in c.Members)
+            var c = tree.FindClassDeclaration("C");
+            foreach (var member1 in c.Members.OfType<FieldDeclarationSyntax>())
             {
-                foreach (var member2 in c.Members)
+                foreach (var member2 in c.Members.OfType<FieldDeclarationSyntax>())
                 {
                     if (member1.SpanStart < member2.SpanStart)
                     {
