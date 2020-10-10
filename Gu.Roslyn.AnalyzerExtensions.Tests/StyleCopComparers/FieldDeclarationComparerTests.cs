@@ -205,8 +205,7 @@ namespace N
         {
             var tree = CSharpSyntaxTree.ParseText(code);
 
-            return All().ToArray()// Need this ToArray as we are mutating in the Select.
-                        .Select(x =>
+            return All().Select(x =>
             {
                 if (stripLines)
                 {
@@ -217,8 +216,9 @@ namespace N
                 return new TestCaseData(x.Item1, x.Item2);
             }).ToArray();
 
-            IEnumerable<(FieldDeclarationSyntax, FieldDeclarationSyntax)> All()
+            List<(FieldDeclarationSyntax, FieldDeclarationSyntax)> All()
             {
+                var pairs = new List<(FieldDeclarationSyntax, FieldDeclarationSyntax)>();
                 var c = tree.FindClassDeclaration("C");
                 foreach (var member1 in c.Members.OfType<FieldDeclarationSyntax>())
                 {
@@ -226,10 +226,12 @@ namespace N
                     {
                         if (member1.SpanStart < member2.SpanStart)
                         {
-                            yield return (member1, member2);
+                            pairs.Add((member1, member2));
                         }
                     }
                 }
+
+                return pairs;
             }
         }
     }

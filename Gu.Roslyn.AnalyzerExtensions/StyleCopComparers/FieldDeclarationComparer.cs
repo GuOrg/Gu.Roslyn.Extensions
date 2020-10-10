@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -144,45 +145,39 @@
             internal static bool TryGetSetter(FieldDeclarationSyntax field, [NotNullWhen(true)] out AccessorDeclarationSyntax? setter)
             {
                 setter = null;
-
-                if (field.Declaration.Variables.TrySingle(out var variable) &&
-                    field.Parent is TypeDeclarationSyntax type)
+                if (field is { Declaration: { Variables: { Count: 1 } variables } } &&
+                    variables[0].Identifier is { ValueText: { } name })
                 {
-                    using var walker = Borrow(() => new SetterAssignmentWalker());
-                    foreach (var member in type.Members)
+                    using var walker = SpecificIdentifierNameWalker.Borrow(field.Parent, name);
+                    foreach (var identifierName in walker.IdentifierNames)
                     {
-                        if (member is PropertyDeclarationSyntax property &&
-                            property.TryGetSetter(out setter))
-                        {
-                            walker.Visit(setter);
-                        }
-                    }
+                        var node = identifierName.Parent is MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _ } memberAccess
+                            ? (ExpressionSyntax)memberAccess
+                            : identifierName;
 
-                    if (walker.assignments.TrySingle(x => IsAssigning(x), out var assignment))
-                    {
-                        setter = assignment.FirstAncestor<AccessorDeclarationSyntax>();
+                        if (IsAssigning() &&
+                            node.TryFirstAncestor<AccessorDeclarationSyntax>(out var accessor) &&
+                            accessor.IsKind(SyntaxKind.SetAccessorDeclaration))
+                        {
+                            setter = accessor;
+                        }
+
+                        bool IsAssigning()
+                        {
+                            return node switch
+                            {
+                                { Parent: AssignmentExpressionSyntax { Right: IdentifierNameSyntax { Identifier: { ValueText: "value" } } } } => true,
+                                { Parent: ArgumentSyntax { Parent: ArgumentListSyntax { Arguments: { Count: 2 }, Parent: InvocationExpressionSyntax invocation } } }
+                                    when invocation.TryGetMethodName(out var methodName) &&
+                                         methodName == "SetValue"
+                                    => true,
+                                _ => false,
+                            };
+                        }
                     }
                 }
 
                 return setter != null;
-
-                bool IsAssigning(AssignmentExpressionSyntax assignment)
-                {
-                    return assignment is { Left: { } left, Right: IdentifierNameSyntax { Identifier: { ValueText: "value" } } } &&
-                           IsField(left);
-                }
-
-                bool IsField(ExpressionSyntax expression)
-                {
-                    return expression switch
-                    {
-                        IdentifierNameSyntax identifierName
-                        => identifierName.Identifier.ValueText == variable!.Identifier.ValueText,
-                        MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _, Name: { } name }
-                        => name.Identifier.ValueText == variable!.Identifier.ValueText,
-                        _ => false,
-                    };
-                }
             }
 
             /// <inheritdoc />
