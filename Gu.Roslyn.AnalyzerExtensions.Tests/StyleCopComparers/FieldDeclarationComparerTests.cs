@@ -285,19 +285,11 @@ namespace N
             Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(ModifiersSource))]
         public static void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
