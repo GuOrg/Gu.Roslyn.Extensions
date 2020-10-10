@@ -1,5 +1,6 @@
 ﻿namespace Gu.Roslyn.AnalyzerExtensions.StyleCopComparers
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
@@ -47,6 +48,16 @@
             var compare = MemberDeclarationComparer.CompareAccessibility(x.Modifiers, y.Modifiers, Accessibility.Private);
             if (compare != 0)
             {
+                if (x.Modifiers.Any(SyntaxKind.StaticKeyword) &&
+                    y.Modifiers.Any(SyntaxKind.StaticKeyword))
+                {
+                    var byMember = CompareBackingMember(x, y);
+                    if (byMember != 0)
+                    {
+                        return byMember;
+                    }
+                }
+
                 return compare;
             }
 
@@ -62,7 +73,7 @@
                 return compare;
             }
 
-            compare = CompareBackingProperty(x, y);
+            compare = CompareBackingMember(x, y);
             if (compare != 0)
             {
                 return compare;
@@ -109,10 +120,10 @@
             }
         }
 
-        private static int CompareBackingProperty(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        private static int CompareBackingMember(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            if (TryGetSetter(x, out var xSetter) &&
-                TryGetSetter(y, out var ySetter))
+            if (TryGetMember(x, out var xSetter) &&
+                TryGetMember(y, out var ySetter))
             {
                 return xSetter.SpanStart.CompareTo(ySetter.SpanStart);
             }
@@ -121,14 +132,14 @@
         }
 
         /// <summary>
-        /// Try get single setter assigning the field.
+        /// Try get single result assigning the field.
         /// </summary>
         /// <param name="field">The <see cref="FieldDeclarationSyntax"/>.</param>
-        /// <param name="setter">The single setter accessor assigning the field.</param>
-        /// <returns>True if a single setter was found.</returns>
-        private static bool TryGetSetter(FieldDeclarationSyntax field, [NotNullWhen(true)] out AccessorDeclarationSyntax? setter)
+        /// <param name="result">The single result accessor assigning the field.</param>
+        /// <returns>True if a single result was found.</returns>
+        private static bool TryGetMember(FieldDeclarationSyntax field, [NotNullWhen(true)] out MemberDeclarationSyntax? result)
         {
-            setter = null;
+            result = null;
             if (field is { Declaration: { Variables: { Count: 1 } variables } } &&
                 variables[0].Identifier is { ValueText: { } name })
             {
@@ -139,32 +150,88 @@
                         ? (ExpressionSyntax)memberAccess
                         : identifierName;
 
-                    if (IsAssigning() &&
-                        node.TryFirstAncestor<AccessorDeclarationSyntax>(out var accessor) &&
-                        accessor.IsKind(SyntaxKind.SetAccessorDeclaration))
+                    if (Member(node) is { } member)
                     {
-                        setter = accessor;
-                    }
-
-                    bool IsAssigning()
-                    {
-                        return node switch
+                        if (ReferenceEquals(member, result))
                         {
-                            { Parent: AssignmentExpressionSyntax { Right: IdentifierNameSyntax { Identifier: { ValueText: "value" } } } } => true,
-                            { Parent: ArgumentSyntax { Parent: ArgumentListSyntax { Arguments: { Count: 2 }, Parent: InvocationExpressionSyntax invocation } } }
-                                when invocation.TryGetMethodName(out var methodName) &&
-                                     methodName == "SetValue"
-                                => true,
-                            { Parent: ArgumentSyntax { RefKindKeyword: { ValueText: "ref" }, Parent: ArgumentListSyntax { Arguments: { } arguments } } }
-                                when arguments.Count >= 2
-                                     => true,
-                            _ => false,
-                        };
+                            continue;
+                        }
+                        else if (result is null)
+                        {
+                            result = member;
+                        }
+                        else
+                        {
+                            result = null;
+                            return false;
+                        }
                     }
                 }
             }
 
-            return setter != null;
+            return result != null;
+
+            static MemberDeclarationSyntax? Member(ExpressionSyntax usage)
+            {
+                if (IsAssigning() &&
+                    usage.TryFirstAncestor<AccessorDeclarationSyntax>(out var accessor) &&
+                    accessor.IsKind(SyntaxKind.SetAccessorDeclaration))
+                {
+                    return accessor.FirstAncestor<PropertyDeclarationSyntax>();
+                }
+
+                if (usage.Parent is ArgumentSyntax { Parent: ArgumentListSyntax { Arguments: { Count: 2 }, Parent: InvocationExpressionSyntax setValue } } &&
+                    setValue.TryGetMethodName(out var methodName) &&
+                    methodName == "SetValue")
+                {
+                    if (usage.TryFirstAncestor<MethodDeclarationSyntax>(out var set) &&
+                        set.Modifiers.Any(SyntaxKind.StaticKeyword) &&
+                        set.Identifier.ValueText.StartsWith("Set", StringComparison.Ordinal) &&
+                        set.ParameterList.Parameters.Count == 1)
+                    {
+                        return set;
+                    }
+
+                    if (usage.TryFirstAncestor(out accessor) &&
+                        accessor.IsKind(SyntaxKind.SetAccessorDeclaration))
+                    {
+                        return accessor.FirstAncestor<PropertyDeclarationSyntax>();
+                    }
+                }
+
+                if (usage.Parent is ArgumentSyntax { Parent: ArgumentListSyntax { Arguments: { Count: 1 }, Parent: InvocationExpressionSyntax getValue } } &&
+                    getValue.TryGetMethodName(out methodName) &&
+                    methodName == "GetValue")
+                {
+                    if (usage.TryFirstAncestor<MethodDeclarationSyntax>(out var method) &&
+                        method.Modifiers.Any(SyntaxKind.StaticKeyword) &&
+                        method.Identifier.ValueText.StartsWith("Get", StringComparison.Ordinal) &&
+                        method.ParameterList.Parameters.Count == 1)
+                    {
+                        return method;
+                    }
+
+                    if (usage.TryFirstAncestor(out accessor) &&
+                        accessor.IsKind(SyntaxKind.GetAccessorDeclaration))
+                    {
+                        return accessor.FirstAncestor<PropertyDeclarationSyntax>();
+                    }
+                }
+
+                return null;
+
+                bool IsAssigning()
+                {
+                    return usage switch
+                    {
+                        { Parent: AssignmentExpressionSyntax { Right: IdentifierNameSyntax { Identifier: { ValueText: "value" } } } } => true,
+                        { Parent: ArgumentSyntax { RefKindKeyword: { ValueText: "ref" }, Parent: ArgumentListSyntax { Arguments: { } arguments } } }
+                            when arguments.Count >= 2
+                            => true,
+                        _ => false,
+                    };
+                }
+            }
         }
     }
 }

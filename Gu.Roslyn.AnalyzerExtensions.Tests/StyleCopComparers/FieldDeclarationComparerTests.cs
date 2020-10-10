@@ -198,12 +198,30 @@ namespace N
             typeof(C),
             new PropertyMetadata(default(int)));
 
+        private static readonly DependencyPropertyKey ReadOnly1PropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(ReadOnly1),
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int)));
+
+        /// <summary>Identifies the <see cref=""ReadOnly1""/> dependency property.</summary>
+        public static readonly DependencyProperty ReadOnly1Property = ReadOnly1PropertyKey.DependencyProperty;
+
         /// <summary>Identifies the <see cref=""Value2""/> dependency property.</summary>
         public static readonly DependencyProperty Value2Property = DependencyProperty.Register(
             nameof(Value2),
             typeof(int),
             typeof(C),
             new PropertyMetadata(default(int)));
+
+        private static readonly DependencyPropertyKey ReadOnly2PropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(ReadOnly2),
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int)));
+
+        /// <summary>Identifies the <see cref=""ReadOnly2""/> dependency property.</summary>
+        public static readonly DependencyProperty ReadOnly2Property = ReadOnly2PropertyKey.DependencyProperty;
 
         /// <summary>Identifies the <see cref=""Value3""/> dependency property.</summary>
         public static readonly DependencyProperty Value3Property = DependencyProperty.Register(
@@ -212,10 +230,25 @@ namespace N
             typeof(C),
             new PropertyMetadata(default(int)));
 
+        private static readonly DependencyPropertyKey ReadOnly3PropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(ReadOnly3),
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int)));
+
+        /// <summary>Identifies the <see cref=""ReadOnly3""/> dependency property.</summary>
+        public static readonly DependencyProperty ReadOnly3Property = ReadOnly3PropertyKey.DependencyProperty;
+
         public int Value1
         {
             get => (int)this.GetValue(Value1Property);
             set => this.SetValue(Value1Property, value);
+        }
+
+        public int ReadOnly1
+        {
+            get => (int)this.GetValue(ReadOnly1Property);
+            private set => this.SetValue(ReadOnly1PropertyKey, value);
         }
 
         public int Value2
@@ -224,10 +257,22 @@ namespace N
             set => this.SetValue(Value2Property, value);
         }
 
+        public int ReadOnly2
+        {
+            get => (int)this.GetValue(ReadOnly2Property);
+            private set => this.SetValue(ReadOnly2PropertyKey, value);
+        }
+
         public int Value3
         {
             get => (int)this.GetValue(Value3Property);
             set => this.SetValue(Value3Property, value);
+        }
+
+        public int ReadOnly3
+        {
+            get => (int)this.GetValue(ReadOnly3Property);
+            private set => this.SetValue(ReadOnly3PropertyKey, value);
         }
     }
 }",
@@ -236,66 +281,66 @@ namespace N
         [TestCaseSource(nameof(ModifiersSource))]
         public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(ModifiersSource))]
         public static void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(InitializedSource))]
         public static void InitializedWithOther(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(BackingFieldSource))]
         public static void BackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
+            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
             Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(DependencyPropertyBackingFieldSource))]
         public static void DependencyPropertyBackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
             Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
         public static TestCaseData[] CreateTestCases(string code, bool stripLines)
