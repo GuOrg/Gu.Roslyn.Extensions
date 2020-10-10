@@ -111,8 +111,8 @@
 
         private static int CompareBackingProperty(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            if (SetterAssignmentWalker.TryGetSetter(x, out var xSetter) &&
-                SetterAssignmentWalker.TryGetSetter(y, out var ySetter))
+            if (TryGetSetter(x, out var xSetter) &&
+                TryGetSetter(y, out var ySetter))
             {
                 return xSetter.SpanStart.CompareTo(ySetter.SpanStart);
             }
@@ -120,71 +120,48 @@
             return 0;
         }
 
-        /// <inheritdoc />
-        internal sealed class SetterAssignmentWalker : PooledWalker<SetterAssignmentWalker>
+        /// <summary>
+        /// Try get single setter assigning the field.
+        /// </summary>
+        /// <param name="field">The <see cref="FieldDeclarationSyntax"/>.</param>
+        /// <param name="setter">The single setter accessor assigning the field.</param>
+        /// <returns>True if a single setter was found.</returns>
+        private static bool TryGetSetter(FieldDeclarationSyntax field, [NotNullWhen(true)] out AccessorDeclarationSyntax? setter)
         {
-            private readonly List<AssignmentExpressionSyntax> assignments = new List<AssignmentExpressionSyntax>();
-
-            private SetterAssignmentWalker()
+            setter = null;
+            if (field is { Declaration: { Variables: { Count: 1 } variables } } &&
+                variables[0].Identifier is { ValueText: { } name })
             {
-            }
-
-            /// <inheritdoc />
-            public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
-            {
-                this.assignments.Add(node);
-                base.VisitAssignmentExpression(node);
-            }
-
-            /// <summary>
-            /// Try get single setter assigning the field.
-            /// </summary>
-            /// <param name="field">The <see cref="FieldDeclarationSyntax"/>.</param>
-            /// <param name="setter">The single setter accessor assigning the field.</param>
-            /// <returns>True if a single setter was found.</returns>
-            internal static bool TryGetSetter(FieldDeclarationSyntax field, [NotNullWhen(true)] out AccessorDeclarationSyntax? setter)
-            {
-                setter = null;
-                if (field is { Declaration: { Variables: { Count: 1 } variables } } &&
-                    variables[0].Identifier is { ValueText: { } name })
+                using var walker = SpecificIdentifierNameWalker.Borrow(field.Parent, name);
+                foreach (var identifierName in walker.IdentifierNames)
                 {
-                    using var walker = SpecificIdentifierNameWalker.Borrow(field.Parent, name);
-                    foreach (var identifierName in walker.IdentifierNames)
+                    var node = identifierName.Parent is MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _ } memberAccess
+                        ? (ExpressionSyntax)memberAccess
+                        : identifierName;
+
+                    if (IsAssigning() &&
+                        node.TryFirstAncestor<AccessorDeclarationSyntax>(out var accessor) &&
+                        accessor.IsKind(SyntaxKind.SetAccessorDeclaration))
                     {
-                        var node = identifierName.Parent is MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _ } memberAccess
-                            ? (ExpressionSyntax)memberAccess
-                            : identifierName;
+                        setter = accessor;
+                    }
 
-                        if (IsAssigning() &&
-                            node.TryFirstAncestor<AccessorDeclarationSyntax>(out var accessor) &&
-                            accessor.IsKind(SyntaxKind.SetAccessorDeclaration))
+                    bool IsAssigning()
+                    {
+                        return node switch
                         {
-                            setter = accessor;
-                        }
-
-                        bool IsAssigning()
-                        {
-                            return node switch
-                            {
-                                { Parent: AssignmentExpressionSyntax { Right: IdentifierNameSyntax { Identifier: { ValueText: "value" } } } } => true,
-                                { Parent: ArgumentSyntax { Parent: ArgumentListSyntax { Arguments: { Count: 2 }, Parent: InvocationExpressionSyntax invocation } } }
-                                    when invocation.TryGetMethodName(out var methodName) &&
-                                         methodName == "SetValue"
-                                    => true,
-                                _ => false,
-                            };
-                        }
+                            { Parent: AssignmentExpressionSyntax { Right: IdentifierNameSyntax { Identifier: { ValueText: "value" } } } } => true,
+                            { Parent: ArgumentSyntax { Parent: ArgumentListSyntax { Arguments: { Count: 2 }, Parent: InvocationExpressionSyntax invocation } } }
+                                when invocation.TryGetMethodName(out var methodName) &&
+                                     methodName == "SetValue"
+                                => true,
+                            _ => false,
+                        };
                     }
                 }
-
-                return setter != null;
             }
 
-            /// <inheritdoc />
-            protected override void Clear()
-            {
-                this.assignments.Clear();
-            }
+            return setter != null;
         }
     }
 }
