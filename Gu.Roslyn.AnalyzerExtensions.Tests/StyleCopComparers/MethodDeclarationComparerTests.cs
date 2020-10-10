@@ -42,6 +42,86 @@ namespace N
 }",
             stripLines: false);
 
+        private static readonly IReadOnlyList<TestCaseData> AttachedPropertySource = CreateTestCases(
+            @"
+namespace N
+{
+    using System;
+    using System.Windows;
+
+    public static class C
+    {
+        public static readonly DependencyProperty Value1Property = DependencyProperty.RegisterAttached(
+            ""Value1"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(
+                default(int),
+                OnValue1Changed,
+                OnValue1Coerce),
+            ValidateValue1);
+
+        public static readonly DependencyProperty Value2Property = DependencyProperty.RegisterAttached(
+            ""Value2"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(
+                default(int),
+                OnValue2Changed,
+                OnValue2Coerce),
+            ValidateValue2);
+
+        public static int GetValue1(DependencyObject element)
+        {
+            return (int)element.GetValue(Value1Property);
+        }
+
+        public static void SetValue1(DependencyObject element, int value)
+        {
+            element.SetValue(Value1Property, value);
+        }
+
+        public static int GetValue2(DependencyObject element)
+        {
+            return (int)element.GetValue(Value2Property);
+        }
+
+        public static void SetValue2(DependencyObject element, int value)
+        {
+            element.SetValue(Value2Property, value);
+        }
+
+        private static void OnValue1Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static object OnValue1Coerce(DependencyObject d, object basevalue)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static bool ValidateValue1(object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void OnValue2Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static object OnValue2Coerce(DependencyObject d, object basevalue)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static bool ValidateValue2(object value)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}",
+            stripLines: true);
+
         [TestCaseSource(nameof(TestCaseSource))]
         public static void Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
         {
@@ -58,6 +138,20 @@ namespace N
             Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
             Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
             Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
+        }
+
+        [TestCaseSource(nameof(AttachedPropertySource))]
+        public static void CompareAttachedPropertyMethods(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+        {
+            Assert.AreEqual(-1, MethodDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MethodDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MethodDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MethodDeclarationComparer.Compare(y, y));
+
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
         public static TestCaseData[] CreateTestCases(string code, bool stripLines)

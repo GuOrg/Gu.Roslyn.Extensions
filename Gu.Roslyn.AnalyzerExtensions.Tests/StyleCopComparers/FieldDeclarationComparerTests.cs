@@ -182,7 +182,7 @@ namespace N
 }",
             stripLines: true);
 
-        private static readonly IReadOnlyList<TestCaseData> DependencyPropertyBackingFieldSource = CreateTestCases(
+        private static readonly IReadOnlyList<TestCaseData> WpfSource = CreateTestCases(
             @"
 namespace N
 {
@@ -191,6 +191,12 @@ namespace N
 
     public class C : Control
     {
+        public static readonly DependencyProperty Attached1Property = DependencyProperty.RegisterAttached(
+            ""Attached1"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int));
+
         /// <summary>Identifies the <see cref=""Value1""/> dependency property.</summary>
         public static readonly DependencyProperty Value1Property = DependencyProperty.Register(
             nameof(Value1),
@@ -223,6 +229,12 @@ namespace N
         /// <summary>Identifies the <see cref=""ReadOnly2""/> dependency property.</summary>
         public static readonly DependencyProperty ReadOnly2Property = ReadOnly2PropertyKey.DependencyProperty;
 
+        public static readonly DependencyProperty Attached2Property = DependencyProperty.RegisterAttached(
+            ""Attached2"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int));
+
         /// <summary>Identifies the <see cref=""Value3""/> dependency property.</summary>
         public static readonly DependencyProperty Value3Property = DependencyProperty.Register(
             nameof(Value3),
@@ -238,6 +250,12 @@ namespace N
 
         /// <summary>Identifies the <see cref=""ReadOnly3""/> dependency property.</summary>
         public static readonly DependencyProperty ReadOnly3Property = ReadOnly3PropertyKey.DependencyProperty;
+
+        public static readonly DependencyProperty Attached3Property = DependencyProperty.RegisterAttached(
+            ""Attached3"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int));
 
         public int Value1
         {
@@ -273,6 +291,36 @@ namespace N
         {
             get => (int)this.GetValue(ReadOnly3Property);
             private set => this.SetValue(ReadOnly3PropertyKey, value);
+        }
+
+        public static int GetAttached1(DependencyObject element)
+        {
+            return (int)element.GetValue(Attached1Property);
+        }
+
+        public static void SetAttached1(DependencyObject element, int value)
+        {
+            element.SetValue(Attached1Property, value);
+        }
+
+        public static int GetAttached2(DependencyObject element)
+        {
+            return (int)element.GetValue(Attached2Property);
+        }
+
+        public static void SetAttached2(DependencyObject element, int value)
+        {
+            element.SetValue(Attached2Property, value);
+        }
+
+        public static int GetAttached3(DependencyObject element)
+        {
+            return (int)element.GetValue(Attached3Property);
+        }
+
+        public static void SetAttached3(DependencyObject element, int value)
+        {
+            element.SetValue(Attached3Property, value);
         }
     }
 }",
@@ -322,7 +370,7 @@ namespace N
             Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
-        [TestCaseSource(nameof(DependencyPropertyBackingFieldSource))]
+        [TestCaseSource(nameof(WpfSource))]
         public static void DependencyPropertyBackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
