@@ -11,7 +11,7 @@
 
     public static class FieldDeclarationComparerTests
     {
-        private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases(CSharpSyntaxTree.ParseText(@"
+        private static readonly IReadOnlyList<TestCaseData> ModifiersSource = CreateTestCases(CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C
@@ -82,7 +82,18 @@ namespace N
     }
 }")).ToArray();
 
-        [TestCaseSource(nameof(TestCaseSource))]
+        private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    class C
+    {
+        public const int PublicConst1 = 1;
+        public const int PublicConst2 = PublicConst1;
+        public const int PublicConst3 = PublicConst2 * PublicConst1;
+    }
+}")).ToArray();
+
+        [TestCaseSource(nameof(ModifiersSource))]
         public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
@@ -91,7 +102,7 @@ namespace N
             Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
         }
 
-        [TestCaseSource(nameof(TestCaseSource))]
+        [TestCaseSource(nameof(ModifiersSource))]
         public static void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
@@ -100,24 +111,13 @@ namespace N
             Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
         }
 
-        [Test]
-        public static void InitializedWithOther()
+        [TestCaseSource(nameof(InitializedSource))]
+        public static void InitializedWithOther(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        public const int PublicConst1 = PublicConst2;
-        public const int PublicConst2 = 3;
-    }
-}");
-            var x = syntaxTree.FindFieldDeclaration("public const int PublicConst1 = PublicConst2");
-            var y = syntaxTree.FindFieldDeclaration("public const int PublicConst2 = 3");
-            Assert.AreEqual(1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(BackingFieldSource))]
