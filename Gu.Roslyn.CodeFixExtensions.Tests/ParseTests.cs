@@ -13,7 +13,7 @@
         {
             var declaration = Parse.FieldDeclaration(code);
             Assert.AreEqual(code, declaration.ToFullString());
-            var expected = (FieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            var expected = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code);
             RoslynAssert.Ast(expected, declaration);
         }
 
@@ -22,7 +22,7 @@
         {
             var declaration = Parse.ConstructorDeclaration(code);
             Assert.AreEqual(code, declaration.ToFullString());
-            var expected = (ConstructorDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            var expected = (ConstructorDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code);
             RoslynAssert.Ast(expected, declaration);
         }
 
@@ -31,7 +31,7 @@
         {
             var declaration = Parse.PropertyDeclaration(code);
             Assert.AreEqual(code, declaration.ToFullString());
-            var expected = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            var expected = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code);
             RoslynAssert.Ast(expected, declaration);
         }
 
@@ -40,7 +40,7 @@
         {
             var declaration = Parse.MethodDeclaration(code);
             Assert.AreEqual(code, declaration.ToFullString());
-            var expected = (MethodDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code).Members.Single();
+            var expected = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code);
             RoslynAssert.Ast(expected, declaration);
         }
 

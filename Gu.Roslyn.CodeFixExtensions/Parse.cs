@@ -2,7 +2,9 @@
 {
     using System;
     using System.Linq;
+
     using Gu.Roslyn.AnalyzerExtensions;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -20,7 +22,7 @@
         /// <returns>The <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax FieldDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (FieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
+            return (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
         }
 
         /// <summary>
@@ -31,7 +33,7 @@
         /// <returns>The <see cref="ConstructorDeclarationSyntax"/>.</returns>
         public static ConstructorDeclarationSyntax ConstructorDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (ConstructorDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
+            return (ConstructorDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
         }
 
         /// <summary>
@@ -42,7 +44,7 @@
         /// <returns>The <see cref="EventFieldDeclarationSyntax"/>.</returns>
         public static EventFieldDeclarationSyntax EventFieldDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (EventFieldDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
+            return (EventFieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
         }
 
         /// <summary>
@@ -53,7 +55,7 @@
         /// <returns>The <see cref="EventDeclarationSyntax"/>.</returns>
         public static EventDeclarationSyntax EventDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (EventDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
+            return (EventDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
         }
 
         /// <summary>
@@ -64,7 +66,7 @@
         /// <returns>The <see cref="PropertyDeclarationSyntax"/>.</returns>
         public static PropertyDeclarationSyntax PropertyDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
+            return (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
         }
 
         /// <summary>
@@ -75,7 +77,7 @@
         /// <returns>The <see cref="MethodDeclarationSyntax"/>.</returns>
         public static MethodDeclarationSyntax MethodDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (MethodDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code.WithLeadingWhiteSpace(leadingWhitespace)).Members.Single();
+            return (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
         }
 
         /// <summary>
@@ -87,7 +89,7 @@
         public static XmlElementSyntax XmlElementSyntax(string text, string? leadingWhitespace = null)
         {
             if (DocumentationCommentTriviaSyntax(text.WithLeadingWhiteSpace("/// "), leadingWhitespace ?? string.Empty) is var comment &&
-                comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(out XmlElementSyntax? element))
+                comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(out var element))
             {
                 return element;
             }
@@ -103,7 +105,7 @@
         public static XmlEmptyElementSyntax XmlEmptyElementSyntax(string text)
         {
             if (DocumentationCommentTriviaSyntax(text.WithLeadingWhiteSpace("/// ")) is var comment &&
-                comment.Content.TrySingleOfType<XmlNodeSyntax, XmlEmptyElementSyntax>(out XmlEmptyElementSyntax? element))
+                comment.Content.TrySingleOfType<XmlNodeSyntax, XmlEmptyElementSyntax>(out var element))
             {
                 return element;
             }
