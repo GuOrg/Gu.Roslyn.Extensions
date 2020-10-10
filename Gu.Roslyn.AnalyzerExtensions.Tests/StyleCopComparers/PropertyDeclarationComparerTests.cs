@@ -151,13 +151,13 @@ namespace N
                 return new TestCaseData(x.Item1, x.Item2);
             }).ToArray();
 
-            List<(FieldDeclarationSyntax, FieldDeclarationSyntax)> All()
+            List<(PropertyDeclarationSyntax, PropertyDeclarationSyntax)> All()
             {
-                var pairs = new List<(FieldDeclarationSyntax, FieldDeclarationSyntax)>();
+                var pairs = new List<(PropertyDeclarationSyntax, PropertyDeclarationSyntax)>();
                 var c = tree.FindClassDeclaration("C");
-                foreach (var member1 in c.Members.OfType<FieldDeclarationSyntax>())
+                foreach (var member1 in c.Members.OfType<PropertyDeclarationSyntax>())
                 {
-                    foreach (var member2 in c.Members.OfType<FieldDeclarationSyntax>())
+                    foreach (var member2 in c.Members.OfType<PropertyDeclarationSyntax>())
                     {
                         if (member1.SpanStart < member2.SpanStart)
                         {
