@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
@@ -24,7 +24,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 foreach (var candidate in type.Constructors)
                 {
                     if (candidate is { Parameters: { Length: 0 }, DeclaringSyntaxReferences: { Length: 1 } } &&
-                        candidate.ContainingType == type)
+                        Equals(candidate.ContainingType, type))
                     {
                         result = candidate;
                         return true;

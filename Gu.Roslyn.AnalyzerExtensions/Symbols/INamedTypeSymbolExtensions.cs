@@ -59,7 +59,7 @@
                 }
             }
 
-            if (type.ConstructedFrom != type)
+            if (!Equals(type.ConstructedFrom, type))
             {
                 builder.Append("[");
                 for (var i = 0; i < type.TypeArguments.Length; i++)

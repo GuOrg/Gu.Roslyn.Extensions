@@ -290,6 +290,11 @@
         protected static T BorrowAndVisit<TParent>(SyntaxNode node, SearchScope scope, ExecutionWalker<TParent> parent, Func<T> create)
             where TParent : ExecutionWalker<TParent>
         {
+            if (parent is null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+
             if (create is null)
             {
                 throw new ArgumentNullException(nameof(create));
