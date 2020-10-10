@@ -2,16 +2,23 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
     using Gu.Roslyn.Asserts;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
+
     using NUnit.Framework;
 
     public static class FieldDeclarationComparerTests
     {
-        private static readonly IReadOnlyList<TestCaseData> ModifiersSource = CreateTestCases(CSharpSyntaxTree.ParseText(@"
+        private static readonly FieldInfo PositionField = typeof(SyntaxNode).GetField("<Position>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        private static readonly IReadOnlyList<TestCaseData> ModifiersSource = CreateTestCases(
+            @"
 namespace N
 {
     class C
@@ -35,9 +42,11 @@ namespace N
         private int Private4 = 4;
         int Private5;
     }
-}")).ToArray();
+}",
+            stripLines: false);
 
-        private static readonly IReadOnlyList<TestCaseData> BackingFieldSource = CreateTestCases(CSharpSyntaxTree.ParseText(@"
+        private static readonly IReadOnlyList<TestCaseData> BackingFieldSource = CreateTestCases(
+            @"
 namespace N
 {
     class C
@@ -80,9 +89,11 @@ namespace N
             set => value3 = value;
         }
     }
-}")).ToArray();
+}",
+            stripLines: true);
 
-        private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(CSharpSyntaxTree.ParseText(@"
+        private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(
+            @"
 namespace N
 {
     class C
@@ -91,7 +102,59 @@ namespace N
         public const int PublicConst2 = PublicConst1;
         public const int PublicConst3 = PublicConst2 * PublicConst1;
     }
-}")).ToArray();
+}",
+            stripLines: true);
+
+        private static readonly IReadOnlyList<TestCaseData> DependencyPropertyBackingFieldSource = CreateTestCases(
+            @"
+namespace N
+{
+    using System.Windows;
+    using System.Windows.Controls;
+
+    public class C : Control
+    {
+        /// <summary>Identifies the <see cref=""Value1""/> dependency property.</summary>
+        public static readonly DependencyProperty Value1Property = DependencyProperty.Register(
+            nameof(Value1),
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int)));
+
+        /// <summary>Identifies the <see cref=""Value2""/> dependency property.</summary>
+        public static readonly DependencyProperty Value2Property = DependencyProperty.Register(
+            nameof(Value2),
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int)));
+
+        /// <summary>Identifies the <see cref=""Value3""/> dependency property.</summary>
+        public static readonly DependencyProperty Value3Property = DependencyProperty.Register(
+            nameof(Value3),
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int)));
+
+        public int Value1
+        {
+            get => (int)this.GetValue(Value1Property);
+            set => this.SetValue(Value1Property, value);
+        }
+
+        public int Value2
+        {
+            get => (int)this.GetValue(Value2Property);
+            set => this.SetValue(Value2Property, value);
+        }
+
+        public int Value3
+        {
+            get => (int)this.GetValue(Value3Property);
+            set => this.SetValue(Value3Property, value);
+        }
+    }
+}",
+            stripLines: true);
 
         [TestCaseSource(nameof(ModifiersSource))]
         public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
@@ -115,30 +178,56 @@ namespace N
         public static void InitializedWithOther(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
         }
 
         [TestCaseSource(nameof(BackingFieldSource))]
         public static void BackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(1, FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
         }
 
-        public static IEnumerable<TestCaseData> CreateTestCases(SyntaxTree tree)
+        [TestCaseSource(nameof(DependencyPropertyBackingFieldSource))]
+        public static void DependencyPropertyBackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
-            var c = tree.FindClassDeclaration("C");
-            foreach (var member1 in c.Members.OfType<FieldDeclarationSyntax>())
+            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1, FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0, FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0, FieldDeclarationComparer.Compare(y, y));
+        }
+
+        public static TestCaseData[] CreateTestCases(string code, bool stripLines)
+        {
+            var tree = CSharpSyntaxTree.ParseText(code);
+
+            return All().ToArray()// Need this ToArray as we are mutating in the Select.
+                        .Select(x =>
             {
-                foreach (var member2 in c.Members.OfType<FieldDeclarationSyntax>())
+                if (stripLines)
                 {
-                    if (member1.SpanStart < member2.SpanStart)
+                    PositionField!.SetValue(x.Item1, 1);
+                    PositionField.SetValue(x.Item2, 1);
+                }
+
+                return new TestCaseData(x.Item1, x.Item2);
+            }).ToArray();
+
+            IEnumerable<(FieldDeclarationSyntax, FieldDeclarationSyntax)> All()
+            {
+                var c = tree.FindClassDeclaration("C");
+                foreach (var member1 in c.Members.OfType<FieldDeclarationSyntax>())
+                {
+                    foreach (var member2 in c.Members.OfType<FieldDeclarationSyntax>())
                     {
-                        yield return new TestCaseData(member1, member2);
+                        if (member1.SpanStart < member2.SpanStart)
+                        {
+                            yield return (member1, member2);
+                        }
                     }
                 }
             }
