@@ -42,8 +42,25 @@ namespace N
 {
     class C
     {
+        private static int static1;
+        private static int static2;
+
         private int value1;
         private int value2;
+        private int value3;
+
+
+        public static int Static1
+        {
+            get => static1;
+            set => static1 = value;
+        }
+
+        public static int Static2
+        {
+            get => static2;
+            set => static2 = value;
+        }
 
         public int Value1
         {
@@ -55,6 +72,12 @@ namespace N
         {
             get => value2;
             set => value2 = value;
+        }
+
+        public int Value3
+        {
+            get => value3;
+            set => value3 = value;
         }
     }
 }")).ToArray();
