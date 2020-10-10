@@ -3,8 +3,10 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,7 +17,77 @@
     public static class AddMember
     {
         /// <summary>
-        /// Add the field and respect StyleCop ordering.
+        /// Add the member and respect StyleCop ordering.
+        /// </summary>
+        /// <typeparam name="TContaining">The type of <paramref name="containingType"/>.</typeparam>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="member">The <see cref="FieldDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
+        /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
+        public static TContaining AddField<TContaining>(this TContaining containingType, FieldDeclarationSyntax member, IComparer<MemberDeclarationSyntax>? comparer = null)
+            where TContaining : TypeDeclarationSyntax
+        {
+            return AddSorted(containingType, member, comparer);
+        }
+
+        /// <summary>
+        /// Add the member and respect StyleCop ordering.
+        /// </summary>
+        /// <typeparam name="TContaining">The type of <paramref name="containingType"/>.</typeparam>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="member">The <see cref="EventDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
+        /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
+        public static TContaining AddEvent<TContaining>(this TContaining containingType, EventDeclarationSyntax member, IComparer<MemberDeclarationSyntax>? comparer = null)
+            where TContaining : TypeDeclarationSyntax
+        {
+            return AddSorted(containingType, member, comparer);
+        }
+
+        /// <summary>
+        /// Add the member and respect StyleCop ordering.
+        /// </summary>
+        /// <typeparam name="TContaining">The type of <paramref name="containingType"/>.</typeparam>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="member">The <see cref="EventFieldDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
+        /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
+        public static TContaining AddEvent<TContaining>(this TContaining containingType, EventFieldDeclarationSyntax member, IComparer<MemberDeclarationSyntax>? comparer = null)
+            where TContaining : TypeDeclarationSyntax
+        {
+            return AddSorted(containingType, member, comparer);
+        }
+
+        /// <summary>
+        /// Add the member and respect StyleCop ordering.
+        /// </summary>
+        /// <typeparam name="TContaining">The type of <paramref name="containingType"/>.</typeparam>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="member">The <see cref="PropertyDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
+        /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
+        public static TContaining AddProperty<TContaining>(this TContaining containingType, PropertyDeclarationSyntax member, IComparer<MemberDeclarationSyntax>? comparer = null)
+            where TContaining : TypeDeclarationSyntax
+        {
+            return AddSorted(containingType, member, comparer);
+        }
+
+        /// <summary>
+        /// Add the member and respect StyleCop ordering.
+        /// </summary>
+        /// <typeparam name="TContaining">The type of <paramref name="containingType"/>.</typeparam>
+        /// <param name="containingType">The containing type.</param>
+        /// <param name="member">The <see cref="MethodDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
+        /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
+        public static TContaining AddMethod<TContaining>(this TContaining containingType, MethodDeclarationSyntax member, IComparer<MemberDeclarationSyntax>? comparer = null)
+            where TContaining : TypeDeclarationSyntax
+        {
+            return AddSorted(containingType, member, comparer);
+        }
+
+        /// <summary>
+        /// Add the member and respect StyleCop ordering.
         /// </summary>
         /// <typeparam name="TContaining">The type of <paramref name="containingType"/>.</typeparam>
         /// <typeparam name="TMember">The type of <paramref name="member"/>.</typeparam>
@@ -24,8 +96,8 @@
         /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="containingType"/> with <paramref name="member"/>.</returns>
         public static TContaining AddSorted<TContaining, TMember>(this TContaining containingType, TMember member, IComparer<MemberDeclarationSyntax>? comparer = null)
-            where TContaining : TypeDeclarationSyntax
-            where TMember : MemberDeclarationSyntax
+        where TContaining : TypeDeclarationSyntax
+        where TMember : MemberDeclarationSyntax
         {
             if (containingType is null)
             {
