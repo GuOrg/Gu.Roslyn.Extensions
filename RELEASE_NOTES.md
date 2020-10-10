@@ -1,3 +1,6 @@
+#### 0.13.0
+* BUGFIX: Roslyn 3.3.1 and netstandard 2.0
+
 #### 0.12.9
 * BUGFIX: Handle default CodeStyleOptions
 

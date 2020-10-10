@@ -76,6 +76,7 @@
         /// <param name="editor">The <see cref="DocumentEditor"/>.</param>
         /// <param name="containingType">The containing type.</param>
         /// <param name="field">The <see cref="FieldDeclarationSyntax"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{MemberDeclarationSyntax}"/>. If null <see cref="MemberDeclarationComparer.Default"/> is used.</param>
         /// <returns>The <paramref name="editor"/>.</returns>
         public static DocumentEditor AddField(this DocumentEditor editor, TypeDeclarationSyntax containingType, FieldDeclarationSyntax field, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
