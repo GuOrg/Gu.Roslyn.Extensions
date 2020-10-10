@@ -1,7 +1,8 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis;
@@ -11,7 +12,10 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
 
     public static class MemberDeclarationComparerTests
     {
-        private static readonly SyntaxTree SyntaxTree = CSharpSyntaxTree.ParseText(@"
+        private static readonly FieldInfo PositionField = typeof(SyntaxNode).GetField("<Position>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases(
+            @"
 namespace N
 {
     public class C : IC
@@ -117,9 +121,27 @@ namespace N
 
         object Public();
     }
-}");
+}",
+            stripLines: false);
 
-        private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases().ToArray();
+        private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(
+    @"
+namespace N
+{
+    public class C
+    {
+        const int Const1 { get; } = 1;
+        const int Const2 { get; } = Const1;
+
+        private static int Static1 { get; } = 1;
+        public static int PublicStatic2 { get; } = Static1;
+        public static int Static3 { get; } = 2;
+        public static int Static4 { get; } = Const1;
+        public static int Static5 { get; } = Const2;
+        public static int Static6 { get; } = Const1 + Const2;
+    }
+}",
+    stripLines: true);
 
         [TestCaseSource(nameof(TestCaseSource))]
         public static void MemberDeclarationComparerCompare(MemberDeclarationSyntax x, MemberDeclarationSyntax y)
@@ -130,38 +152,46 @@ namespace N
             Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
         }
 
-        [Test]
-        public static void InitializedWithOther()
+        [TestCaseSource(nameof(InitializedSource))]
+        public static void InitializedWithOther(MemberDeclarationSyntax x, MemberDeclarationSyntax y)
         {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        public static int PublicStatic1 { get; } = PublicStatic2;
-        public static int PublicStatic2 { get; } = 3;
-    }
-}");
-            var x = syntaxTree.FindPropertyDeclaration("public static int PublicStatic1 { get; } = PublicStatic2");
-            var y = syntaxTree.FindPropertyDeclaration("public static int PublicStatic2 { get; } = 3");
-            Assert.AreEqual(1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
-        public static IEnumerable<TestCaseData> CreateTestCases()
+        public static TestCaseData[] CreateTestCases(string code, bool stripLines)
         {
-            var c = SyntaxTree.FindClassDeclaration("C");
-            foreach (var member1 in c.Members)
+            var tree = CSharpSyntaxTree.ParseText(code);
+
+            return All().Select(x =>
             {
-                foreach (var member2 in c.Members)
+                if (stripLines)
                 {
-                    if (member1.SpanStart < member2.SpanStart)
+                    PositionField!.SetValue(x.Item1, 1);
+                    PositionField.SetValue(x.Item2, 1);
+                }
+
+                return new TestCaseData(x.Item1, x.Item2);
+            }).ToArray();
+
+            List<(FieldDeclarationSyntax, FieldDeclarationSyntax)> All()
+            {
+                var pairs = new List<(FieldDeclarationSyntax, FieldDeclarationSyntax)>();
+                var c = tree.FindClassDeclaration("C");
+                foreach (var member1 in c.Members.OfType<FieldDeclarationSyntax>())
+                {
+                    foreach (var member2 in c.Members.OfType<FieldDeclarationSyntax>())
                     {
-                        yield return new TestCaseData(member1, member2);
+                        if (member1.SpanStart < member2.SpanStart)
+                        {
+                            pairs.Add((member1, member2));
+                        }
                     }
                 }
+
+                return pairs;
             }
         }
     }
