@@ -77,7 +77,7 @@
         /// <param name="containingType">The containing type.</param>
         /// <param name="field">The <see cref="FieldDeclarationSyntax"/>.</param>
         /// <returns>The <paramref name="editor"/>.</returns>
-        public static DocumentEditor AddField(this DocumentEditor editor, TypeDeclarationSyntax containingType, FieldDeclarationSyntax field)
+        public static DocumentEditor AddField(this DocumentEditor editor, TypeDeclarationSyntax containingType, FieldDeclarationSyntax field, IComparer<MemberDeclarationSyntax>? comparer = null)
         {
             if (editor is null)
             {
@@ -96,7 +96,7 @@
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, field));
+                node => node.AddSorted(field, comparer));
             return editor;
         }
 
@@ -198,7 +198,7 @@
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event, comparer));
+                node => node.AddSorted(@event, comparer));
             return editor;
         }
 
@@ -229,7 +229,7 @@
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((ClassDeclarationSyntax)node, @event, comparer));
+                node => node.AddSorted(@event, comparer));
             return editor;
         }
 
@@ -260,7 +260,7 @@
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, property, comparer));
+                node => node.AddSorted(property, comparer));
             return editor;
         }
 
@@ -291,7 +291,7 @@
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, method, comparer));
+                node => node.AddSorted(method, comparer));
             return editor;
         }
 
@@ -322,7 +322,7 @@
 
             editor.ReplaceNode(
                 containingType,
-                (node, generator) => generator.AddSorted((TypeDeclarationSyntax)node, member, comparer));
+                node => node.AddSorted(member, comparer));
             return editor;
         }
 
