@@ -49,8 +49,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Gu.Analyzers" Version="1.6.9-dev" PrivateAssets="all" />
-    <PackageReference Include="IDisposableAnalyzers" Version="3.4.1" PrivateAssets="all" />
+    <PackageReference Include="Gu.Analyzers" Version="1.6.10-dev" PrivateAssets="all" />
+    <PackageReference Include="IDisposableAnalyzers" Version="3.4.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.3.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="2.9.8" PrivateAssets="all" />
