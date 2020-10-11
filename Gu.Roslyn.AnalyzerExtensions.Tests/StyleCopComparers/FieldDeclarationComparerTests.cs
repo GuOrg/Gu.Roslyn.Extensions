@@ -191,12 +191,6 @@ namespace N
 
     public class C : Control
     {
-        public static readonly DependencyProperty Attached1Property = DependencyProperty.RegisterAttached(
-            ""Attached1"",
-            typeof(int),
-            typeof(C),
-            new PropertyMetadata(default(int));
-
         /// <summary>Identifies the <see cref=""Value1""/> dependency property.</summary>
         public static readonly DependencyProperty Value1Property = DependencyProperty.Register(
             nameof(Value1),
@@ -229,12 +223,6 @@ namespace N
         /// <summary>Identifies the <see cref=""ReadOnly2""/> dependency property.</summary>
         public static readonly DependencyProperty ReadOnly2Property = ReadOnly2PropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty Attached2Property = DependencyProperty.RegisterAttached(
-            ""Attached2"",
-            typeof(int),
-            typeof(C),
-            new PropertyMetadata(default(int));
-
         /// <summary>Identifies the <see cref=""Value3""/> dependency property.</summary>
         public static readonly DependencyProperty Value3Property = DependencyProperty.Register(
             nameof(Value3),
@@ -250,6 +238,18 @@ namespace N
 
         /// <summary>Identifies the <see cref=""ReadOnly3""/> dependency property.</summary>
         public static readonly DependencyProperty ReadOnly3Property = ReadOnly3PropertyKey.DependencyProperty;
+
+        public static readonly DependencyProperty Attached1Property = DependencyProperty.RegisterAttached(
+            ""Attached1"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int));
+
+        public static readonly DependencyProperty Attached2Property = DependencyProperty.RegisterAttached(
+            ""Attached2"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(default(int));
 
         public static readonly DependencyProperty Attached3Property = DependencyProperty.RegisterAttached(
             ""Attached3"",
