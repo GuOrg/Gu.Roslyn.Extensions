@@ -82,6 +82,21 @@ namespace N
 }",
             stripLines: false);
 
+        private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(
+            @"
+namespace N
+{
+    public class C : IC
+    {
+        public static int Static1 { get; } = 1;
+
+        public static int Static2 { get; } = Static1;
+
+        public static int Static3 => Static1;
+    }
+}",
+            stripLines: true);
+
         [TestCaseSource(nameof(TestCaseSource))]
         public static void Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
         {
@@ -111,24 +126,13 @@ namespace N
             Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
         }
 
-        [Test]
-        public static void InitializedWithOther()
+        [TestCaseSource(nameof(InitializedSource))]
+        public static void InitializedWithOther(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
         {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
-namespace N
-{
-    class C
-    {
-        public static int PublicStatic1 { get; } = PublicStatic2;
-        public static int PublicStatic2 { get; } = 3;
-    }
-}");
-            var x = syntaxTree.FindPropertyDeclaration("public static int PublicStatic1 { get; } = PublicStatic2");
-            var y = syntaxTree.FindPropertyDeclaration("public static int PublicStatic2 { get; } = 3");
-            Assert.AreEqual(1, PropertyDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, PropertyDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, PropertyDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  PropertyDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  PropertyDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  PropertyDeclarationComparer.Compare(y, y));
 
             Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
