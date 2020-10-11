@@ -160,7 +160,7 @@
                         {
                             result = member;
                         }
-                        else if(result is PropertyDeclarationSyntax)
+                        else if (result is PropertyDeclarationSyntax)
                         {
                             result = null;
                             return false;
