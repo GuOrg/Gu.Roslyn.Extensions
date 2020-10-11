@@ -100,30 +100,39 @@
             return declaration.Modifiers.Accessibility(Microsoft.CodeAnalysis.Accessibility.Private);
         }
 
-        private static bool TryGetWpfSortIndex(MethodDeclarationSyntax method, out int result)
+        private static bool TryGetWpfSortIndex(MethodDeclarationSyntax method, out long result)
         {
-            result = -1;
-
-            switch (method)
+            long callbackStart = int.MaxValue;
+            result = method switch
             {
-                case { Identifier: { ValueText: { } name }, ParameterList: { Parameters: { Count: 1 } } }
+                { Identifier: { ValueText: { } name }, ParameterList: { Parameters: { Count: 1 } } }
                     when name.StartsWith("Get", StringComparison.Ordinal) &&
-                        FindInvocation(method, "GetValue") is { ArgumentList: { Arguments: { Count: 1 } arguments } } &&
-                        arguments[0].Expression is IdentifierNameSyntax fieldName &&
-                        FindDeclaration(fieldName) is { } field:
-                    result = field.SpanStart;
-                    break;
-
-                case { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "void" } }, Identifier: { ValueText: { } name }, ParameterList: { Parameters: { Count: 2 } parameters } }
-                    when name.StartsWith("Set", StringComparison.Ordinal) &&
-                         FindInvocation(method, "SetValue") is { ArgumentList: { Arguments: { Count: 2 } arguments } } &&
+                         FindInvocation(method, "GetValue") is { ArgumentList: { Arguments: { Count: 1 } arguments } } &&
                          arguments[0].Expression is IdentifierNameSyntax fieldName &&
-                         arguments[1].Expression is IdentifierNameSyntax arg1 &&
-                         arg1.Identifier.ValueText == parameters[1].Identifier.ValueText &&
-                         FindDeclaration(fieldName) is { } field:
-                    result = field.Declaration.SpanStart;
-                    break;
-            }
+                         FindDeclaration(fieldName) is { } field
+                    => field.SpanStart,
+                { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "void" } }, Identifier: { ValueText: { } name }, ParameterList: { Parameters: { Count: 2 } parameters } }
+                    when
+                    name.StartsWith("Set", StringComparison.Ordinal) && FindInvocation(method, "SetValue") is { ArgumentList: { Arguments: { Count: 2 } arguments } } &&
+                    arguments[0].Expression is IdentifierNameSyntax fieldName && arguments[1].Expression is IdentifierNameSyntax arg1 &&
+                    arg1.Identifier.ValueText == parameters[1].Identifier.ValueText && FindDeclaration(fieldName) is { } field
+                    => field.Declaration.SpanStart,
+                { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "void" } }, ParameterList: { Parameters: { Count: 2 } parameters } }
+                    when parameters[0].Type is IdentifierNameSyntax { Identifier: { ValueText: "DependencyObject" } } &&
+                         parameters[1].Type is IdentifierNameSyntax { Identifier: { ValueText: "DependencyPropertyChangedEventArgs" } } &&
+                         FindCallbackInvocation() is { } usage
+                    => callbackStart + usage.SpanStart,
+                { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "object" } }, ParameterList: { Parameters: { Count: 2 } parameters } }
+                    when parameters[0].Type is IdentifierNameSyntax { Identifier: { ValueText: "DependencyObject" } } &&
+                         parameters[1].Type is PredefinedTypeSyntax { Keyword: { ValueText: "object" } } &&
+                         FindCallbackInvocation() is { } usage
+                    => callbackStart + usage.SpanStart,
+                { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "bool" } }, ParameterList: { Parameters: { Count: 1 } parameters } }
+                    when parameters[0].Type is PredefinedTypeSyntax { Keyword: { ValueText: "object" } } &&
+                         FindCallbackInvocation() is { } usage
+                    => callbackStart + usage.SpanStart,
+                _ => -1,
+            };
 
             return result != -1;
 
@@ -164,6 +173,7 @@
                             MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax key }
                                 when key != expression
                                 => FindDeclaration(key),
+                            _ => null,
                         },
                     _ => null,
                 };
@@ -177,6 +187,35 @@
                         _ => null,
                     };
                 }
+            }
+
+            IdentifierNameSyntax? FindCallbackInvocation()
+            {
+                using var walker = SpecificIdentifierNameWalker.Borrow(method.Parent, method.Identifier.ValueText);
+                if (walker.IdentifierNames.TrySingle(out var candidate))
+                {
+                    if (ContainingArgument() is { } argument &&
+                        argument.FirstAncestorOrSelf<InvocationExpressionSyntax>() is { } invocation &&
+                        invocation.MethodName() is { } methodName &&
+                        methodName.StartsWith("Register", StringComparison.Ordinal))
+                    {
+                        return candidate;
+                    }
+
+                    ArgumentSyntax? ContainingArgument()
+                    {
+                        return candidate switch
+                        {
+                            { Parent: ArgumentSyntax containing } => containing,
+                            { Parent: InvocationExpressionSyntax parent }
+                                when parent.FirstAncestorOrSelf<ArgumentSyntax>() is { } containing
+                                => containing,
+                            _ => null,
+                        };
+                    }
+                }
+
+                return null;
             }
         }
     }
