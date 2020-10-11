@@ -160,7 +160,7 @@
                         {
                             result = member;
                         }
-                        else
+                        else if(result is PropertyDeclarationSyntax)
                         {
                             result = null;
                             return false;
@@ -187,7 +187,7 @@
                     if (usage.TryFirstAncestor<MethodDeclarationSyntax>(out var set) &&
                         set.Modifiers.Any(SyntaxKind.StaticKeyword) &&
                         set.Identifier.ValueText.StartsWith("Set", StringComparison.Ordinal) &&
-                        set.ParameterList.Parameters.Count == 1)
+                        set.ParameterList.Parameters.Count == 2)
                     {
                         return set;
                     }

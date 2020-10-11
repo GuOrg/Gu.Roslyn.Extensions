@@ -182,7 +182,7 @@ namespace N
 }",
             stripLines: true);
 
-        private static readonly IReadOnlyList<TestCaseData> WpfSource = CreateTestCases(
+        private static readonly IReadOnlyList<TestCaseData> DependencyPropertySource = CreateTestCases(
             @"
 namespace N
 {
@@ -326,6 +326,125 @@ namespace N
 }",
             stripLines: true);
 
+        private static readonly IReadOnlyList<TestCaseData> AttachedPropertySource = CreateTestCases(
+            @"
+namespace N
+{
+    using System;
+    using System.Windows;
+
+    public static class C
+    {
+        public static readonly DependencyProperty Value1Property = DependencyProperty.RegisterAttached(
+            ""Value1"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(
+                default(int),
+                OnValue1Changed,
+                OnValue1Coerce),
+            ValidateValue1);
+
+        private static readonly DependencyPropertyKey Value2PropertyKey = DependencyProperty.RegisterAttachedReadOnly(
+            ""Value2"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(
+                default(int),
+                OnValue2Changed,
+                OnValue2Coerce),
+            ValidateValue2);
+
+        public static readonly DependencyProperty Value2Property = Value2PropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey Value3PropertyKey = DependencyProperty.RegisterAttachedReadOnly(
+            ""Value3"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(
+                default(int),
+                OnValue3Changed,
+                OnValue3Coerce),
+            ValidateValue3);
+
+        public static readonly DependencyProperty Value3Property = Value3PropertyKey.DependencyProperty;
+
+        public static int GetValue1(DependencyObject element)
+        {
+            return (int)element.GetValue(Value1Property);
+        }
+
+        public static void SetValue1(DependencyObject element, int value)
+        {
+            element.SetValue(Value1Property, value);
+        }
+
+        public static int GetValue2(DependencyObject element)
+        {
+            return (int)element.GetValue(Value2Property);
+        }
+
+        private static void SetValue2(DependencyObject element, int value)
+        {
+            element.SetValue(Value2PropertyKey, value);
+        }
+
+        public static int GetValue3(DependencyObject element)
+        {
+            return (int)element.GetValue(Value3Property);
+        }
+
+        private static void SetValue3(DependencyObject element, int value)
+        {
+            element.SetValue(Value3PropertyKey, value);
+        }
+
+        private static void OnValue1Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static object OnValue1Coerce(DependencyObject d, object basevalue)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static bool ValidateValue1(object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void OnValue2Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static object OnValue2Coerce(DependencyObject d, object basevalue)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static bool ValidateValue2(object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void OnValue3Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static object OnValue3Coerce(DependencyObject d, object basevalue)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static bool ValidateValue3(object value)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+",
+            stripLines: true);
+
         [TestCaseSource(nameof(ModifiersSource))]
         public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
@@ -370,8 +489,21 @@ namespace N
             Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
         }
 
-        [TestCaseSource(nameof(WpfSource))]
-        public static void DependencyPropertyBackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        [TestCaseSource(nameof(DependencyPropertySource))]
+        public static void DependencyProperty(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+        {
+            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+        }
+
+        [TestCaseSource(nameof(AttachedPropertySource))]
+        public static void AttachedProperty(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
             Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
             Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));

@@ -61,7 +61,7 @@ namespace N
                 OnValue1Coerce),
             ValidateValue1);
 
-        public static readonly DependencyProperty Value2Property = DependencyProperty.RegisterAttached(
+        private static readonly DependencyPropertyKey Value2PropertyKey = DependencyProperty.RegisterAttachedReadOnly(
             ""Value2"",
             typeof(int),
             typeof(C),
@@ -70,6 +70,20 @@ namespace N
                 OnValue2Changed,
                 OnValue2Coerce),
             ValidateValue2);
+
+        public static readonly DependencyProperty Value2Property = Value2PropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey Value3PropertyKey = DependencyProperty.RegisterAttachedReadOnly(
+            ""Value3"",
+            typeof(int),
+            typeof(C),
+            new PropertyMetadata(
+                default(int),
+                OnValue3Changed,
+                OnValue3Coerce),
+            ValidateValue3);
+
+        public static readonly DependencyProperty Value3Property = Value3PropertyKey.DependencyProperty;
 
         public static int GetValue1(DependencyObject element)
         {
@@ -86,9 +100,19 @@ namespace N
             return (int)element.GetValue(Value2Property);
         }
 
-        public static void SetValue2(DependencyObject element, int value)
+        private static void SetValue2(DependencyObject element, int value)
         {
-            element.SetValue(Value2Property, value);
+            element.SetValue(Value2PropertyKey, value);
+        }
+
+        public static int GetValue3(DependencyObject element)
+        {
+            return (int)element.GetValue(Value3Property);
+        }
+
+        private static void SetValue3(DependencyObject element, int value)
+        {
+            element.SetValue(Value3PropertyKey, value);
         }
 
         private static void OnValue1Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -118,8 +142,23 @@ namespace N
         {
             throw new NotImplementedException();
         }
+
+        private static void OnValue3Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static object OnValue3Coerce(DependencyObject d, object basevalue)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static bool ValidateValue3(object value)
+        {
+            throw new NotImplementedException();
+        }
     }
-}",
+}
+",
             stripLines: true);
 
         [TestCaseSource(nameof(TestCaseSource))]
