@@ -1,5 +1,6 @@
 ﻿namespace Gu.Roslyn.CodeFixExtensions
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -264,13 +265,15 @@
                         else if (trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia))
                         {
                             yield return whitespace;
-                            yield return trivia;
-                            yield return whitespace;
-                        }
-                        else if (trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
-                        {
-                            yield return whitespace;
-                            yield return trivia;
+                            if (trivia.HasStructure)
+                            {
+                                yield return CommentRewriter.Indent(trivia, whitespace.ToString());
+                            }
+                            else
+                            {
+                                yield return trivia;
+                            }
+
                             yield return whitespace;
                         }
                         else
@@ -324,6 +327,39 @@
             }
 
             return (TContaining)containingType.WithMembers(containingType.Members.Move(oldIndex, newIndex));
+        }
+
+        private class CommentRewriter : CSharpSyntaxRewriter
+        {
+            private readonly string whitespace;
+            private int n;
+
+            private CommentRewriter(string whitespace)
+                : base(visitIntoStructuredTrivia: true)
+            {
+                this.whitespace = whitespace;
+            }
+
+            public override SyntaxTrivia VisitTrivia(SyntaxTrivia trivia)
+            {
+                switch (trivia.Kind())
+                {
+                    case SyntaxKind.DocumentationCommentExteriorTrivia
+                        when trivia.ToString() is {} text &&
+                             text.StartsWith("///", StringComparison.Ordinal):
+                        this.n++;
+                        return this.n == 1
+                            ? base.VisitTrivia(trivia)
+                            : SyntaxFactory.DocumentationCommentExterior(this.whitespace + text);
+                    default:
+                        return base.VisitTrivia(trivia);
+                }
+            }
+
+            internal static SyntaxTrivia Indent(SyntaxTrivia trivia, string whitespace)
+            {
+                return new CommentRewriter(whitespace).VisitTrivia(trivia);
+            }
         }
     }
 }

@@ -89,7 +89,7 @@ namespace N
             var expected = @"
 namespace N
 {
-    class C
+    public class C
     {
 #if true
         private const int F1 = 1;
@@ -139,7 +139,6 @@ private int f;");
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
 
-        [Ignore("Temp.")]
         [Test]
         public static async Task AddFieldWithMultiLineDocs()
         {
