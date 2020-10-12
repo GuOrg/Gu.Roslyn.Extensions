@@ -279,7 +279,7 @@ namespace N
         }
 
         [Test]
-        public static async Task AddPublicFieldWhenPublicAndPrivateExists()
+        public static async Task AddPublicWhenPublicAndPrivateExists()
         {
             var code = @"
 namespace N
@@ -313,7 +313,7 @@ namespace N
         }
 
         [Test]
-        public static async Task AddPrivateFieldWhenPublicExists()
+        public static async Task AddPrivateWhenPublicExists()
         {
             var code = @"
 namespace N
@@ -344,7 +344,7 @@ namespace N
         }
 
         [Test]
-        public static async Task AddPrivateFieldWhenPrivateExists()
+        public static async Task AddPrivateWhenPrivateExists()
         {
             var code = @"
 namespace N
@@ -370,6 +370,80 @@ namespace N
 
             var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private int newField;");
             _ = editor.AddField(containingType, newField);
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task AddPrivateAndPublicWhenPublicExists()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        /// <summary> F1 </summary>
+        public static readonly int F1;
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        /// <summary> F1 </summary>
+        public static readonly int F1;
+
+        private static readonly int f2;
+
+        /// <summary> F2 </summary>
+        public static readonly int F2 = f2;
+    }
+}";
+
+            _ = editor.AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private static readonly int f2;"))
+                      .AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"/// <summary> F2 </summary>
+public static readonly int F2 = f2;"));
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task AddPublicAndPrivateWhenPublicExists()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        /// <summary> F1 </summary>
+        public static readonly int F1;
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        /// <summary> F1 </summary>
+        public static readonly int F1;
+
+        private static readonly int f2;
+
+        /// <summary> F2 </summary>
+        public static readonly int F2 = f2;
+    }
+}";
+
+            _ = editor.AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"/// <summary> F2 </summary>
+public static readonly int F2 = f2;"))
+                      .AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private static readonly int f2;"));
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
 
