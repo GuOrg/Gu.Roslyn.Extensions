@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.13.1</Version>
+    <Version>0.13.2</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
