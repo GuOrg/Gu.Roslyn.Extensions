@@ -2,7 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using Gu.Roslyn.AnalyzerExtensions;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -99,6 +101,25 @@
 
             trivia = default;
             return false;
+        }
+
+        /// <summary>
+        /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
+        /// </summary>
+        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+        /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
+        /// <returns>True if leading <see cref="SyntaxKind.WhitespaceTrivia"/> exists.</returns>
+        public static bool TryGetLeadingWhitespace(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
+        {
+            if (member is null)
+            {
+                throw new System.ArgumentNullException(nameof(member));
+            }
+
+            trivia = default;
+            return member.HasLeadingTrivia &&
+                   member.GetLeadingTrivia() is { } triviaList &&
+                   triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out trivia);
         }
 
         /// <summary>

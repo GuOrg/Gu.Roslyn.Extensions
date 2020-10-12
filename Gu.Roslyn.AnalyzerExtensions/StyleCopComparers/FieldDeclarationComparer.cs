@@ -67,7 +67,7 @@
                 return compare;
             }
 
-            compare = CompareReadOnly(x, y);
+            compare = CompareReadOnly(x.Modifiers, y.Modifiers);
             if (compare != 0)
             {
                 return compare;
@@ -84,6 +84,21 @@
 
         /// <inheritdoc />
         int IComparer<FieldDeclarationSyntax>.Compare(FieldDeclarationSyntax? x, FieldDeclarationSyntax? y) => Compare(x, y);
+
+        private static int CompareReadOnly(SyntaxTokenList x, SyntaxTokenList y)
+        {
+            return Index(x).CompareTo(Index(y));
+
+            static int Index(SyntaxTokenList modifiers)
+            {
+                if (modifiers.Any(SyntaxKind.ReadOnlyKeyword))
+                {
+                    return 0;
+                }
+
+                return 1;
+            }
+        }
 
         private static bool IsInitializedWith(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
         {
@@ -103,21 +118,6 @@
             }
 
             return false;
-        }
-
-        private static int CompareReadOnly(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
-        {
-            return Index(x).CompareTo(Index(y));
-
-            static int Index(FieldDeclarationSyntax field)
-            {
-                if (field.Modifiers.Any(SyntaxKind.ReadOnlyKeyword))
-                {
-                    return 0;
-                }
-
-                return 1;
-            }
         }
 
         private static int CompareBackingMember(FieldDeclarationSyntax x, FieldDeclarationSyntax y)

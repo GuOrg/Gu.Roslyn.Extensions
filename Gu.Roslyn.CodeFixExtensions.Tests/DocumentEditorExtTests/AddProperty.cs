@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
 {
     using System.Linq;
     using System.Threading.Tasks;

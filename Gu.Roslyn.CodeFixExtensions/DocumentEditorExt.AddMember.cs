@@ -329,52 +329,50 @@
 
         private static TypeDeclarationSyntax AddBackingField(this DocumentEditor editor, TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, string propertyName)
         {
-            if (type.TryFindProperty(propertyName, out var property))
+            if (type.TryFindProperty(propertyName, out var property) &&
+                editor.SemanticModel.BackingFieldsAdjacent(out var newLine) == CodeStyleResult.Yes)
             {
-                if (editor.SemanticModel.BackingFieldsAdjacent(out var newLine) == CodeStyleResult.Yes)
+                if (newLine ||
+                    !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))
                 {
-                    if (newLine ||
-                        !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))
-                    {
-                        return type.InsertNodesBefore(property, new[] { backingField });
-                    }
-
-                    return type.InsertNodesBefore(property, new[] { backingField.WithTrailingTrivia(null) });
+                    return type.InsertNodesBefore(property, new[] { backingField });
                 }
 
-                var index = type.Members.IndexOf(property);
-                for (var i = index + 1; i < type.Members.Count; i++)
+                return type.InsertNodesBefore(property, new[] { backingField.WithTrailingTrivia(null) });
+            }
+
+            var index = type.Members.IndexOf(property);
+            for (var i = index + 1; i < type.Members.Count; i++)
+            {
+                if (type.Members[i] is PropertyDeclarationSyntax other)
                 {
-                    if (type.Members[i] is PropertyDeclarationSyntax other)
+                    if (other.TryGetBackingField(out var otherField))
                     {
-                        if (other.TryGetBackingField(out var otherField))
-                        {
-                            return type.InsertNodesBefore(otherField, new[] { backingField });
-                        }
-                    }
-                    else
-                    {
-                        break;
+                        return type.InsertNodesBefore(otherField, new[] { backingField });
                     }
                 }
-
-                for (var i = index - 1; i >= 0; i--)
+                else
                 {
-                    if (type.Members[i] is PropertyDeclarationSyntax other)
-                    {
-                        if (other.TryGetBackingField(out var otherField))
-                        {
-                            return type.InsertNodesAfter(otherField, new[] { backingField });
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
 
-            return editor.Generator.AddSorted(type, backingField);
+            for (var i = index - 1; i >= 0; i--)
+            {
+                if (type.Members[i] is PropertyDeclarationSyntax other)
+                {
+                    if (other.TryGetBackingField(out var otherField))
+                    {
+                        return type.InsertNodesAfter(otherField, new[] { backingField });
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return type.AddField(backingField);
         }
     }
 }

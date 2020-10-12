@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
 {
     using System.Linq;
     using System.Threading.Tasks;
@@ -12,7 +12,7 @@ namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
     {
         [TestCase("public static readonly int NewField = 1;")]
         [TestCase("private int newField;")]
-        public static async Task AddPrivateFieldWhenEmpty(string declaration)
+        public static async Task WhenEmptyClass(string declaration)
         {
             var code = @"
 namespace N
@@ -35,6 +35,216 @@ namespace N
 }".AssertReplace("private int newField;", declaration);
 
             var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(declaration);
+            _ = editor.AddField(containingType, newField);
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task AddDependentFields()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        private const int F1 = 1;
+        private const int F2 = F1;
+    }
+}";
+
+            _ = editor.AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"private const int F1 = 1;"))
+                      .AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"private const int F2 = F1;"));
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Ignore("Temp.")]
+        [Test]
+        public static async Task AddFieldWithSingleLineDocsAfterFieldInConditional()
+        {
+            var code = @"
+namespace N
+{
+    public class C
+    {
+#if true
+        private const int F1 = 1;
+#endif
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+#if true
+        private const int F1 = 1;
+#endif
+
+        /// <summary> Text </summary>
+        private int f;
+    }
+}";
+
+            var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"/// <summary> Text </summary>
+private int f;");
+            _ = editor.AddField(containingType, newField);
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task AddFieldWithSingleLineDocs()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+
+        /// <summary> Text </summary>
+        private int f;
+    }
+}";
+
+            var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"/// <summary> Text </summary>
+private int f;");
+            _ = editor.AddField(containingType, newField);
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Ignore("Temp.")]
+        [Test]
+        public static async Task AddFieldWithMultiLineDocs()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+
+        /// <summary>
+        /// Text
+        /// </summary>
+        private int f;
+    }
+}";
+
+            var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"/// <summary>
+/// Text
+/// </summary>
+private int f;");
+            _ = editor.AddField(containingType, newField);
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task AddIndentedFieldWithSingleLineDocs()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+
+        /// <summary> Text </summary>
+        private int f;
+    }
+}";
+
+            var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"
+        /// <summary> Text </summary>
+        private int f;");
+            _ = editor.AddField(containingType, newField);
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
+        public static async Task AddIndentedFieldWithMultiLineDocs()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        private int f;
+
+        /// <summary>
+        /// Text
+        /// </summary>
+        private int f;
+    }
+}";
+
+            var newField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"
+        /// <summary>
+        /// Text
+        /// </summary>
+        private int f;");
             _ = editor.AddField(containingType, newField);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }

@@ -39,7 +39,7 @@
         }
 
         /// <summary>
-        /// Compare const &lt; static &lt; member.
+        /// Compare const &lt; static &lt; instance.
         /// </summary>
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>
@@ -65,7 +65,7 @@
         }
 
         /// <summary>
-        /// Compare public &lt; internal &lt; protected.
+        /// Compare public &lt; internal &lt; protected &lt; private.
         /// </summary>
         /// <param name="x">The first modifiers.</param>
         /// <param name="y">The other modifiers.</param>
