@@ -146,13 +146,6 @@
                 throw new System.ArgumentNullException(nameof(member));
             }
 
-            if (NextToken() is { HasLeadingTrivia: true } token &&
-                token.LeadingTrivia.Any(x => IsEndDirective(x)))
-            {
-                containingType = containingType.ReplaceToken(token, token.WithLeadingTrivia(token.LeadingTrivia.SkipWhile(x => IsEndDirective(x))));
-                member = member.PrependLeadingTrivia(token.LeadingTrivia.TakeWhile(x => IsEndDirective(x)).Concat(new[] { SyntaxFactory.LineFeed }));
-            }
-
             if (!member.TryGetLeadingWhitespace(out _))
             {
                 var leadingWhiteSpace = containingType.TryGetLeadingWhitespace(out var classWhitespace)
@@ -171,6 +164,13 @@
             if (!member.TryGetTrailingNewLine(out _))
             {
                 member = member.AppendTrailingTrivia(SyntaxFactory.LineFeed);
+            }
+
+            if (NextToken() is { HasLeadingTrivia: true } token &&
+                token.LeadingTrivia.Any(x => IsEndDirective(x)))
+            {
+                containingType = containingType.ReplaceToken(token, token.WithLeadingTrivia(token.LeadingTrivia.SkipWhile(x => IsEndDirective(x))));
+                member = member.PrependLeadingTrivia(token.LeadingTrivia.TakeWhile(x => IsEndDirective(x)));
             }
 
             if (containingType.Members.TryElementAt(index, out var existing) &&

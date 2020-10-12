@@ -68,7 +68,6 @@ namespace N
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
 
-        [Ignore("Temp.")]
         [Test]
         public static async Task AddFieldWithSingleLineDocsAfterFieldInConditional()
         {
