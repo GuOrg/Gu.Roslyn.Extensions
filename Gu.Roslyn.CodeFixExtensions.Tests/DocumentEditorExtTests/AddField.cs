@@ -386,8 +386,6 @@ namespace N
     }
 }";
             var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
 
             var expected = @"
 namespace N
@@ -403,10 +401,34 @@ namespace N
         public static readonly int F2 = f2;
     }
 }";
+            var privateField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private static readonly int f2;");
+            var publicField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"/// <summary> F2 </summary>
+public static readonly int F2 = f2;");
 
-            _ = editor.AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private static readonly int f2;"))
-                      .AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"/// <summary> F2 </summary>
-public static readonly int F2 = f2;"));
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            _ = editor.AddField(containingType, privateField)
+                      .AddField(containingType, publicField);
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+
+            editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            _ = editor.AddField(containingType, publicField)
+                      .AddField(containingType, privateField);
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+
+            editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            editor.ReplaceNode(containingType, containingType.AddField(privateField).AddField(publicField));
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+
+            editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            editor.ReplaceNode(containingType, containingType.AddField(publicField).AddField(privateField));
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
 
