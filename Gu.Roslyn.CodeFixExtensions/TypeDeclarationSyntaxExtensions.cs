@@ -182,7 +182,7 @@
                                 yield return whitespace;
                                 if (trivia.HasStructure)
                                 {
-                                    yield return CommentRewriter.Indent(trivia, whitespace.ToString());
+                                    yield return IndentCommentRewriter.Indent(trivia, whitespace.ToString());
                                 }
                                 else
                                 {
@@ -333,12 +333,12 @@
             return (TContaining)containingType.WithMembers(containingType.Members.Move(oldIndex, newIndex));
         }
 
-        private class CommentRewriter : CSharpSyntaxRewriter
+        private class IndentCommentRewriter : CSharpSyntaxRewriter
         {
             private readonly string whitespace;
             private int n;
 
-            private CommentRewriter(string whitespace)
+            private IndentCommentRewriter(string whitespace)
                 : base(visitIntoStructuredTrivia: true)
             {
                 this.whitespace = whitespace;
@@ -362,7 +362,7 @@
 
             internal static SyntaxTrivia Indent(SyntaxTrivia trivia, string whitespace)
             {
-                return new CommentRewriter(whitespace).VisitTrivia(trivia);
+                return new IndentCommentRewriter(whitespace).VisitTrivia(trivia);
             }
         }
     }
