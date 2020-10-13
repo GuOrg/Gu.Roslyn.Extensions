@@ -470,6 +470,49 @@ public static readonly int F2 = f2;"))
         }
 
         [Test]
+        public static async Task AddInternalAndPrivateWhenPublicAndPrivateExists()
+        {
+            var code = @"
+namespace N
+{
+    class C
+    {
+        /// <summary> F1 </summary>
+        public static readonly int F1;
+
+        /// <summary> f3 </summary>
+        private static readonly int f3;
+    }
+}";
+            var sln = CodeFactory.CreateSolution(code);
+            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+
+            var expected = @"
+namespace N
+{
+    class C
+    {
+        /// <summary> F1 </summary>
+        public static readonly int F1;
+
+        private static readonly int f2;
+
+        /// <summary> F2 </summary>
+        internal static readonly int F2 = f2;
+
+        /// <summary> f3 </summary>
+        private static readonly int f3;
+    }
+}";
+
+            _ = editor.AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(@"/// <summary> F2 </summary>
+internal static readonly int F2 = f2;"))
+                      .AddField(containingType, (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private static readonly int f2;"));
+            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+        }
+
+        [Test]
         public static async Task TypicalClass()
         {
             var code = @"

@@ -153,12 +153,86 @@
                     : "            ";
 
                 member = WithLeadingWhiteSpace(member, SyntaxFactory.Whitespace(leadingWhiteSpace));
+
+                static T WithLeadingWhiteSpace<T>(T member, SyntaxTrivia whitespace)
+                    where T : MemberDeclarationSyntax
+                {
+                    if (!member.HasLeadingTrivia)
+                    {
+                        return member.WithLeadingTrivia(whitespace);
+                    }
+
+                    return member.WithLeadingTrivia(Update(member.GetLeadingTrivia()));
+
+                    IEnumerable<SyntaxTrivia> Update(SyntaxTriviaList leadingTrivia)
+                    {
+                        foreach (var trivia in leadingTrivia)
+                        {
+                            if (IsEndDirective(trivia))
+                            {
+                                yield return trivia;
+                            }
+                            else if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                            {
+                                yield return trivia;
+                                yield return whitespace;
+                            }
+                            else if (trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia))
+                            {
+                                yield return whitespace;
+                                if (trivia.HasStructure)
+                                {
+                                    yield return CommentRewriter.Indent(trivia, whitespace.ToString());
+                                }
+                                else
+                                {
+                                    yield return trivia;
+                                }
+
+                                yield return whitespace;
+                            }
+                            else
+                            {
+                                yield return trivia;
+                            }
+                        }
+                    }
+                }
             }
 
             if (index > 0 &&
                 ShouldAddLeadingLineFeed(containingType.Members[index - 1], member))
             {
                 member = WithLeadingNewLine(member);
+
+                static T WithLeadingNewLine<T>(T member)
+                    where T : MemberDeclarationSyntax
+                {
+                    if (!member.HasLeadingTrivia)
+                    {
+                        return member.WithLeadingTrivia(SyntaxFactory.LineFeed);
+                    }
+
+                    return member.WithLeadingTrivia(Update(member.GetLeadingTrivia()));
+
+                    IEnumerable<SyntaxTrivia> Update(SyntaxTriviaList leadingTrivia)
+                    {
+                        return leadingTrivia.Insert(Index(), SyntaxFactory.LineFeed);
+
+                        int Index()
+                        {
+                            for (var i = 0; i < leadingTrivia.Count; i++)
+                            {
+                                if (!IsEndDirective(leadingTrivia[i]))
+                                {
+                                    return i;
+                                }
+                            }
+
+                            return 0;
+                        }
+                    }
+                }
             }
 
             if (!member.TryGetTrailingNewLine(out _))
@@ -238,76 +312,6 @@
                         return false;
                 }
             }
-
-            static T WithLeadingWhiteSpace<T>(T member, SyntaxTrivia whitespace)
-                  where T : MemberDeclarationSyntax
-            {
-                if (!member.HasLeadingTrivia)
-                {
-                    return member.WithLeadingTrivia(whitespace);
-                }
-
-                return member.WithLeadingTrivia(Update(member.GetLeadingTrivia()));
-
-                IEnumerable<SyntaxTrivia> Update(SyntaxTriviaList leadingTrivia)
-                {
-                    foreach (var trivia in leadingTrivia)
-                    {
-                        if (IsEndDirective(trivia))
-                        {
-                            yield return trivia;
-                        }
-                        else if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
-                        {
-                            yield return trivia;
-                            yield return whitespace;
-                        }
-                        else if (trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia))
-                        {
-                            yield return whitespace;
-                            if (trivia.HasStructure)
-                            {
-                                yield return CommentRewriter.Indent(trivia, whitespace.ToString());
-                            }
-                            else
-                            {
-                                yield return trivia;
-                            }
-
-                            yield return whitespace;
-                        }
-                        else
-                        {
-                            yield return trivia;
-                        }
-                    }
-                }
-            }
-
-            static T WithLeadingNewLine<T>(T member)
-                 where T : MemberDeclarationSyntax
-            {
-                if (!member.HasLeadingTrivia)
-                {
-                    return member.WithLeadingTrivia(SyntaxFactory.LineFeed);
-                }
-
-                var leadingTrivia = member.GetLeadingTrivia();
-                return member.WithLeadingTrivia(leadingTrivia.Insert(Index(), SyntaxFactory.LineFeed));
-
-                int Index()
-                {
-                    for (var i = 0; i < leadingTrivia.Count; i++)
-                    {
-                        if (!IsEndDirective(leadingTrivia[i]))
-                        {
-                            return i;
-                        }
-                    }
-
-                    return 0;
-                }
-            }
         }
 
         /// <summary>
@@ -345,7 +349,7 @@
                 switch (trivia.Kind())
                 {
                     case SyntaxKind.DocumentationCommentExteriorTrivia
-                        when trivia.ToString() is {} text &&
+                        when trivia.ToString() is { } text &&
                              text.StartsWith("///", StringComparison.Ordinal):
                         this.n++;
                         return this.n == 1
