@@ -1,1 +1,3 @@
-﻿
+﻿static Gu.Roslyn.CodeFixExtensions.Trivia.TryGetLeadingWhitespace(this Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member, out Microsoft.CodeAnalysis.SyntaxTrivia trivia) -> bool
+static Gu.Roslyn.CodeFixExtensions.TypeDeclarationSyntaxExtensions.InsertMember<TContaining, TMember>(this TContaining containingType, TMember member, int index) -> TContaining
+static Gu.Roslyn.CodeFixExtensions.TypeDeclarationSyntaxExtensions.MoveMember<TContaining>(this TContaining containingType, int oldIndex, int newIndex) -> TContaining
