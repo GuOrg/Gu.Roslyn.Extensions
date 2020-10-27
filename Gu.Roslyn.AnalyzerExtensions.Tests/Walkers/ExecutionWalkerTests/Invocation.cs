@@ -383,5 +383,34 @@ namespace N
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
             Assert.AreEqual(expected, string.Join(", ", walker.Literals));
         }
+
+        [TestCase(SearchScope.Member,    "1")]
+        [TestCase(SearchScope.Instance,  "1, 2, 2, 2, 2")]
+        [TestCase(SearchScope.Type,      "1, 2, 2, 2, 2")]
+        [TestCase(SearchScope.Recursive, "1, 2, 2, 2, 2")]
+        public static void Chained(SearchScope scope, string expected)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public static class C
+    {
+        public C()
+        {
+            1.M()
+             .M()
+             .M()
+             .M();
+        }
+
+        public static int M(this int i) => j + 2;
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindConstructorDeclaration("C");
+            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+        }
     }
 }
