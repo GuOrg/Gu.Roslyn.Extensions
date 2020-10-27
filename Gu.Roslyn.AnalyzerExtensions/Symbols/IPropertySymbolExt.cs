@@ -1,8 +1,9 @@
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -99,6 +100,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             if (property is null)
             {
                 throw new System.ArgumentNullException(nameof(property));
+            }
+
+            if (property is { IsAbstract: true })
+            {
+                return true;
             }
 
             if (property.ContainingType is { } containingType)

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -7,8 +7,9 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     // ReSharper disable once InconsistentNaming
     public static class IPropertySymbolExtTests
     {
-        [TestCase("GetOnly", true)]
-        [TestCase("AutoGetSet", true)]
+        [TestCase("GetOnly",        true)]
+        [TestCase("AutoGetSet",     true)]
+        [TestCase("AbstractGetSet", true)]
         [TestCase("ExpressionBody", false)]
         public static void IsAutoProperty(string name, bool expected)
         {
@@ -16,11 +17,13 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
                 @"
 namespace N
 {
-    public class C
+    public abstract class C
     {
         public int GetOnly { get; }
 
         public int AutoGetSet { get; set; }
+
+        public abstract int AbstractGetSet { get; set; }
 
         public int ExpressionBody => GetOnly;
     }
