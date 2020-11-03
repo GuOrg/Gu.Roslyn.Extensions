@@ -29,7 +29,7 @@
             }
 
             var scope = nodeInScope.Parent;
-            while (scope != null)
+            while (scope is { })
             {
                 switch (scope)
                 {
@@ -84,7 +84,7 @@
             }
 
             var scope = nodeInScope.Parent;
-            while (scope != null)
+            while (scope is { })
             {
                 switch (scope)
                 {

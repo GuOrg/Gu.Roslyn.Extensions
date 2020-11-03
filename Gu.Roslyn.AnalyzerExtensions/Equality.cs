@@ -40,7 +40,7 @@
                          IsRuntimeHelpersEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                          IsStringEquals(invocation, semanticModel, cancellationToken, out left, out right, out _) ||
                          IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
-                         (semanticModel != null && IsEqualityComparerEquals(invocation, semanticModel, cancellationToken, out _, out left, out right)):
+                         (semanticModel is { } && IsEqualityComparerEquals(invocation, semanticModel, cancellationToken, out _, out left, out right)):
                     return true;
                 case ConditionalAccessExpressionSyntax { WhenNotNull: InvocationExpressionSyntax invocation }
                     when IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
@@ -98,7 +98,7 @@
                         return false;
                 }
 
-                if (semanticModel != null)
+                if (semanticModel is { })
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            method is { IsStatic: true, Parameters: { Length: 2 } parameters } &&
@@ -144,7 +144,7 @@
 
             bool IsCorrectSymbol()
             {
-                if (semanticModel != null)
+                if (semanticModel is { })
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            !method.IsStatic;
@@ -272,7 +272,7 @@
 
             bool? IsCorrectSymbol()
             {
-                if (semanticModel != null)
+                if (semanticModel is { })
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            method is { IsStatic: true, Parameters: { Length: 2 } parameters } &&
@@ -318,7 +318,7 @@
 
             bool? IsCorrectSymbol()
             {
-                if (semanticModel != null)
+                if (semanticModel is { })
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            method.ContainingType == QualifiedType.System.Runtime.CompilerServices.RuntimeHelpers &&
@@ -372,7 +372,7 @@
 
             bool? IsCorrectSymbol()
             {
-                if (semanticModel != null)
+                if (semanticModel is { })
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            method.ContainingType == QualifiedType.System.Nullable &&
@@ -429,7 +429,7 @@
 
             bool IsCorrectSymbol()
             {
-                if (semanticModel != null)
+                if (semanticModel is { })
                 {
                     return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
                            method.ContainingType == QualifiedType.System.String &&

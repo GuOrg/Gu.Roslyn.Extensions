@@ -99,7 +99,7 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindFirst(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out IdentifierNameSyntax? identifierName)
         {
-            if (symbol != null)
+            if (symbol is { })
             {
                 using var walker = Borrow(node);
                 return walker.TryFindFirst(symbol, semanticModel, cancellationToken, out identifierName);
@@ -120,7 +120,7 @@
         /// <returns>True if a match was found.</returns>
         public static bool TryFindLast(SyntaxNode node, ISymbol symbol, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out IdentifierNameSyntax? identifierName)
         {
-            if (symbol != null)
+            if (symbol is { })
             {
                 using var walker = Borrow(node);
                 return walker.TryFindLast(symbol, semanticModel, cancellationToken, out identifierName);

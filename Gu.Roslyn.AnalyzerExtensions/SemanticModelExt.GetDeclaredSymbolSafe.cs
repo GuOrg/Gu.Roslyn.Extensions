@@ -34,7 +34,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -359,7 +359,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -434,7 +434,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken) ??
                      GetSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>

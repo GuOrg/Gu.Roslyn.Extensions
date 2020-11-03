@@ -117,7 +117,7 @@
 
                 if (TryGetPositionFromTypeParam(out var before, out var after))
                 {
-                    if (after != null)
+                    if (after is { })
                     {
                         return comment.InsertBefore(after, typeparam);
                     }
@@ -168,7 +168,7 @@
                     }
                 }
 
-                return before != null;
+                return before is { };
 
                 static TypeParameterListSyntax? TryGetTypeParameterList(MemberDeclarationSyntax source)
                 {
@@ -241,7 +241,7 @@
 
                 if (TryGetPositionFromParam(out var before, out var after))
                 {
-                    if (after != null)
+                    if (after is { })
                     {
                         return comment.InsertBefore(after, param);
                     }
@@ -291,7 +291,7 @@
                     }
                 }
 
-                return before != null;
+                return before is { };
             }
         }
 

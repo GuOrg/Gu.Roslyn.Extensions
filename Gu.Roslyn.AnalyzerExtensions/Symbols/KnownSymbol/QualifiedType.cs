@@ -295,7 +295,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         protected virtual bool NameEquals(string name)
         {
             return name == this.Type ||
-                   (this.Alias != null &&
+                   (this.Alias is { } &&
                     name == this.Alias);
         }
 

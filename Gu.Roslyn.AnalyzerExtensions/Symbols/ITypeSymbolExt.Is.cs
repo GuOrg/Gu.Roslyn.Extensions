@@ -222,7 +222,7 @@
                 }
             }
 
-            while (source != null)
+            while (source is { })
             {
                 if (source == qualifiedType)
                 {
@@ -275,7 +275,7 @@
                 }
             }
 
-            while (source?.BaseType != null)
+            while (source?.BaseType is { })
             {
                 if (IsSameType(source, destination))
                 {

@@ -1,6 +1,7 @@
 ﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
+
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -65,9 +66,7 @@
 
             if (element.StartTag is { Attributes: { } attributes })
             {
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
-                return attributes.TrySingleOfType(out attribute);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+                return attributes.TrySingleOfType<XmlAttributeSyntax, XmlNameAttributeSyntax>(out attribute);
             }
 
             attribute = null;

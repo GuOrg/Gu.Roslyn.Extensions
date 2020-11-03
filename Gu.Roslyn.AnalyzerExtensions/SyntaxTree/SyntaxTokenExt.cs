@@ -1,5 +1,6 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
+    using System;
     using System.Threading;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -36,6 +37,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>The <see cref="FileLinePositionSpan"/> for the token in the containing document.</returns>
         public static FileLinePositionSpan FileLinePositionSpan(this SyntaxToken token, CancellationToken cancellationToken)
         {
+            if (token.SyntaxTree is null)
+            {
+                throw new ArgumentException("token is not in a syntax tree.", nameof(token));
+            }
+
             return token.SyntaxTree.GetLineSpan(token.Span, cancellationToken);
         }
     }

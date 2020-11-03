@@ -47,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where T : SyntaxNode
         {
             result = node.FirstAncestor<T>();
-            return result != null;
+            return result is { };
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where T : SyntaxNode
         {
             result = node?.FirstAncestorOrSelf<T>();
-            return result != null;
+            return result is { };
         }
 
         /// <summary>

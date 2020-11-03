@@ -48,7 +48,7 @@
                 return Microsoft.CodeAnalysis.Accessibility.Protected;
             }
 
-            if (declaration.ExplicitInterfaceSpecifier != null)
+            if (declaration.ExplicitInterfaceSpecifier is { })
             {
                 // This will not always be right.
                 return Microsoft.CodeAnalysis.Accessibility.Public;

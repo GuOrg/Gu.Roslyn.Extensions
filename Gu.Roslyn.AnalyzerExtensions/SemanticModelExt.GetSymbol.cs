@@ -35,7 +35,7 @@
 
             symbol = GetSymbolSafe(semanticModel, token.Parent, cancellationToken) as TSymbol ??
                      GetDeclaredSymbolSafe(semanticModel, token.Parent, cancellationToken) as TSymbol;
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -63,7 +63,7 @@
 
             symbol = GetSymbolSafe(semanticModel, node, cancellationToken) as TSymbol ??
                      GetDeclaredSymbolSafe(semanticModel, node, cancellationToken) as TSymbol;
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -88,7 +88,7 @@
             }
 
             symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -113,7 +113,7 @@
             }
 
             symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -186,7 +186,7 @@
             }
 
             symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -256,7 +256,7 @@
             }
 
             symbol = GetSymbolSafe(semanticModel, node, cancellationToken);
-            return symbol != null;
+            return symbol is { };
         }
 
         /// <summary>
@@ -389,7 +389,6 @@
             {
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
-
 
             if (token.Parent is null)
             {

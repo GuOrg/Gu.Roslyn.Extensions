@@ -71,7 +71,7 @@
                 name = variable.Identifier.ValueText;
             }
 
-            return name != null;
+            return name is { };
         }
 
         /// <summary>

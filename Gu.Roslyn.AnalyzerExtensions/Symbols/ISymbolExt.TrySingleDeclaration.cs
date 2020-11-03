@@ -49,7 +49,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 ? reference.GetSyntax(cancellationToken) as BasePropertyDeclarationSyntax
                 : null;
 
-            return declaration != null;
+            return declaration is { };
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 ? reference.GetSyntax(cancellationToken) as MemberDeclarationSyntax
                 : null;
 
-            return declaration != null;
+            return declaration is { };
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 ? reference.GetSyntax(cancellationToken) as EventDeclarationSyntax
                 : null;
 
-            return declaration != null;
+            return declaration is { };
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 ? reference.GetSyntax(cancellationToken) as EventFieldDeclarationSyntax
                 : null;
 
-            return declaration != null;
+            return declaration is { };
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 ? reference.GetSyntax(cancellationToken) as T
                 : null;
 
-            return declaration != null;
+            return declaration is { };
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 ? reference.GetSyntax(cancellationToken) as ParameterSyntax
                 : null;
 
-            return declaration != null;
+            return declaration is { };
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 ? reference.GetSyntax(cancellationToken)
                 : null;
 
-            return declaration != null;
+            return declaration is { };
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 ? reference.GetSyntax(cancellationToken).FirstAncestorOrSelf<T>()
                 : null;
 
-            return declaration != null;
+            return declaration is { };
         }
     }
 }

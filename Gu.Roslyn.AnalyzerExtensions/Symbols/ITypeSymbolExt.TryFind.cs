@@ -274,10 +274,7 @@
                 return false;
             }
 
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
-            return type.GetMembers(name)
-                       .TrySingleOfType(out member);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return type.GetMembers(name).TrySingleOfType<ISymbol, TMember>(out member);
         }
 
         /// <summary>
@@ -308,7 +305,7 @@
                 if (symbol is TMember candidate &&
                     predicate(candidate))
                 {
-                    if (member != null)
+                    if (member is { })
                     {
                         member = null;
                         return false;
@@ -318,7 +315,7 @@
                 }
             }
 
-            return member != null;
+            return member is { };
         }
 
         /// <summary>
@@ -354,7 +351,7 @@
                 if (symbol is TMember candidate &&
                     predicate(candidate))
                 {
-                    if (member != null)
+                    if (member is { })
                     {
                         member = null;
                         return false;
@@ -364,7 +361,7 @@
                 }
             }
 
-            return member != null;
+            return member is { };
         }
 
         /// <summary>
@@ -423,9 +420,7 @@
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
             }
 
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
-            return type.GetMembers(name).TryFirstOfType(out member);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return type.GetMembers(name).TryFirstOfType<ISymbol, TMember>(out member);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -116,8 +117,9 @@
                 foreach (var declaration in walker.localDeclarations)
                 {
                     if (declaration.Declaration is { Variables: { } variables } &&
-                        variables.TryFirst(x => x.Initializer != null, out var variable) &&
-                        IsMatch(currentSymbol, variable.Initializer.Value, semanticModel, cancellationToken) &&
+                        variables.TryFirst(x => x.Initializer is { }, out var variable) &&
+                        variable is { Initializer: { Value: { } value } } &&
+                        IsMatch(currentSymbol, value, semanticModel, cancellationToken) &&
                         semanticModel.TryGetSymbol(variable, cancellationToken, out ILocalSymbol? local))
                     {
                         using var localWalker = With(local, currentNode);
@@ -244,7 +246,7 @@
                 if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out var assignedSymbol) &&
                     SymbolComparer.Equal(symbol.OriginalDefinition, assignedSymbol))
                 {
-                    if (assignment != null)
+                    if (assignment is { })
                     {
                         assignment = null;
                         return false;
@@ -254,7 +256,7 @@
                 }
             }
 
-            return assignment != null;
+            return assignment is { };
         }
 
         /// <summary>

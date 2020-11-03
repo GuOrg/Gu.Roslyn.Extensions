@@ -82,7 +82,7 @@
 
             bool IsMatch()
             {
-                return node != null &&
+                return node is { } &&
                        NameMatches() &&
                        this.semanticModel.TryGetSymbol(node, this.cancellationToken, out var nodeSymbol) &&
                        nodeSymbol.IsEquivalentTo(this.symbol);

@@ -54,7 +54,7 @@
                         throw new InvalidOperationException($"Not handling member {part.Kind}.");
                 }
 
-                if (part.Symbol != null)
+                if (part.Symbol is { })
                 {
                     previous = part;
                 }

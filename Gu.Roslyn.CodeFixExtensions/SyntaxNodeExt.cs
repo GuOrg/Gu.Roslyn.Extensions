@@ -108,7 +108,7 @@
 
             node = syntaxRoot.FindNode(location.SourceSpan, getInnermostNodeForTie: true)
                              .FirstAncestorOrSelf<T>();
-            return node != null;
+            return node is { };
         }
     }
 }

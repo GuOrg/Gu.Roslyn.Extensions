@@ -165,11 +165,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             member = null;
-            while (type != null)
+            while (type is { })
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
-                    if (member != null)
+                    if (member is { })
                     {
                         member = null;
                         return false;
@@ -188,7 +188,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
-            return member != null;
+            return member is { };
         }
 
         /// <summary>
@@ -209,14 +209,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             member = null;
-            while (type != null)
+            while (type is { })
             {
                 foreach (var symbol in type.GetMembers())
                 {
                     if (symbol is TMember candidate &&
                         predicate(candidate))
                     {
-                        if (member != null)
+                        if (member is { })
                         {
                             member = null;
                             return false;
@@ -231,7 +231,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
-            return member != null;
+            return member is { };
         }
 
         /// <summary>
@@ -254,14 +254,14 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             member = null;
 
-            while (type != null)
+            while (type is { })
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
                     if (symbol is TMember candidate &&
                         predicate(candidate))
                     {
-                        if (member != null)
+                        if (member is { })
                         {
                             member = null;
                             return false;
@@ -276,7 +276,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
-            return member != null;
+            return member is { };
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             member = null;
-            while (type != null)
+            while (type is { })
             {
                 foreach (var symbol in type.GetMembers())
                 {
@@ -330,7 +330,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TMember : class, ISymbol
         {
             member = null;
-            while (type != null)
+            while (type is { })
             {
                 foreach (var symbol in type.GetMembers(name))
                 {
@@ -368,7 +368,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             member = null;
-            while (type != null)
+            while (type is { })
             {
                 foreach (var symbol in type.GetMembers(name))
                 {

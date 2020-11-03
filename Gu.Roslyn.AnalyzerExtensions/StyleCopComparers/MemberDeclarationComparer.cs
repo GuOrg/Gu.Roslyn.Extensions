@@ -233,7 +233,7 @@
                 switch (member)
                 {
                     case EventDeclarationSyntax eventDeclaration:
-                        if (eventDeclaration.ExplicitInterfaceSpecifier != null)
+                        if (eventDeclaration.ExplicitInterfaceSpecifier is { })
                         {
                             return Microsoft.CodeAnalysis.Accessibility.Public;
                         }

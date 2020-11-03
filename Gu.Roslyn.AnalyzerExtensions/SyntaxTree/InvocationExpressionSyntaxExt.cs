@@ -141,7 +141,7 @@
                 return false;
             }
 
-            return invocation.ArgumentList != null &&
+            return invocation.ArgumentList is { } &&
                    invocation.TryGetMethodName(out var name) &&
                    name == expected.Name &&
                    semanticModel.TryGetSymbol(invocation, cancellationToken, out target) &&

@@ -169,7 +169,7 @@
                 }
             }
 
-            return result != null;
+            return result is { };
 
             static MemberDeclarationSyntax? Member(ExpressionSyntax usage)
             {

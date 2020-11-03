@@ -125,7 +125,7 @@
         /// <inheritdoc />
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
         {
-            if (node?.Alias != null)
+            if (node?.Alias is { })
             {
                 this.aliases.Add(node);
             }

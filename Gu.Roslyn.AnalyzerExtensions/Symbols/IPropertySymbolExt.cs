@@ -47,7 +47,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             getter = null;
-            return property.GetMethod != null &&
+            return property.GetMethod is { } &&
                    property.TrySingleDeclaration(cancellationToken, out var declaration) &&
                    declaration.TryGetGetter(out getter);
         }
@@ -67,7 +67,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             setter = null;
-            return property.SetMethod != null &&
+            return property.SetMethod is { } &&
                    property.TrySingleDeclaration(cancellationToken, out var declaration) &&
                    declaration.TryGetSetter(out setter);
         }

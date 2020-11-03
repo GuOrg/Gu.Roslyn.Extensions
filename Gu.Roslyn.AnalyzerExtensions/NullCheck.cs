@@ -133,7 +133,7 @@
                 throw new System.ArgumentNullException(nameof(scope));
             }
 
-            if (scope.FirstAncestorOrSelf<MemberDeclarationSyntax>() is {} member)
+            if (scope.FirstAncestorOrSelf<MemberDeclarationSyntax>() is { } member)
             {
                 var walker = NullCheckWalker.Borrow(member);
                 walker.Filter(parameter, semanticModel, cancellationToken);

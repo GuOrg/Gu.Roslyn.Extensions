@@ -87,7 +87,7 @@
 
         private static Accessibility Accessibility(MethodDeclarationSyntax declaration)
         {
-            if (declaration.ExplicitInterfaceSpecifier != null)
+            if (declaration.ExplicitInterfaceSpecifier is { })
             {
                 return Microsoft.CodeAnalysis.Accessibility.Public;
             }

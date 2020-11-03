@@ -93,7 +93,7 @@
         {
             unchecked
             {
-                return ((this.Name != null ? this.Name.GetHashCode() : 0) * 397) ^ (this.Type != null ? this.Type.GetHashCode() : 0);
+                return ((this.Name is { } ? this.Name.GetHashCode() : 0) * 397) ^ (this.Type is { } ? this.Type.GetHashCode() : 0);
             }
         }
     }

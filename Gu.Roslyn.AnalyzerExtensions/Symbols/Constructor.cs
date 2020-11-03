@@ -18,7 +18,7 @@
         public static bool TryFindDefault(INamedTypeSymbol type, Search search, [NotNullWhen(true)] out IMethodSymbol? result)
         {
             result = null;
-            while (type != null &&
+            while (type is { } &&
                    type != QualifiedType.System.Object)
             {
                 foreach (var candidate in type.Constructors)
@@ -36,7 +36,9 @@
                     return false;
                 }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
             return false;

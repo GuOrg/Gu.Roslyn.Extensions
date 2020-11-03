@@ -1,6 +1,7 @@
 ﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
+
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -22,9 +23,7 @@
             }
 
             element = null;
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
-            return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "summary" } } } }, out element);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag: { Name: { LocalName: { Text: "summary" } } } }, out element);
         }
 
         /// <summary>
@@ -41,9 +40,7 @@
             }
 
             element = null;
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
-            return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "returns" } } } }, out element);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag: { Name: { LocalName: { Text: "returns" } } } }, out element);
         }
 
         /// <summary>
@@ -66,9 +63,7 @@
             }
 
             element = null;
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
-            return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "param" } } } } && x.HasNameAttribute(parameterName), out element);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag: { Name: { LocalName: { Text: "param" } } } } && x.HasNameAttribute(parameterName), out element);
         }
 
         /// <summary>
@@ -91,9 +86,7 @@
             }
 
             element = null;
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
-            return comment.Content.TrySingleOfType(x => x is { StartTag: { Name: { LocalName: { Text: "typeparam" } } } } && x.HasNameAttribute(parameterName), out element);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag: { Name: { LocalName: { Text: "typeparam" } } } } && x.HasNameAttribute(parameterName), out element);
         }
     }
 }

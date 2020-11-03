@@ -51,7 +51,7 @@
 
         private static Accessibility Accessibility(IndexerDeclarationSyntax indexer)
         {
-            if (indexer.ExplicitInterfaceSpecifier != null)
+            if (indexer.ExplicitInterfaceSpecifier is { })
             {
                 return Microsoft.CodeAnalysis.Accessibility.Public;
             }
