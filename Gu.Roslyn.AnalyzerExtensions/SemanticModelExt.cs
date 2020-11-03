@@ -51,7 +51,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 }
 
                 // We can't use GetTypeInfo() here as it brings in System.Reflection.Extensions that does not work in VS.
-                if (default(T)! is Enum &&
+                if (default(T) is Enum &&
                     Enum.GetUnderlyingType(typeof(T)) == optional.Value.GetType())
                 {
                     // ReSharper disable once PossibleInvalidCastException
