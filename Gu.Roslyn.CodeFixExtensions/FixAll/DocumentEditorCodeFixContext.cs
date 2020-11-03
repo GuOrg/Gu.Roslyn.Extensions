@@ -13,7 +13,9 @@ namespace Gu.Roslyn.CodeFixExtensions
     /// <summary>
     /// A CodeFixContext for usage with <see cref="DocumentEditorCodeFixProvider"/>.
     /// </summary>
-    public struct DocumentEditorCodeFixContext : IEquatable<DocumentEditorCodeFixContext>
+#pragma warning disable RS0016 // Add public types and members to the declared API
+    public readonly struct DocumentEditorCodeFixContext : IEquatable<DocumentEditorCodeFixContext>
+#pragma warning restore RS0016 // Add public types and members to the declared API
     {
         private readonly CodeFixContext context;
 

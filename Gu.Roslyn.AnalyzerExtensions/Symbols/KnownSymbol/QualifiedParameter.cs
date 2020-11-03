@@ -6,7 +6,9 @@
     /// <summary>
     /// For comparison with <see cref="Microsoft.CodeAnalysis.IParameterSymbol"/>.
     /// </summary>
-    public struct QualifiedParameter : IEquatable<QualifiedParameter>
+#pragma warning disable RS0016 // Add public types and members to the declared API
+    public readonly struct QualifiedParameter : IEquatable<QualifiedParameter>
+#pragma warning restore RS0016 // Add public types and members to the declared API
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="QualifiedParameter"/> struct.

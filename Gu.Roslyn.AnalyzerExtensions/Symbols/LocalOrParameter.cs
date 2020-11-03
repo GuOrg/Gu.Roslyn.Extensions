@@ -11,7 +11,9 @@
     /// A wrapper for a local or a parameter.
     /// </summary>
     [DebuggerDisplay("{this.Symbol}")]
-    public struct LocalOrParameter : IEquatable<LocalOrParameter>
+#pragma warning disable RS0016 // Add public types and members to the declared API
+    public readonly struct LocalOrParameter : IEquatable<LocalOrParameter>
+#pragma warning restore RS0016 // Add public types and members to the declared API
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalOrParameter"/> struct.

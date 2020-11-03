@@ -1,4 +1,6 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
+﻿#pragma warning disable RS0041 // Public members should not use oblivious types
+
+namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;

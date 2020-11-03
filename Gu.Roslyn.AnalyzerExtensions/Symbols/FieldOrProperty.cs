@@ -11,7 +11,9 @@
     /// A wrapper for a field or a property.
     /// </summary>
     [DebuggerDisplay("{this.Symbol}")]
-    public struct FieldOrProperty : IEquatable<FieldOrProperty>
+#pragma warning disable RS0016 // Add public types and members to the declared API
+    public readonly struct FieldOrProperty : IEquatable<FieldOrProperty>
+#pragma warning restore RS0016 // Add public types and members to the declared API
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FieldOrProperty"/> struct.

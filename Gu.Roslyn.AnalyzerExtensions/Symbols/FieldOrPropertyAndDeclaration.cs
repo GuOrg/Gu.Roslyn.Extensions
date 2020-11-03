@@ -8,7 +8,9 @@
     /// <summary>
     /// A field or a property symbol and declaration.
     /// </summary>
-    public struct FieldOrPropertyAndDeclaration : IEquatable<FieldOrPropertyAndDeclaration>
+#pragma warning disable RS0016 // Add public types and members to the declared API
+    public readonly struct FieldOrPropertyAndDeclaration : IEquatable<FieldOrPropertyAndDeclaration>
+#pragma warning restore RS0016 // Add public types and members to the declared API
     {
         /// <summary>
         /// Gets the symbol.

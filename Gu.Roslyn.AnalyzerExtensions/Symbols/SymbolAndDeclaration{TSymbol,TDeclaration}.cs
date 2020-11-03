@@ -10,7 +10,9 @@
     /// <typeparam name="TSymbol">The <see cref="Symbol"/>.</typeparam>
     /// <typeparam name="TDeclaration">The <see cref="MemberDeclarationSyntax"/>.</typeparam>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "Nice with fields, not gonna be any side effects.")]
-    public struct SymbolAndDeclaration<TSymbol, TDeclaration> : IEquatable<SymbolAndDeclaration<TSymbol, TDeclaration>>
+#pragma warning disable RS0016 // Add public types and members to the declared API
+    public readonly struct SymbolAndDeclaration<TSymbol, TDeclaration> : IEquatable<SymbolAndDeclaration<TSymbol, TDeclaration>>
+#pragma warning restore RS0016 // Add public types and members to the declared API
         where TSymbol : class, ISymbol, IEquatable<ISymbol>
         where TDeclaration : SyntaxNode
     {
