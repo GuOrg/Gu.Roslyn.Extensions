@@ -19,25 +19,14 @@
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equal(INamedTypeSymbol? x, INamedTypeSymbol? y)
-        {
-            if (x is { IsReferenceType: true })
-            {
-                return SymbolEqualityComparer.IncludeNullability.Equals(x, y);
-            }
-
-            return SymbolEqualityComparer.Default.Equals(x, y);
-        }
+        public static bool Equal(INamedTypeSymbol? x, INamedTypeSymbol? y) => TypeSymbolComparer.Equal(x, y);
 
         /// <summary> Determines equality by name, containing type, arity and namespace. </summary>
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
         [Obsolete("Use Equal as RS1024 does not nag about it.")]
-        public static bool Equals(INamedTypeSymbol? x, INamedTypeSymbol? y)
-        {
-            return Equal(x, y);
-        }
+        public static bool Equals(INamedTypeSymbol? x, INamedTypeSymbol? y) => Equal(x, y);
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global

@@ -21,12 +21,15 @@
         /// <returns>True if the instances are found equal.</returns>
         public static bool Equal(ITypeSymbol? x, ITypeSymbol? y)
         {
-            if (x is { IsReferenceType: true })
+            if (IsAnnotated(x) &&
+                IsAnnotated(y))
             {
                 return SymbolEqualityComparer.IncludeNullability.Equals(x, y);
             }
 
             return SymbolEqualityComparer.Default.Equals(x, y);
+
+            static bool IsAnnotated(ITypeSymbol? type) => type is { } && type.NullableAnnotation != NullableAnnotation.None;
         }
 
         /// <summary> Determines equality by name and containing symbol. </summary>

@@ -1,3 +1,6 @@
+#### 0.14.2
+* Only compare nullability if both types are annotated.
+
 #### 0.14.1
 * Return annotated types from GetType()
 

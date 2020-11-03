@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.14.1</Version>
+    <Version>0.14.2</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -18,6 +18,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer</PackageTags>
     <PackageReleaseNotes>
+      0.14.2
+      Only compare nullability if both types are annotated.
       0.14.1
       Return annotated types from GetType()
       0.14.0
