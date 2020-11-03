@@ -1,3 +1,6 @@
+#### 0.14.3
+* Only compare nullability if both types are annotated reference types.
+
 #### 0.14.2
 * Only compare nullability if both types are annotated.
 
