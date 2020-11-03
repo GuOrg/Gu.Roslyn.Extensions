@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -27,10 +27,10 @@ namespace N
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
             var node2 = syntaxTree.FindFieldDeclaration("f2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2.Declaration.Variables[0], CancellationToken.None);
-            Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
-            Assert.AreEqual(false, SymbolComparer.Equals(symbol1, symbol2));
-            Assert.AreEqual(true, FieldSymbolComparer.Equals((IFieldSymbol)symbol1, (IFieldSymbol)symbol1));
-            Assert.AreEqual(false, FieldSymbolComparer.Equals((IFieldSymbol)symbol1, (IFieldSymbol)symbol2));
+            Assert.AreEqual(true, SymbolComparer.Equal(symbol1, symbol1));
+            Assert.AreEqual(false, SymbolComparer.Equal(symbol1, symbol2));
+            Assert.AreEqual(true, FieldSymbolComparer.Equal((IFieldSymbol)symbol1, (IFieldSymbol)symbol1));
+            Assert.AreEqual(false, FieldSymbolComparer.Equal((IFieldSymbol)symbol1, (IFieldSymbol)symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol1));
             Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol2));
         }
@@ -61,10 +61,10 @@ namespace N
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
             var node2 = syntaxTree.FindMemberAccessExpression("this.F");
             var symbol2 = semanticModel.GetSymbolInfo(node2, CancellationToken.None).Symbol;
-            Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
-            Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol2));
-            Assert.AreEqual(true, FieldSymbolComparer.Equals((IFieldSymbol)symbol1, (IFieldSymbol)symbol1));
-            Assert.AreEqual(true, FieldSymbolComparer.Equals((IFieldSymbol)symbol1, (IFieldSymbol)symbol2));
+            Assert.AreEqual(true, SymbolComparer.Equal(symbol1, symbol1));
+            Assert.AreEqual(true, SymbolComparer.Equal(symbol1, symbol2));
+            Assert.AreEqual(true, FieldSymbolComparer.Equal((IFieldSymbol)symbol1, (IFieldSymbol)symbol1));
+            Assert.AreEqual(true, FieldSymbolComparer.Equal((IFieldSymbol)symbol1, (IFieldSymbol)symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol1));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), FieldSymbolComparer.Default.GetHashCode((IFieldSymbol)symbol2));
         }

@@ -30,10 +30,10 @@ namespace N
             var symbol1 = semanticModel.GetDeclaredSymbol(node1, CancellationToken.None);
             var node2 = syntaxTree.FindMethodDeclaration("M2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2, CancellationToken.None);
-            Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
-            Assert.AreEqual(false, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
-            Assert.AreEqual(true, MethodSymbolComparer.Equals(symbol1, symbol1));
-            Assert.AreEqual(false, MethodSymbolComparer.Equals(symbol1, symbol2));
+            Assert.AreEqual(true, SymbolComparer.Equal((ISymbol)symbol1, (ISymbol)symbol1));
+            Assert.AreEqual(false, SymbolComparer.Equal((ISymbol)symbol1, (ISymbol)symbol2));
+            Assert.AreEqual(true, MethodSymbolComparer.Equal(symbol1, symbol1));
+            Assert.AreEqual(false, MethodSymbolComparer.Equal(symbol1, symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), MethodSymbolComparer.Default.GetHashCode(symbol1));
             Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), MethodSymbolComparer.Default.GetHashCode(symbol2));
         }

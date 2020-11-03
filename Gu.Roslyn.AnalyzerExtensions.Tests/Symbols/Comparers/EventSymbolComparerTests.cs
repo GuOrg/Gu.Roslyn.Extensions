@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -29,10 +29,10 @@ namespace N
             var symbol1 = semanticModel.GetDeclaredSymbol(node1.Declaration.Variables[0], CancellationToken.None);
             var node2 = syntaxTree.FindEventFieldDeclaration("E2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2.Declaration.Variables[0], CancellationToken.None);
-            Assert.AreEqual(true, SymbolComparer.Equals(symbol1, symbol1));
-            Assert.AreEqual(false, SymbolComparer.Equals(symbol1, symbol2));
-            Assert.AreEqual(true, EventSymbolComparer.Equals((IEventSymbol)symbol1, (IEventSymbol)symbol1));
-            Assert.AreEqual(false, EventSymbolComparer.Equals((IEventSymbol)symbol1, (IEventSymbol)symbol2));
+            Assert.AreEqual(true, SymbolComparer.Equal(symbol1, symbol1));
+            Assert.AreEqual(false, SymbolComparer.Equal(symbol1, symbol2));
+            Assert.AreEqual(true, EventSymbolComparer.Equal((IEventSymbol)symbol1, (IEventSymbol)symbol1));
+            Assert.AreEqual(false, EventSymbolComparer.Equal((IEventSymbol)symbol1, (IEventSymbol)symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), EventSymbolComparer.Default.GetHashCode((IEventSymbol)symbol1));
             Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), EventSymbolComparer.Default.GetHashCode((IEventSymbol)symbol2));
         }
