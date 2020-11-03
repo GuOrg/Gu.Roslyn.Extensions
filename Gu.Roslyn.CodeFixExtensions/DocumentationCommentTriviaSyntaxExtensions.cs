@@ -2,7 +2,9 @@
 {
     using System;
     using System.Linq;
+
     using Gu.Roslyn.AnalyzerExtensions;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -144,7 +146,7 @@
                 before = null!;
                 after = null!;
                 if (comment.TryFirstAncestor(out MemberDeclarationSyntax? member) &&
-                    TryGetTypeParameterList(member, out var typeParameterList) &&
+                    TryGetTypeParameterList(member) is { } typeParameterList &&
                     typeParameterList.Parameters.TrySingle(x => x.Identifier.ValueText == identifierName.Identifier.ValueText, out var parameter) &&
                     typeParameterList.Parameters.IndexOf(parameter) is var ordinal &&
                     ordinal >= 0)
@@ -168,20 +170,14 @@
 
                 return before != null;
 
-                static bool TryGetTypeParameterList(MemberDeclarationSyntax source, out TypeParameterListSyntax result)
+                static TypeParameterListSyntax? TryGetTypeParameterList(MemberDeclarationSyntax source)
                 {
-                    switch (source)
+                    return source switch
                     {
-                        case MethodDeclarationSyntax methodDeclaration:
-                            result = methodDeclaration.TypeParameterList;
-                            return result != null;
-                        case TypeDeclarationSyntax typeDeclaration:
-                            result = typeDeclaration.TypeParameterList;
-                            return result != null;
-                        default:
-                            result = null!;
-                            return false;
-                    }
+                        MethodDeclarationSyntax methodDeclaration => methodDeclaration.TypeParameterList,
+                        TypeDeclarationSyntax typeDeclaration => typeDeclaration.TypeParameterList,
+                        _ => null,
+                    };
                 }
             }
         }

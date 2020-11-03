@@ -121,13 +121,16 @@
                 throw new System.ArgumentNullException(nameof(propertyDeclaration));
             }
 
-            var property = editor.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
-            var type = (TypeDeclarationSyntax)propertyDeclaration.Parent;
-            var backingField = CreateBackingField(editor, propertyDeclaration);
-            editor.ReplaceNode(
-                type,
-                (node, generator) => AddBackingField(editor, (TypeDeclarationSyntax)node, backingField, property.Name));
-            return backingField;
+            if (propertyDeclaration.Parent is TypeDeclarationSyntax type)
+            {
+                var backingField = CreateBackingField(editor, propertyDeclaration);
+                editor.ReplaceNode(
+                    type,
+                    (node, generator) => AddBackingField(editor, (TypeDeclarationSyntax)node, backingField, propertyDeclaration.Identifier.ValueText));
+                return backingField;
+            }
+
+            throw new System.ArgumentNullException(nameof(propertyDeclaration), "Property.Parent is not a TypeDeclaration.");
         }
 
         /// <summary>
@@ -149,27 +152,31 @@
                 throw new System.ArgumentNullException(nameof(propertyDeclaration));
             }
 
-            var property = editor.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
-            var name = editor.SemanticModel.UnderscoreFields() == CodeStyleResult.Yes
-                ? $"_{property.Name.ToFirstCharLower()}"
-                : property.Name.ToFirstCharLower();
-            while (property.ContainingType.MemberNames.Any(x => x == name))
+            if (propertyDeclaration.Parent is TypeDeclarationSyntax type)
             {
-                name += "_";
+                var name = editor.SemanticModel.UnderscoreFields() == CodeStyleResult.Yes
+                    ? $"_{propertyDeclaration.Identifier.ValueText.ToFirstCharLower()}"
+                    : propertyDeclaration.Identifier.ValueText.ToFirstCharLower();
+                while (type.TryFindField(name, out _))
+                {
+                    name += "_";
+                }
+
+                if (SyntaxFacts.GetKeywordKind(name) != SyntaxKind.None ||
+                    SyntaxFacts.GetContextualKeywordKind(name) != SyntaxKind.None)
+                {
+                    name = "@" + name;
+                }
+
+                return (FieldDeclarationSyntax)editor.Generator.FieldDeclaration(
+                    name,
+                    accessibility: Accessibility.Private,
+                    modifiers: DeclarationModifiers.None,
+                    type: propertyDeclaration.Type,
+                    initializer: propertyDeclaration.Initializer?.Value);
             }
 
-            if (SyntaxFacts.GetKeywordKind(name) != SyntaxKind.None ||
-                SyntaxFacts.GetContextualKeywordKind(name) != SyntaxKind.None)
-            {
-                name = "@" + name;
-            }
-
-            return (FieldDeclarationSyntax)editor.Generator.FieldDeclaration(
-                name,
-                accessibility: Accessibility.Private,
-                modifiers: DeclarationModifiers.None,
-                type: propertyDeclaration.Type,
-                initializer: propertyDeclaration.Initializer?.Value);
+            throw new System.ArgumentNullException(nameof(propertyDeclaration), "Property.Parent is not a TypeDeclaration.");
         }
 
         /// <summary>
@@ -329,46 +336,48 @@
 
         private static TypeDeclarationSyntax AddBackingField(this DocumentEditor editor, TypeDeclarationSyntax type, FieldDeclarationSyntax backingField, string propertyName)
         {
-            if (type.TryFindProperty(propertyName, out var property) &&
-                editor.SemanticModel.BackingFieldsAdjacent(out var newLine) == CodeStyleResult.Yes)
+            if (type.TryFindProperty(propertyName, out var property))
             {
-                if (newLine ||
-                    !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))
+                if (editor.SemanticModel.BackingFieldsAdjacent(out var newLine) == CodeStyleResult.Yes)
                 {
-                    return type.InsertNodesBefore(property, new[] { backingField });
+                    if (newLine ||
+                        !property.GetLeadingTrivia().Any(SyntaxKind.EndOfLineTrivia))
+                    {
+                        return type.InsertNodesBefore(property, new[] { backingField });
+                    }
+
+                    return type.InsertNodesBefore(property, new[] { backingField.WithTrailingTrivia(null) });
                 }
 
-                return type.InsertNodesBefore(property, new[] { backingField.WithTrailingTrivia(null) });
-            }
-
-            var index = type.Members.IndexOf(property);
-            for (var i = index + 1; i < type.Members.Count; i++)
-            {
-                if (type.Members[i] is PropertyDeclarationSyntax other)
+                var index = type.Members.IndexOf(property);
+                for (var i = index + 1; i < type.Members.Count; i++)
                 {
-                    if (other.TryGetBackingField(out var otherField))
+                    if (type.Members[i] is PropertyDeclarationSyntax other)
                     {
-                        return type.InsertNodesBefore(otherField, new[] { backingField });
+                        if (other.TryGetBackingField(out var otherField))
+                        {
+                            return type.InsertNodesBefore(otherField, new[] { backingField });
+                        }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
-                else
-                {
-                    break;
-                }
-            }
 
-            for (var i = index - 1; i >= 0; i--)
-            {
-                if (type.Members[i] is PropertyDeclarationSyntax other)
+                for (var i = index - 1; i >= 0; i--)
                 {
-                    if (other.TryGetBackingField(out var otherField))
+                    if (type.Members[i] is PropertyDeclarationSyntax other)
                     {
-                        return type.InsertNodesAfter(otherField, new[] { backingField });
+                        if (other.TryGetBackingField(out var otherField))
+                        {
+                            return type.InsertNodesAfter(otherField, new[] { backingField });
+                        }
                     }
-                }
-                else
-                {
-                    break;
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 

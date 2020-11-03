@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
@@ -162,7 +162,9 @@ namespace Gu.Roslyn.CodeFixExtensions
                 var document = await FixDocumentAsync(docAction.Key, docAction.Value, cancellationToken).ConfigureAwait(false);
                 solution = solution.WithDocumentSyntaxRoot(
                     document.Id,
+#pragma warning disable CS8604 // Possible null reference argument.
                     await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false));
+#pragma warning restore CS8604 // Possible null reference argument.
             }
 
             return solution;
