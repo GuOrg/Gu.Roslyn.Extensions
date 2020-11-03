@@ -196,16 +196,14 @@
             }
 
             assignment = null;
-            using (var walker = Borrow(node, scope, semanticModel, cancellationToken))
+            using var walker = Borrow(node, scope, semanticModel, cancellationToken);
+            foreach (var candidate in walker.Assignments)
             {
-                foreach (var candidate in walker.Assignments)
+                if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out var assignedSymbol) &&
+                    SymbolComparer.Equal(symbol.OriginalDefinition, assignedSymbol))
                 {
-                    if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out var assignedSymbol) &&
-                        SymbolComparer.Equals(symbol.OriginalDefinition, assignedSymbol))
-                    {
-                        assignment = candidate;
-                        return true;
-                    }
+                    assignment = candidate;
+                    return true;
                 }
             }
 
@@ -240,21 +238,19 @@
             }
 
             assignment = null;
-            using (var walker = Borrow(node, scope, semanticModel, cancellationToken))
+            using var walker = Borrow(node, scope, semanticModel, cancellationToken);
+            foreach (var candidate in walker.Assignments)
             {
-                foreach (var candidate in walker.Assignments)
+                if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out var assignedSymbol) &&
+                    SymbolComparer.Equal(symbol.OriginalDefinition, assignedSymbol))
                 {
-                    if (semanticModel.TryGetSymbol(candidate.Left, cancellationToken, out var assignedSymbol) &&
-                        SymbolComparer.Equals(symbol.OriginalDefinition, assignedSymbol))
+                    if (assignment != null)
                     {
-                        if (assignment != null)
-                        {
-                            assignment = null;
-                            return false;
-                        }
-
-                        assignment = candidate;
+                        assignment = null;
+                        return false;
                     }
+
+                    assignment = candidate;
                 }
             }
 
@@ -358,7 +354,7 @@
                     }
 
                     return semanticModel.TryGetSymbol(expression, cancellationToken, out var candidateSymbol) &&
-                           SymbolComparer.Equals(symbol, candidateSymbol);
+                           SymbolComparer.Equal(symbol, candidateSymbol);
             }
         }
     }

@@ -83,7 +83,7 @@
             bool IsFieldOrProperty(ExpressionSyntax expression)
             {
                 return semanticModel.TryGetSymbol(expression, cancellationToken, out var symbol) &&
-                       symbol.Equals(fieldOrProperty.Symbol);
+                       SymbolComparer.Equal(symbol, fieldOrProperty.Symbol);
             }
         }
 
@@ -145,7 +145,7 @@
             bool IsMatch(ExpressionSyntax expression)
             {
                 return semanticModel.TryGetSymbol(expression, cancellationToken, out var symbol) &&
-                       symbol.Equals(localOrParameter.Symbol);
+                      SymbolComparer.Equal(symbol, localOrParameter.Symbol);
             }
         }
 

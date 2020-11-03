@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -144,7 +145,7 @@
                 return this.SearchScope switch
                 {
                     SearchScope.Recursive => true,
-                    _ => type.Equals(this.ContainingType),
+                    _ => TypeSymbolComparer.Equal(type, this.ContainingType),
                 };
             }
         }

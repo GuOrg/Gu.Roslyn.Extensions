@@ -19,7 +19,7 @@
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(IMethodSymbol? x, IMethodSymbol? y)
+        public static bool Equal(IMethodSymbol? x, IMethodSymbol? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -33,7 +33,7 @@
             }
 
             return x.MetadataName == y.MetadataName &&
-                   NamedTypeSymbolComparer.Equals(x.ContainingType, y.ContainingType) &&
+                   NamedTypeSymbolComparer.Equal(x.ContainingType, y.ContainingType) &&
                    ParametersMatches(x.Parameters, y.Parameters);
 
             static bool ParametersMatches(ImmutableArray<IParameterSymbol> xs, ImmutableArray<IParameterSymbol> ys)
@@ -53,7 +53,7 @@
 
                     if (xs[i].Type is INamedTypeSymbol xNamedType &&
                         ys[i].Type is INamedTypeSymbol yNamedType &&
-                        !NamedTypeSymbolComparer.Equals(xNamedType, yNamedType))
+                        !NamedTypeSymbolComparer.Equal(xNamedType, yNamedType))
                     {
                         return false;
                     }
@@ -62,6 +62,13 @@
                 return true;
             }
         }
+
+        /// <summary> Determines equality by name, containing type, return type and parameters. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        [Obsolete("Use Equal as RS1024 does not nag about it.")]
+        public static bool Equals(IMethodSymbol? x, IMethodSymbol? y) => Equal(x, y);
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
@@ -78,7 +85,7 @@
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc />
-        bool IEqualityComparer<IMethodSymbol>.Equals(IMethodSymbol? x, IMethodSymbol? y) => Equals(x, y);
+        bool IEqualityComparer<IMethodSymbol>.Equals(IMethodSymbol? x, IMethodSymbol? y) => Equal(x, y);
 
         /// <inheritdoc />
         public int GetHashCode(IMethodSymbol obj)

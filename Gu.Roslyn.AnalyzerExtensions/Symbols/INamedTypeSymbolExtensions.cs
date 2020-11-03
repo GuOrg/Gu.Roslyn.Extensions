@@ -1,6 +1,7 @@
 ﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
+
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -59,7 +60,7 @@
                 }
             }
 
-            if (!Equals(type.ConstructedFrom, type))
+            if (!TypeSymbolComparer.Equal(type.ConstructedFrom, type))
             {
                 builder.Append("[");
                 for (var i = 0; i < type.TypeArguments.Length; i++)
@@ -158,7 +159,7 @@
 
             bool Matches(IMethodSymbol candidate)
             {
-                if (!candidate.ReturnType.Equals(virtualOrAbstract.ReturnType) ||
+                if (!TypeSymbolComparer.Equal(candidate.ReturnType, virtualOrAbstract.ReturnType) ||
                     candidate.Parameters.Length != virtualOrAbstract.Parameters.Length ||
                     candidate.TypeParameters.Length != virtualOrAbstract.TypeParameters.Length)
                 {
@@ -167,7 +168,7 @@
 
                 for (var i = 0; i < candidate.Parameters.Length; i++)
                 {
-                    if (!candidate.Parameters[i].Type.Equals(virtualOrAbstract.Parameters[i].Type))
+                    if (!TypeSymbolComparer.Equal(candidate.Parameters[i].Type, virtualOrAbstract.Parameters[i].Type))
                     {
                         return false;
                     }

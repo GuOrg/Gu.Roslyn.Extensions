@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Threading;
@@ -295,7 +295,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         [Obsolete("Use overload with Compilation")]
         public static bool IsSameType(this ITypeSymbol x, ITypeSymbol y)
         {
-            if (Equals(x, y))
+            if (TypeSymbolComparer.Equal(x, y))
             {
                 return true;
             }
@@ -310,7 +310,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 if (y is ITypeParameterSymbol ytp)
                 {
                     return xtp.MetadataName == ytp.MetadataName &&
-                           SymbolComparer.Equals(xtp.ContainingSymbol, ytp.ContainingSymbol);
+                           SymbolComparer.Equal(xtp.ContainingSymbol, ytp.ContainingSymbol);
                 }
 
                 foreach (var constraintType in xtp.ConstraintTypes)
@@ -359,7 +359,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return IsSameType(x.OriginalDefinition, y.OriginalDefinition);
             }
 
-            return NamedTypeSymbolComparer.Equals(x, y);
+            return NamedTypeSymbolComparer.Equal(x, y);
         }
 
         /// <summary>

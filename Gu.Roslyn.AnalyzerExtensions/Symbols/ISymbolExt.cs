@@ -1,7 +1,8 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -78,13 +79,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
 
-            if (x.Equals(y))
+            if (SymbolComparer.Equal(x, y))
             {
                 return true;
             }
 
             if (x.IsDefinition &&
-                !y.Equals(y.OriginalDefinition))
+                !SymbolComparer.Equal(y, y.OriginalDefinition))
             {
                 return IsEquivalentTo(x, y.OriginalDefinition);
             }
@@ -96,8 +97,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 IEventSymbol { OverriddenEvent: { } overridden } => IsEquivalentTo(x, overridden),
                 IMethodSymbol { OverriddenMethod: { } overridden } => IsEquivalentTo(x, overridden),
                 IMethodSymbol { IsExtensionMethod: true } ym
-                    when x is IMethodSymbol { IsExtensionMethod: true } xm => xm.ReducedFrom?.Equals(ym) == true ||
-                           xm.Equals(ym.ReducedFrom),
+                    when x is IMethodSymbol { IsExtensionMethod: true } xm => MethodSymbolComparer.Equal(xm.ReducedFrom, ym) ||
+                                                                              MethodSymbolComparer.Equal(xm, ym.ReducedFrom),
 
                 _ => false,
             };

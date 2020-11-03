@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
 
     /// <summary>
@@ -125,10 +126,12 @@
         }
 
         /// <inheritdoc/>
-        public bool Equals(LocalOrParameter other)
+        public bool Equals(LocalOrParameter other) => this.Symbol switch
         {
-            return this.Symbol.Equals(other.Symbol);
-        }
+            ILocalSymbol local => LocalSymbolComparer.Equal(local, other.Symbol as ILocalSymbol),
+            IParameterSymbol parameter => ParameterSymbolComparer.Equal(parameter, other.Symbol as IParameterSymbol),
+            _ => false,
+        };
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)

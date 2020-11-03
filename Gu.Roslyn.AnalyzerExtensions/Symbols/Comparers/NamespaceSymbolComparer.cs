@@ -18,7 +18,7 @@
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(INamespaceSymbol? x, INamespaceSymbol? y)
+        public static bool Equal(INamespaceSymbol? x, INamespaceSymbol? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -33,6 +33,13 @@
 
             return x.MetadataName == y.MetadataName;
         }
+
+        /// <summary> Determines equality by name. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        [Obsolete("Use Equal as RS1024 does not nag about it.")]
+        public static bool Equals(INamespaceSymbol? x, INamespaceSymbol? y) => Equal(x, y);
 
         /// <summary> Determines equality by name. </summary>
         /// <param name="x">The first instance.</param>
@@ -91,7 +98,7 @@
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc />
-        bool IEqualityComparer<INamespaceSymbol>.Equals(INamespaceSymbol? x, INamespaceSymbol? y) => Equals(x, y);
+        bool IEqualityComparer<INamespaceSymbol>.Equals(INamespaceSymbol? x, INamespaceSymbol? y) => Equal(x, y);
 
         /// <inheritdoc />
         public int GetHashCode(INamespaceSymbol obj)

@@ -112,7 +112,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 foreach (var member in containingType.GetMembers())
                 {
                     if (member is IFieldSymbol { AssociatedSymbol: IPropertySymbol associatedSymbol } &&
-                        associatedSymbol.Equals(property))
+                       PropertySymbolComparer.Equal(associatedSymbol, property))
                     {
                         return true;
                     }

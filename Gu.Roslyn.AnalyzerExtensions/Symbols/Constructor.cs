@@ -24,7 +24,7 @@
                 foreach (var candidate in type.Constructors)
                 {
                     if (candidate is { Parameters: { Length: 0 }, DeclaringSyntaxReferences: { Length: 1 } } &&
-                        Equals(candidate.ContainingType, type))
+                       NamedTypeSymbolComparer.Equal(candidate.ContainingType, type))
                     {
                         result = candidate;
                         return true;

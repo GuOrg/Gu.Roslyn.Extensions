@@ -619,7 +619,7 @@
             if (type.IsReferenceType)
             {
                 return type.GetMembers("op_Equality").TryFirst(out var @operator) &&
-                       type.Equals(@operator.ContainingType);
+                       TypeSymbolComparer.Equal(type, @operator.ContainingType);
             }
 
             return HasEqualityOperator(type);

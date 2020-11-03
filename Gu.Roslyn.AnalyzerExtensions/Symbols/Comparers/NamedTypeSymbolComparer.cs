@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
@@ -18,36 +19,24 @@
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
+        public static bool Equal(INamedTypeSymbol? x, INamedTypeSymbol? y)
+        {
+            if (x is { IsReferenceType: true })
+            {
+                return SymbolEqualityComparer.IncludeNullability.Equals(x, y);
+            }
+
+            return SymbolEqualityComparer.Default.Equals(x, y);
+        }
+
+        /// <summary> Determines equality by name, containing type, arity and namespace. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        [Obsolete("Use Equal as RS1024 does not nag about it.")]
         public static bool Equals(INamedTypeSymbol? x, INamedTypeSymbol? y)
         {
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            if (x is null ||
-                y is null)
-            {
-                return false;
-            }
-
-            if (x.MetadataName != y.MetadataName ||
-                !TypeSymbolComparer.Equals(x.ContainingType, y.ContainingType) ||
-                !NamespaceSymbolComparer.Equals(x.ContainingNamespace, y.ContainingNamespace) ||
-                x.Arity != y.Arity)
-            {
-                return false;
-            }
-
-            for (var i = 0; i < x.Arity; i++)
-            {
-                if (!TypeSymbolComparer.Equals(x.TypeArguments[i], y.TypeArguments[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return Equal(x, y);
         }
 
         //// ReSharper disable once UnusedMember.Global
@@ -65,7 +54,7 @@
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc />
-        bool IEqualityComparer<INamedTypeSymbol>.Equals(INamedTypeSymbol? x, INamedTypeSymbol? y) => Equals(x, y);
+        bool IEqualityComparer<INamedTypeSymbol>.Equals(INamedTypeSymbol? x, INamedTypeSymbol? y) => Equal(x, y);
 
         /// <inheritdoc/>
         public int GetHashCode(INamedTypeSymbol obj) => TypeSymbolComparer.GetHashCode(obj);

@@ -18,7 +18,7 @@
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(ISymbol? x, ISymbol? y)
+        public static bool Equal(ISymbol? x, ISymbol? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -34,59 +34,66 @@
             if (x is IEventSymbol xEvent &&
                 y is IEventSymbol yEvent)
             {
-                return EventSymbolComparer.Equals(xEvent, yEvent);
+                return EventSymbolComparer.Equal(xEvent, yEvent);
             }
 
             if (x is IFieldSymbol xField &&
                 y is IFieldSymbol yField)
             {
-                return FieldSymbolComparer.Equals(xField, yField);
+                return FieldSymbolComparer.Equal(xField, yField);
             }
 
             if (x is ILocalSymbol xLocal &&
                 y is ILocalSymbol yLocal)
             {
-                return LocalSymbolComparer.Equals(xLocal, yLocal);
+                return LocalSymbolComparer.Equal(xLocal, yLocal);
             }
 
             if (x is IMethodSymbol xMethod &&
                 y is IMethodSymbol yMethod)
             {
-                return MethodSymbolComparer.Equals(xMethod, yMethod);
+                return MethodSymbolComparer.Equal(xMethod, yMethod);
             }
 
             if (x is INamedTypeSymbol xNamedType &&
                 y is INamedTypeSymbol yNamedType)
             {
-                return NamedTypeSymbolComparer.Equals(xNamedType, yNamedType);
+                return NamedTypeSymbolComparer.Equal(xNamedType, yNamedType);
             }
 
             if (x is INamespaceSymbol xNamespace &&
                 y is INamespaceSymbol yNamespace)
             {
-                return NamespaceSymbolComparer.Equals(xNamespace, yNamespace);
+                return NamespaceSymbolComparer.Equal(xNamespace, yNamespace);
             }
 
             if (x is IParameterSymbol xParameter &&
                 y is IParameterSymbol yParameter)
             {
-                return ParameterSymbolComparer.Equals(xParameter, yParameter);
+                return ParameterSymbolComparer.Equal(xParameter, yParameter);
             }
 
             if (x is IPropertySymbol xProperty &&
                 y is IPropertySymbol yProperty)
             {
-                return PropertySymbolComparer.Equals(xProperty, yProperty);
+                return PropertySymbolComparer.Equal(xProperty, yProperty);
             }
 
             if (x is ITypeSymbol xType &&
                 y is ITypeSymbol yType)
             {
-                return TypeSymbolComparer.Equals(xType, yType);
+                return TypeSymbolComparer.Equal(xType, yType);
             }
 
-            return x.Equals(y);
+            return SymbolEqualityComparer.Default.Equals(x, y);
         }
+
+        /// <summary> Determines equality by delegating to other compare. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        [Obsolete("Use Equal as RS1024 does not nag about it.")]
+        public static bool Equals(ISymbol? x, ISymbol? y) => Equal(x, y);
 
         //// ReSharper disable UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
@@ -130,7 +137,7 @@
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc/>
-        bool IEqualityComparer<ISymbol>.Equals(ISymbol? x, ISymbol? y) => Equals(x, y);
+        bool IEqualityComparer<ISymbol>.Equals(ISymbol? x, ISymbol? y) => Equal(x, y);
 
         /// <inheritdoc/>
         public int GetHashCode(ISymbol obj)

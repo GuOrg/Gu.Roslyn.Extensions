@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
@@ -14,44 +15,26 @@
         {
         }
 
+        /// <summary> Determines equality by name, containing type, arity and namespace. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        public static bool Equal(ITypeSymbol? x, ITypeSymbol? y)
+        {
+            if (x is { IsReferenceType: true })
+            {
+                return SymbolEqualityComparer.IncludeNullability.Equals(x, y);
+            }
+
+            return SymbolEqualityComparer.Default.Equals(x, y);
+        }
+
         /// <summary> Determines equality by name and containing symbol. </summary>
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(ITypeSymbol? x, ITypeSymbol? y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            if (x is null ||
-                y is null)
-            {
-                return false;
-            }
-
-            if (x.TypeKind != y.TypeKind)
-            {
-                return false;
-            }
-
-            if (x is INamedTypeSymbol xNamedType &&
-                y is INamedTypeSymbol yNamedType)
-            {
-                return NamedTypeSymbolComparer.Equals(xNamedType, yNamedType);
-            }
-
-            if (x.TypeKind == TypeKind.TypeParameter)
-            {
-                return x.MetadataName == y.MetadataName &&
-                       SymbolComparer.Equals(x.ContainingSymbol, y.ContainingSymbol);
-            }
-
-            return x.MetadataName == y.MetadataName &&
-                   Equals(x.ContainingType, y.ContainingType) &&
-                   NamespaceSymbolComparer.Equals(x.ContainingNamespace, y.ContainingNamespace);
-        }
+        [Obsolete("Use Equal as RS1024 does not nag about it.")]
+        public static bool Equals(ITypeSymbol? x, ITypeSymbol? y) => Equal(x, y);
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
@@ -88,7 +71,7 @@
         }
 
         /// <inheritdoc />
-        bool IEqualityComparer<ITypeSymbol>.Equals(ITypeSymbol? x, ITypeSymbol? y) => Equals(x, y);
+        bool IEqualityComparer<ITypeSymbol>.Equals(ITypeSymbol? x, ITypeSymbol? y) => Equal(x, y);
 
         /// <inheritdoc />
         int IEqualityComparer<ITypeSymbol>.GetHashCode(ITypeSymbol obj)

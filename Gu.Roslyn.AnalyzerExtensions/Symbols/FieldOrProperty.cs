@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -108,26 +109,29 @@
         /// </summary>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>The initializer for the member.</returns>
-        public EqualsValueClauseSyntax Initializer(CancellationToken cancellationToken)
+        public EqualsValueClauseSyntax? Initializer(CancellationToken cancellationToken)
         {
-            switch (this.Symbol.Kind)
+            return this.Symbol.Kind switch
             {
-                case SymbolKind.Field
+                SymbolKind.Field
                     when this.Symbol.TrySingleDeclaration(cancellationToken, out FieldDeclarationSyntax? fieldDeclaration) &&
-                         fieldDeclaration.Declaration is { Variables: { Count: 1 } variables } &&
-                         variables.TrySingle(out var variable) &&
-                         variable.Initializer is { } initializer:
-                    return initializer;
-                case SymbolKind.Property
-                    when this.Symbol.TrySingleDeclaration(cancellationToken, out PropertyDeclarationSyntax? propertyDeclaration):
-                    return propertyDeclaration.Initializer;
-                default:
-                    throw new InvalidOperationException("Should never get here.");
-            }
+                         fieldDeclaration.Declaration is { Variables: { Count: 1 } variables } && variables.TrySingle(out var variable) &&
+                         variable.Initializer is { } initializer
+                    => initializer,
+                SymbolKind.Property
+                    when this.Symbol.TrySingleDeclaration(cancellationToken, out PropertyDeclarationSyntax? propertyDeclaration)
+                    => propertyDeclaration.Initializer,
+                _ => throw new InvalidOperationException("Should never get here."),
+            };
         }
 
         /// <inheritdoc/>
-        public bool Equals(FieldOrProperty other) => this.Symbol.Equals(other.Symbol);
+        public bool Equals(FieldOrProperty other) => this.Symbol switch
+        {
+            IFieldSymbol field => FieldSymbolComparer.Equal(field, other.Symbol as IFieldSymbol),
+            IPropertySymbol property => PropertySymbolComparer.Equal(property, other.Symbol as IPropertySymbol),
+            _ => false,
+        };
 
         /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is FieldOrProperty other && this.Equals(other);

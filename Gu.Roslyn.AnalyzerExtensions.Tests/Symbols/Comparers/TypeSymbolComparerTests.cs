@@ -1,4 +1,4 @@
-// ReSharper disable RedundantCast
+﻿// ReSharper disable RedundantCast
 #pragma warning disable IDE0004
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
 {
@@ -31,10 +31,10 @@ namespace N
             var symbol1 = semanticModel.GetDeclaredSymbol(node1, CancellationToken.None);
             var node2 = syntaxTree.FindTypeDeclaration("C2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2, CancellationToken.None);
-            Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
-            Assert.AreEqual(false, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
-            Assert.AreEqual(true, TypeSymbolComparer.Equals((ITypeSymbol)symbol1, (ITypeSymbol)symbol1));
-            Assert.AreEqual(false, TypeSymbolComparer.Equals((ITypeSymbol)symbol1, (ITypeSymbol)symbol2));
+            Assert.AreEqual(true, SymbolComparer.Equal((ISymbol)symbol1, (ISymbol)symbol1));
+            Assert.AreEqual(false, SymbolComparer.Equal((ISymbol)symbol1, (ISymbol)symbol2));
+            Assert.AreEqual(true, TypeSymbolComparer.Equal((ITypeSymbol)symbol1, (ITypeSymbol)symbol1));
+            Assert.AreEqual(false, TypeSymbolComparer.Equal((ITypeSymbol)symbol1, (ITypeSymbol)symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), TypeSymbolComparer.GetHashCode(symbol1));
             Assert.AreNotEqual(SymbolComparer.Default.GetHashCode(symbol1), TypeSymbolComparer.GetHashCode(symbol2));
         }
@@ -58,10 +58,10 @@ namespace N
             var symbol1 = semanticModel.GetDeclaredSymbol(node1, CancellationToken.None).Type;
             var node2 = syntaxTree.FindPropertyDeclaration("P2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2, CancellationToken.None).Type;
-            Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
-            Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
-            Assert.AreEqual(true, TypeSymbolComparer.Equals((ITypeSymbol)symbol1, (ITypeSymbol)symbol1));
-            Assert.AreEqual(true, TypeSymbolComparer.Equals((ITypeSymbol)symbol1, (ITypeSymbol)symbol2));
+            Assert.AreEqual(true, SymbolComparer.Equal((ISymbol)symbol1, (ISymbol)symbol1));
+            Assert.AreEqual(true, SymbolComparer.Equal((ISymbol)symbol1, (ISymbol)symbol2));
+            Assert.AreEqual(true, TypeSymbolComparer.Equal((ITypeSymbol)symbol1, (ITypeSymbol)symbol1));
+            Assert.AreEqual(true, TypeSymbolComparer.Equal((ITypeSymbol)symbol1, (ITypeSymbol)symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), TypeSymbolComparer.GetHashCode(symbol1));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), TypeSymbolComparer.GetHashCode(symbol2));
         }
@@ -86,10 +86,10 @@ namespace N
             var symbol1 = semanticModel.GetDeclaredSymbol(node1, CancellationToken.None).Parameters[0].Type;
             var node2 = syntaxTree.FindMethodDeclaration("M2");
             var symbol2 = semanticModel.GetDeclaredSymbol(node2, CancellationToken.None).Parameters[0].Type;
-            Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol1));
-            Assert.AreEqual(true, SymbolComparer.Equals((ISymbol)symbol1, (ISymbol)symbol2));
-            Assert.AreEqual(true, TypeSymbolComparer.Equals((ITypeSymbol)symbol1, (ITypeSymbol)symbol1));
-            Assert.AreEqual(true, TypeSymbolComparer.Equals((ITypeSymbol)symbol1, (ITypeSymbol)symbol2));
+            Assert.AreEqual(true, SymbolComparer.Equal((ISymbol)symbol1, (ISymbol)symbol1));
+            Assert.AreEqual(true, SymbolComparer.Equal((ISymbol)symbol1, (ISymbol)symbol2));
+            Assert.AreEqual(true, TypeSymbolComparer.Equal((ITypeSymbol)symbol1, (ITypeSymbol)symbol1));
+            Assert.AreEqual(true, TypeSymbolComparer.Equal((ITypeSymbol)symbol1, (ITypeSymbol)symbol2));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), TypeSymbolComparer.GetHashCode(symbol1));
             Assert.AreEqual(SymbolComparer.Default.GetHashCode(symbol1), TypeSymbolComparer.GetHashCode(symbol2));
         }

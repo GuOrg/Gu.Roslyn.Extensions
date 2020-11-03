@@ -18,21 +18,14 @@
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(IAssemblySymbol? x, IAssemblySymbol? y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
+        public static bool Equal(IAssemblySymbol? x, IAssemblySymbol? y) => SymbolEqualityComparer.Default.Equals(x, y);
 
-            if (x is null ||
-                y is null)
-            {
-                return false;
-            }
-
-            return x.MetadataName == y.MetadataName;
-        }
+        /// <summary> Compares equality by name. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        [Obsolete("Use Equal as RS1024 does not nag about it.")]
+        public static bool Equals(IAssemblySymbol? x, IAssemblySymbol? y) => SymbolEqualityComparer.Default.Equals(x, y);
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
@@ -49,7 +42,7 @@
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc />
-        bool IEqualityComparer<IAssemblySymbol>.Equals(IAssemblySymbol? x, IAssemblySymbol? y) => Equals(x, y);
+        bool IEqualityComparer<IAssemblySymbol>.Equals(IAssemblySymbol? x, IAssemblySymbol? y) => SymbolEqualityComparer.Default.Equals(x, y);
 
         /// <inheritdoc />
         public int GetHashCode(IAssemblySymbol obj)

@@ -18,7 +18,7 @@
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
-        public static bool Equals(IFieldSymbol? x, IFieldSymbol? y)
+        public static bool Equal(IFieldSymbol? x, IFieldSymbol? y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -32,8 +32,15 @@
             }
 
             return x.MetadataName == y.MetadataName &&
-                   NamedTypeSymbolComparer.Equals(x.ContainingType, y.ContainingType);
+                   NamedTypeSymbolComparer.Equal(x.ContainingType, y.ContainingType);
         }
+
+        /// <summary> Compares equality by name and containing type. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        [Obsolete("Use Equal as RS1024 does not nag about it.")]
+        public static bool Equals(IFieldSymbol? x, IFieldSymbol? y) => Equal(x, y);
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
@@ -50,7 +57,7 @@
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc />
-        bool IEqualityComparer<IFieldSymbol>.Equals(IFieldSymbol? x, IFieldSymbol? y) => Equals(x, y);
+        bool IEqualityComparer<IFieldSymbol>.Equals(IFieldSymbol? x, IFieldSymbol? y) => Equal(x, y);
 
         /// <inheritdoc />
         public int GetHashCode(IFieldSymbol obj)
