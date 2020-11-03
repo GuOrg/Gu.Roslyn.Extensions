@@ -47,7 +47,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 if (optional.Value is null)
                 {
                     value = default!;
+#pragma warning disable CA1508 // Avoid dead conditional code
+                    //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
                     return value is null;
+#pragma warning restore CA1508 // Avoid dead conditional code
                 }
 
                 // We can't use GetTypeInfo() here as it brings in System.Reflection.Extensions that does not work in VS.
@@ -86,9 +89,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is { } temp)
             {
-                if (node is NullableTypeSyntax)
+                if (temp.IsReferenceType &&
+                    (semanticModel.GetNullableContext(node.SpanStart) & NullableContext.Enabled) == NullableContext.Enabled)
                 {
-                    return temp.WithNullableAnnotation(NullableAnnotation.Annotated);
+                    return temp.WithNullableAnnotation(node is NullableTypeSyntax ? NullableAnnotation.Annotated : NullableAnnotation.NotAnnotated);
                 }
 
                 return temp;
@@ -137,22 +141,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 throw new ArgumentNullException(nameof(node));
             }
 
-            if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is INamedTypeSymbol temp)
-            {
-                if (node is NullableTypeSyntax)
-                {
-                    return (INamedTypeSymbol)temp.WithNullableAnnotation(NullableAnnotation.Annotated);
-                }
-
-                return temp;
-            }
-
-            if (semanticModel.GetDeclaredSymbolSafe(node, cancellationToken) is INamedTypeSymbol declaredTemp)
-            {
-                return declaredTemp;
-            }
-
-            return null;
+            return GetType(semanticModel, node, cancellationToken) as INamedTypeSymbol;
         }
 
         /// <summary>

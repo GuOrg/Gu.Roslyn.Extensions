@@ -1,6 +1,5 @@
 ﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
 {
-    using System;
     using System.Threading;
 
     using Gu.Roslyn.Asserts;
@@ -38,14 +37,14 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
             var node = syntaxTree.FindClassDeclaration("C");
             var expected = compilation.GetSemanticModel(syntaxTree).GetDeclaredSymbol(node);
-            Assert.AreEqual(true,     compilation.GetSemanticModel(syntaxTree).TryGetType(node, CancellationToken.None, out var type));
+            Assert.AreEqual(true, compilation.GetSemanticModel(syntaxTree).TryGetType(node, CancellationToken.None, out var type));
             Assert.AreEqual(expected, type);
             Assert.AreEqual(expected, compilation.GetSemanticModel(syntaxTree).GetType(node, CancellationToken.None));
 
             Assert.AreEqual(true, compilation.GetSemanticModel(syntaxTree).TryGetNamedType(node, CancellationToken.None, out var namedType));
             Assert.AreEqual(namedType, type);
 
-            Assert.AreEqual(true,     compilation.GetSemanticModel(OtherTree).TryGetType(node, CancellationToken.None, out type));
+            Assert.AreEqual(true, compilation.GetSemanticModel(OtherTree).TryGetType(node, CancellationToken.None, out type));
             Assert.AreEqual(expected, type);
             Assert.AreEqual(expected, compilation.GetSemanticModel(OtherTree).GetType(node, CancellationToken.None));
 
@@ -109,7 +108,7 @@ namespace N
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var qualifiedType = QualifiedType.FromType(typeof(System.ObsoleteAttribute));
             var attribute = syntaxTree.Find<AttributeSyntax>(typeName);
-            Assert.AreEqual(true,                semanticModel.TryGetNamedType(attribute, qualifiedType, CancellationToken.None, out var type));
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(attribute, qualifiedType, CancellationToken.None, out var type));
             Assert.AreEqual("ObsoleteAttribute", type.Name);
 
             qualifiedType = QualifiedType.FromType(typeof(System.Attribute));
@@ -129,17 +128,73 @@ namespace N
         public string? P { get; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
             var node = syntaxTree.FindPropertyDeclaration("P");
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var propertySymbol = semanticModel.GetDeclaredSymbol(node)!;
 
             Assert.AreEqual(propertySymbol.Type, semanticModel.GetType(node.Type, CancellationToken.None));
+            Assert.AreEqual(NullableAnnotation.Annotated, compilation.GetSemanticModel(syntaxTree).GetType(node.Type, CancellationToken.None).NullableAnnotation);
             Assert.AreEqual(true, semanticModel.TryGetType(node.Type, CancellationToken.None, out var type));
             Assert.AreEqual(propertySymbol.Type, type);
 
             Assert.AreEqual(propertySymbol.Type, semanticModel.GetNamedType(node.Type, CancellationToken.None));
-            Assert.AreEqual(true,                semanticModel.TryGetNamedType(node.Type, CancellationToken.None, out var namedType));
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(node.Type, CancellationToken.None, out var namedType));
+            Assert.AreEqual(propertySymbol.Type, namedType);
+        }
+
+        [Test]
+        public static void NotNull()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+#nullable enable
+namespace N
+{
+    class C
+    {
+        public string P { get; }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
+            var node = syntaxTree.FindPropertyDeclaration("P");
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var propertySymbol = semanticModel.GetDeclaredSymbol(node)!;
+
+            Assert.AreEqual(propertySymbol.Type, semanticModel.GetType(node.Type, CancellationToken.None));
+            Assert.AreEqual(NullableAnnotation.NotAnnotated, compilation.GetSemanticModel(syntaxTree).GetType(node.Type, CancellationToken.None).NullableAnnotation);
+            Assert.AreEqual(true, semanticModel.TryGetType(node.Type, CancellationToken.None, out var type));
+            Assert.AreEqual(propertySymbol.Type, type);
+
+            Assert.AreEqual(propertySymbol.Type, semanticModel.GetNamedType(node.Type, CancellationToken.None));
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(node.Type, CancellationToken.None, out var namedType));
+            Assert.AreEqual(propertySymbol.Type, namedType);
+        }
+
+        [Test]
+        public static void NullableDisabled()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N
+{
+    class C
+    {
+        public string P { get; }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
+            var node = syntaxTree.FindPropertyDeclaration("P");
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var propertySymbol = semanticModel.GetDeclaredSymbol(node)!;
+
+            Assert.AreEqual(propertySymbol.Type, semanticModel.GetType(node.Type, CancellationToken.None));
+            Assert.AreEqual(NullableAnnotation.None, compilation.GetSemanticModel(syntaxTree).GetType(node.Type, CancellationToken.None).NullableAnnotation);
+            Assert.AreEqual(true, semanticModel.TryGetType(node.Type, CancellationToken.None, out var type));
+            Assert.AreEqual(propertySymbol.Type, type);
+
+            Assert.AreEqual(propertySymbol.Type, semanticModel.GetNamedType(node.Type, CancellationToken.None));
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(node.Type, CancellationToken.None, out var namedType));
             Assert.AreEqual(propertySymbol.Type, namedType);
         }
     }

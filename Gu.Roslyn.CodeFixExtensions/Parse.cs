@@ -1,8 +1,6 @@
 ﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
-    using System.Linq;
-
     using Gu.Roslyn.AnalyzerExtensions;
 
     using Microsoft.CodeAnalysis;
@@ -173,7 +171,7 @@
         {
             var code = $"{text.WithLeadingWhiteSpace(leadingWhitespace)}\r\n{leadingWhitespace}public class C {{}}";
             if (SyntaxFactory.ParseCompilationUnit(code) is { } compilationUnit &&
-                compilationUnit.Members.TrySingleOfType<MemberDeclarationSyntax, ClassDeclarationSyntax>(out ClassDeclarationSyntax? member) &&
+                compilationUnit.Members.TrySingleOfType<MemberDeclarationSyntax, ClassDeclarationSyntax>(out var member) &&
                 member.AttributeLists.TrySingle(out var attributeList))
             {
                 return attributeList;
