@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -84,7 +84,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             var sorted = typeDeclaration.Members.OrderBy(x => x, comparer ?? MemberDeclarationComparer.Default).ToArray();
-            for (int i = 0; i < sorted.Length; i++)
+            for (var i = 0; i < sorted.Length; i++)
             {
                 sorted[i] = i == 0 ? sorted[i].AdjustLeadingNewLine(null) : sorted[i].AdjustLeadingNewLine(sorted[i - 1]);
             }

@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -41,9 +42,8 @@
                          IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right) ||
                          (semanticModel != null && IsEqualityComparerEquals(invocation, semanticModel, cancellationToken, out _, out left, out right)):
                     return true;
-                case ConditionalAccessExpressionSyntax conditionalAccess
-                    when conditionalAccess.WhenNotNull is InvocationExpressionSyntax invocation &&
-                         IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
+                case ConditionalAccessExpressionSyntax { WhenNotNull: InvocationExpressionSyntax invocation }
+                    when IsInstanceEquals(invocation, semanticModel, cancellationToken, out left, out right):
                     return true;
                 case BinaryExpressionSyntax node
                     when IsInstanceEquals(node, semanticModel, cancellationToken, out left, out right) ||
@@ -327,14 +327,15 @@
                            parameters[1].Type == QualifiedType.System.Object;
                 }
 
-                switch (candidate.Expression)
+                return candidate.Expression switch
                 {
-                    case MemberAccessExpressionSyntax { Expression: { } expression } when MemberPath.TryFindLast(expression, out var last) &&
-                                                                                          last.ValueText == "RuntimeHelpers":
-                        return null;
-                    default:
-                        return false;
-                }
+                    MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier: { ValueText: "RuntimeHelpers" } } } => true,
+                    MemberAccessExpressionSyntax { Expression: { } expression }
+                        when MemberPath.TryFindLast(expression, out var last) &&
+                             last.ValueText == "RuntimeHelpers"
+                        => null,
+                    _ => false,
+                };
             }
         }
 
@@ -380,14 +381,15 @@
                            parameters[1].Type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
                 }
 
-                switch (candidate.Expression)
+                return candidate.Expression switch
                 {
-                    case MemberAccessExpressionSyntax memberAccess when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
-                                                                        last.ValueText == "Nullable":
-                        return null;
-                    default:
-                        return false;
-                }
+                    MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier: { ValueText: "Nullable" } } } => true,
+                    MemberAccessExpressionSyntax memberAccess
+                        when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
+                             last.ValueText == "Nullable"
+                        => null,
+                    _ => false,
+                };
             }
         }
 

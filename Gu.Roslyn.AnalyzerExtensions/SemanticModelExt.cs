@@ -4,6 +4,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -70,9 +71,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="type">The symbol if found.</param>
-        /// <returns>True if a symbol was found.</returns>
-        public static bool TryGetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)] out ITypeSymbol? type)
+        /// <returns>ITypeSymbol if a symbol was found.</returns>
+        public static ITypeSymbol? GetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
         {
             if (semanticModel is null)
             {
@@ -86,18 +86,73 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is { } temp)
             {
-                type = temp;
-                return true;
+                if (node is NullableTypeSyntax)
+                {
+                    return temp.WithNullableAnnotation(NullableAnnotation.Annotated);
+                }
+
+                return temp;
             }
 
             if (semanticModel.TryGetSymbol(node, cancellationToken, out ISymbol? symbol))
             {
-                type = symbol as ITypeSymbol;
-                return type != null;
+                return symbol as ITypeSymbol;
             }
 
-            type = null;
-            return false;
+            return null;
+        }
+
+        /// <summary>
+        /// Try getting the GetTypeInfo for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="type">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)] out ITypeSymbol? type)
+        {
+            type = GetType(semanticModel, node, cancellationToken);
+            return type is { };
+        }
+
+        /// <summary>
+        /// Try getting the GetTypeInfo for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="SyntaxNode"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <returns>INamedTypeSymbol if a symbol was found.</returns>
+        public static INamedTypeSymbol? GetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
+        {
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is INamedTypeSymbol temp)
+            {
+                if (node is NullableTypeSyntax)
+                {
+                    return (INamedTypeSymbol)temp.WithNullableAnnotation(NullableAnnotation.Annotated);
+                }
+
+                return temp;
+            }
+
+            if (semanticModel.GetDeclaredSymbolSafe(node, cancellationToken) is INamedTypeSymbol declaredTemp)
+            {
+                return declaredTemp;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -176,30 +231,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <returns>True if a symbol was found.</returns>
         public static bool TryGetNamedType(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken, [NotNullWhen(true)] out INamedTypeSymbol? type)
         {
-            if (semanticModel is null)
-            {
-                throw new ArgumentNullException(nameof(semanticModel));
-            }
-
-            if (node is null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-
-            if (semanticModel.GetTypeInfoSafe(node, cancellationToken).Type is INamedTypeSymbol temp)
-            {
-                type = temp;
-                return true;
-            }
-
-            if (semanticModel.GetDeclaredSymbolSafe(node, cancellationToken) is INamedTypeSymbol declaredTemp)
-            {
-                type = declaredTemp;
-                return true;
-            }
-
-            type = null;
-            return false;
+            type = GetNamedType(semanticModel, node, cancellationToken);
+            return type is { };
         }
 
         /// <summary>

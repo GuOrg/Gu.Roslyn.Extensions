@@ -1,10 +1,14 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
 {
+    using System;
     using System.Threading;
+
     using Gu.Roslyn.Asserts;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
+
     using NUnit.Framework;
 
     public static class TryGetType
@@ -34,14 +38,16 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
             var node = syntaxTree.FindClassDeclaration("C");
             var expected = compilation.GetSemanticModel(syntaxTree).GetDeclaredSymbol(node);
-            Assert.AreEqual(true, compilation.GetSemanticModel(syntaxTree).TryGetType(node, CancellationToken.None, out var type));
+            Assert.AreEqual(true,     compilation.GetSemanticModel(syntaxTree).TryGetType(node, CancellationToken.None, out var type));
             Assert.AreEqual(expected, type);
+            Assert.AreEqual(expected, compilation.GetSemanticModel(syntaxTree).GetType(node, CancellationToken.None));
 
             Assert.AreEqual(true, compilation.GetSemanticModel(syntaxTree).TryGetNamedType(node, CancellationToken.None, out var namedType));
             Assert.AreEqual(namedType, type);
 
-            Assert.AreEqual(true, compilation.GetSemanticModel(OtherTree).TryGetType(node, CancellationToken.None, out type));
+            Assert.AreEqual(true,     compilation.GetSemanticModel(OtherTree).TryGetType(node, CancellationToken.None, out type));
             Assert.AreEqual(expected, type);
+            Assert.AreEqual(expected, compilation.GetSemanticModel(OtherTree).GetType(node, CancellationToken.None));
 
             Assert.AreEqual(true, compilation.GetSemanticModel(OtherTree).TryGetNamedType(node, CancellationToken.None, out namedType));
             Assert.AreEqual(namedType, type);
@@ -107,7 +113,34 @@ namespace N
             Assert.AreEqual("ObsoleteAttribute", type.Name);
 
             qualifiedType = QualifiedType.FromType(typeof(System.Attribute));
-            Assert.AreEqual(false,                semanticModel.TryGetNamedType(attribute, qualifiedType, CancellationToken.None, out _));
+            Assert.AreEqual(false, semanticModel.TryGetNamedType(attribute, qualifiedType, CancellationToken.None, out _));
+        }
+
+        [Test]
+        public static void Nullable()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+#nullable enable
+namespace N
+{
+    class C
+    {
+        public string? P { get; }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+            var node = syntaxTree.FindPropertyDeclaration("P");
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var propertySymbol = semanticModel.GetDeclaredSymbol(node)!;
+
+            Assert.AreEqual(propertySymbol.Type, semanticModel.GetType(node.Type, CancellationToken.None));
+            Assert.AreEqual(true, semanticModel.TryGetType(node.Type, CancellationToken.None, out var type));
+            Assert.AreEqual(propertySymbol.Type, type);
+
+            Assert.AreEqual(propertySymbol.Type, semanticModel.GetNamedType(node.Type, CancellationToken.None));
+            Assert.AreEqual(true,                semanticModel.TryGetNamedType(node.Type, CancellationToken.None, out var namedType));
+            Assert.AreEqual(propertySymbol.Type, namedType);
         }
     }
 }

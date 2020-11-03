@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis;
@@ -69,7 +69,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             }
 
             var candidate = syntaxRoot.FindNode(location.SourceSpan, getInnermostNodeForTie: true);
-            while (candidate.Span == location.SourceSpan)
+            while (candidate?.Span == location.SourceSpan)
             {
                 if (candidate is T match)
                 {

@@ -69,7 +69,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
             this.FullName = fullName;
             this.Namespace = @namespace;
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
-            this.Alias = alias ?? (type.EndsWith("Attribute", StringComparison.Ordinal) ? type.Substring(0, type.Length - 9) : null);
+            this.Alias = alias ?? (type.EndsWith("Attribute", StringComparison.Ordinal)
+                ? type.Substring(0, type.Length - 9)
+                : null);
         }
 
         /// <summary>
@@ -125,13 +127,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="left">The <see cref="BaseTypeSyntax"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if not found equal.</returns>
-        public static bool operator !=(BaseTypeSyntax left, QualifiedType right) => !(left == right);
+        public static bool operator !=(BaseTypeSyntax? left, QualifiedType right) => !(left == right);
 
         /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="TypeSyntax"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if found equal.</returns>
-        public static bool operator ==(TypeSyntax left, QualifiedType right)
+        public static bool operator ==(TypeSyntax? left, QualifiedType right)
         {
             return right?.Equals(left) == true;
         }
@@ -140,7 +142,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="left">The <see cref="TypeSyntax"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if not found equal.</returns>
-        public static bool operator !=(TypeSyntax left, QualifiedType right) => !(left == right);
+        public static bool operator !=(TypeSyntax? left, QualifiedType right) => !(left == right);
 
         /// <summary>
         /// Create a <see cref="QualifiedType"/> from a <see cref="Type"/>.
@@ -233,7 +235,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="type">The <see cref="ITypeSymbol"/>.</param>
         /// <returns>True if equal.</returns>
-        protected virtual bool Equals(ITypeSymbol type)
+        protected virtual bool Equals(ITypeSymbol? type)
         {
             if (type is null)
             {
@@ -249,7 +251,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         /// <param name="type">The <see cref="TypeSyntax"/>.</param>
         /// <returns>True if equal.</returns>
-        protected virtual bool Equals(TypeSyntax type)
+        protected virtual bool Equals(TypeSyntax? type)
         {
             if (type is null)
             {
@@ -278,7 +280,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     !name.Parent.IsKind(SyntaxKind.UsingDirective) &&
                     AliasWalker.TryGet(type.SyntaxTree, this, out var directive))
                 {
-                    return directive.Alias.Name.Identifier.Text == name.Identifier.Text;
+                    return directive.Alias?.Name.Identifier.Text == name.Identifier.Text;
                 }
 
                 return false;
