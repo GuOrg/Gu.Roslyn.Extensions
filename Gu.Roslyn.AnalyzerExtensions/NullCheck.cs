@@ -2,6 +2,7 @@
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -21,10 +22,9 @@
         /// <returns>True if <paramref name="parameter"/> is checked for null.</returns>
         public static bool IsChecked(IParameterSymbol parameter, SyntaxNode scope, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (parameter is null ||
-                scope is null)
+            if (parameter is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(parameter));
             }
 
             using var walker = NullCheckWalker.Borrow(scope);
@@ -41,16 +41,25 @@
         /// <returns>True if <paramref name="parameter"/> is checked for null before <paramref name="location"/>.</returns>
         public static bool IsCheckedBefore(IParameterSymbol parameter, SyntaxNode location, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            if (parameter is null ||
-                location is null)
+            if (parameter is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(parameter));
             }
 
-            using var walker = NullCheckWalker.Borrow(location.FirstAncestorOrSelf<MemberDeclarationSyntax>());
-            return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
-                   location.TryFirstAncestorOrSelf(out ExpressionSyntax? expression) &&
-                   check.IsExecutedBefore(expression) == ExecutedBefore.Yes;
+            if (location is null)
+            {
+                throw new System.ArgumentNullException(nameof(location));
+            }
+
+            if (location.FirstAncestorOrSelf<MemberDeclarationSyntax>() is { } member)
+            {
+                using var walker = NullCheckWalker.Borrow(member);
+                return walker.TryGetFirst(parameter, semanticModel, cancellationToken, out var check) &&
+                       location.TryFirstAncestorOrSelf(out ExpressionSyntax? expression) &&
+                       check.IsExecutedBefore(expression) == ExecutedBefore.Yes;
+            }
+
+            return false;
         }
 
         /// <summary>

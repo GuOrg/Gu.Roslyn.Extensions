@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using Microsoft.CodeAnalysis;
@@ -181,9 +181,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 return memberDeclaration switch
                 {
-                    FieldDeclarationSyntax { Declaration: { Variables: { } variables } } declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword) ||
-                                                                                                        (variables.TryLast(out var last) &&
-                                                                                                         last.Initializer.Contains(node)),
+                    FieldDeclarationSyntax { Declaration: { Variables: { } variables } } declaration
+                        => declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword) ||
+                           (variables.TryLast(out var last) &&
+                            last.Initializer?.Contains(node) == true),
                     BaseFieldDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword),
                     PropertyDeclarationSyntax declaration => declaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
                                                              declaration.Initializer?.Contains(node) == true,

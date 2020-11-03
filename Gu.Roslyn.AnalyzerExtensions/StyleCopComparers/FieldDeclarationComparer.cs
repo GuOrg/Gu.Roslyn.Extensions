@@ -140,7 +140,7 @@
         private static bool TryGetMember(FieldDeclarationSyntax field, [NotNullWhen(true)] out MemberDeclarationSyntax? result)
         {
             result = null;
-            if (field is { Declaration: { Variables: { Count: 1 } variables } } &&
+            if (field is { Declaration: { Variables: { Count: 1 } variables }, Parent: { } } &&
                 variables[0].Identifier is { ValueText: { } name })
             {
                 using var walker = SpecificIdentifierNameWalker.Borrow(field.Parent, name);

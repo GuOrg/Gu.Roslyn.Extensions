@@ -57,20 +57,15 @@
 
             return MemberDeclarationComparer.CompareSpanStart(x, y);
 
-            bool IsInWpfContext(SyntaxNode node)
+            bool IsInWpfContext(SyntaxNode? node)
             {
-                switch (node)
+                return node switch
                 {
-                    case CompilationUnitSyntax compilationUnit:
-                        return HasSystemWindows(compilationUnit.Usings);
-                    case NamespaceDeclarationSyntax namespaceDeclaration:
-                        return HasSystemWindows(namespaceDeclaration.Usings) ||
-                               IsInWpfContext(node.Parent);
-                    case null:
-                        return false;
-                    default:
-                        return IsInWpfContext(node.Parent);
-                }
+                    CompilationUnitSyntax compilationUnit => HasSystemWindows(compilationUnit.Usings),
+                    NamespaceDeclarationSyntax namespaceDeclaration => HasSystemWindows(namespaceDeclaration.Usings) || IsInWpfContext(node.Parent),
+                    null => false,
+                    _ => IsInWpfContext(node.Parent)
+                };
 
                 bool HasSystemWindows(SyntaxList<UsingDirectiveSyntax> usings)
                 {

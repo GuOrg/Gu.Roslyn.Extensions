@@ -28,6 +28,11 @@
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
 
+            if (token.Parent is null)
+            {
+                throw new System.ArgumentNullException(nameof(token), "Token.Parent is null");
+            }
+
             symbol = GetSymbolSafe(semanticModel, token.Parent, cancellationToken) as TSymbol ??
                      GetDeclaredSymbolSafe(semanticModel, token.Parent, cancellationToken) as TSymbol;
             return symbol != null;
