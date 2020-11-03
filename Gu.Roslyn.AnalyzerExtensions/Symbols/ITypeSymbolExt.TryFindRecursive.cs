@@ -159,13 +159,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
-                return false;
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
             }
 
+            member = null;
             while (type != null)
             {
                 foreach (var symbol in type.GetMembers(name))
@@ -184,7 +183,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
                 }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
             return member != null;
@@ -202,13 +203,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                predicate is null)
+            if (predicate is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(predicate));
             }
 
+            member = null;
             while (type != null)
             {
                 foreach (var symbol in type.GetMembers())
@@ -226,7 +226,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
             return member != null;
@@ -245,12 +247,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                predicate is null)
+            if (predicate is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(predicate));
             }
+
+            member = null;
 
             while (type != null)
             {
@@ -269,7 +271,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
             return member != null;
@@ -287,13 +291,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                predicate is null)
+            if (predicate is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(predicate));
             }
 
+            member = null;
             while (type != null)
             {
                 foreach (var symbol in type.GetMembers())
@@ -306,7 +309,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
             return false;
@@ -325,11 +330,6 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TMember : class, ISymbol
         {
             member = null;
-            if (type is null)
-            {
-                return false;
-            }
-
             while (type != null)
             {
                 foreach (var symbol in type.GetMembers(name))
@@ -341,7 +341,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
             return false;
@@ -360,13 +362,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
             where TMember : class, ISymbol
         {
-            member = null;
-            if (type is null ||
-                predicate is null)
+            if (predicate is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(predicate));
             }
 
+            member = null;
             while (type != null)
             {
                 foreach (var symbol in type.GetMembers(name))
@@ -379,7 +380,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     }
                 }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
             return false;

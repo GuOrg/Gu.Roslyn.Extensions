@@ -67,7 +67,7 @@
                 node = node.WithModifiers(modifiers);
             }
 
-            return base.VisitEventDeclaration(node);
+            return base.VisitEventDeclaration(node)!;
         }
 
         /// <inheritdoc />
@@ -83,7 +83,7 @@
                 node = node.WithModifiers(modifiers);
             }
 
-            return base.VisitPropertyDeclaration(node);
+            return base.VisitPropertyDeclaration(node)!;
         }
 
         /// <inheritdoc />
@@ -167,7 +167,7 @@
                 }
             }
 
-            return (ClassDeclarationSyntax)base.VisitClassDeclaration(classDeclaration);
+            return (ClassDeclarationSyntax)base.VisitClassDeclaration(classDeclaration)!;
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using Gu.Roslyn.AnalyzerExtensions;
     using Microsoft.CodeAnalysis;
@@ -101,7 +101,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             {
                 if (x.Count == y.Count)
                 {
-                    for (int i = 0; i < x.Count; i++)
+                    for (var i = 0; i < x.Count; i++)
                     {
                         if (x[i].Kind() != y[i].Kind())
                         {

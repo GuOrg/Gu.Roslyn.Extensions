@@ -94,10 +94,10 @@
             switch (typeDeclaration)
             {
                 case ClassDeclarationSyntax declaration:
-                    typeDeclaration = (T)base.VisitClassDeclaration(declaration);
+                    typeDeclaration = (T)base.VisitClassDeclaration(declaration)!;
                     break;
                 case StructDeclarationSyntax declaration:
-                    typeDeclaration = (T)base.VisitStructDeclaration(declaration);
+                    typeDeclaration = (T)base.VisitStructDeclaration(declaration)!;
                     break;
             }
 
@@ -107,7 +107,7 @@
             }
 
             this.sortedMembers.Value = ImmutableArray<MemberDeclarationSyntax>.Empty;
-            return typeDeclaration;
+            return typeDeclaration!;
         }
     }
 }
