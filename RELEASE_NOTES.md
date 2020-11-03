@@ -1,3 +1,6 @@
+#### 0.14.1
+* Return annotated types from GetType()
+
 #### 0.14.0
 * BREAKING: Use Roslyn 3.5.0
 
