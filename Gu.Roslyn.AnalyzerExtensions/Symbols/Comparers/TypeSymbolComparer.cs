@@ -29,7 +29,8 @@
 
             return SymbolEqualityComparer.Default.Equals(x, y);
 
-            static bool IsAnnotated(ITypeSymbol? type) => type is { } && type.NullableAnnotation != NullableAnnotation.None;
+            static bool IsAnnotated(ITypeSymbol? type) => type is { IsReferenceType: true } &&
+                                                          type.NullableAnnotation != NullableAnnotation.None;
         }
 
         /// <summary> Determines equality by name and containing symbol. </summary>
