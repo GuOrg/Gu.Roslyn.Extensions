@@ -1,3 +1,6 @@
+#### 
+* BREAKING: Use Roslyn 3.5.0
+
 #### 0.13.0
 * BREAKING: Roslyn 3.3.1 and netstandard 2.0
 
