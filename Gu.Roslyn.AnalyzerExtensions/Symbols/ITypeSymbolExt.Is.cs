@@ -229,7 +229,9 @@
                     return true;
                 }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 source = source.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
             return false;

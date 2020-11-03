@@ -94,55 +94,45 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public string? Alias { get; }
 
+#pragma warning disable CA1062 // Validate arguments of public methods
+
         /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="ITypeSymbol"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if found equal.</returns>
-        public static bool operator ==(ITypeSymbol left, QualifiedType right)
-        {
-            return right?.Equals(left) == true;
-        }
+        public static bool operator ==(ITypeSymbol? left, QualifiedType right) => right.Equals(left);
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="ITypeSymbol"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if not found equal.</returns>
-        public static bool operator !=(ITypeSymbol left, QualifiedType right) => !(left == right);
+        public static bool operator !=(ITypeSymbol? left, QualifiedType right) => !right.Equals(left);
 
         /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="BaseTypeSyntax"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if found equal.</returns>
-        public static bool operator ==(BaseTypeSyntax left, QualifiedType right)
-        {
-            if (left is null || right is null)
-            {
-                return left is null && right is null;
-            }
-
-            return right.Equals(left.Type) == true;
-        }
+        public static bool operator ==(BaseTypeSyntax? left, QualifiedType right) => right.Equals(left);
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="BaseTypeSyntax"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if not found equal.</returns>
-        public static bool operator !=(BaseTypeSyntax? left, QualifiedType right) => !(left == right);
+        public static bool operator !=(BaseTypeSyntax? left, QualifiedType right) => !right.Equals(left);
 
         /// <summary> Check if <paramref name="left"/> is the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="TypeSyntax"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if found equal.</returns>
-        public static bool operator ==(TypeSyntax? left, QualifiedType right)
-        {
-            return right?.Equals(left) == true;
-        }
+        public static bool operator ==(TypeSyntax? left, QualifiedType right) => right.Equals(left);
 
         /// <summary> Check if <paramref name="left"/> is not the type described by <paramref name="right"/>. </summary>
         /// <param name="left">The <see cref="TypeSyntax"/>.</param>
         /// <param name="right">The <see cref="QualifiedType"/>.</param>
         /// <returns>True if not found equal.</returns>
-        public static bool operator !=(TypeSyntax? left, QualifiedType right) => !(left == right);
+        public static bool operator !=(TypeSyntax? left, QualifiedType right) => !right.Equals(left);
+
+#pragma warning restore CA1062 // Validate arguments of public methods
 
         /// <summary>
         /// Create a <see cref="QualifiedType"/> from a <see cref="Type"/>.

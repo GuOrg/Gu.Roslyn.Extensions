@@ -107,6 +107,11 @@
         /// <inheritdoc />
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
         {
+            if (node is null)
+            {
+                throw new System.ArgumentNullException(nameof(node));
+            }
+
             if (node.StaticKeyword.IsKind(SyntaxKind.StaticKeyword))
             {
                 this.usingDirectives.Add(node);
