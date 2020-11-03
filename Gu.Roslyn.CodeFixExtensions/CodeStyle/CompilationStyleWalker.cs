@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -29,22 +29,20 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(containing));
             }
 
-            if (await Check(containing).ConfigureAwait(false) is CodeStyleResult containingResult &&
+            if (await Check(containing).ConfigureAwait(false) is { } containingResult &&
                 containingResult != CodeStyleResult.NotFound)
             {
                 return containingResult;
             }
 
-            using (var set = PooledSet<Document>.Borrow())
+            using var set = PooledSet<Document>.Borrow();
+            foreach (var document in Documents())
             {
-                foreach (var document in Documents())
+                if (set.Add(document) &&
+                    await Check(document).ConfigureAwait(false) is { } documentResult &&
+                    documentResult != CodeStyleResult.NotFound)
                 {
-                    if (set.Add(document) &&
-                        await Check(document).ConfigureAwait(false) is CodeStyleResult documentResult &&
-                        documentResult != CodeStyleResult.NotFound)
-                    {
-                        return documentResult;
-                    }
+                    return documentResult;
                 }
             }
 
@@ -58,6 +56,11 @@ namespace Gu.Roslyn.CodeFixExtensions
                 }
 
                 var tree = await candidate.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+                if (tree is null)
+                {
+                    return CodeStyleResult.NotFound;
+                }
+
                 if (IsExcluded(tree.FilePath))
                 {
                     return CodeStyleResult.NotFound;
@@ -101,7 +104,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     yield return document;
                 }
 
-                static bool Equals(IReadOnlyList<string> x, IReadOnlyList<string> y)
+                static bool Equals(IReadOnlyList<string>? x, IReadOnlyList<string>? y)
                 {
                     if (x is null && y is null)
                     {
@@ -115,7 +118,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
                     if (x.Count == y.Count)
                     {
-                        for (int i = 0; i < x.Count; i++)
+                        for (var i = 0; i < x.Count; i++)
                         {
                             if (x[i] != y[i])
                             {
@@ -129,7 +132,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     return false;
                 }
 
-                static bool IsIn(IReadOnlyList<string> x, IReadOnlyList<string> y)
+                static bool IsIn(IReadOnlyList<string>? x, IReadOnlyList<string>? y)
                 {
                     if (x is null || y is null)
                     {
@@ -138,7 +141,7 @@ namespace Gu.Roslyn.CodeFixExtensions
 
                     if (x.Count > y.Count)
                     {
-                        for (int i = 0; i < y.Count; i++)
+                        for (var i = 0; i < y.Count; i++)
                         {
                             if (x[i] != y[i])
                             {
@@ -172,7 +175,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(compilation));
             }
 
-            if (Check(containing) is CodeStyleResult containingResult &&
+            if (Check(containing) is { } containingResult &&
                 containingResult != CodeStyleResult.NotFound)
             {
                 return containingResult;
@@ -185,7 +188,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                     continue;
                 }
 
-                if (Check(syntaxTree) is CodeStyleResult syntaxTreeResult &&
+                if (Check(syntaxTree) is { } syntaxTreeResult &&
                     syntaxTreeResult != CodeStyleResult.NotFound)
                 {
                     return syntaxTreeResult;
@@ -249,7 +252,7 @@ namespace Gu.Roslyn.CodeFixExtensions
             this.result = CodeStyleResult.NotFound;
         }
 
-        private static bool IsExcluded(string filePath)
+        private static bool IsExcluded(string? filePath)
         {
             if (filePath is null)
             {
