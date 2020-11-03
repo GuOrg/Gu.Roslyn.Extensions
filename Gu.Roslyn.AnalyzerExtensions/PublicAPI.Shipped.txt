@@ -24,7 +24,6 @@ Gu.Roslyn.AnalyzerExtensions.ConstructorInitializerSyntaxExt
 Gu.Roslyn.AnalyzerExtensions.DiagnosticDescriptorExt
 Gu.Roslyn.AnalyzerExtensions.DocumentationCommentTriviaSyntaxExtensions
 Gu.Roslyn.AnalyzerExtensions.EnumerableExt
-Gu.Roslyn.AnalyzerExtensions.EnumerableExt
 Gu.Roslyn.AnalyzerExtensions.Equality
 Gu.Roslyn.AnalyzerExtensions.EventSymbolComparer
 Gu.Roslyn.AnalyzerExtensions.EventSymbolComparer.GetHashCode(Microsoft.CodeAnalysis.IEventSymbol obj) -> int

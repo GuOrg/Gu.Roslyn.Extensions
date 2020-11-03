@@ -390,6 +390,12 @@
                 throw new System.ArgumentNullException(nameof(semanticModel));
             }
 
+
+            if (token.Parent is null)
+            {
+                throw new System.ArgumentNullException(nameof(token), "Token.Parent is null");
+            }
+
             return GetSymbolSafe(semanticModel, token.Parent, cancellationToken);
         }
 
@@ -413,19 +419,14 @@
                 throw new System.ArgumentNullException(nameof(node));
             }
 
-            switch (node)
+            return node switch
             {
-                case AwaitExpressionSyntax awaitExpression:
-                    return GetSymbolSafe(semanticModel, awaitExpression, cancellationToken);
-                case ElementAccessExpressionSyntax { Expression: { } expression }
-                    when semanticModel.TryGetType(expression, cancellationToken, out var type) &&
-                         type is IArrayTypeSymbol arrayType:
-                    return arrayType;
-                default:
-                    return semanticModel.SemanticModelFor(node)
-                                       ?.GetSymbolInfo(node, cancellationToken)
-                                        .Symbol;
-            }
+                AwaitExpressionSyntax awaitExpression => GetSymbolSafe(semanticModel, awaitExpression, cancellationToken),
+                ElementAccessExpressionSyntax { Expression: { } expression }
+                    when semanticModel.TryGetType(expression, cancellationToken, out var type) && type is IArrayTypeSymbol arrayType
+                    => arrayType,
+                _ => semanticModel.SemanticModelFor(node)?.GetSymbolInfo(node, cancellationToken).Symbol,
+            };
         }
     }
 }

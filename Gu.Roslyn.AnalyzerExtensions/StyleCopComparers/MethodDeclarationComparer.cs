@@ -57,17 +57,17 @@
 
             return MemberDeclarationComparer.CompareSpanStart(x, y);
 
-            bool IsInWpfContext(SyntaxNode? node)
+            static bool IsInWpfContext(SyntaxNode? node)
             {
                 return node switch
                 {
                     CompilationUnitSyntax compilationUnit => HasSystemWindows(compilationUnit.Usings),
                     NamespaceDeclarationSyntax namespaceDeclaration => HasSystemWindows(namespaceDeclaration.Usings) || IsInWpfContext(node.Parent),
                     null => false,
-                    _ => IsInWpfContext(node.Parent)
+                    _ => IsInWpfContext(node.Parent),
                 };
 
-                bool HasSystemWindows(SyntaxList<UsingDirectiveSyntax> usings)
+                static bool HasSystemWindows(SyntaxList<UsingDirectiveSyntax> usings)
                 {
                     foreach (var @using in usings)
                     {

@@ -128,7 +128,7 @@
 
                             break;
                         case IfStatementSyntax { Condition: { } condition }:
-                            foreach (SyntaxNode node in condition.DescendantNodes())
+                            foreach (var node in condition.DescendantNodes())
                             {
                                 switch (node)
                                 {
