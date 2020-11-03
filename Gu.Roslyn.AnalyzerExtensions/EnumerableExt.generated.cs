@@ -21,7 +21,7 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryElementAt<T>(this IReadOnlyList<T> source, int index, [MaybeNullWhen(false)] out T result)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -46,7 +46,7 @@
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -72,7 +72,7 @@
         public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -110,7 +110,7 @@
         public static bool TrySingleOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -148,7 +148,7 @@
         /// <returns>True if an element was found.</returns>
         public static bool TrySingle<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -184,7 +184,7 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -210,7 +210,7 @@
         public static bool TryFirstOfType<T, TResult>(this IReadOnlyList<T> source, out TResult result)
             where TResult : T
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -240,7 +240,7 @@
         public static bool TryFirstOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -269,7 +269,7 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryFirst<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -296,7 +296,7 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out T result)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -323,7 +323,7 @@
         public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -353,7 +353,7 @@
         public static bool TryLastOfType<T, TResult>(this IReadOnlyList<T> source, Func<TResult, bool> predicate, [MaybeNullWhen(false)] out TResult result)
             where TResult : T
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -382,7 +382,7 @@
         /// <returns>True if an element was found.</returns>
         public static bool TryLast<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }

@@ -77,11 +77,14 @@
         /// <returns>True if an alias was found.</returns>
         public static bool TryGet(SyntaxTree tree, QualifiedType type, [NotNullWhen(true)] out UsingDirectiveSyntax? result)
         {
-            result = null;
-            if (tree is null ||
-                type is null)
+            if (tree is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(tree));
+            }
+
+            if (type is null)
+            {
+                throw new System.ArgumentNullException(nameof(type));
             }
 
             if (tree.TryGetRoot(out var root))
@@ -97,13 +100,14 @@
                 }
             }
 
+            result = null;
             return false;
         }
 
         /// <inheritdoc />
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
         {
-            if (node?.StaticKeyword.IsKind(SyntaxKind.StaticKeyword) == true)
+            if (node.StaticKeyword.IsKind(SyntaxKind.StaticKeyword))
             {
                 this.usingDirectives.Add(node);
             }

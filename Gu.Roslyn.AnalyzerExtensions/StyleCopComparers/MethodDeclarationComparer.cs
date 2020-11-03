@@ -186,6 +186,11 @@
 
             IdentifierNameSyntax? FindCallbackInvocation()
             {
+                if (method.Parent is null)
+                {
+                    return null;
+                }
+
                 using var walker = SpecificIdentifierNameWalker.Borrow(method.Parent, method.Identifier.ValueText);
                 if (walker.IdentifierNames.TrySingle(out var candidate))
                 {

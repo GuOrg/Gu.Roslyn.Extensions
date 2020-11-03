@@ -133,9 +133,14 @@
                 throw new System.ArgumentNullException(nameof(scope));
             }
 
-            var walker = NullCheckWalker.Borrow(scope.FirstAncestorOrSelf<MemberDeclarationSyntax>());
-            walker.Filter(parameter, semanticModel, cancellationToken);
-            return walker;
+            if (scope.FirstAncestorOrSelf<MemberDeclarationSyntax>() is {} member)
+            {
+                var walker = NullCheckWalker.Borrow(member);
+                walker.Filter(parameter, semanticModel, cancellationToken);
+                return walker;
+            }
+
+            return NullCheckWalker.Borrow(scope);
         }
     }
 }

@@ -397,7 +397,7 @@ private void WriteIfNullThrow(Data item)
 {
     if (!item.IsValueType)
     {
-        this.WriteLine("            if (source == null)");
+        this.WriteLine("            if (source is null)");
         this.WriteLine("            {");
         this.WriteLine("                throw new ArgumentNullException(nameof(source));");
         this.WriteLine("            }");

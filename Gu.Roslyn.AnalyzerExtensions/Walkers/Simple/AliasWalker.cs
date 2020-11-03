@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -57,11 +58,14 @@
         /// <returns>True if an alias was found.</returns>
         public static bool TryGet(SyntaxTree tree, string name, [NotNullWhen(true)] out UsingDirectiveSyntax? result)
         {
-            result = null;
-            if (tree is null ||
-                name is null)
+            if (tree is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(tree));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new System.ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
             }
 
             if (tree.TryGetRoot(out var root))
@@ -69,7 +73,8 @@
                 using var walker = Borrow(root);
                 foreach (var candidate in walker.aliases)
                 {
-                    if (candidate.Alias.Name.Identifier.ValueText == name)
+                    if (candidate is { Alias: { Name: { Identifier: { ValueText: { } valueText } } } } &&
+                        valueText == name)
                     {
                         result = candidate;
                         return true;
@@ -77,6 +82,7 @@
                 }
             }
 
+            result = null;
             return false;
         }
 
@@ -89,11 +95,14 @@
         /// <returns>True if an alias was found.</returns>
         public static bool TryGet(SyntaxTree tree, QualifiedType type, [NotNullWhen(true)] out UsingDirectiveSyntax? result)
         {
-            result = null;
-            if (tree is null ||
-                type is null)
+            if (tree is null)
             {
-                return false;
+                throw new System.ArgumentNullException(nameof(tree));
+            }
+
+            if (type is null)
+            {
+                throw new System.ArgumentNullException(nameof(type));
             }
 
             if (tree.TryGetRoot(out var root))
@@ -109,6 +118,7 @@
                 }
             }
 
+            result = null;
             return false;
         }
 

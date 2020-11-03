@@ -67,9 +67,6 @@ Gu.Roslyn.AnalyzerExtensions.IPropertySymbolExt
 Gu.Roslyn.AnalyzerExtensions.ISymbolExt
 Gu.Roslyn.AnalyzerExtensions.ISymbolExt
 Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
-Gu.Roslyn.AnalyzerExtensions.ITypeSymbolExt
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker.IdentifierNames.get -> System.Collections.Generic.IReadOnlyList<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>
 Gu.Roslyn.AnalyzerExtensions.IdentifierNameExecutionWalker.TryFind(string name, out Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax identifierName) -> bool
@@ -269,8 +266,6 @@ Gu.Roslyn.AnalyzerExtensions.SearchScope.Member = 0 -> Gu.Roslyn.AnalyzerExtensi
 Gu.Roslyn.AnalyzerExtensions.SearchScope.Recursive = 3 -> Gu.Roslyn.AnalyzerExtensions.SearchScope
 Gu.Roslyn.AnalyzerExtensions.SearchScope.Type = 2 -> Gu.Roslyn.AnalyzerExtensions.SearchScope
 Gu.Roslyn.AnalyzerExtensions.SearchScopeExt
-Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
-Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
 Gu.Roslyn.AnalyzerExtensions.SemanticModelExt
 Gu.Roslyn.AnalyzerExtensions.SeparatedSyntaxListExt
 Gu.Roslyn.AnalyzerExtensions.SpecificIdentifierNameWalker

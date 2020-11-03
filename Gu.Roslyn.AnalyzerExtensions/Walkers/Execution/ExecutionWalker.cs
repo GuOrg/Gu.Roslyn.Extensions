@@ -66,8 +66,8 @@
             if (this.SearchScope != SearchScope.Member &&
                 node.Initializer is null &&
                 this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var ctor) &&
-                ctor.ContainingType is { } containingType &&
-                Constructor.TryFindDefault(containingType.BaseType, Search.Recursive, out var defaultCtor) &&
+                ctor.ContainingType is { BaseType: { } baseType } &&
+                Constructor.TryFindDefault(baseType, Search.Recursive, out var defaultCtor) &&
                 defaultCtor.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax? defaultCtorDeclaration))
             {
                 this.Visit(defaultCtorDeclaration);
