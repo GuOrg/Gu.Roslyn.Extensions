@@ -77,15 +77,7 @@
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
     
-    <None Update="EnumerableExt.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EnumerableExt.generated.cs</LastGenOutput>
-    </None>
-
-    <Compile Update="EnumerableExt.generated.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EnumerableExt.tt</DependentUpon>
-    </Compile>
+    <None Update="EnumerableExt.tt" Generator="TextTemplatingFileGenerator" LastGenOutput="EnumerableExt.generated.cs" />
+    <Compile Update="EnumerableExt.generated.cs" DesignTime="True" AutoGen="True" DependentUpon="EnumerableExt.tt" />
   </ItemGroup>
 </Project>
