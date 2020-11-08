@@ -184,22 +184,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            if (obj is null)
-            {
-                return false;
-            }
-
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
 
-            if (obj.GetType() != this.GetType())
+            return obj switch
             {
-                return false;
-            }
-
-            return this.Equals((QualifiedType)obj);
+                QualifiedType t => this.Equals(t),
+                ITypeSymbol t => this.Equals(t),
+                TypeSyntax t => this.Equals(t),
+                BaseTypeSyntax t => this.Equals(t),
+                _ => false,
+            };
         }
 
         /// <inheritdoc />
@@ -276,6 +273,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 return false;
             }
         }
+
+        /// <summary>
+        /// Check if equal.
+        /// </summary>
+        /// <param name="baseType">The <see cref="BaseTypeSyntax"/>.</param>
+        /// <returns>True if equal.</returns>
+        protected virtual bool Equals(BaseTypeSyntax? baseType) => this.Equals(baseType?.Type);
 
         /// <summary>
         /// Check if <paramref name="name"/> matches <see cref="Type"/> or <see cref="Alias"/>.

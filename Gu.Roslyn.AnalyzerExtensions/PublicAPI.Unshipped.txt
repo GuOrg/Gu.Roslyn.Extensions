@@ -1,1 +1,1 @@
-﻿
+﻿virtual Gu.Roslyn.AnalyzerExtensions.QualifiedType.Equals(Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax? baseType) -> bool

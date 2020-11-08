@@ -1,6 +1,7 @@
 ﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
 {
     using System;
+    using System.Linq;
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -9,7 +10,7 @@
     public static class QualifiedTypeTests
     {
         [Test]
-        public static void SymbolEquality()
+        public static void TypeSymbolEquality()
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
@@ -62,11 +63,37 @@ namespace N
             var typeSyntax = syntaxTree.FindMethodDeclaration("M").ReturnType;
             var qualifiedType = QualifiedType.FromType(type);
             Assert.AreEqual(true, typeSyntax == qualifiedType);
+            Assert.AreEqual(true, qualifiedType.Equals(typeSyntax));
+
             Assert.AreEqual(false, typeSyntax != qualifiedType);
 
             typeSyntax = syntaxTree.FindMethodDeclaration("Other").ReturnType;
             Assert.AreEqual(false, typeSyntax == qualifiedType);
             Assert.AreEqual(true, typeSyntax != qualifiedType);
+        }
+
+        [Test]
+        public static void BaseTypeSyntaxEquality()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N
+{
+    using System;
+
+    internal class C : IDisposable
+    {
+        internal object M()
+        {
+        }
+    }
+}");
+            var baseType = syntaxTree.FindClassDeclaration("C").BaseList.Types.Single();
+            Assert.AreEqual(true,  baseType == new QualifiedType("System.IDisposable"));
+            Assert.AreEqual(true,  new QualifiedType("System.IDisposable").Equals(baseType));
+            Assert.AreEqual(true,  baseType == QualifiedType.System.Object);
+            Assert.AreEqual(false, baseType == QualifiedType.System.String);
+            Assert.AreEqual(false, baseType != new QualifiedType("System.IDisposable"));
         }
 
         [TestCase("[Obsolete]")]
