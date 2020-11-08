@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.14.3</Version>
+    <Version>0.14.4</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -18,6 +18,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer codefix</PackageTags>
     <PackageReleaseNotes>
+      0.14.4
+      BUGFIX: QualifiedType == BaseTypeSyntax.
       0.14.3
       Only compare nullability if both types are annotated reference types.
       0.14.2

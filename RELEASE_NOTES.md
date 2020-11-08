@@ -1,3 +1,6 @@
+#### 0.14.4
+* BUGFIX: QualifiedType == BaseTypeSyntax.
+
 #### 0.14.3
 * Only compare nullability if both types are annotated reference types.
 
