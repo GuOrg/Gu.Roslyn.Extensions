@@ -91,7 +91,7 @@ namespace N
             var baseType = syntaxTree.FindClassDeclaration("C").BaseList.Types.Single();
             Assert.AreEqual(true,  baseType == new QualifiedType("System.IDisposable"));
             Assert.AreEqual(true,  new QualifiedType("System.IDisposable").Equals(baseType));
-            Assert.AreEqual(true,  baseType == QualifiedType.System.Object);
+            Assert.AreEqual(false,  baseType == QualifiedType.System.Object);
             Assert.AreEqual(false, baseType == QualifiedType.System.String);
             Assert.AreEqual(false, baseType != new QualifiedType("System.IDisposable"));
         }
