@@ -1,3 +1,6 @@
+#### 0.15.0
+* BREAKING: recursion.Target() returns syntax node for invocation as it can be a local function
+
 #### 0.14.4
 * BUGFIX: QualifiedType == BaseTypeSyntax.
 

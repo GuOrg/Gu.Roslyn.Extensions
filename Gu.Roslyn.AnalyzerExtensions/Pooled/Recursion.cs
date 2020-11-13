@@ -6,6 +6,7 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -77,12 +78,12 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,MethodDeclarationSyntax}"/>.</returns>
-        public Target<ExpressionSyntax, ISymbol, MethodDeclarationSyntax>? Target(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ExpressionSyntax, ISymbol, CSharpSyntaxNode>? Target(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.EffectiveSymbol<IMethodSymbol>(node) is { } symbol)
             {
-                _ = symbol.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration);
+                _ = symbol.TrySingleDeclaration(this.CancellationToken, out CSharpSyntaxNode? declaration);
                 if (symbol is { IsExtensionMethod: true, ReducedFrom: { } reducedFrom })
                 {
                     switch (node)

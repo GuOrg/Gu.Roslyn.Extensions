@@ -185,5 +185,35 @@ namespace N
             Assert.AreEqual("int n", target.Symbol.ToDisplayString(Format));
             Assert.AreEqual("public static int M2(this int n) => n;", target.Declaration.ToString());
         }
+
+        [Test]
+        public static void LocalFunction()
+        {
+            var tree = CSharpSyntaxTree.ParseText(@"
+namespace N
+{
+    public static class C
+    {
+        public static int P
+        {
+            get
+            {
+                return M();
+
+                int M() => 1;
+            }
+        }
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { tree });
+            var semanticModel = compilation.GetSemanticModel(tree);
+            Assert.AreEqual(true, semanticModel.TryGetNamedType(tree.FindClassDeclaration("C"), CancellationToken.None, out var type));
+            using var recursion = Recursion.Borrow(type, semanticModel, CancellationToken.None);
+            var node = tree.FindInvocation("M()");
+            var target = recursion.Target(node).Value;
+            Assert.AreEqual("M()",                                     target.Source.ToString());
+            Assert.AreEqual("M()",                                 target.Symbol.ToDisplayString(Format));
+            Assert.AreEqual("int M() => 1;", target.Declaration.ToString());
+        }
     }
 }
