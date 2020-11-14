@@ -211,6 +211,19 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
+        public Target<IdentifierNameSyntax, ISymbol, SyntaxNode>? Target(IdentifierNameSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        {
+            return this.Target<IdentifierNameSyntax, ISymbol, SyntaxNode>(node, caller, line);
+        }
+
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
         public Target<ExpressionSyntax, ISymbol, SyntaxNode>? Target(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             return node switch
