@@ -108,6 +108,19 @@
         /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
+        /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
+        public Target<InvocationExpressionSyntax, IMethodSymbol, SyntaxNode>? Method(InvocationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        {
+            return this.Target<InvocationExpressionSyntax, IMethodSymbol, SyntaxNode>(node, caller, line);
+        }
+
+        /// <summary>
+        /// Get the target symbol and declaration if exists.
+        /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+        /// </summary>
+        /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+        /// <param name="caller">The invoking method.</param>
+        /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,ConstructorDeclarationSyntax}"/>.</returns>
         public Target<ObjectCreationExpressionSyntax, IMethodSymbol, ConstructorDeclarationSyntax>? Target(ObjectCreationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
@@ -285,12 +298,12 @@
         /// <param name="caller">The invoking method.</param>
         /// <param name="line">Line number in <paramref name="caller"/>.</param>
         /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,SyntaxNode}"/>.</returns>
-        public Target<ExpressionSyntax, IMethodSymbol, MethodDeclarationSyntax>? MethodGroup(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+        public Target<ExpressionSyntax, IMethodSymbol, SyntaxNode>? MethodGroup(ExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.EffectiveSymbol<IMethodSymbol>(node) is { } symbol)
             {
-                _ = symbol.TrySingleDeclaration(this.CancellationToken, out MethodDeclarationSyntax? declaration);
+                _ = symbol.TrySingleDeclaration(this.CancellationToken, out SyntaxNode? declaration);
                 return AnalyzerExtensions.Target.Create(node, symbol, declaration);
             }
 

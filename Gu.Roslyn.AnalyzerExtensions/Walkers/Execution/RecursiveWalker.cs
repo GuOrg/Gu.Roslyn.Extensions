@@ -36,7 +36,7 @@
 
             return false;
 
-            bool IsRecursiveTarget(Target<TSource, TSymbol, TDeclaration> t)
+            static bool IsRecursiveTarget(Target<TSource, TSymbol, TDeclaration> t)
             {
                 return t switch
                 {
