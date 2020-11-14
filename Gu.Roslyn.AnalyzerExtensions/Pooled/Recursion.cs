@@ -41,6 +41,24 @@
         /// <summary>
         /// Get and instance from cache, dispose returns it.
         /// </summary>
+        /// <param name="node">The <see cref="SyntaxNode"/> where recursion starts..</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
+        /// <returns>A <see cref="Recursion"/>.</returns>
+        public static Recursion? Borrow(SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            if (node.FirstAncestorOrSelf<TypeDeclarationSyntax>() is { } typeDeclaration &&
+                semanticModel.GetNamedType(typeDeclaration, cancellationToken) is { } containingType)
+            {
+                return Borrow(containingType, semanticModel, cancellationToken);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get and instance from cache, dispose returns it.
+        /// </summary>
         /// <param name="containingType">The <see cref="INamedTypeSymbol"/> where recursion starts..</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that cancels the operation.</param>
