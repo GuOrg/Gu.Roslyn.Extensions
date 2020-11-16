@@ -886,6 +886,7 @@ static Gu.Roslyn.AnalyzerExtensions.QualifiedType.operator ==(Microsoft.CodeAnal
 static Gu.Roslyn.AnalyzerExtensions.QualifiedType.operator ==(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax? left, Gu.Roslyn.AnalyzerExtensions.QualifiedType! right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.QualifiedType.operator ==(Microsoft.CodeAnalysis.ITypeSymbol? left, Gu.Roslyn.AnalyzerExtensions.QualifiedType! right) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Recursion.Borrow(Microsoft.CodeAnalysis.INamedTypeSymbol! containingType, Microsoft.CodeAnalysis.SemanticModel! semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.Recursion!
+static Gu.Roslyn.AnalyzerExtensions.Recursion.Borrow(Microsoft.CodeAnalysis.SyntaxNode! node, Microsoft.CodeAnalysis.SemanticModel! semanticModel, System.Threading.CancellationToken cancellationToken) -> Gu.Roslyn.AnalyzerExtensions.Recursion?
 static Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.Borrow(Microsoft.CodeAnalysis.SyntaxNode! node) -> Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker!
 static Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.TrySingle(Microsoft.CodeAnalysis.SyntaxNode! node, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax? returnValue) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Scope.HasLocal(Microsoft.CodeAnalysis.SyntaxNode! nodeInScope, string! name) -> bool

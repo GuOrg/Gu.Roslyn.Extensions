@@ -47,6 +47,11 @@
         /// <returns>A <see cref="Recursion"/>.</returns>
         public static Recursion? Borrow(SyntaxNode node, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             if (node.FirstAncestorOrSelf<TypeDeclarationSyntax>() is { } typeDeclaration &&
                 semanticModel.GetNamedType(typeDeclaration, cancellationToken) is { } containingType)
             {
