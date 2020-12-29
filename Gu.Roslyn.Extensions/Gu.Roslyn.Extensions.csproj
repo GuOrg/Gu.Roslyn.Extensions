@@ -55,7 +55,12 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions" />
+    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="all" />
@@ -64,14 +69,5 @@
   <ItemGroup>
     <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" />
     <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions" />
-    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="..\Gu.Roslyn.CodeFixExtensions\AddMember.cs" />
   </ItemGroup>
 </Project>
