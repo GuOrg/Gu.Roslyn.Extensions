@@ -47,10 +47,8 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 if (optional.Value is null)
                 {
                     value = default!;
-#pragma warning disable CA1508 // Avoid dead conditional code
                     //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
                     return value is null;
-#pragma warning restore CA1508 // Avoid dead conditional code
                 }
 
                 // We can't use GetTypeInfo() here as it brings in System.Reflection.Extensions that does not work in VS.

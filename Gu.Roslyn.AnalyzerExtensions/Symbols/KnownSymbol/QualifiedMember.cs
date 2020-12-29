@@ -1,4 +1,4 @@
-#pragma warning disable 660,661 // using a hack with operator overloads
+﻿#pragma warning disable 660,661 // using a hack with operator overloads
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics;
@@ -66,12 +66,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return !(left == right);
         }
 
-#pragma warning disable CA2225 // Operator overloads have named alternates
         /// <summary> Check if <paramref name="symbol"/> is the type described by this instance.</summary>
         /// <param name="symbol">The <typeparamref name="T"/>.</param>
         /// <returns>True if found equal.</returns>
         protected virtual bool Equals(T symbol)
-#pragma warning restore CA2225 // Operator overloads have named alternates
         {
             if (symbol is null)
             {

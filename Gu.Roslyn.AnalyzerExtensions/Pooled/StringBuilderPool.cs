@@ -1,4 +1,4 @@
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
@@ -26,12 +26,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
             return new PooledStringBuilder();
         }
 
-#pragma warning disable CA1034 // Nested types should not be visible
         /// <summary>
         /// Wrapping a <see cref="StringBuilder"/>.
         /// </summary>
         public class PooledStringBuilder
-#pragma warning restore CA1034 // Nested types should not be visible
         {
             private readonly StringBuilder inner = new StringBuilder();
 

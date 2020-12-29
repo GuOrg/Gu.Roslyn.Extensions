@@ -62,7 +62,7 @@
                 throw new System.ArgumentNullException(nameof(argument));
             }
 
-            if (argument.NameColon is { Name: IdentifierNameSyntax name })
+            if (argument.NameColon is { Name: { } name })
             {
                 return method.TryFindParameter(name.Identifier.ValueText, out parameter);
             }
@@ -78,9 +78,7 @@
                     return true;
                 }
 
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
                 return method.Parameters.TryElementAt(index, out parameter);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
             }
 
             parameter = null;

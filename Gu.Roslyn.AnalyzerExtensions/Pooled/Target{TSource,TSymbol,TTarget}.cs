@@ -11,11 +11,9 @@
     /// <typeparam name="TSource">The node used in the recursion.</typeparam>
     /// <typeparam name="TSymbol">The target symbol.</typeparam>
     /// <typeparam name="TTarget">The target node.</typeparam>
-#pragma warning disable CA1005 // Avoid excessive parameters on generic types
 #pragma warning disable RS0016 // Add public types and members to the declared API
     public struct Target<TSource, TSymbol, TTarget> : IEquatable<Target<TSource, TSymbol, TTarget>>
 #pragma warning restore RS0016 // Add public types and members to the declared API
-#pragma warning restore CA1005 // Avoid excessive parameters on generic types
         where TSource : SyntaxNode
         where TSymbol : ISymbol
         where TTarget : SyntaxNode

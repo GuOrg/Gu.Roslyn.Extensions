@@ -513,9 +513,7 @@
 
             if (candidate.IsKind(SyntaxKind.EqualsExpression))
             {
-#pragma warning disable CA1062 // Validate arguments of public methods
                 left = candidate.Left;
-#pragma warning restore CA1062 // Validate arguments of public methods
                 right = candidate.Right;
                 return true;
             }
@@ -543,9 +541,7 @@
 
             if (candidate.IsKind(SyntaxKind.NotEqualsExpression))
             {
-#pragma warning disable CA1062 // Validate arguments of public methods
                 left = candidate.Left;
-#pragma warning restore CA1062 // Validate arguments of public methods
                 right = candidate.Right;
                 return true;
             }
