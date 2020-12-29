@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -107,8 +107,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             while (node.TryFirstAncestor<AnonymousFunctionExpressionSyntax>(out var lambda))
             {
-                if (semanticModel.GetTypeInfoSafe(lambda, cancellationToken) is TypeInfo typeInfo &&
-                    typeInfo.ConvertedType is { } convertedType &&
+                if (semanticModel.GetTypeInfoSafe(lambda, cancellationToken) is { ConvertedType: { } convertedType } &&
                     convertedType.IsAssignableTo(QualifiedType.System.Linq.Expression, semanticModel.Compilation))
                 {
                     return true;

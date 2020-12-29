@@ -1,4 +1,4 @@
-// ReSharper disable UnusedVariable
+﻿// ReSharper disable UnusedVariable
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
 {
     using NUnit.Framework;
@@ -41,7 +41,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         public static void UsingBorrowAddForeach()
         {
             using var set = PooledSet<int>.Borrow();
-            set.Add(1);
+            _ = set.Add(1);
             foreach (var i in set)
             {
             }
@@ -51,7 +51,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         public static void UsingBorrowAddForeachCallId()
         {
             using var set = PooledSet<int>.Borrow();
-            set.Add(1);
+            _ = set.Add(1);
             foreach (var i in set)
             {
                 var j = Id(i);
@@ -64,7 +64,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
         {
             using (set = set.IncrementUsage())
             {
-                set.Add(set.Count);
+                _ = set.Add(set.Count);
                 foreach (var i in set)
                 {
                     var j = Id(i);

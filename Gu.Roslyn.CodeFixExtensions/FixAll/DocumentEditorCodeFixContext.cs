@@ -1,5 +1,4 @@
-﻿#pragma warning disable GU0008 // Avoid relay properties.
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Immutable;

@@ -52,9 +52,8 @@
             switch (node.Parent)
             {
                 case InvocationExpressionSyntax _:
-                case ArgumentSyntax argument when argument.Parent is ArgumentListSyntax argumentList &&
-                                                  argumentList.Parent is InvocationExpressionSyntax invocation &&
-                                                  invocation.IsNameOf():
+                case ArgumentSyntax { Parent: ArgumentListSyntax { Parent: InvocationExpressionSyntax invocation } }
+                    when invocation.IsNameOf():
                     if (IsInstanceMethod() &&
                         !Scope.HasLocal(node, node.Identifier.ValueText) &&
                         !Scope.HasParameter(node, node.Identifier.ValueText))

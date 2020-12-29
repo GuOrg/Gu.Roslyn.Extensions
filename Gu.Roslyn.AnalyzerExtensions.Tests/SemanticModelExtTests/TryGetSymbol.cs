@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
 {
     using System.Linq;
     using System.Threading;
@@ -261,7 +261,7 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = (ElementAccessExpressionSyntax)syntaxTree.FindAssignmentExpression("xs[0] = 1").Left;
-            var expected = (IPropertySymbol)semanticModel.GetTypeInfo(node.Expression).Type.GetMembers().Single(x => x is IPropertySymbol property && property.IsIndexer);
+            var expected = (IPropertySymbol)semanticModel.GetTypeInfo(node.Expression).Type.GetMembers().Single(x => x is IPropertySymbol { IsIndexer: true });
             Assert.AreEqual(expected, semanticModel.GetSymbolSafe(node, CancellationToken.None));
             Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var indexer));
             Assert.AreEqual(expected, indexer);
@@ -287,7 +287,7 @@ namespace N
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = (ElementAccessExpressionSyntax)syntaxTree.FindAssignmentExpression("map[0] = \"abc\"").Left;
-            var expected = (IPropertySymbol)semanticModel.GetTypeInfo(node.Expression).Type.GetMembers().Single(x => x is IPropertySymbol property && property.IsIndexer);
+            var expected = (IPropertySymbol)semanticModel.GetTypeInfo(node.Expression).Type.GetMembers().Single(x => x is IPropertySymbol { IsIndexer: true });
             Assert.AreEqual(expected, semanticModel.GetSymbolSafe(node, CancellationToken.None));
             Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var indexer));
             Assert.AreEqual(expected, indexer);
