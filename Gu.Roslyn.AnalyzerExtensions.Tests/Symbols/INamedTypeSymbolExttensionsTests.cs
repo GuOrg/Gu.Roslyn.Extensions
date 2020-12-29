@@ -1,4 +1,4 @@
-// ReSharper disable AssignNullToNotNullAttribute
+﻿// ReSharper disable AssignNullToNotNullAttribute
 // ReSharper disable CoVariantArrayConversion
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
 {
@@ -12,9 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
     using NUnit.Framework;
 
     // ReSharper disable once InconsistentNaming
-#pragma warning disable GURA07 // Test class should be internal static.
     public class INamedTypeSymbolExtensionsTests
-#pragma warning restore GURA07 // Test class should be internal static.
     {
         [TestCase(typeof(int))]
         [TestCase(typeof(Nullable<>))]

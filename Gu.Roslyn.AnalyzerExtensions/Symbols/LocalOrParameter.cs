@@ -117,14 +117,12 @@
         /// <returns>True if a scope could be determined.</returns>
         public bool TryGetScope(CancellationToken cancellationToken, [NotNullWhen(true)] out SyntaxNode? scope)
         {
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return this.Symbol switch
             {
                 ILocalSymbol local => local.TryGetScope(cancellationToken, out scope),
                 IParameterSymbol parameter => parameter.ContainingSymbol.TrySingleDeclaration(cancellationToken, out scope),
                 _ => throw new InvalidOperationException("Should never get here."),
             };
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <inheritdoc/>

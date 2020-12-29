@@ -50,10 +50,8 @@
                     if (parameter.IsParams)
                     {
                         argument = null;
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
                         return arguments.Count - 1 == parameter.Ordinal &&
                                arguments.TryElementAt(parameter.Ordinal, out argument);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
                     }
 
                     if (TryFindByNameColon(argumentList, parameter.Name, out argument))
@@ -73,9 +71,7 @@
                         return false;
                     }
 
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
                     return argumentList.Arguments.TryElementAt(parameter.Ordinal, out argument);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
             }
 
             argument = null;

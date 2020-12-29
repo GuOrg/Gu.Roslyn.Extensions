@@ -28,9 +28,9 @@
         {
 #pragma warning disable CA1062 // Validate arguments of public methods
             context.EnableConcurrentExecution();
+#pragma warning restore CA1062 // Validate arguments of public methods
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterCompilationStartAction(x =>
-#pragma warning restore CA1062 // Validate arguments of public methods
             {
                 var transaction = SyntaxTreeCache<SemanticModel>.Begin(x.Compilation);
                 x.RegisterCompilationEndAction(_ => transaction.Dispose());

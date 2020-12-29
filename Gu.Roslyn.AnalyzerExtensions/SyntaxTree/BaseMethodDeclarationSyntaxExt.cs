@@ -99,9 +99,7 @@
                     var index = arguments.IndexOf(argument);
                     if (parameters.TryElementAt(index, out parameter))
                     {
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
                         return true;
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
                     }
 
                     parameter = parameters.Last();

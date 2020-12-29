@@ -31,7 +31,7 @@
             }
 
             argument = null;
-            return initializer?.ArgumentList is { } argumentList &&
+            return initializer.ArgumentList is { } argumentList &&
                    argumentList.TryFind(parameter, out argument);
         }
 
@@ -55,7 +55,7 @@
             }
 
             arguments = default;
-            return initializer?.ArgumentList is { } argumentList &&
+            return initializer.ArgumentList is { } argumentList &&
                    argumentList.TryFindParams(parameter, out arguments);
         }
 
