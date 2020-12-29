@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions" />
     <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions" />
+    <Compile Remove="..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" />
   </ItemGroup>
 
   <ItemGroup>
