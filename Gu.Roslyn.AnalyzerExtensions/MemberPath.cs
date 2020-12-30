@@ -1,5 +1,4 @@
-﻿#pragma warning disable CA1034 // Nested types should not be visible
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -72,16 +71,10 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
-#pragma warning disable SA1313 // Parameter names must begin with lower-case letter
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable SA1600 // Elements must be documented
         [Obsolete("Should only be called with arguments of type IAssemblySymbol.", error: true)]
-#pragma warning disable CA1707 // Identifiers should not contain underscores
         public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
-#pragma warning restore CA1707 // Identifiers should not contain underscores
-#pragma warning restore SA1600 // Elements must be documented
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning restore SA1313 // Parameter names must begin with lower-case letter
         //// ReSharper restore UnusedParameter.Global
 
         /// <summary>

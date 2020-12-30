@@ -1,5 +1,4 @@
-﻿#pragma warning disable CA1000 // Do not declare static members on generic types
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Collections.Concurrent;
@@ -62,9 +61,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         private sealed class Transaction : IDisposable
         {
-#pragma warning disable SA1401 // Fields should be private
             internal static int RefCount;
-#pragma warning restore SA1401 // Fields should be private
             private readonly object gate = new object();
             private Compilation? compilation;
 
@@ -83,9 +80,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// </summary>
             ~Transaction()
             {
-#pragma warning disable IDISP023 // Don't use reference types in finalizer context.
                 this.Purge();
-#pragma warning restore IDISP023 // Don't use reference types in finalizer context.
             }
 
             /// <inheritdoc />

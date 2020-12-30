@@ -171,7 +171,7 @@
         }
 
         [DebuggerDisplay("Start: {Start}, End: {End}, Length: {Length}")]
-        private struct Substring
+        private readonly struct Substring
         {
             internal Substring(int start, int end)
             {

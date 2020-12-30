@@ -1,5 +1,4 @@
-#pragma warning disable CA1062 // Validate arguments of public methods
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;

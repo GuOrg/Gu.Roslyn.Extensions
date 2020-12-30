@@ -369,9 +369,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <filterpriority>2.</filterpriority>
             public PooledStringBuilder AppendFormat(string format, object arg0)
             {
-#pragma warning disable CA1305 // Specify IFormatProvider
                 this.inner.AppendFormat(format, arg0);
-#pragma warning restore CA1305 // Specify IFormatProvider
                 return this;
             }
 
@@ -388,9 +386,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <filterpriority>2.</filterpriority>
             public PooledStringBuilder AppendFormat(string format, object arg0, object arg1)
             {
-#pragma warning disable CA1305 // Specify IFormatProvider
                 this.inner.AppendFormat(format, arg0, arg1);
-#pragma warning restore CA1305 // Specify IFormatProvider
                 return this;
             }
 
@@ -408,9 +404,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <filterpriority>2.</filterpriority>
             public PooledStringBuilder AppendFormat(string format, object arg0, object arg1, object arg2)
             {
-#pragma warning disable CA1305 // Specify IFormatProvider
                 this.inner.AppendFormat(format, arg0, arg1, arg2);
-#pragma warning restore CA1305 // Specify IFormatProvider
                 return this;
             }
 
@@ -425,9 +419,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             /// <exception cref="System.ArgumentOutOfRangeException">The length of the expanded string would exceed <see cref="System.Text.StringBuilder.MaxCapacity" />. </exception>
             public PooledStringBuilder AppendFormat(string format, params object[] args)
             {
-#pragma warning disable CA1305 // Specify IFormatProvider
                 this.inner.AppendFormat(format, args);
-#pragma warning restore CA1305 // Specify IFormatProvider
                 return this;
             }
 
