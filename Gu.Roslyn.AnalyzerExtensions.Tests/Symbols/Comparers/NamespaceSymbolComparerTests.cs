@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -23,6 +23,23 @@ namespace N
             var declaration = syntaxTree.Find<NamespaceDeclarationSyntax>(namespaceName);
             var symbol = semanticModel.GetDeclaredSymbol(declaration, CancellationToken.None);
             Assert.AreEqual(true, NamespaceSymbolComparer.Equals(symbol, namespaceName));
+        }
+
+        [TestCase("N")]
+        [TestCase("A.B")]
+        [TestCase("A.B.C")]
+        public static void Equal(string namespaceName)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+namespace N
+{
+}".AssertReplace("N", namespaceName));
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var declaration = syntaxTree.Find<NamespaceDeclarationSyntax>(namespaceName);
+            var symbol = semanticModel.GetDeclaredSymbol(declaration, CancellationToken.None);
+            Assert.AreEqual(true, NamespaceSymbolComparer.Equal(symbol, symbol));
         }
     }
 }

@@ -31,7 +31,8 @@
                 return false;
             }
 
-            return x.MetadataName == y.MetadataName;
+            return x.MetadataName == y.MetadataName &&
+                   Equal(x.ContainingNamespace, y.ContainingNamespace);
         }
 
         /// <summary> Determines equality by name. </summary>
