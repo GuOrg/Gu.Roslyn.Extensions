@@ -90,7 +90,9 @@
             using var e = source.GetEnumerator();
             if (e.MoveNext())
             {
+#pragma warning disable CA1508 // Avoid dead conditional code
                 if (e.Current is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     while (e.MoveNext())
                     {
@@ -241,7 +243,9 @@
             result = default!;
             using var e = source.GetEnumerator();
             if (e.MoveNext() &&
+#pragma warning disable CA1508 // Avoid dead conditional code
                 e.Current is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
             {
                 result = item;
                 return true;
