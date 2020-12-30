@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ISymbolExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ISymbolExtTests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -41,6 +41,31 @@ namespace N
             Assert.AreEqual(true, symbol.OriginalDefinition.IsEquivalentTo(symbol));
             Assert.AreEqual(true, symbol.OverriddenProperty.IsEquivalentTo(symbol));
             Assert.AreEqual(true, symbol.OverriddenProperty.OriginalDefinition.IsEquivalentTo(symbol));
+        }
+
+        [Test]
+        public static void ExtensionMethod()
+        {
+            var code = @"
+namespace N
+{
+    public static class C
+    {
+        public static text M(this string text) => text;
+
+        public static string Get => string.Empty.M();
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindMethodDeclaration("M"), CancellationToken.None, out var symbol));
+            Assert.AreEqual(true, symbol.IsEquivalentTo(symbol));
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindInvocation("M()"), CancellationToken.None, out var reduced));
+            Assert.AreEqual(true, symbol.IsEquivalentTo(reduced));
+            Assert.AreEqual(true, reduced.IsEquivalentTo(symbol));
+            Assert.AreEqual(true, reduced.IsEquivalentTo(reduced));
         }
     }
 }
