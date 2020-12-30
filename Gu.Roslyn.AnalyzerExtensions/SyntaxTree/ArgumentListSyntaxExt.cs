@@ -94,6 +94,7 @@
 
             if (argumentList is null)
             {
+                arguments = default;
                 return false;
             }
 
@@ -109,6 +110,7 @@
                 return true;
             }
 
+            arguments = default;
             return false;
         }
 

@@ -1,9 +1,11 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     /// <summary>
     /// Factory methods for <see cref="PooledDictionary{TKey,TValue}"/>.
     /// </summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public static class PooledDictionary
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         /// <summary>
         /// Borrow a dictionary, dispose returns it.

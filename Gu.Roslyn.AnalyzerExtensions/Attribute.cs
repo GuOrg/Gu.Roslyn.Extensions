@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -9,7 +9,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <summary>
     /// Helper for working with attributes.
     /// </summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public static class Attribute
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         /// <summary>
         /// Try find an attribute of the expected type.

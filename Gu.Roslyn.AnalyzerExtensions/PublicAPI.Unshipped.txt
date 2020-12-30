@@ -1,1 +1,2 @@
-﻿
+﻿Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>
+Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Target() -> void

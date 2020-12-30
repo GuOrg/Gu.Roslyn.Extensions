@@ -1,4 +1,5 @@
 ﻿// ReSharper disable UnusedVariable
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
 {
     using NUnit.Framework;

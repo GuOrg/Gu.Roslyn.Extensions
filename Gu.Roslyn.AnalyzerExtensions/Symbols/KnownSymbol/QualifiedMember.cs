@@ -1,4 +1,6 @@
 ﻿#pragma warning disable 660,661 // using a hack with operator overloads
+#pragma warning disable CA2225 // Operator overloads have named alternates
+#pragma warning disable CA1046 // Do not overload equality operator on reference types
 namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics;
