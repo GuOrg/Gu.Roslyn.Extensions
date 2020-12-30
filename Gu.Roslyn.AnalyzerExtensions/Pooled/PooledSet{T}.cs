@@ -53,7 +53,9 @@
         /// </summary>
         /// <param name="set">A previously borrowed set or null.</param>
         /// <returns>A newly borrowed set or the same instance with incremented ref count.</returns>
+#pragma warning disable IDISP015 // Member should not return created and cached instance.
         public static PooledSet<T> BorrowOrIncrementUsage(PooledSet<T>? set)
+#pragma warning restore IDISP015 // Member should not return created and cached instance.
         {
             if (set is null)
             {

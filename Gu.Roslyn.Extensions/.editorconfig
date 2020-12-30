@@ -1,10 +1,4 @@
 [*.cs]
 
-# CA1303: Method 'bool StringHelper.EqualsAt(string x, string y, int position)' passes a literal string as parameter 'message' of a call to 'ArgumentOutOfRangeException.ArgumentOutOfRangeException(string? paramName, object? actualValue, string? message)'. Retrieve the following string(s) from a resource table instead: "Expected greater than or equal to zero.".
-dotnet_diagnostic.CA1303.severity = none
-
-# SA1633: The file header is missing or not located at the top of the file.
-dotnet_diagnostic.SA1633.severity = none
-
-# CA1051: Do not declare visible instance fields
-dotnet_diagnostic.CA1051.severity = none
+# IDE0079: Remove unnecessary suppression
+dotnet_diagnostic.IDE0079.severity = none

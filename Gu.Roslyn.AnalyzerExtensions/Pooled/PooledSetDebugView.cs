@@ -8,7 +8,9 @@
     /// Debug view for <see cref="PooledSet{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of items in the set.</typeparam>
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes
     internal class PooledSetDebugView<T>
+#pragma warning restore CA1812 // Avoid uninstantiated internal classes
     {
         private readonly PooledSet<T> set;
 

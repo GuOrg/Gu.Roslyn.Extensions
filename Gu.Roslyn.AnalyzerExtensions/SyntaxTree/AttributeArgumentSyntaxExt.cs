@@ -31,7 +31,7 @@
             }
 
             result = null;
-            return argument?.Expression is { } expression &&
+            return argument.Expression is { } expression &&
                    expression.TryGetStringValue(semanticModel, cancellationToken, out result);
         }
 
@@ -56,7 +56,7 @@
             }
 
             result = null;
-            return argument?.Expression is TypeOfExpressionSyntax expression &&
+            return argument.Expression is TypeOfExpressionSyntax expression &&
                    semanticModel.TryGetType(expression.Type, cancellationToken, out result);
         }
     }

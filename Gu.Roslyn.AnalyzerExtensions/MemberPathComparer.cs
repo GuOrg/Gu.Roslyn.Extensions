@@ -22,7 +22,7 @@
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CA1707,CS1591,IDE1006,SA1313,SA1600 // Missing XML comment for publicly visible type or member
         [Obsolete("Should only be called with arguments of type IEventSymbol.", error: true)]
         public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

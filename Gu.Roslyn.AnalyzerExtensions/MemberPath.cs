@@ -71,10 +71,10 @@
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CA1707,CS1591,IDE1006,SA1313,SA1600
         [Obsolete("Should only be called with arguments of type IAssemblySymbol.", error: true)]
         public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore CA1707,CS1591,IDE1006,SA1313,SA1600
         //// ReSharper restore UnusedParameter.Global
 
         /// <summary>
@@ -159,7 +159,9 @@
         public static PathWalker Get(ExpressionSyntax expression) => PathWalker.Borrow(expression);
 
         /// <inheritdoc />
+#pragma warning disable CA1034 // Nested types should not be visible
         public sealed class PathWalker : PooledWalker<PathWalker>
+#pragma warning restore CA1034 // Nested types should not be visible
         {
             private readonly List<SyntaxToken> tokens = new List<SyntaxToken>();
 

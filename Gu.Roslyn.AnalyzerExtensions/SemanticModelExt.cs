@@ -44,14 +44,16 @@ namespace Gu.Roslyn.AnalyzerExtensions
                     return true;
                 }
 
+                // ReSharper disable ConditionIsAlwaysTrueOrFalse
                 if (optional.Value is null)
                 {
                     value = default!;
-                    //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 #pragma warning disable CA1508 // Avoid dead conditional code
                     return value is null;
 #pragma warning restore CA1508 // Avoid dead conditional code
                 }
+
+                // ReSharper restore ConditionIsAlwaysTrueOrFalse
 
                 // We can't use GetTypeInfo() here as it brings in System.Reflection.Extensions that does not work in VS.
                 if (default(T) is Enum &&

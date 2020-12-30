@@ -26,7 +26,9 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("AnalyzerPerformance", "RS1013:Start action has no registered non-end actions.", Justification = "We want it like this here.")]
         public override void Initialize(AnalysisContext context)
         {
+#pragma warning disable CA1062 // Validate arguments of public methods
             context.EnableConcurrentExecution();
+#pragma warning restore CA1062 // Validate arguments of public methods
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterCompilationStartAction(x =>
             {
