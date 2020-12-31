@@ -71,37 +71,95 @@
         /// <returns>True if the symbols are found equivalent.</returns>
         public static bool IsEquivalentTo(this ISymbol x, ISymbol y)
         {
-            if (x is null ||
-                y is null ||
-                x.Name != y.Name ||
-                x.Kind != y.Kind)
+            if (x is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(x));
             }
 
-            if (SymbolComparer.Equal(x, y))
+            if (y is null)
             {
-                return true;
+                throw new ArgumentNullException(nameof(y));
             }
 
-            if (x.IsDefinition &&
-                !SymbolComparer.Equal(y, y.OriginalDefinition))
+            return Name() ??
+                   Kind() ??
+                   OverriddenEvent(x as IEventSymbol, y as IEventSymbol) ??
+                   OverriddenEvent(y as IEventSymbol, x as IEventSymbol) ??
+                   OverriddenProperty(x as IPropertySymbol, y as IPropertySymbol) ??
+                   OverriddenProperty(y as IPropertySymbol, x as IPropertySymbol) ??
+                   OverriddenMethod(x as IMethodSymbol, y as IMethodSymbol) ??
+                   OverriddenMethod(y as IMethodSymbol, x as IMethodSymbol) ??
+                   ReducedFrom(x as IMethodSymbol, y as IMethodSymbol) ??
+                   ReducedFrom(y as IMethodSymbol, x as IMethodSymbol) ??
+                   Parameter(y as IParameterSymbol, x as IParameterSymbol) ??
+                   Definition(x, y) ??
+                   Definition(y, x) ??
+                   SymbolComparer.Equal(x, y);
+
+            bool? Name() => x.MetadataName == y.MetadataName ? null : false;
+
+            bool? Kind() => x.Kind == y.Kind ? null : false;
+
+            static bool? OverriddenEvent(IEventSymbol? x, IEventSymbol? y)
             {
-                return IsEquivalentTo(x, y.OriginalDefinition);
+                if (x is { OverriddenEvent: { } xOverridden })
+                {
+                    return y is not null && IsEquivalentTo(xOverridden, y);
+                }
+
+                return null;
             }
 
-            return y switch
+            static bool? OverriddenProperty(IPropertySymbol? x, IPropertySymbol? y)
             {
-                IParameterSymbol _ => IsEquivalentTo(x.ContainingSymbol, y.ContainingSymbol),
-                IPropertySymbol { OverriddenProperty: { } overridden } => IsEquivalentTo(x, overridden),
-                IEventSymbol { OverriddenEvent: { } overridden } => IsEquivalentTo(x, overridden),
-                IMethodSymbol { OverriddenMethod: { } overridden } => IsEquivalentTo(x, overridden),
-                IMethodSymbol { IsExtensionMethod: true } ym
-                    when x is IMethodSymbol { IsExtensionMethod: true } xm => MethodSymbolComparer.Equal(xm.ReducedFrom, ym) ||
-                                                                              MethodSymbolComparer.Equal(xm, ym.ReducedFrom),
+                if (x is { OverriddenProperty: { } xOverridden })
+                {
+                    return y is not null && IsEquivalentTo(xOverridden, y);
+                }
 
-                _ => false,
-            };
+                return null;
+            }
+
+            static bool? OverriddenMethod(IMethodSymbol? x, IMethodSymbol? y)
+            {
+                if (x is { OverriddenMethod: { } xOverridden })
+                {
+                    return y is not null && IsEquivalentTo(xOverridden, y);
+                }
+
+                return null;
+            }
+
+            static bool? ReducedFrom(IMethodSymbol? x, IMethodSymbol? y)
+            {
+                if (x is { ReducedFrom: { } xReducedFrom })
+                {
+                    return y is not null && IsEquivalentTo(xReducedFrom, y);
+                }
+
+                return null;
+            }
+
+            static bool? Parameter(IParameterSymbol? x, IParameterSymbol? y)
+            {
+                return (x, y) switch
+                {
+                    ({ Name: { } xName, ContainingSymbol: { } xContainingSymbol }, { Name: { } yName, ContainingSymbol: { } yContainingSymbol })
+                        => xName == yName && IsEquivalentTo(xContainingSymbol, yContainingSymbol),
+                    (_, _) => null,
+                };
+            }
+
+            static bool? Definition(ISymbol x, ISymbol y)
+            {
+                return (x, y) switch
+                {
+                    ({ IsDefinition: true }, { IsDefinition: false, OriginalDefinition: { } yOriginalDefinition })
+                        when !ReferenceEquals(y, yOriginalDefinition)
+                        => IsEquivalentTo(x, yOriginalDefinition),
+                    (_, _) => null,
+                };
+            }
         }
 
         /// <summary>
