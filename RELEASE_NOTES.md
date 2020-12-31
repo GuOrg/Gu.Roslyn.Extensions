@@ -1,3 +1,6 @@
+#### 0.15.3
+* BUGFIX: Don't use Roslyn SymbolEqualityComparer
+
 #### 0.15.0
 * BREAKING: recursion.Target() returns syntax node for invocation as it can be a local function
 
