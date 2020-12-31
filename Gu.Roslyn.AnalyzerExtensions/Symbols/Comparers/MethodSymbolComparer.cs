@@ -46,14 +46,7 @@
                 for (var i = 0; i < xs.Length; i++)
                 {
                     if (xs[i].Name != ys[i].Name ||
-                        xs[i].Type.MetadataName != ys[i].Type.MetadataName)
-                    {
-                        return false;
-                    }
-
-                    if (xs[i].Type is INamedTypeSymbol xNamedType &&
-                        ys[i].Type is INamedTypeSymbol yNamedType &&
-                        !NamedTypeSymbolComparer.Equal(xNamedType, yNamedType))
+                        !TypeSymbolComparer.Equal(xs[i].Type, ys[i].Type))
                     {
                         return false;
                     }
