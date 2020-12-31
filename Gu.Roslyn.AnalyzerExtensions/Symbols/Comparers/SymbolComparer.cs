@@ -26,66 +26,23 @@
             }
 
             if (x is null ||
-                y is null)
+                y is null ||
+                x.Kind != y.Kind ||
+                x.MetadataName != y.MetadataName)
             {
                 return false;
             }
 
-            if (x is IEventSymbol xEvent &&
-                y is IEventSymbol yEvent)
-            {
-                return EventSymbolComparer.Equal(xEvent, yEvent);
-            }
-
-            if (x is IFieldSymbol xField &&
-                y is IFieldSymbol yField)
-            {
-                return FieldSymbolComparer.Equal(xField, yField);
-            }
-
-            if (x is ILocalSymbol xLocal &&
-                y is ILocalSymbol yLocal)
-            {
-                return LocalSymbolComparer.Equal(xLocal, yLocal);
-            }
-
-            if (x is IMethodSymbol xMethod &&
-                y is IMethodSymbol yMethod)
-            {
-                return MethodSymbolComparer.Equal(xMethod, yMethod);
-            }
-
-            if (x is INamedTypeSymbol xNamedType &&
-                y is INamedTypeSymbol yNamedType)
-            {
-                return NamedTypeSymbolComparer.Equal(xNamedType, yNamedType);
-            }
-
-            if (x is INamespaceSymbol xNamespace &&
-                y is INamespaceSymbol yNamespace)
-            {
-                return NamespaceSymbolComparer.Equal(xNamespace, yNamespace);
-            }
-
-            if (x is IParameterSymbol xParameter &&
-                y is IParameterSymbol yParameter)
-            {
-                return ParameterSymbolComparer.Equal(xParameter, yParameter);
-            }
-
-            if (x is IPropertySymbol xProperty &&
-                y is IPropertySymbol yProperty)
-            {
-                return PropertySymbolComparer.Equal(xProperty, yProperty);
-            }
-
-            if (x is ITypeSymbol xType &&
-                y is ITypeSymbol yType)
-            {
-                return TypeSymbolComparer.Equal(xType, yType);
-            }
-
-            return SymbolEqualityComparer.Default.Equals(x, y);
+            return FieldSymbolComparer.Equal(x as IFieldSymbol, y as IFieldSymbol) ||
+                   EventSymbolComparer.Equal(x as IEventSymbol, y as IEventSymbol) ||
+                   PropertySymbolComparer.Equal(x as IPropertySymbol, y as IPropertySymbol) ||
+                   MethodSymbolComparer.Equal(x as IMethodSymbol, y as IMethodSymbol) ||
+                   ParameterSymbolComparer.Equal(x as IParameterSymbol, y as IParameterSymbol) ||
+                   LocalSymbolComparer.Equal(x as ILocalSymbol, y as ILocalSymbol) ||
+                   NamedTypeSymbolComparer.Equal(x as INamedTypeSymbol, y as INamedTypeSymbol) ||
+                   TypeSymbolComparer.Equal(x as ITypeSymbol, y as ITypeSymbol) ||
+                   NamespaceSymbolComparer.Equal(x as INamespaceSymbol, y as INamespaceSymbol) ||
+                   SymbolEqualityComparer.Default.Equals(x, y);
         }
 
         /// <summary> Determines equality by delegating to other compare. </summary>
@@ -100,66 +57,22 @@
             }
 
             if (x is null ||
-                y is null)
+                y is null ||
+                x.Kind != y.Kind)
             {
                 return false;
             }
 
-            if (x is IEventSymbol xEvent &&
-                y is IEventSymbol yEvent)
-            {
-                return EventSymbolComparer.Equivalent(xEvent, yEvent);
-            }
-
-            if (x is IFieldSymbol xField &&
-                y is IFieldSymbol yField)
-            {
-                return FieldSymbolComparer.Equivalent(xField, yField);
-            }
-
-            if (x is ILocalSymbol xLocal &&
-                y is ILocalSymbol yLocal)
-            {
-                return LocalSymbolComparer.Equal(xLocal, yLocal);
-            }
-
-            if (x is IMethodSymbol xMethod &&
-                y is IMethodSymbol yMethod)
-            {
-                return MethodSymbolComparer.Equivalent(xMethod, yMethod);
-            }
-
-            if (x is INamedTypeSymbol xNamedType &&
-                y is INamedTypeSymbol yNamedType)
-            {
-                return NamedTypeSymbolComparer.Equivalent(xNamedType, yNamedType);
-            }
-
-            if (x is INamespaceSymbol xNamespace &&
-                y is INamespaceSymbol yNamespace)
-            {
-                return NamespaceSymbolComparer.Equal(xNamespace, yNamespace);
-            }
-
-            if (x is IParameterSymbol xParameter &&
-                y is IParameterSymbol yParameter)
-            {
-                return ParameterSymbolComparer.Equivalent(xParameter, yParameter);
-            }
-
-            if (x is IPropertySymbol xProperty &&
-                y is IPropertySymbol yProperty)
-            {
-                return PropertySymbolComparer.Equivalent(xProperty, yProperty);
-            }
-
-            if (x is ITypeSymbol xType &&
-                y is ITypeSymbol yType)
-            {
-                return TypeSymbolComparer.Equivalent(xType, yType);
-            }
-
-            return SymbolEqualityComparer.Default.Equals(x, y);
+            return FieldSymbolComparer.Equivalent(x as IFieldSymbol, y as IFieldSymbol) ||
+                   EventSymbolComparer.Equivalent(x as IEventSymbol, y as IEventSymbol) ||
+                   PropertySymbolComparer.Equivalent(x as IPropertySymbol, y as IPropertySymbol) ||
+                   MethodSymbolComparer.Equivalent(x as IMethodSymbol, y as IMethodSymbol) ||
+                   ParameterSymbolComparer.Equivalent(x as IParameterSymbol, y as IParameterSymbol) ||
+                   LocalSymbolComparer.Equal(x as ILocalSymbol, y as ILocalSymbol) ||
+                   NamedTypeSymbolComparer.Equivalent(x as INamedTypeSymbol, y as INamedTypeSymbol) ||
+                   TypeSymbolComparer.Equivalent(x as ITypeSymbol, y as ITypeSymbol) ||
+                   NamespaceSymbolComparer.Equal(x as INamespaceSymbol, y as INamespaceSymbol) ||
+                   SymbolEqualityComparer.Default.Equals(x, y);
         }
 
         /// <summary> Determines equality by delegating to other compare. </summary>
