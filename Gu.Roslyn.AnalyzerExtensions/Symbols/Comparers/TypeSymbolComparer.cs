@@ -21,16 +21,57 @@
         /// <returns>True if the instances are found equal.</returns>
         public static bool Equal(ITypeSymbol? x, ITypeSymbol? y)
         {
-            if (IsAnnotated(x) &&
-                IsAnnotated(y))
+            if (ReferenceEquals(x, y))
             {
-                return SymbolEqualityComparer.IncludeNullability.Equals(x, y);
+                return true;
             }
 
-            return SymbolEqualityComparer.Default.Equals(x, y);
+            if (x is null || y is null)
+            {
+                return false;
+            }
 
-            static bool IsAnnotated(ITypeSymbol? type) => type is { IsReferenceType: true } &&
-                                                          type.NullableAnnotation != NullableAnnotation.None;
+            return x.MetadataName == y.MetadataName &&
+                   NamespaceSymbolComparer.Equal(x.ContainingNamespace, y.ContainingNamespace) &&
+                   NullableAnnotation() &&
+                   TypeArguments();
+
+            bool NullableAnnotation()
+            {
+                if (!x.IsReferenceType)
+                {
+                    return true;
+                }
+
+                return (x.NullableAnnotation, y.NullableAnnotation) switch
+                {
+                    (Microsoft.CodeAnalysis.NullableAnnotation.None, _) => true,
+                    (_, Microsoft.CodeAnalysis.NullableAnnotation.None) => true,
+                    var (xa, ya) => xa == ya,
+                };
+            }
+
+            bool TypeArguments()
+            {
+                if (x is INamedTypeSymbol { IsGenericType: true, TypeArguments: { } xa } &&
+                    y is INamedTypeSymbol { IsGenericType: true, TypeArguments: { } ya })
+                {
+                    if (xa.Length != ya.Length)
+                    {
+                        return false;
+                    }
+
+                    for (var i = 0; i < xa.Length; i++)
+                    {
+                        if (!TypeSymbolComparer.Equal(xa[i], ya[i]))
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
         }
 
         /// <summary> Determines equality by name and containing symbol. </summary>
