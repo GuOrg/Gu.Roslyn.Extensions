@@ -74,6 +74,36 @@
             }
         }
 
+        /// <summary> Compares equality by name and containing type and treats overridden and definition as equal. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        public static bool Equivalent(ITypeSymbol? x, ITypeSymbol? y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is null ||
+                y is null)
+            {
+                return false;
+            }
+
+            return Equal(x, y) ||
+                   Definition(x, y) ||
+                   Definition(y, x);
+
+            static bool Definition(ITypeSymbol x, ITypeSymbol y)
+            {
+                return x.IsDefinition &&
+                       y is { IsDefinition: false, OriginalDefinition: { } yOriginalDefinition } &&
+                       !ReferenceEquals(y, yOriginalDefinition) &&
+                       Equivalent(x, yOriginalDefinition);
+            }
+        }
+
         /// <summary> Determines equality by name and containing symbol. </summary>
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>

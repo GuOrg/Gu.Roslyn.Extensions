@@ -35,6 +35,36 @@
                    NamedTypeSymbolComparer.Equal(x.ContainingType, y.ContainingType);
         }
 
+        /// <summary> Compares equality by name and containing type and treats overridden and definition as equal. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        public static bool Equivalent(IFieldSymbol? x, IFieldSymbol? y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is null ||
+                y is null)
+            {
+                return false;
+            }
+
+            return Equal(x, y) ||
+                   Definition(x, y) ||
+                   Definition(y, x);
+
+            static bool Definition(IFieldSymbol x, IFieldSymbol y)
+            {
+                return x.IsDefinition &&
+                       y is { IsDefinition: false, OriginalDefinition: { } yOriginalDefinition } &&
+                       !ReferenceEquals(y, yOriginalDefinition) &&
+                       Equivalent(x, yOriginalDefinition);
+            }
+        }
+
         /// <summary> Compares equality by name and containing type. </summary>
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>

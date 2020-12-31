@@ -35,6 +35,33 @@
                    SymbolComparer.Equal(x.ContainingSymbol, y.ContainingSymbol);
         }
 
+        /// <summary> Compares equality by name and containing type and treats overridden and definition as equal. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        public static bool Equivalent(IParameterSymbol? x, IParameterSymbol? y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is null ||
+                y is null)
+            {
+                return false;
+            }
+
+            return Equal(x, y) ||
+                   Definition(x, y);
+
+            static bool Definition(IParameterSymbol x, IParameterSymbol y)
+            {
+                return x.Name == y.Name &&
+                       SymbolComparer.Equivalent(x.ContainingSymbol, y.ContainingSymbol);
+            }
+        }
+
         /// <summary> Determines equality by name and containing symbol. </summary>
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>

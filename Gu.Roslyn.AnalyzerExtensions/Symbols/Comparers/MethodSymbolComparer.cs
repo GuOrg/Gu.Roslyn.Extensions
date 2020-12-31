@@ -56,6 +56,52 @@
             }
         }
 
+        /// <summary> Compares equality by name and containing type and treats overridden and definition as equal. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        public static bool Equivalent(IMethodSymbol? x, IMethodSymbol? y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is null ||
+                y is null)
+            {
+                return false;
+            }
+
+            return Equal(x, y) ||
+                   Overridden(x, y) ||
+                   Overridden(y, x) ||
+                   ReducedFrom(x, y) ||
+                   ReducedFrom(y, x) ||
+                   Definition(x, y) ||
+                   Definition(y, x);
+
+            static bool Overridden(IMethodSymbol x, IMethodSymbol y)
+            {
+                return x is { OverriddenMethod: { } xOverridden } &&
+                       Equivalent(xOverridden, y);
+            }
+
+            static bool ReducedFrom(IMethodSymbol x, IMethodSymbol y)
+            {
+                return x is { ReducedFrom: { } xReducedFrom } &&
+                       Equivalent(xReducedFrom, y);
+            }
+
+            static bool Definition(IMethodSymbol x, IMethodSymbol y)
+            {
+                return x.IsDefinition &&
+                       y is { IsDefinition: false, OriginalDefinition: { } yOriginalDefinition } &&
+                       !ReferenceEquals(y, yOriginalDefinition) &&
+                       Equivalent(x, yOriginalDefinition);
+            }
+        }
+
         /// <summary> Determines equality by name, containing type, return type and parameters. </summary>
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>

@@ -92,6 +92,80 @@
         /// <param name="x">The first instance.</param>
         /// <param name="y">The other instance.</param>
         /// <returns>True if the instances are found equal.</returns>
+        public static bool Equivalent(ISymbol? x, ISymbol? y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is null ||
+                y is null)
+            {
+                return false;
+            }
+
+            if (x is IEventSymbol xEvent &&
+                y is IEventSymbol yEvent)
+            {
+                return EventSymbolComparer.Equivalent(xEvent, yEvent);
+            }
+
+            if (x is IFieldSymbol xField &&
+                y is IFieldSymbol yField)
+            {
+                return FieldSymbolComparer.Equivalent(xField, yField);
+            }
+
+            if (x is ILocalSymbol xLocal &&
+                y is ILocalSymbol yLocal)
+            {
+                return LocalSymbolComparer.Equal(xLocal, yLocal);
+            }
+
+            if (x is IMethodSymbol xMethod &&
+                y is IMethodSymbol yMethod)
+            {
+                return MethodSymbolComparer.Equivalent(xMethod, yMethod);
+            }
+
+            if (x is INamedTypeSymbol xNamedType &&
+                y is INamedTypeSymbol yNamedType)
+            {
+                return NamedTypeSymbolComparer.Equivalent(xNamedType, yNamedType);
+            }
+
+            if (x is INamespaceSymbol xNamespace &&
+                y is INamespaceSymbol yNamespace)
+            {
+                return NamespaceSymbolComparer.Equal(xNamespace, yNamespace);
+            }
+
+            if (x is IParameterSymbol xParameter &&
+                y is IParameterSymbol yParameter)
+            {
+                return ParameterSymbolComparer.Equivalent(xParameter, yParameter);
+            }
+
+            if (x is IPropertySymbol xProperty &&
+                y is IPropertySymbol yProperty)
+            {
+                return PropertySymbolComparer.Equivalent(xProperty, yProperty);
+            }
+
+            if (x is ITypeSymbol xType &&
+                y is ITypeSymbol yType)
+            {
+                return TypeSymbolComparer.Equivalent(xType, yType);
+            }
+
+            return SymbolEqualityComparer.Default.Equals(x, y);
+        }
+
+        /// <summary> Determines equality by delegating to other compare. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
         [Obsolete("Use Equal as RS1024 does not nag about it.")]
         public static bool Equals(ISymbol? x, ISymbol? y) => Equal(x, y);
 

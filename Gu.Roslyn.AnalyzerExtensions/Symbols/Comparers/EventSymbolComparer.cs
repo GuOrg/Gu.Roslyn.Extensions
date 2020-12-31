@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
@@ -34,6 +35,44 @@
             return x.MetadataName == y.MetadataName &&
                    NamedTypeSymbolComparer.Equal(x.ContainingType, y.ContainingType) &&
                    TypeSymbolComparer.Equal(x.Type, y.Type);
+        }
+
+        /// <summary> Compares equality by name and containing type and treats overridden and definition as equal. </summary>
+        /// <param name="x">The first instance.</param>
+        /// <param name="y">The other instance.</param>
+        /// <returns>True if the instances are found equal.</returns>
+        public static bool Equivalent(IEventSymbol? x, IEventSymbol? y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is null ||
+                y is null)
+            {
+                return false;
+            }
+
+            return Equal(x, y) ||
+                   Overridden(x, y) ||
+                   Overridden(y, x) ||
+                   Definition(x, y) ||
+                   Definition(y, x);
+
+            static bool Overridden(IEventSymbol x, IEventSymbol y)
+            {
+                return x is { OverriddenEvent: { } xOverridden } &&
+                       Equivalent(xOverridden, y);
+            }
+
+            static bool Definition(IEventSymbol x, IEventSymbol y)
+            {
+                return x.IsDefinition &&
+                       y is { IsDefinition: false, OriginalDefinition: { } yOriginalDefinition } &&
+                       !ReferenceEquals(y, yOriginalDefinition) &&
+                       Equivalent(x, yOriginalDefinition);
+            }
         }
 
         /// <summary> Compares equality by name and containing type and type. </summary>
