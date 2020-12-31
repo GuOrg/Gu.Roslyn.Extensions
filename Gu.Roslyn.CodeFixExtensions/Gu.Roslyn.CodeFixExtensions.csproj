@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.15.3</Version>
+    <Version>0.15.4</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
