@@ -63,7 +63,7 @@
 
                     for (var i = 0; i < xa.Length; i++)
                     {
-                        if (!TypeSymbolComparer.Equal(xa[i], ya[i]))
+                        if (!Equal(xa[i], ya[i]))
                         {
                             return false;
                         }
