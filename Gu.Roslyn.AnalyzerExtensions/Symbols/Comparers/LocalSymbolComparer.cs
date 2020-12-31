@@ -44,18 +44,10 @@
 
         //// ReSharper disable once UnusedMember.Global
         //// ReSharper disable UnusedParameter.Global
-#pragma warning disable SA1313 // Parameter names must begin with lower-case letter
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable SA1600 // Elements must be documented
-#pragma warning disable CA1707 // Identifiers should not contain underscores
+#pragma warning disable CS1591,CA1707,IDE1006,SA1313,SA1600
         [Obsolete("Should only be called with arguments of type ILocalSymbol.", error: true)]
-#pragma warning disable IDE1006 // Naming Styles
         public static new bool Equals(object _, object __) => throw new InvalidOperationException("This is hidden so that it is not called by accident.");
-#pragma warning restore IDE1006 // Naming Styles
-#pragma warning restore CA1707 // Identifiers should not contain underscores
-#pragma warning restore SA1600 // Elements must be documented
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning restore SA1313 // Parameter names must begin with lower-case letter
+#pragma warning restore CS1591,CA1707,IDE1006,SA1313,SA1600
         //// ReSharper restore UnusedParameter.Global
 
         /// <inheritdoc />
