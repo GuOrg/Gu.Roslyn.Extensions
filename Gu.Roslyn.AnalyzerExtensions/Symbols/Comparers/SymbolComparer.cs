@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     using Microsoft.CodeAnalysis;
 
     /// <inheritdoc />
@@ -33,16 +34,23 @@
                 return false;
             }
 
-            return FieldSymbolComparer.Equal(x as IFieldSymbol, y as IFieldSymbol) ||
-                   EventSymbolComparer.Equal(x as IEventSymbol, y as IEventSymbol) ||
-                   PropertySymbolComparer.Equal(x as IPropertySymbol, y as IPropertySymbol) ||
-                   MethodSymbolComparer.Equal(x as IMethodSymbol, y as IMethodSymbol) ||
-                   ParameterSymbolComparer.Equal(x as IParameterSymbol, y as IParameterSymbol) ||
-                   LocalSymbolComparer.Equal(x as ILocalSymbol, y as ILocalSymbol) ||
-                   NamedTypeSymbolComparer.Equal(x as INamedTypeSymbol, y as INamedTypeSymbol) ||
-                   TypeSymbolComparer.Equal(x as ITypeSymbol, y as ITypeSymbol) ||
-                   NamespaceSymbolComparer.Equal(x as INamespaceSymbol, y as INamespaceSymbol) ||
-                   SymbolEqualityComparer.Default.Equals(x, y);
+            return (x.Kind, y.Kind) switch
+            {
+                (SymbolKind.Field, SymbolKind.Field) => FieldSymbolComparer.Equal((IFieldSymbol)x, (IFieldSymbol)y),
+                (SymbolKind.Event, SymbolKind.Event) => EventSymbolComparer.Equal((IEventSymbol)x, (IEventSymbol)y),
+                (SymbolKind.Property, SymbolKind.Property) => PropertySymbolComparer.Equal((IPropertySymbol)x, (IPropertySymbol)y),
+                (SymbolKind.Method, SymbolKind.Method) => MethodSymbolComparer.Equal((IMethodSymbol)x, (IMethodSymbol)y),
+                (SymbolKind.Parameter, SymbolKind.Parameter) => ParameterSymbolComparer.Equal((IParameterSymbol)x, (IParameterSymbol)y),
+                (SymbolKind.Local, SymbolKind.Local) => LocalSymbolComparer.Equal((ILocalSymbol)x, (ILocalSymbol)y),
+                (SymbolKind.NamedType, SymbolKind.NamedType) => NamedTypeSymbolComparer.Equal((INamedTypeSymbol)x, (INamedTypeSymbol)y),
+                (SymbolKind.ArrayType, SymbolKind.ArrayType) => TypeSymbolComparer.Equal((ITypeSymbol)x, (ITypeSymbol)y),
+                (SymbolKind.DynamicType, SymbolKind.DynamicType) => TypeSymbolComparer.Equal((ITypeSymbol)x, (ITypeSymbol)y),
+                (SymbolKind.ErrorType, SymbolKind.ErrorType) => false,
+                (SymbolKind.PointerType, SymbolKind.PointerType) => TypeSymbolComparer.Equal((ITypeSymbol)x, (ITypeSymbol)y),
+                (SymbolKind.TypeParameter, SymbolKind.TypeParameter) => TypeSymbolComparer.Equal((ITypeSymbol)x, (ITypeSymbol)y),
+                (SymbolKind.Namespace, SymbolKind.Namespace) => NamespaceSymbolComparer.Equal((INamespaceSymbol)x, (INamespaceSymbol)y),
+                (_, _) => SymbolEqualityComparer.Default.Equals(x, y),
+            };
         }
 
         /// <summary> Determines equality by delegating to other compare. </summary>
@@ -63,16 +71,23 @@
                 return false;
             }
 
-            return FieldSymbolComparer.Equivalent(x as IFieldSymbol, y as IFieldSymbol) ||
-                   EventSymbolComparer.Equivalent(x as IEventSymbol, y as IEventSymbol) ||
-                   PropertySymbolComparer.Equivalent(x as IPropertySymbol, y as IPropertySymbol) ||
-                   MethodSymbolComparer.Equivalent(x as IMethodSymbol, y as IMethodSymbol) ||
-                   ParameterSymbolComparer.Equivalent(x as IParameterSymbol, y as IParameterSymbol) ||
-                   LocalSymbolComparer.Equal(x as ILocalSymbol, y as ILocalSymbol) ||
-                   NamedTypeSymbolComparer.Equivalent(x as INamedTypeSymbol, y as INamedTypeSymbol) ||
-                   TypeSymbolComparer.Equivalent(x as ITypeSymbol, y as ITypeSymbol) ||
-                   NamespaceSymbolComparer.Equal(x as INamespaceSymbol, y as INamespaceSymbol) ||
-                   SymbolEqualityComparer.Default.Equals(x, y);
+            return (x.Kind, y.Kind) switch
+            {
+                (SymbolKind.Field, SymbolKind.Field) => FieldSymbolComparer.Equivalent((IFieldSymbol)x, (IFieldSymbol)y),
+                (SymbolKind.Event, SymbolKind.Event) => EventSymbolComparer.Equivalent((IEventSymbol)x, (IEventSymbol)y),
+                (SymbolKind.Property, SymbolKind.Property) => PropertySymbolComparer.Equivalent((IPropertySymbol)x, (IPropertySymbol)y),
+                (SymbolKind.Method, SymbolKind.Method) => MethodSymbolComparer.Equivalent((IMethodSymbol)x, (IMethodSymbol)y),
+                (SymbolKind.Parameter, SymbolKind.Parameter) => ParameterSymbolComparer.Equivalent((IParameterSymbol)x, (IParameterSymbol)y),
+                (SymbolKind.Local, SymbolKind.Local) => LocalSymbolComparer.Equal((ILocalSymbol)x, (ILocalSymbol)y),
+                (SymbolKind.NamedType, SymbolKind.NamedType) => NamedTypeSymbolComparer.Equal((INamedTypeSymbol)x, (INamedTypeSymbol)y),
+                (SymbolKind.ArrayType, SymbolKind.ArrayType) => TypeSymbolComparer.Equivalent((ITypeSymbol)x,     (ITypeSymbol)y),
+                (SymbolKind.DynamicType, SymbolKind.DynamicType) => TypeSymbolComparer.Equivalent((ITypeSymbol)x, (ITypeSymbol)y),
+                (SymbolKind.ErrorType, SymbolKind.ErrorType) => false,
+                (SymbolKind.PointerType, SymbolKind.PointerType) => TypeSymbolComparer.Equivalent((ITypeSymbol)x,     (ITypeSymbol)y),
+                (SymbolKind.TypeParameter, SymbolKind.TypeParameter) => TypeSymbolComparer.Equivalent((ITypeSymbol)x, (ITypeSymbol)y),
+                (SymbolKind.Namespace, SymbolKind.Namespace) => NamespaceSymbolComparer.Equal((INamespaceSymbol)x, (INamespaceSymbol)y),
+                (_, _) => SymbolEqualityComparer.Default.Equals(x, y),
+            };
         }
 
         /// <summary> Determines equality by delegating to other compare. </summary>
