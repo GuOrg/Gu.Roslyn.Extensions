@@ -39,6 +39,7 @@
         [TestCase("Cast<object>(new object())",                                                    true)]
         [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")",                                 true)]
         [TestCase("Cast<System.Collections.IEnumerable?>(\"abc\")",                                true)]
+        [TestCase("Cast<System.Collections.IEnumerable?>(new ints[0])",                            true)]
         public static void When(string call, bool expected)
         {
             var e = @"
