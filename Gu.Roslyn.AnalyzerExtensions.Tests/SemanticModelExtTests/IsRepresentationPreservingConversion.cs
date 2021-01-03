@@ -8,38 +8,42 @@
 
     public static class IsRepresentationPreservingConversion
     {
-        [TestCase("Cast<int>(1)",                                                                  true)]
-        [TestCase("Cast<int>(null)",                                                               false)]
-        [TestCase("Cast<int>((object)null)",                                                       false)]
-        [TestCase("Cast<int>(1.0)",                                                                false)]
-        [TestCase("Cast<int>((object)1.0)",                                                        false)]
-        [TestCase("Cast<int>(new object())",                                                       false)]
-        [TestCase("Cast<int>((object)1)",                                                          true)]
-        [TestCase("Cast<int?>(1)",                                                                 true)]
-        [TestCase("Cast<int?>((object)1)",                                                         true)]
-        [TestCase("Cast<int?>(null)",                                                              true)]
-        [TestCase("Cast<int?>((object)null)",                                                      true)]
-        [TestCase("Cast<int?>(1.0)",                                                               false)]
-        [TestCase("Cast<int?>((object)1.0)",                                                       false)]
-        [TestCase("Cast<int>(n)",                                                                  true)]
-        [TestCase("Cast<int?>(n)",                                                                 true)]
-        [TestCase("Cast<int?>(nullableInt)",                                                       true)]
-        [TestCase("Cast<double>(1.0)",                                                             true)]
-        [TestCase("Cast<double>(1d)",                                                              true)]
-        [TestCase("Cast<double>(1)",                                                               false)]
-        [TestCase("Cast<double>((double)1)",                                                       true)]
-        [TestCase("Cast<double>((System.Double)1)",                                                true)]
-        [TestCase("Cast<double?>(1)",                                                              false)]
-        [TestCase("Cast<System.IComparable>(1)",                                                   true)]
-        [TestCase("Cast<System.IComparable<int>>(1)",                                              true)]
-        [TestCase("Cast<object>(1)",                                                               true)]
-        [TestCase("Cast<System.StringComparison>(System.StringComparison.CurrentCulture)",         true)]
-        [TestCase("Cast<System.StringComparison>((object)System.StringComparison.CurrentCulture)", true)]
-        [TestCase("Cast<E>(E.M1)",                                                                 true)]
-        [TestCase("Cast<object>(new object())",                                                    true)]
-        [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")",                                 true)]
-        [TestCase("Cast<System.Collections.IEnumerable?>(\"abc\")",                                true)]
-        [TestCase("Cast<System.Collections.IEnumerable?>(new ints[0])",                            true)]
+        [TestCase("Cast<int>(1)",                                                                                          true)]
+        [TestCase("Cast<int>(null)",                                                                                       false)]
+        [TestCase("Cast<int>((object)null)",                                                                               false)]
+        [TestCase("Cast<int>(1.0)",                                                                                        false)]
+        [TestCase("Cast<int>((object)1.0)",                                                                                false)]
+        [TestCase("Cast<int>(new object())",                                                                               false)]
+        [TestCase("Cast<int>((object)1)",                                                                                  true)]
+        [TestCase("Cast<int?>(1)",                                                                                         true)]
+        [TestCase("Cast<int?>((object)1)",                                                                                 true)]
+        [TestCase("Cast<int?>(null)",                                                                                      true)]
+        [TestCase("Cast<int?>((object)null)",                                                                              true)]
+        [TestCase("Cast<int?>(1.0)",                                                                                       false)]
+        [TestCase("Cast<int?>((object)1.0)",                                                                               false)]
+        [TestCase("Cast<int>(n)",                                                                                          true)]
+        [TestCase("Cast<int?>(n)",                                                                                         true)]
+        [TestCase("Cast<int?>(nullableInt)",                                                                               true)]
+        [TestCase("Cast<double>(1.0)",                                                                                     true)]
+        [TestCase("Cast<double>(1d)",                                                                                      true)]
+        [TestCase("Cast<double>(1)",                                                                                       false)]
+        [TestCase("Cast<double>((double)1)",                                                                               true)]
+        [TestCase("Cast<double>((System.Double)1)",                                                                        true)]
+        [TestCase("Cast<double?>(1)",                                                                                      false)]
+        [TestCase("Cast<System.IComparable>(1)",                                                                           true)]
+        [TestCase("Cast<System.IComparable<int>>(1)",                                                                      true)]
+        [TestCase("Cast<object>(1)",                                                                                       true)]
+        [TestCase("Cast<System.StringComparison>(System.StringComparison.CurrentCulture)",                                 true)]
+        [TestCase("Cast<System.StringComparison>((object)System.StringComparison.CurrentCulture)",                         true)]
+        [TestCase("Cast<E>(E.M1)",                                                                                         true)]
+        [TestCase("Cast<E?>(E.M1)",                                                                                        true)]
+        [TestCase("Cast<object>(new object())",                                                                            true)]
+        [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")",                                                         true)]
+        [TestCase("Cast<System.Collections.IEnumerable>(new ints[0])",                                                     true)]
+        [TestCase("Cast<System.Collections.IEnumerable>(new System.Collections.ObjectModel.ObservableCollection<int>())",  true)]
+        [TestCase("Cast<System.Collections.IEnumerable?>(\"abc\")",                                                        true)]
+        [TestCase("Cast<System.Collections.IEnumerable?>(new ints[0])",                                                    true)]
+        [TestCase("Cast<System.Collections.IEnumerable?>(new System.Collections.ObjectModel.ObservableCollection<int>())", true)]
         public static void When(string call, bool expected)
         {
             var e = @"
@@ -58,7 +62,7 @@ namespace N
     {
         public C(int n, int? nullableInt)
         {
-            var cast = Cast<int>(1);
+            _ = Cast<int>(1);
         }
 
         private static T Cast<T>(object o) => (T) o;
