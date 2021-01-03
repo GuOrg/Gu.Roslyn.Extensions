@@ -1,7 +1,8 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using NUnit.Framework;
 
@@ -22,6 +23,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
         [TestCase("Cast<E>(E.M1)")]
         [TestCase("Cast<object>(new object())")]
         [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")")]
+        [TestCase("Cast<System.Collections.IEnumerable?>(\"abc\")")]
         public static void TrueWhen(string call)
         {
             var e = @"
@@ -48,7 +50,11 @@ namespace N
 }";
             code = code.AssertReplace("Cast<int>(1)", call);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, CSharpSyntaxTree.ParseText(e) }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create(
+                "test",
+                new[] { syntaxTree, CSharpSyntaxTree.ParseText(e) },
+                MetadataReferences.FromAttributes(),
+                CodeFactory.DllCompilationOptions.WithNullableContextOptions(NullableContextOptions.Enable));
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation(call);
             var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
@@ -78,7 +84,11 @@ namespace N
 }";
             code = code.AssertReplace("Cast<int?>(arg)", call);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create(
+                "test",
+                new[] { syntaxTree },
+                MetadataReferences.FromAttributes(),
+                CodeFactory.DllCompilationOptions.WithNullableContextOptions(NullableContextOptions.Enable));
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation(call);
             var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
