@@ -251,32 +251,35 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             var conversion = semanticModel.SemanticModelFor(expression)
-                                          .ClassifyConversion(expression, destination, isExplicitInSource: true);
-            if (conversion.IsNumeric)
+                                          .ClassifyConversion(expression, destination);
+            return conversion switch
             {
-                return conversion.IsIdentity;
-            }
+                { IsReference: true, IsIdentity: true } => true,
+                { IsReference: true, IsImplicit: true } => true,
+                { IsNullLiteral: true, IsImplicit: true } => true,
+                { IsDefaultLiteral: true, IsImplicit: true } => true,
+                { IsBoxing: true, Exists: true } => true,
+                { IsIdentity: true } => true,
+                { IsNullable: true }
+                    => destination is INamedTypeSymbol namedType &&
+                       namedType.TypeArguments.TrySingle(out var typeArg) &&
+                       IsRepresentationPreservingConversion(semanticModel, expression, typeArg),
+                { IsReference: true, IsExplicit: true } => CheckInner(),
+                { IsUnboxing: true } => CheckInner(),
+                _ => false,
+            };
 
-            if (conversion.IsNullable)
-            {
-                return conversion.IsIdentity ||
-                       (destination is INamedTypeSymbol namedType &&
-                        namedType.TypeArguments.TrySingle(out var typeArg) &&
-                        IsRepresentationPreservingConversion(semanticModel, expression, typeArg));
-            }
-
-            if (conversion.IsUnboxing)
+            bool CheckInner()
             {
                 return expression switch
                 {
-                    CastExpressionSyntax { Expression: { } right } => IsRepresentationPreservingConversion(semanticModel, right, destination),
-                    BinaryExpressionSyntax { Left: { } left } binary => binary.IsKind(SyntaxKind.AsExpression) &&
-                                                                        IsRepresentationPreservingConversion(semanticModel, left, destination),
+                    CastExpressionSyntax { Expression: { } e }
+                        => IsRepresentationPreservingConversion(semanticModel, e, destination),
+                    BinaryExpressionSyntax { Left: { } e, OperatorToken: { ValueText: "as" } }
+                        => IsRepresentationPreservingConversion(semanticModel, e, destination),
                     _ => false,
                 };
             }
-
-            return conversion.IsImplicit;
         }
 
         /// <summary>

@@ -18,6 +18,7 @@
         [TestCase("Cast<int?>(1)",                                                                                                 true)]
         [TestCase("Cast<int?>((object)1)",                                                                                         true)]
         [TestCase("Cast<int?>(null)",                                                                                              true)]
+        [TestCase("Cast<int?>(default(int))",                                                                                      true)]
         [TestCase("Cast<int?>((object)null)",                                                                                      true)]
         [TestCase("Cast<int?>(1.0)",                                                                                               false)]
         [TestCase("Cast<int?>((object)1.0)",                                                                                       false)]
@@ -29,6 +30,7 @@
         [TestCase("Cast<double>(1)",                                                                                               false)]
         [TestCase("Cast<double>((double)1)",                                                                                       true)]
         [TestCase("Cast<double>((System.Double)1)",                                                                                true)]
+        [TestCase("Cast<double?>(((object)1) as double)",                                                                          true)]
         [TestCase("Cast<double?>(1)",                                                                                              false)]
         [TestCase("Cast<System.IComparable>(1)",                                                                                   true)]
         [TestCase("Cast<System.IComparable<int>>(1)",                                                                              true)]
@@ -37,7 +39,16 @@
         [TestCase("Cast<System.StringComparison>((object)System.StringComparison.CurrentCulture)",                                 true)]
         [TestCase("Cast<E>(E.M1)",                                                                                                 true)]
         [TestCase("Cast<E?>(E.M1)",                                                                                                true)]
+        [TestCase("Cast<string>(string.Empty)",                                                                                    true)]
+        [TestCase("Cast<string>(1)",                                                                                               false)]
+        [TestCase("Cast<string>(new object())",                                                                                    false)]
+        [TestCase("Cast<string?>(string.Empty)",                                                                                   true)]
+        [TestCase("Cast<string?>(1)",                                                                                              false)]
+        [TestCase("Cast<string?>(new object())",                                                                                   false)]
         [TestCase("Cast<object>(new object())",                                                                                    true)]
+        [TestCase("Cast<object>(null)",                                                                                            true)]
+        [TestCase("Cast<object>(default)",                                                                                         true)]
+        [TestCase("Cast<object>(default(object))",                                                                                 true)]
         [TestCase("Cast<System.Collections.IEnumerable>(\"abc\")",                                                                 true)]
         [TestCase("Cast<System.Collections.IEnumerable>(new ints[0])",                                                             true)]
         [TestCase("Cast<System.Collections.IEnumerable>(new System.Collections.ObjectModel.ObservableCollection<int>())",          true)]
@@ -67,7 +78,7 @@ namespace N
             _ = Cast<int>(1);
         }
 
-        private static T Cast<T>(object o) => (T) o;
+        private static T Cast<T>(object o) => (T)o;
     }
 }".AssertReplace("Cast<int>(1)", call);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
