@@ -1,3 +1,6 @@
+#### 0.15.5
+* BUFIX: IsRepresentationPreservingConversion when cast reference type.
+
 #### 0.15.3
 * BUGFIX: Don't use Roslyn SymbolEqualityComparer
 
