@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -64,6 +64,37 @@ namespace N
             Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindConstructorDeclaration("C(int n, params int[] ms)"), CancellationToken.None, out var method));
             Assert.AreEqual(true, method.TryFindParameter(syntaxTree.FindArgument(arg), out var parameter));
             Assert.AreEqual(expected, parameter.Name);
+        }
+
+        [TestCase("x", true)]
+        [TestCase("y", true)]
+        [TestCase("missing", false)]
+        public static void TryFindParameterExtensionInvocation(string name, bool expected)
+        {
+            var code = @"
+namespace N
+{
+    public static class C
+    {
+        public static int Get(int a) => a.M(2);
+
+        public static int M(this int x, int y) => x + y;
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            Assert.AreEqual(true,     semanticModel.TryGetSymbol(syntaxTree.FindInvocation("a.M(2)"), CancellationToken.None, out var method));
+            Assert.AreEqual(expected,     method.TryFindParameter(name, out var parameter));
+            if (expected)
+            {
+                Assert.AreEqual(name, parameter.Name);
+                Assert.AreEqual(name, method.FindParameter(name).Name);
+            }
+            else
+            {
+                Assert.AreEqual(null, method.FindParameter(name));
+            }
         }
     }
 }

@@ -104,6 +104,8 @@
                 throw new System.ArgumentNullException(nameof(name));
             }
 
+            // When extension method invocation
+            method = method.ReducedFrom ?? method;
             foreach (var candidate in method.Parameters)
             {
                 if (candidate.Name == name)

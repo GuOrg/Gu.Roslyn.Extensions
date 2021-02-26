@@ -1,3 +1,6 @@
+#### 0.15.6
+* BUFIX: IMethodSymbol.FindParameter(name) when extension method invocation.
+
 #### 0.15.5
 * BUFIX: IsRepresentationPreservingConversion when cast reference type.
 
