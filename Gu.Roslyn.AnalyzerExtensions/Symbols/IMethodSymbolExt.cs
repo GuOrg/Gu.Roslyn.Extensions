@@ -1,6 +1,7 @@
 ﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -104,8 +105,6 @@
                 throw new System.ArgumentNullException(nameof(name));
             }
 
-            // When extension method invocation
-            method = method.ReducedFrom ?? method;
             foreach (var candidate in method.Parameters)
             {
                 if (candidate.Name == name)
@@ -113,6 +112,14 @@
                     parameter = candidate;
                     return true;
                 }
+            }
+
+            // When extension method invocation
+            if (method.ReducedFrom is { Parameters: { Length: > 0 } parameters } &&
+                parameters[0].Name == name)
+            {
+                parameter = parameters[0];
+                return true;
             }
 
             parameter = null;
