@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -47,21 +48,21 @@
                     argument = null;
                     return false;
                 case { Arguments: { } arguments }:
-                    if (parameter.IsParams)
-                    {
-                        argument = null;
-                        return arguments.Count - 1 == parameter.Ordinal &&
-                               arguments.TryElementAt(parameter.Ordinal, out argument);
-                    }
-
                     if (TryFindByNameColon(argumentList, parameter.Name, out argument))
                     {
                         return true;
                     }
 
+                    if (parameter.IsParams)
+                    {
+                        argument = null;
+                        return arguments.Count - 1 == Index() &&
+                               arguments.TryElementAt(Index(), out argument);
+                    }
+
                     if (parameter.IsOptional)
                     {
-                        if (argumentList.Arguments.TryElementAt(parameter.Ordinal, out var candidate) &&
+                        if (argumentList.Arguments.TryElementAt(Index(), out var candidate) &&
                             candidate.NameColon is null)
                         {
                             argument = candidate;
@@ -71,11 +72,41 @@
                         return false;
                     }
 
-                    return argumentList.Arguments.TryElementAt(parameter.Ordinal, out argument);
+                    return argumentList.Arguments.TryElementAt(Index(), out argument);
             }
 
             argument = null;
             return false;
+
+            int Index()
+            {
+                return parameter switch
+                {
+                    { ContainingSymbol: IMethodSymbol { IsExtensionMethod: true, ReducedFrom: null } }
+                        when IsExtensionMethodInvocation()
+                        => parameter.Ordinal - 1,
+                    { ContainingSymbol: IMethodSymbol { IsExtensionMethod: true, ReducedFrom: { } } }
+                        when !IsExtensionMethodInvocation()
+                        => parameter.Ordinal + 1,
+                    _ => parameter.Ordinal,
+                };
+            }
+
+            bool IsExtensionMethodInvocation()
+            {
+                return argumentList switch
+                {
+                    { Parent: InvocationExpressionSyntax {Parent:ConditionalAccessExpressionSyntax } } => true,
+                    { Parent: InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccess } }
+                        => memberAccess switch
+                        {
+                            { Expression: IdentifierNameSyntax name } => name.Identifier.ValueText != parameter.ContainingType.Name,
+                            { Expression: MemberAccessExpressionSyntax { Name: IdentifierNameSyntax name } } => name.Identifier.ValueText != parameter.ContainingType.Name,
+                            _ => true,
+                        },
+                    _ => false,
+                };
+            }
         }
 
         /// <summary>
