@@ -96,7 +96,7 @@
             {
                 return argumentList switch
                 {
-                    { Parent: InvocationExpressionSyntax {Parent:ConditionalAccessExpressionSyntax } } => true,
+                    { Parent: InvocationExpressionSyntax { Parent: ConditionalAccessExpressionSyntax } } => true,
                     { Parent: InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccess } }
                         => memberAccess switch
                         {
