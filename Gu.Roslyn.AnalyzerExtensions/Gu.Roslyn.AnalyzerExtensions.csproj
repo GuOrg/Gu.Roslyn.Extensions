@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.15.6</Version>
+    <Version>0.15.7</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -24,6 +24,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer</PackageTags>
     <PackageReleaseNotes>
+      0.15.7
+      BUFIX: IMethodSymbol.FindArgument(parameter) when extension method invocation.
       0.15.6
       BUFIX: IMethodSymbol.FindParameter(name) when extension method invocation.
       0.15.5

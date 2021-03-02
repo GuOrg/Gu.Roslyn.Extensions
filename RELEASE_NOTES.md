@@ -1,3 +1,6 @@
+#### 0.15.7
+* BUFIX: IMethodSymbol.FindArgument(parameter) when extension method invocation.
+
 #### 0.15.6
 * BUFIX: IMethodSymbol.FindParameter(name) when extension method invocation.
 
