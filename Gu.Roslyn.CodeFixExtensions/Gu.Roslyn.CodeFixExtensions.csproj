@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -14,7 +13,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.15.7</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers and code fixes.</Description>
@@ -58,6 +56,8 @@
       FEATURE: Recursion, helper for walking safely.
       BREAKING: Minor changes to signature of ExecutionWalker
     </PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
