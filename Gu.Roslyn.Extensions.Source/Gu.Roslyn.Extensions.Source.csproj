@@ -73,10 +73,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions" Pack="true" PackagePath="/contentFiles/cs/any/AnalyzerExtensions"/>
-    <Compile Remove="..\Gu.Roslyn.AnalyzerExtensions\AssemblyAttributes.cs" />
-    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions" Pack="true" PackagePath="/contentFiles/cs/any/CodeFixExtensions"/>
-    <Compile Remove="..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" />
+    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**;..\Gu.Roslyn.AnalyzerExtensions\AssemblyAttributes.cs" LinkBase="AnalyzerExtensions" Pack="true" PackagePath="/contentFiles/cs/any/AnalyzerExtensions"/>
+    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**;..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" LinkBase="CodeFixExtensions" Pack="true" PackagePath="/contentFiles/cs/any/CodeFixExtensions"/>
   </ItemGroup>
 
 </Project>
