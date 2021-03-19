@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>0.15.7</Version>
+    <Authors>Johan Larsson</Authors>
+    <Description>
+      Helpers &amp; extensions for writing Roslyn analyzers and code fixes.
+      This is a package with source files to avoid binary dependency for the analyzer.
+      To work it requires dependency on TunnelVisionLabs.ReferenceAssemblyAnnotator
+      &lt;ItemGroup&gt;
+        &lt;PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" /&gt;
+        &lt;PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" /&gt;
+      &lt;/ItemGroup&gt;
+    </Description>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
+    <PackageTags>Roslyn analyzer codefix</PackageTags>
+    <PackageReleaseNotes>
+      0.15.7
+      BUFIX: IMethodSymbol.FindArgument(parameter) when extension method invocation.
+      0.15.6
+      BUFIX: IMethodSymbol.FindParameter(name) when extension method invocation.
+      0.15.5
+      BUFIX: IsRepresentationPreservingConversion when cast reference type.
+      0.15.3
+      BUGFIX: Don't use Roslyn SymbolEqualityComparer
+      0.15.0
+      BREAKING: recursion.Target() returns syntax node for invocation as it can be a local function
+      0.14.4
+      BUGFIX: QualifiedType == BaseTypeSyntax.
+      0.14.3
+      Only compare nullability if both types are annotated reference types.
+      0.14.2
+      Only compare nullability if both types are annotated.
+      0.14.1
+      Return annotated types from GetType()
+      0.14.0
+      BREAKING: Use Roslyn 3.5.0
+      0.13.0
+      BREAKING: Roslyn 3.3.1 and netstandard 2.0
+      0.12.9
+      BUGFIX: Handle default CodeStyleOptions
+      0.12.8
+      BUGFIX: Handle using C = C
+      0.12.7
+      BUGFIX: MemberPath when nullable annotations
+      0.12.6
+      BUGFIX: Infinite recursion when comparing generic parameter.
+      0.12.5
+      FEATURE: Recursion, helper for walking safely.
+      BREAKING: Minor changes to signature of ExecutionWalker
+    </PackageReleaseNotes>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" />
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**" LinkBase="AnalyzerExtensions" Pack="true" PackagePath="/contentFiles/cs/any/AnalyzerExtensions"/>
+    <Compile Remove="..\Gu.Roslyn.AnalyzerExtensions\AssemblyAttributes.cs" />
+    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**" LinkBase="CodeFixExtensions" Pack="true" PackagePath="/contentFiles/cs/any/CodeFixExtensions"/>
+    <Compile Remove="..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" />
+  </ItemGroup>
+
+</Project>
