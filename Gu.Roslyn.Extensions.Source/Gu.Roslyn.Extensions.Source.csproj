@@ -69,12 +69,13 @@
 
   <ItemGroup>
     <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" />
-    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all"/>
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**;..\Gu.Roslyn.AnalyzerExtensions\AssemblyAttributes.cs" LinkBase="AnalyzerExtensions" Pack="true" PackagePath="/contentFiles/cs/any/AnalyzerExtensions"/>
-    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**;..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" LinkBase="CodeFixExtensions" Pack="true" PackagePath="/contentFiles/cs/any/CodeFixExtensions"/>
+    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**;..\Gu.Roslyn.AnalyzerExtensions\AssemblyAttributes.cs" LinkBase="AnalyzerExtensions" Pack="true" PackagePath="/contentFiles/cs/any/AnalyzerExtensions" />
+    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**;..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" LinkBase="CodeFixExtensions" Pack="true" PackagePath="/contentFiles/cs/any/CodeFixExtensions" />
+    <None Update=".editorconfig" Pack="true" PackagePath="/contentFiles/cs/any/.editorconfig"/>
   </ItemGroup>
 
 </Project>
