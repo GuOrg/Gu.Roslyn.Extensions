@@ -429,7 +429,7 @@ To work it requires:
 
 ```xml
   <ItemGroup>
-    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" />
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[5.0.0]" />
     <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all"/>
   </ItemGroup>
 ```

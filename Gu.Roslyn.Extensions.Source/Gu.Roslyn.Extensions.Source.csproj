@@ -8,14 +8,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.15.7</Version>
+    <Version>0.15.8</Version>
     <Authors>Johan Larsson</Authors>
     <Description>
       Helpers &amp; extensions for writing Roslyn analyzers and code fixes.
       This is a package with source files to avoid binary dependency for the analyzer.
       To work it requires dependency on TunnelVisionLabs.ReferenceAssemblyAnnotator
       &lt;ItemGroup&gt;
-        &lt;PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" /&gt;
+        &lt;PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[5.0.0]" /&gt;
         &lt;PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" /&gt;
       &lt;/ItemGroup&gt;
     </Description>
@@ -60,6 +60,7 @@
       BREAKING: Minor changes to signature of ExecutionWalker
     </PackageReleaseNotes>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -68,14 +69,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" />
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[5.0.0]" />
     <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**;..\Gu.Roslyn.AnalyzerExtensions\AssemblyAttributes.cs" LinkBase="AnalyzerExtensions" Pack="true" PackagePath="/contentFiles/cs/any/AnalyzerExtensions" />
     <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**;..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" LinkBase="CodeFixExtensions" Pack="true" PackagePath="/contentFiles/cs/any/CodeFixExtensions" />
-    <None Update=".editorconfig" Pack="true" PackagePath="/contentFiles/cs/any/.editorconfig"/>
+    <None Update=".editorconfig" Pack="true" PackagePath="/contentFiles/cs/any"/>
   </ItemGroup>
 
 </Project>
