@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.15.8</Version>
+    <Version>0.15.9</Version>
     <Authors>Johan Larsson</Authors>
     <Description>
       Helpers &amp; extensions for writing Roslyn analyzers and code fixes.
@@ -75,9 +75,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**;..\Gu.Roslyn.AnalyzerExtensions\AssemblyAttributes.cs" LinkBase="AnalyzerExtensions" Pack="true" PackagePath="/contentFiles/cs/any/AnalyzerExtensions" />
-    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**;..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" LinkBase="CodeFixExtensions" Pack="true" PackagePath="/contentFiles/cs/any/CodeFixExtensions" />
-    <None Update=".editorconfig" Pack="true" PackagePath="/contentFiles/cs/any"/>
+    <Compile Include="..\Gu.Roslyn.AnalyzerExtensions\**\*.cs" Exclude="..\Gu.Roslyn.AnalyzerExtensions\obj\**;..\Gu.Roslyn.AnalyzerExtensions\AssemblyAttributes.cs" AutoGen="true" LinkBase="AnalyzerExtensions" Pack="true" PackagePath="/contentFiles/cs/any/AnalyzerExtensions" />
+    <Compile Include="..\Gu.Roslyn.CodeFixExtensions\**\*.cs" Exclude="..\Gu.Roslyn.CodeFixExtensions\obj\**;..\Gu.Roslyn.CodeFixExtensions\AssemblyAttributes.cs" AutoGen="true" LinkBase="CodeFixExtensions" Pack="true" PackagePath="/contentFiles/cs/any/CodeFixExtensions" />
   </ItemGroup>
 
 </Project>

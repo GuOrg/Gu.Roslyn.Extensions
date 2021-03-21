@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.15.8</Version>
+    <Version>0.15.9</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers.</Description>
     <NeutralLanguage>en</NeutralLanguage>
