@@ -16,6 +16,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer codefix</PackageTags>
     <PackageReleaseNotes>
+      0.16.0
+      BREAKING: Update Roslyn dependency to 4.0.1
       0.15.7
       BUFIX: IMethodSymbol.FindArgument(parameter) when extension method invocation.
       0.15.6
@@ -70,7 +72,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
   </ItemGroup>
 
