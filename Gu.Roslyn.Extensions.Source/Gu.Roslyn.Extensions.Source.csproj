@@ -95,6 +95,7 @@
       <Code Type="Fragment" Language="cs">
         <![CDATA[
         var original = $"{Path.GetFullPath(PackageFile)}.original";
+        File.Delete(original);
         File.Move(Path.GetFullPath(PackageFile), original);
         using var inputPackage = ZipFile.OpenRead(original);
         using var outputFile = File.Create(PackageFile);
