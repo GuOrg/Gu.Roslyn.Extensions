@@ -17,7 +17,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     [DebuggerDisplay("Count = {this.Count}, refCount = {this.refCount}")]
     public sealed class PooledSet<T> : IDisposable, IReadOnlyCollection<T>
     {
-        private static readonly ConcurrentQueue<PooledSet<T>> Cache = new ConcurrentQueue<PooledSet<T>>();
+        private static readonly ConcurrentQueue<PooledSet<T>> Cache = new();
         private readonly HashSet<T> inner = new HashSet<T>(GetComparer());
 
         private int refCount;

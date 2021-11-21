@@ -225,7 +225,7 @@
             static bool IsLiteralAndExpression(ExpressionSyntax x, ExpressionSyntax y, out LiteralExpressionSyntax literal, out ExpressionSyntax expression)
             {
                 if (x is LiteralExpressionSyntax xl &&
-                    !(y is LiteralExpressionSyntax))
+                    y is not LiteralExpressionSyntax)
                 {
                     literal = xl;
                     expression = y;

@@ -16,9 +16,9 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDisposable
         where TKey : notnull
     {
-        private static readonly ConcurrentQueue<PooledDictionary<TKey, TValue>> Cache = new ConcurrentQueue<PooledDictionary<TKey, TValue>>();
+        private static readonly ConcurrentQueue<PooledDictionary<TKey, TValue>> Cache = new();
 
-        private readonly Dictionary<TKey, TValue> inner = new Dictionary<TKey, TValue>(GetComparer());
+        private readonly Dictionary<TKey, TValue> inner = new(GetComparer());
 
         private PooledDictionary()
         {

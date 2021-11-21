@@ -7,7 +7,7 @@
     /// <inheritdoc />
     public abstract class SyntaxTreeCacheAnalyzer : DiagnosticAnalyzer
     {
-        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor Descriptor = new(
             id: "SyntaxTreeCacheAnalyzer",
             title: "Controls caching of for example semantic models for syntax trees.",
             messageFormat: "Controls caching of for example Semantic models for syntax trees.",

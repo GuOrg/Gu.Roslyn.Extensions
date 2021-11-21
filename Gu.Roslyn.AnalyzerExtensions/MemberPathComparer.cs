@@ -8,7 +8,7 @@
     public sealed class MemberPathComparer : IEqualityComparer<ExpressionSyntax>
     {
         /// <summary> The default instance. </summary>
-        internal static readonly MemberPathComparer Default = new MemberPathComparer();
+        internal static readonly MemberPathComparer Default = new();
 
         private MemberPathComparer()
         {

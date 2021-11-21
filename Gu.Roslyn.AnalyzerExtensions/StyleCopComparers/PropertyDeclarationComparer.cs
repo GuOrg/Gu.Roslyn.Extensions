@@ -82,7 +82,7 @@
         {
             if (y.Modifiers.Any(SyntaxKind.StaticKeyword) &&
                 x.Initializer is { Value: { } value } initializer &&
-                !(value is LiteralExpressionSyntax))
+                value is not LiteralExpressionSyntax)
             {
                 using var walker = IdentifierNameWalker.Borrow(initializer);
                 foreach (var identifierName in walker.IdentifierNames)

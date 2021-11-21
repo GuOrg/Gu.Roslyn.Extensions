@@ -12,7 +12,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <typeparam name="T">The type of items.</typeparam>
     public sealed class PooledList<T> : IList<T>, IDisposable
     {
-        private static readonly ConcurrentQueue<PooledList<T>> Cache = new ConcurrentQueue<PooledList<T>>();
+        private static readonly ConcurrentQueue<PooledList<T>> Cache = new();
 
         private readonly List<T> inner = new List<T>();
 

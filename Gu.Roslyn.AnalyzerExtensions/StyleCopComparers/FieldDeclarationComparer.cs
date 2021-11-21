@@ -105,7 +105,7 @@
             if (y.Modifiers.Any(SyntaxKind.ConstKeyword, SyntaxKind.StaticKeyword) &&
                 x.Declaration.Variables.TryLast(out var variable) &&
                 variable.Initializer is { Value: { } value } initializer &&
-                !(value is LiteralExpressionSyntax))
+                value is not LiteralExpressionSyntax)
             {
                 using var walker = IdentifierNameWalker.Borrow(initializer);
                 foreach (var identifierName in walker.IdentifierNames)

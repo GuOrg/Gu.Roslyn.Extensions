@@ -15,7 +15,7 @@
     /// </summary>
     public sealed class Recursion : IDisposable
     {
-        private static readonly ConcurrentQueue<Recursion> Cache = new ConcurrentQueue<Recursion>();
+        private static readonly ConcurrentQueue<Recursion> Cache = new();
         private readonly HashSet<(string?, int, SyntaxNode)> visited = new HashSet<(string?, int, SyntaxNode)>();
 
         private Recursion()

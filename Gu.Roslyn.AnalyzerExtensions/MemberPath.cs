@@ -163,7 +163,7 @@
         public sealed class PathWalker : PooledWalker<PathWalker>
 #pragma warning restore CA1034 // Nested types should not be visible
         {
-            private readonly List<SyntaxToken> tokens = new List<SyntaxToken>();
+            private readonly List<SyntaxToken> tokens = new();
 
             private PathWalker()
             {

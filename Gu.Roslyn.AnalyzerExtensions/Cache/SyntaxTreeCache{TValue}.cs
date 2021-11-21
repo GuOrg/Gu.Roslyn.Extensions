@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// <typeparam name="TValue">The value type.</typeparam>
     public static class SyntaxTreeCache<TValue>
     {
-        private static readonly ConcurrentDictionary<SyntaxTree, TValue> Inner = new ConcurrentDictionary<SyntaxTree, TValue>();
+        private static readonly ConcurrentDictionary<SyntaxTree, TValue> Inner = new();
 
         /// <summary>
         /// Start a cache transaction.
