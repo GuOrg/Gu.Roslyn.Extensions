@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.15.9</Version>
+    <Version>0.16.0</Version>
     <Authors>Johan Larsson</Authors>
     <Description>
       Helpers &amp; extensions for writing Roslyn analyzers and code fixes.
@@ -25,6 +25,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer codefix</PackageTags>
     <PackageReleaseNotes>
+      0.16.0
+      BREAKING: Update Roslyn dependency to 4.0.1
       0.15.7
       BUFIX: IMethodSymbol.FindArgument(parameter) when extension method invocation.
       0.15.6
@@ -70,7 +72,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[5.0.0]" />
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[6.0.0]" />
     <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>
 
