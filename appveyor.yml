@@ -1,10 +1,9 @@
-image: Visual Studio 2019
+image: Visual Studio 2022
 
 before_build:
 - ps: dotnet restore
 
- 
-configuration: Release
+ configuration: Release
 platform: Any CPU
 build:
   verbosity: minimal
