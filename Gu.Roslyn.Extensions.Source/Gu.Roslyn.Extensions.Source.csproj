@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.16.0</Version>
+    <Version>0.16.1</Version>
     <Authors>Johan Larsson</Authors>
     <Description>
       Helpers &amp; extensions for writing Roslyn analyzers and code fixes.

@@ -9,8 +9,8 @@
     {
         private static readonly DiagnosticDescriptor Descriptor = new(
             id: "SyntaxTreeCacheAnalyzer",
-            title: "Controls caching of for example semantic models for syntax trees.",
-            messageFormat: "Controls caching of for example Semantic models for syntax trees.",
+            title: "Controls caching of for example semantic models for syntax trees",
+            messageFormat: "Controls caching of for example Semantic models for syntax trees",
             category: "Caching",
             defaultSeverity: DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
