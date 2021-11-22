@@ -1,10 +1,1 @@
-﻿Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>
-Gu.Roslyn.AnalyzerExtensions.Target<TSource, TSymbol, TTarget>.Target() -> void
-static Gu.Roslyn.AnalyzerExtensions.EventSymbolComparer.Equivalent(Microsoft.CodeAnalysis.IEventSymbol? x, Microsoft.CodeAnalysis.IEventSymbol? y) -> bool
-static Gu.Roslyn.AnalyzerExtensions.FieldSymbolComparer.Equivalent(Microsoft.CodeAnalysis.IFieldSymbol? x, Microsoft.CodeAnalysis.IFieldSymbol? y) -> bool
-static Gu.Roslyn.AnalyzerExtensions.MethodSymbolComparer.Equivalent(Microsoft.CodeAnalysis.IMethodSymbol? x, Microsoft.CodeAnalysis.IMethodSymbol? y) -> bool
-static Gu.Roslyn.AnalyzerExtensions.NamedTypeSymbolComparer.Equivalent(Microsoft.CodeAnalysis.INamedTypeSymbol? x, Microsoft.CodeAnalysis.INamedTypeSymbol? y) -> bool
-static Gu.Roslyn.AnalyzerExtensions.ParameterSymbolComparer.Equivalent(Microsoft.CodeAnalysis.IParameterSymbol? x, Microsoft.CodeAnalysis.IParameterSymbol? y) -> bool
-static Gu.Roslyn.AnalyzerExtensions.PropertySymbolComparer.Equivalent(Microsoft.CodeAnalysis.IPropertySymbol? x, Microsoft.CodeAnalysis.IPropertySymbol? y) -> bool
-static Gu.Roslyn.AnalyzerExtensions.SymbolComparer.Equivalent(Microsoft.CodeAnalysis.ISymbol? x, Microsoft.CodeAnalysis.ISymbol? y) -> bool
-static Gu.Roslyn.AnalyzerExtensions.TypeSymbolComparer.Equivalent(Microsoft.CodeAnalysis.ITypeSymbol? x, Microsoft.CodeAnalysis.ITypeSymbol? y) -> bool
+﻿
