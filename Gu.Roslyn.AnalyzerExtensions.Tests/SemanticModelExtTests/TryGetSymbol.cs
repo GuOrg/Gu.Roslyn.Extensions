@@ -323,15 +323,14 @@ namespace N
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 @"
-unsafe class Example {
-    void Example(Action<int> a, delegate*<int, void> f) {
-        a(42);
+unsafe class C {
+    void M(delegate*<int, void> f)
+    {
         f(42);
     }
 }");
             var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var otherModel = compilation.GetSemanticModel(OtherTree);
             var node = syntaxTree.FindExpression("delegate*<int, void> f");
             var expected = semanticModel.GetSymbolInfo(node, CancellationToken.None).Symbol;
             Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var method));
