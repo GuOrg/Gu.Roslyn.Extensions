@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -209,6 +209,31 @@ namespace Gu.Roslyn.AnalyzerExtensions
             }
 
             symbol = GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
+            return symbol is { };
+        }
+
+        /// <summary>
+        /// Try getting the <see cref="IMethodSymbol"/> for the node.
+        /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
+        /// </summary>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+        /// <param name="node">The <see cref="FunctionPointerTypeSyntax"/>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+        /// <param name="symbol">The symbol if found.</param>
+        /// <returns>True if a symbol was found.</returns>
+        public static bool TryGetSymbol(this SemanticModel semanticModel, FunctionPointerTypeSyntax node, CancellationToken cancellationToken, [NotNullWhen(true)] out IFunctionPointerTypeSymbol? symbol)
+        {
+            if (semanticModel is null)
+            {
+                throw new ArgumentNullException(nameof(semanticModel));
+            }
+
+            if (node is null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            symbol = (IFunctionPointerTypeSymbol?)GetDeclaredSymbolSafe(semanticModel, node, cancellationToken);
             return symbol is { };
         }
 

@@ -314,6 +314,28 @@ namespace N
             var expected = semanticModel.GetDeclaredSymbol(node);
             Assert.AreEqual(expected, semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
             Assert.AreEqual(expected, otherModel.GetDeclaredSymbolSafe(node, CancellationToken.None));
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var method));
+            Assert.AreEqual(expected, method);
+        }
+
+        [Test]
+        public static void FunctionPointer()
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(
+                @"
+unsafe class Example {
+    void Example(Action<int> a, delegate*<int, void> f) {
+        a(42);
+        f(42);
+    }
+}");
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree });
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var otherModel = compilation.GetSemanticModel(OtherTree);
+            var node = syntaxTree.FindExpression("delegate*<int, void> f");
+            var expected = semanticModel.GetSymbolInfo(node, CancellationToken.None).Symbol;
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out var method));
+            Assert.AreEqual(expected, method);
         }
 
         [Test]
