@@ -1,6 +1,7 @@
 ﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
+
     using Gu.Roslyn.AnalyzerExtensions;
 
     using Microsoft.CodeAnalysis;
@@ -20,7 +21,8 @@
         /// <returns>The <see cref="FieldDeclarationSyntax"/>.</returns>
         public static FieldDeclarationSyntax FieldDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
+            return (FieldDeclarationSyntax?)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace)) ??
+                throw new FormatException($"Could not parse field from {code}");
         }
 
         /// <summary>
@@ -31,7 +33,8 @@
         /// <returns>The <see cref="ConstructorDeclarationSyntax"/>.</returns>
         public static ConstructorDeclarationSyntax ConstructorDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (ConstructorDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
+            return (ConstructorDeclarationSyntax?)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace)) ??
+                throw new FormatException($"Could not parse constructor from {code}");
         }
 
         /// <summary>
@@ -42,7 +45,8 @@
         /// <returns>The <see cref="EventFieldDeclarationSyntax"/>.</returns>
         public static EventFieldDeclarationSyntax EventFieldDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (EventFieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
+            return (EventFieldDeclarationSyntax?)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace)) ??
+                throw new FormatException($"Could not parse event from {code}");
         }
 
         /// <summary>
@@ -53,7 +57,8 @@
         /// <returns>The <see cref="EventDeclarationSyntax"/>.</returns>
         public static EventDeclarationSyntax EventDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (EventDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
+            return (EventDeclarationSyntax?)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace)) ??
+                throw new FormatException($"Could not parse event from {code}");
         }
 
         /// <summary>
@@ -64,7 +69,8 @@
         /// <returns>The <see cref="PropertyDeclarationSyntax"/>.</returns>
         public static PropertyDeclarationSyntax PropertyDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
+            return (PropertyDeclarationSyntax?)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace)) ??
+                throw new FormatException($"Could not parse property from {code}");
         }
 
         /// <summary>
@@ -75,7 +81,8 @@
         /// <returns>The <see cref="MethodDeclarationSyntax"/>.</returns>
         public static MethodDeclarationSyntax MethodDeclaration(string code, string? leadingWhitespace = null)
         {
-            return (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace));
+            return (MethodDeclarationSyntax?)SyntaxFactory.ParseMemberDeclaration(code.WithLeadingWhiteSpace(leadingWhitespace)) ??
+                throw new FormatException($"Could not parse method from {code}");
         }
 
         /// <summary>

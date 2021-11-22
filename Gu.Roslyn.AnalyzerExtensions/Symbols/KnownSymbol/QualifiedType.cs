@@ -299,28 +299,28 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static class System
         {
             /// <summary> System.Void. </summary>
-            public static readonly QualifiedType Void = new QualifiedType("System.Void", "void");
+            public static readonly QualifiedType Void = new("System.Void", "void");
 
             /// <summary> System.Object. </summary>
-            public static readonly QualifiedType Object = new QualifiedType("System.Object", "object");
+            public static readonly QualifiedType Object = new("System.Object", "object");
 
             /// <summary> System.Nullable. </summary>
-            public static readonly QualifiedType Nullable = new QualifiedType("System.Nullable");
+            public static readonly QualifiedType Nullable = new("System.Nullable");
 
             /// <summary> System.Nullable`1. </summary>
-            public static readonly QualifiedType NullableOfT = new QualifiedType("System.Nullable`1");
+            public static readonly QualifiedType NullableOfT = new("System.Nullable`1");
 
             /// <summary> System.Boolean. </summary>
-            public static readonly QualifiedType Boolean = new QualifiedType("System.Boolean", "bool");
+            public static readonly QualifiedType Boolean = new("System.Boolean", "bool");
 
             /// <summary> System.String. </summary>
-            public static readonly QualifiedType String = new QualifiedType("System.String", "string");
+            public static readonly QualifiedType String = new("System.String", "string");
 
             /// <summary> System.StringComparison. </summary>
-            public static readonly QualifiedType StringComparison = new QualifiedType("System.StringComparison");
+            public static readonly QualifiedType StringComparison = new("System.StringComparison");
 
             /// <summary> System.ObsoleteAttribute. </summary>
-            public static readonly QualifiedType ObsoleteAttribute = new QualifiedType("System.ObsoleteAttribute");
+            public static readonly QualifiedType ObsoleteAttribute = new("System.ObsoleteAttribute");
 
             /// <summary> System.CodeDom. </summary>
             public static class CodeDom
@@ -329,7 +329,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 public static class Compiler
                 {
                     /// <summary> System.Runtime.CompilerServices.GeneratedCodeAttribute. </summary>
-                    public static readonly QualifiedType GeneratedCodeAttribute = new QualifiedType("System.CodeDom.Compiler.GeneratedCodeAttribute");
+                    public static readonly QualifiedType GeneratedCodeAttribute = new("System.CodeDom.Compiler.GeneratedCodeAttribute");
                 }
             }
 
@@ -340,7 +340,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 public static class Generic
                 {
                     /// <summary> System.Runtime.CompilerServices.GeneratedCodeAttribute. </summary>
-                    public static readonly QualifiedType IEqualityComparerOfT = new QualifiedType("System.Collections.Generic.IEqualityComparer`1");
+                    public static readonly QualifiedType IEqualityComparerOfT = new("System.Collections.Generic.IEqualityComparer`1");
                 }
             }
 
@@ -348,7 +348,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             public static class Linq
             {
                 /// <summary> System.Linq.Expressions.Expression. </summary>
-                internal static readonly QualifiedType Expression = new QualifiedType("System.Linq.Expressions.Expression");
+                internal static readonly QualifiedType Expression = new("System.Linq.Expressions.Expression");
             }
 
             /// <summary> System.Runtime. </summary>
@@ -358,13 +358,13 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 public static class CompilerServices
                 {
                     /// <summary> System.Runtime.CompilerServices.RuntimeHelpers. </summary>
-                    public static readonly QualifiedType RuntimeHelpers = new QualifiedType("System.Runtime.CompilerServices.RuntimeHelpers");
+                    public static readonly QualifiedType RuntimeHelpers = new("System.Runtime.CompilerServices.RuntimeHelpers");
 
                     /// <summary> System.Runtime.CompilerServices.CallerMemberNameAttribute. </summary>
-                    public static readonly QualifiedType CallerMemberNameAttribute = new QualifiedType("System.Runtime.CompilerServices.CallerMemberNameAttribute");
+                    public static readonly QualifiedType CallerMemberNameAttribute = new("System.Runtime.CompilerServices.CallerMemberNameAttribute");
 
                     /// <summary> System.Runtime.CompilerServices.CompilerGeneratedAttribute. </summary>
-                    public static readonly QualifiedType CompilerGeneratedAttribute = new QualifiedType("System.Runtime.CompilerServices.CompilerGeneratedAttribute");
+                    public static readonly QualifiedType CompilerGeneratedAttribute = new("System.Runtime.CompilerServices.CompilerGeneratedAttribute");
                 }
             }
         }
