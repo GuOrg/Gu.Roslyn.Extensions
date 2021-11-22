@@ -1,8 +1,11 @@
 ﻿namespace Gu.Roslyn.CodeFixExtensions
 {
+    using System;
     using System.Collections.Generic;
+
     using Gu.Roslyn.AnalyzerExtensions;
     using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -72,7 +75,7 @@
                 throw new System.ArgumentNullException(nameof(usingDirective));
             }
 
-            if (compilationUnit.Members.TrySingleOfType<MemberDeclarationSyntax, NamespaceDeclarationSyntax>(out NamespaceDeclarationSyntax? ns) &&
+            if (compilationUnit.Members.TrySingleOfType<MemberDeclarationSyntax, NamespaceDeclarationSyntax>(out var ns) &&
                 UsingDirectiveComparer.IsSameOrContained(ns, usingDirective))
             {
                 return compilationUnit;
@@ -109,6 +112,11 @@
                 }
 
                 previous = directive;
+            }
+
+            if (previous is null)
+            {
+                throw new InvalidOperationException("Did not find node to insert after.");
             }
 
             return compilationUnit.InsertNodesAfter(previous, new[] { usingDirective.WithTrailingElasticLineFeed() });

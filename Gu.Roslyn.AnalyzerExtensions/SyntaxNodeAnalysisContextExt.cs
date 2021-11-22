@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Diagnostics;
@@ -26,7 +26,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                    context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.i.cs", System.StringComparison.Ordinal) ||
                    context.SemanticModel.SyntaxTree.FilePath.EndsWith(".g.cs", System.StringComparison.Ordinal);
 
-            static bool IsGenerated(ISymbol symbol)
+            static bool IsGenerated(ISymbol? symbol)
             {
                 if (symbol is null)
                 {

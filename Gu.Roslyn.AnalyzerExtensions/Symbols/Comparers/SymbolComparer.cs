@@ -143,7 +143,9 @@
         {
             if (obj is ITypeSymbol typeSymbol)
             {
+#pragma warning disable RS1024 // Compare symbols correctly
                 return TypeSymbolComparer.GetHashCode(typeSymbol);
+#pragma warning restore RS1024 // Compare symbols correctly
             }
 
             return obj?.MetadataName.GetHashCode() ?? 0;

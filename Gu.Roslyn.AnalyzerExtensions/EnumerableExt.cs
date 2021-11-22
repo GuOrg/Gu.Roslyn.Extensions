@@ -418,9 +418,7 @@
             var found = false;
             do
             {
-#pragma warning disable CA1508 // Avoid dead conditional code
                 if (e.Current is TResult item)
-#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     result = item;
                     found = true;

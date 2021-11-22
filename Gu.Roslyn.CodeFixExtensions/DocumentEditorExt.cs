@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -59,7 +59,7 @@ namespace Gu.Roslyn.CodeFixExtensions
                 throw new ArgumentNullException(nameof(editor));
             }
 
-            editor.ReplaceNode(oldToken.Parent, oldToken.Parent.ReplaceToken(oldToken, newToken));
+            editor.ReplaceNode(oldToken.Parent!, oldToken.Parent!.ReplaceToken(oldToken, newToken));
             return editor;
         }
 

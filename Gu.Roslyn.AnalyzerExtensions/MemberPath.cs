@@ -196,7 +196,7 @@
             }
 
             /// <inheritdoc />
-            public override void Visit(SyntaxNode node)
+            public override void Visit(SyntaxNode? node)
             {
                 switch (node)
                 {
@@ -218,7 +218,7 @@
                         return;
                 }
 
-                switch (node.Kind())
+                switch (node?.Kind())
                 {
                     case SyntaxKind.ConditionalAccessExpression:
                     case SyntaxKind.SimpleMemberAccessExpression:

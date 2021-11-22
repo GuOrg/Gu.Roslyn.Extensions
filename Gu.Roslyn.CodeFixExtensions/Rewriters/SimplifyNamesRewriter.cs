@@ -33,13 +33,13 @@
         /// <inheritdoc />
         public override SyntaxNode VisitQualifiedName(QualifiedNameSyntax node)
         {
-            return base.VisitQualifiedName(node).WithAdditionalAnnotations(Simplifier.Annotation)!;
+            return base.VisitQualifiedName(node)!.WithAdditionalAnnotations(Simplifier.Annotation);
         }
 
         /// <inheritdoc />
         public override SyntaxNode VisitQualifiedCref(QualifiedCrefSyntax node)
         {
-            return base.VisitQualifiedCref(node).WithAdditionalAnnotations(Simplifier.Annotation)!;
+            return base.VisitQualifiedCref(node)!.WithAdditionalAnnotations(Simplifier.Annotation);
         }
     }
 }

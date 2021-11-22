@@ -10,18 +10,14 @@
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-#pragma warning disable CA1001 // Types that own disposable fields should be disposable
     /// <summary>
     /// Rewrite <see cref="ClassDeclarationSyntax"/> so that members are sorted according to how StyleCop wants it.
     /// </summary>
     public sealed class SortMembersRewriter : CSharpSyntaxRewriter
-#pragma warning restore CA1001 // Types that own disposable fields should be disposable
     {
         private static readonly SortMembersRewriter Default = new();
-#pragma warning disable IDISP002, IDISP006
         private readonly ThreadLocal<ImmutableArray<MemberDeclarationSyntax>> sortedMembers = new();
         private readonly ThreadLocal<int> index = new();
-#pragma warning restore IDISP006, IDISP002
 
         /// <summary>
         /// Rewrite <paramref name="typeDeclaration"/> so that members are sorted according to how StyleCop wants it.

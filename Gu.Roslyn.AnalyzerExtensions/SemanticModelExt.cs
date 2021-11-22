@@ -290,7 +290,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="node">The <see cref="SyntaxNode"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>An <see cref="ISymbol"/> or null.</returns>
-        public static Optional<object> GetConstantValueSafe(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
+        public static Optional<object?> GetConstantValueSafe(this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken)
         {
             return semanticModel.SemanticModelFor(node)
                                 ?.GetConstantValue(node, cancellationToken) ?? default;

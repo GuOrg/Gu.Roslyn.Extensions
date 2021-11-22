@@ -46,6 +46,8 @@
         bool IEqualityComparer<INamedTypeSymbol>.Equals(INamedTypeSymbol? x, INamedTypeSymbol? y) => Equal(x, y);
 
         /// <inheritdoc/>
+#pragma warning disable RS1024 // Compare symbols correctly
         public int GetHashCode(INamedTypeSymbol obj) => TypeSymbolComparer.GetHashCode(obj);
+#pragma warning restore RS1024 // Compare symbols correctly
     }
 }

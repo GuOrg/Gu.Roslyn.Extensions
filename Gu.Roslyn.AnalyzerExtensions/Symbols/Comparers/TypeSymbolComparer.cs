@@ -141,9 +141,8 @@
         bool IEqualityComparer<ITypeSymbol>.Equals(ITypeSymbol? x, ITypeSymbol? y) => Equal(x, y);
 
         /// <inheritdoc />
-        int IEqualityComparer<ITypeSymbol>.GetHashCode(ITypeSymbol obj)
-        {
-            return GetHashCode(obj);
-        }
+#pragma warning disable RS1024 // Compare symbols correctly
+        int IEqualityComparer<ITypeSymbol>.GetHashCode(ITypeSymbol obj) => GetHashCode(obj);
+#pragma warning restore RS1024 // Compare symbols correctly
     }
 }

@@ -431,7 +431,7 @@ override Gu.Roslyn.AnalyzerExtensions.IfStatementWalker.VisitIfStatement(Microso
 override Gu.Roslyn.AnalyzerExtensions.InvocationWalker.VisitInvocationExpression(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax! node) -> void
 override Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.Equals(object? obj) -> bool
 override Gu.Roslyn.AnalyzerExtensions.LocalOrParameter.GetHashCode() -> int
-override Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.Visit(Microsoft.CodeAnalysis.SyntaxNode! node) -> void
+override Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.Visit(Microsoft.CodeAnalysis.SyntaxNode? node) -> void
 override Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax! node) -> void
 override Gu.Roslyn.AnalyzerExtensions.MemberPath.PathWalker.VisitPredefinedType(Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax! node) -> void
 override Gu.Roslyn.AnalyzerExtensions.MutationWalker.VisitArgument(Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax! node) -> void
@@ -453,7 +453,7 @@ override Gu.Roslyn.AnalyzerExtensions.QualifiedType.Equals(object? obj) -> bool
 override Gu.Roslyn.AnalyzerExtensions.QualifiedType.GetHashCode() -> int
 override Gu.Roslyn.AnalyzerExtensions.RecursiveWalker<T>.Clear() -> void
 override Gu.Roslyn.AnalyzerExtensions.RecursiveWalker<T>.TryGetTargetSymbol<TSource, TSymbol, TDeclaration>(TSource! node, out Gu.Roslyn.AnalyzerExtensions.Target<TSource!, TSymbol!, TDeclaration!> target, string? caller = null, int line = 0) -> bool
-override Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.Visit(Microsoft.CodeAnalysis.SyntaxNode! node) -> void
+override Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.Visit(Microsoft.CodeAnalysis.SyntaxNode? node) -> void
 override Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.VisitArrowExpressionClause(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax! node) -> void
 override Gu.Roslyn.AnalyzerExtensions.ReturnValueWalker.VisitReturnStatement(Microsoft.CodeAnalysis.CSharp.Syntax.ReturnStatementSyntax! node) -> void
 override Gu.Roslyn.AnalyzerExtensions.SpecificIdentifierNameWalker.VisitIdentifierName(Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax! node) -> void
@@ -897,7 +897,7 @@ static Gu.Roslyn.AnalyzerExtensions.Scope.IsExecutedBefore(this Microsoft.CodeAn
 static Gu.Roslyn.AnalyzerExtensions.Scope.IsExecutedBefore(this Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax! statement, Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax! other) -> Gu.Roslyn.AnalyzerExtensions.ExecutedBefore
 static Gu.Roslyn.AnalyzerExtensions.Scope.IsInStaticContext(this Microsoft.CodeAnalysis.SyntaxNode! node) -> bool
 static Gu.Roslyn.AnalyzerExtensions.SearchScopeExt.IsEither(this Gu.Roslyn.AnalyzerExtensions.SearchScope scope, Gu.Roslyn.AnalyzerExtensions.SearchScope scope1, Gu.Roslyn.AnalyzerExtensions.SearchScope scope2) -> bool
-static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.GetConstantValueSafe(this Microsoft.CodeAnalysis.SemanticModel! semanticModel, Microsoft.CodeAnalysis.SyntaxNode! node, System.Threading.CancellationToken cancellationToken) -> Microsoft.CodeAnalysis.Optional<object!>
+static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.GetConstantValueSafe(this Microsoft.CodeAnalysis.SemanticModel! semanticModel, Microsoft.CodeAnalysis.SyntaxNode! node, System.Threading.CancellationToken cancellationToken) -> Microsoft.CodeAnalysis.Optional<object?>
 static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.GetDeclaredSymbolSafe(this Microsoft.CodeAnalysis.SemanticModel! semanticModel, Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax! node, System.Threading.CancellationToken cancellationToken) -> Microsoft.CodeAnalysis.ISymbol?
 static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.GetDeclaredSymbolSafe(this Microsoft.CodeAnalysis.SemanticModel! semanticModel, Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax! node, System.Threading.CancellationToken cancellationToken) -> Microsoft.CodeAnalysis.IMethodSymbol?
 static Gu.Roslyn.AnalyzerExtensions.SemanticModelExt.GetDeclaredSymbolSafe(this Microsoft.CodeAnalysis.SemanticModel! semanticModel, Microsoft.CodeAnalysis.CSharp.Syntax.DeclarationExpressionSyntax! node, System.Threading.CancellationToken cancellationToken) -> Microsoft.CodeAnalysis.ISymbol?

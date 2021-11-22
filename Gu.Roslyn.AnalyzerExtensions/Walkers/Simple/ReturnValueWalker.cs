@@ -44,17 +44,15 @@
             }
 
             using var walker = BorrowAndVisit(node, () => new ReturnValueWalker());
-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
             return walker.returnValues.TrySingle(out returnValue);
-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
         }
 
         /// <inheritdoc/>
-        public override void Visit(SyntaxNode node)
+        public override void Visit(SyntaxNode? node)
         {
             if (this.isSubNode)
             {
-                switch (node.Kind())
+                switch (node?.Kind())
                 {
                     case SyntaxKind.SimpleLambdaExpression:
                     case SyntaxKind.ParenthesizedLambdaExpression:

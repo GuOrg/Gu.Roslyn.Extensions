@@ -139,6 +139,6 @@
         public override bool Equals(object? obj) => obj is FieldOrProperty other && this.Equals(other);
 
         /// <inheritdoc/>
-        public override int GetHashCode() => this.Symbol.GetHashCode();
+        public override int GetHashCode() => SymbolComparer.Default.GetHashCode(this.Symbol);
     }
 }

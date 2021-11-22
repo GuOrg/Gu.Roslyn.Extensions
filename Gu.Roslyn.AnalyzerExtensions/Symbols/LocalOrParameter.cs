@@ -134,15 +134,9 @@
         };
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        {
-            return obj is LocalOrParameter other && this.Equals(other);
-        }
+        public override bool Equals(object? obj) => obj is LocalOrParameter other && this.Equals(other);
 
         /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            return this.Symbol.GetHashCode();
-        }
+        public override int GetHashCode() => SymbolComparer.Default.GetHashCode(this.Symbol);
     }
 }

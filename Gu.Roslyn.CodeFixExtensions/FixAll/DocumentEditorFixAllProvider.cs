@@ -48,6 +48,11 @@
                 throw new System.ArgumentNullException(nameof(fixAllContext));
             }
 
+            if (fixAllContext.Document is null)
+            {
+                throw new System.ArgumentNullException(nameof(fixAllContext));
+            }
+
             if (fixAllContext.Scope == FixAllScope.Document)
             {
                 var actions = await GetDocumentEditorActionsAsync(fixAllContext, fixAllContext.Document).ConfigureAwait(false);
