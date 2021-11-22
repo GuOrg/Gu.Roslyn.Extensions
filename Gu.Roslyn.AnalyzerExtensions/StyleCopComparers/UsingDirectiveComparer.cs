@@ -9,7 +9,7 @@
     public sealed class UsingDirectiveComparer : IComparer<UsingDirectiveSyntax>
     {
         /// <summary> The default instance. </summary>
-        public static readonly UsingDirectiveComparer Default = new UsingDirectiveComparer();
+        public static readonly UsingDirectiveComparer Default = new();
         private static readonly StringComparer OrdinalIgnoreCase = StringComparer.OrdinalIgnoreCase;
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>

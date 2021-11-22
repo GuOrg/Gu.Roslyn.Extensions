@@ -9,7 +9,7 @@
     /// </summary>
     public sealed class YieldStatementWalker : PooledWalker<YieldStatementWalker>
     {
-        private readonly List<YieldStatementSyntax> yieldStatements = new List<YieldStatementSyntax>();
+        private readonly List<YieldStatementSyntax> yieldStatements = new();
 
         private YieldStatementWalker()
         {

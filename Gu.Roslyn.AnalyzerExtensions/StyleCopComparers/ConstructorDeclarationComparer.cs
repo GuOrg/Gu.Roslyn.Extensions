@@ -8,7 +8,7 @@
     public sealed class ConstructorDeclarationComparer : IComparer<ConstructorDeclarationSyntax>
     {
         /// <summary> The default instance. </summary>
-        public static readonly ConstructorDeclarationComparer Default = new ConstructorDeclarationComparer();
+        public static readonly ConstructorDeclarationComparer Default = new();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>

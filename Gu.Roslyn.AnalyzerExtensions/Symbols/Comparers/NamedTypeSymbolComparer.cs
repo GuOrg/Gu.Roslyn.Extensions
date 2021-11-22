@@ -9,7 +9,7 @@
     public sealed class NamedTypeSymbolComparer : IEqualityComparer<INamedTypeSymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly NamedTypeSymbolComparer Default = new NamedTypeSymbolComparer();
+        public static readonly NamedTypeSymbolComparer Default = new();
 
         private NamedTypeSymbolComparer()
         {

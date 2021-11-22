@@ -71,14 +71,14 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>A <see cref="QualifiedParameter"/>.</returns>
-        public static QualifiedParameter Create(string name) => new QualifiedParameter(name, null);
+        public static QualifiedParameter Create(string name) => new(name, null);
 
         /// <summary>
         /// Create a <see cref="QualifiedParameter"/> with name only.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A <see cref="QualifiedParameter"/>.</returns>
-        public static QualifiedParameter Create(QualifiedType type) => new QualifiedParameter(null, type);
+        public static QualifiedParameter Create(QualifiedType type) => new(null, type);
 
         /// <inheritdoc />
         public bool Equals(QualifiedParameter other)

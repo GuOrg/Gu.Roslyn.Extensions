@@ -9,7 +9,7 @@
     public sealed class SymbolComparer : IEqualityComparer<ISymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly SymbolComparer Default = new SymbolComparer();
+        public static readonly SymbolComparer Default = new();
 
         private SymbolComparer()
         {

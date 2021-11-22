@@ -9,7 +9,7 @@
     /// </summary>
     public sealed class ThrowWalker : PooledWalker<ThrowWalker>
     {
-        private readonly List<SyntaxNode> throwStatementsAndExpressions = new List<SyntaxNode>();
+        private readonly List<SyntaxNode> throwStatementsAndExpressions = new();
 
         private ThrowWalker()
         {

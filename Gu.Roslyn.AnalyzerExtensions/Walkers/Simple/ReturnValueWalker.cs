@@ -11,7 +11,7 @@
     /// </summary>
     public sealed class ReturnValueWalker : PooledWalker<ReturnValueWalker>
     {
-        private readonly List<ExpressionSyntax> returnValues = new List<ExpressionSyntax>();
+        private readonly List<ExpressionSyntax> returnValues = new();
         private bool isSubNode;
 
         private ReturnValueWalker()

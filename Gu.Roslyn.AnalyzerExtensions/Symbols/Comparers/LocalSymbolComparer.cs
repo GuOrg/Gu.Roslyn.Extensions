@@ -8,7 +8,7 @@
     public sealed class LocalSymbolComparer : IEqualityComparer<ILocalSymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly LocalSymbolComparer Default = new LocalSymbolComparer();
+        public static readonly LocalSymbolComparer Default = new();
 
         private LocalSymbolComparer()
         {

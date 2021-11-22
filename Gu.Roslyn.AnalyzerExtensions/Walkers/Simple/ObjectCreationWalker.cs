@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class ObjectCreationWalker : PooledWalker<ObjectCreationWalker>
     {
-        private readonly List<ObjectCreationExpressionSyntax> objectCreations = new List<ObjectCreationExpressionSyntax>();
+        private readonly List<ObjectCreationExpressionSyntax> objectCreations = new();
 
         private ObjectCreationWalker()
         {

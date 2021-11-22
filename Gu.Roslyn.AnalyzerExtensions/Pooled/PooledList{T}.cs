@@ -14,7 +14,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     {
         private static readonly ConcurrentQueue<PooledList<T>> Cache = new();
 
-        private readonly List<T> inner = new List<T>();
+        private readonly List<T> inner = new();
 
         private PooledList()
         {

@@ -8,7 +8,7 @@
     public sealed class PropertySymbolComparer : IEqualityComparer<IPropertySymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly PropertySymbolComparer Default = new PropertySymbolComparer();
+        public static readonly PropertySymbolComparer Default = new();
 
         private PropertySymbolComparer()
         {

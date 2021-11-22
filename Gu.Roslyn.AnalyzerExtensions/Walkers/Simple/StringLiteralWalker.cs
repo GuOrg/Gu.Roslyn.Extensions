@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public sealed class StringLiteralWalker : PooledWalker<StringLiteralWalker>
     {
-        private readonly List<LiteralExpressionSyntax> literals = new List<LiteralExpressionSyntax>();
+        private readonly List<LiteralExpressionSyntax> literals = new();
 
         private StringLiteralWalker()
         {

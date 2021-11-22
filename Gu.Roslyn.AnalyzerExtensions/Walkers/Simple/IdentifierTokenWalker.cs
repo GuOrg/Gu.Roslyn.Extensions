@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class IdentifierTokenWalker : PooledWalker<IdentifierTokenWalker>
     {
-        private readonly List<SyntaxToken> identifierTokens = new List<SyntaxToken>();
+        private readonly List<SyntaxToken> identifierTokens = new();
 
         private IdentifierTokenWalker()
             : base(SyntaxWalkerDepth.Token)

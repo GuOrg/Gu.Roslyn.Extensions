@@ -9,7 +9,7 @@
     public sealed class MethodSymbolComparer : IEqualityComparer<IMethodSymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly MethodSymbolComparer Default = new MethodSymbolComparer();
+        public static readonly MethodSymbolComparer Default = new();
 
         private MethodSymbolComparer()
         {

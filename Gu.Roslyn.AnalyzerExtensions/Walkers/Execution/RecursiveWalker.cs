@@ -11,7 +11,7 @@
     public abstract class RecursiveWalker<T> : ExecutionWalker<T>
             where T : RecursiveWalker<T>
     {
-        private readonly List<Target<SyntaxNode, ISymbol, SyntaxNode>> targets = new List<Target<SyntaxNode, ISymbol, SyntaxNode>>();
+        private readonly List<Target<SyntaxNode, ISymbol, SyntaxNode>> targets = new();
 
         /// <summary>
         /// Gets the recursive <see cref="Target{TSource,TSymbol,TTarget}"/> found when walking the first level.

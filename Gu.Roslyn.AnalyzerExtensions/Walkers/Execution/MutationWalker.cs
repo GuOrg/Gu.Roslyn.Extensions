@@ -12,10 +12,10 @@
     /// </summary>
     public sealed class MutationWalker : ExecutionWalker<MutationWalker>
     {
-        private readonly List<AssignmentExpressionSyntax> assignments = new List<AssignmentExpressionSyntax>();
-        private readonly List<PrefixUnaryExpressionSyntax> prefixUnaries = new List<PrefixUnaryExpressionSyntax>();
-        private readonly List<PostfixUnaryExpressionSyntax> postfixUnaries = new List<PostfixUnaryExpressionSyntax>();
-        private readonly List<ArgumentSyntax> refOrOutArguments = new List<ArgumentSyntax>();
+        private readonly List<AssignmentExpressionSyntax> assignments = new();
+        private readonly List<PrefixUnaryExpressionSyntax> prefixUnaries = new();
+        private readonly List<PostfixUnaryExpressionSyntax> postfixUnaries = new();
+        private readonly List<ArgumentSyntax> refOrOutArguments = new();
 
         private MutationWalker()
         {

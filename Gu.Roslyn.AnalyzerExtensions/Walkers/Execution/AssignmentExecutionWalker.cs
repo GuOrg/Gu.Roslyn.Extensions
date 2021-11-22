@@ -14,9 +14,9 @@
     /// </summary>
     public sealed class AssignmentExecutionWalker : ExecutionWalker<AssignmentExecutionWalker>
     {
-        private readonly List<AssignmentExpressionSyntax> assignments = new List<AssignmentExpressionSyntax>();
-        private readonly List<ArgumentSyntax> arguments = new List<ArgumentSyntax>();
-        private readonly List<LocalDeclarationStatementSyntax> localDeclarations = new List<LocalDeclarationStatementSyntax>();
+        private readonly List<AssignmentExpressionSyntax> assignments = new();
+        private readonly List<ArgumentSyntax> arguments = new();
+        private readonly List<LocalDeclarationStatementSyntax> localDeclarations = new();
 
         private AssignmentExecutionWalker()
         {

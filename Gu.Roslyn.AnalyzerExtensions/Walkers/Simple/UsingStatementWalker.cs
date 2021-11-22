@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public sealed class UsingStatementWalker : PooledWalker<UsingStatementWalker>
     {
-        private readonly List<UsingStatementSyntax> usingStatements = new List<UsingStatementSyntax>();
+        private readonly List<UsingStatementSyntax> usingStatements = new();
 
         private UsingStatementWalker()
         {

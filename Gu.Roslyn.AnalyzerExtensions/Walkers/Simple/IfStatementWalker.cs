@@ -9,7 +9,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public sealed class IfStatementWalker : PooledWalker<IfStatementWalker>
     {
-        private readonly List<IfStatementSyntax> ifStatements = new List<IfStatementSyntax>();
+        private readonly List<IfStatementSyntax> ifStatements = new();
 
         private IfStatementWalker()
         {

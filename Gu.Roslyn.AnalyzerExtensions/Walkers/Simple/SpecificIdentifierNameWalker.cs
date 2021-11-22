@@ -9,7 +9,7 @@
     /// </summary>
     public sealed class SpecificIdentifierNameWalker : PooledWalker<SpecificIdentifierNameWalker>
     {
-        private readonly List<IdentifierNameSyntax> identifierNames = new List<IdentifierNameSyntax>();
+        private readonly List<IdentifierNameSyntax> identifierNames = new();
         private string valueText = null!;
 
         private SpecificIdentifierNameWalker()

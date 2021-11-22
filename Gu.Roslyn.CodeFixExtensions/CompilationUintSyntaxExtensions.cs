@@ -116,8 +116,8 @@
 
         private sealed class UsingDirectiveWalker : PooledWalker<UsingDirectiveWalker>
         {
-            private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
-            private readonly List<NamespaceDeclarationSyntax> namespaceDeclarations = new List<NamespaceDeclarationSyntax>();
+            private readonly List<UsingDirectiveSyntax> usingDirectives = new();
+            private readonly List<NamespaceDeclarationSyntax> namespaceDeclarations = new();
 
             internal IReadOnlyList<UsingDirectiveSyntax> UsingDirectives => this.usingDirectives;
 

@@ -8,7 +8,7 @@
     public sealed class ParameterSymbolComparer : IEqualityComparer<IParameterSymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly ParameterSymbolComparer Default = new ParameterSymbolComparer();
+        public static readonly ParameterSymbolComparer Default = new();
 
         private ParameterSymbolComparer()
         {

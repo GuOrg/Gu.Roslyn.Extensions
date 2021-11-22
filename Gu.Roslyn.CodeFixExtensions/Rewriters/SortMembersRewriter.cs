@@ -17,10 +17,10 @@
     public sealed class SortMembersRewriter : CSharpSyntaxRewriter
 #pragma warning restore CA1001 // Types that own disposable fields should be disposable
     {
-        private static readonly SortMembersRewriter Default = new SortMembersRewriter();
+        private static readonly SortMembersRewriter Default = new();
 #pragma warning disable IDISP002, IDISP006
-        private readonly ThreadLocal<ImmutableArray<MemberDeclarationSyntax>> sortedMembers = new ThreadLocal<ImmutableArray<MemberDeclarationSyntax>>();
-        private readonly ThreadLocal<int> index = new ThreadLocal<int>();
+        private readonly ThreadLocal<ImmutableArray<MemberDeclarationSyntax>> sortedMembers = new();
+        private readonly ThreadLocal<int> index = new();
 #pragma warning restore IDISP006, IDISP002
 
         /// <summary>

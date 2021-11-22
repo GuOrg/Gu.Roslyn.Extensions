@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public static class StringBuilderPool
     {
-        private static readonly ConcurrentQueue<PooledStringBuilder> Cache = new ConcurrentQueue<PooledStringBuilder>();
+        private static readonly ConcurrentQueue<PooledStringBuilder> Cache = new();
 
         /// <summary>
         /// Borrow an instance.
@@ -31,7 +31,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// </summary>
         public class PooledStringBuilder
         {
-            private readonly StringBuilder inner = new StringBuilder();
+            private readonly StringBuilder inner = new();
 
             /// <summary>Gets the maximum capacity of this instance.</summary>
             /// <returns>The maximum number of characters this instance can hold.</returns>

@@ -9,7 +9,7 @@
     public sealed class AssemblySymbolComparer : IEqualityComparer<IAssemblySymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly AssemblySymbolComparer Default = new AssemblySymbolComparer();
+        public static readonly AssemblySymbolComparer Default = new();
 
         private AssemblySymbolComparer()
         {

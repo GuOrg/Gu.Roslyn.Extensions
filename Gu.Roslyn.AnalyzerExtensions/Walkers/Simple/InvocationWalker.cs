@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class InvocationWalker : PooledWalker<InvocationWalker>
     {
-        private readonly List<InvocationExpressionSyntax> invocations = new List<InvocationExpressionSyntax>();
+        private readonly List<InvocationExpressionSyntax> invocations = new();
 
         private InvocationWalker()
         {

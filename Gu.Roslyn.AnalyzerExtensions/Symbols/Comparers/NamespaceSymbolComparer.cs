@@ -8,7 +8,7 @@
     public sealed class NamespaceSymbolComparer : IEqualityComparer<INamespaceSymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly NamespaceSymbolComparer Default = new NamespaceSymbolComparer();
+        public static readonly NamespaceSymbolComparer Default = new();
 
         private NamespaceSymbolComparer()
         {

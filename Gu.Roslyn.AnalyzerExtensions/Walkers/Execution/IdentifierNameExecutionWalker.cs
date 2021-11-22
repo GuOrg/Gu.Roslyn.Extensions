@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public sealed class IdentifierNameExecutionWalker : ExecutionWalker<IdentifierNameExecutionWalker>
     {
-        private readonly List<IdentifierNameSyntax> identifierNames = new List<IdentifierNameSyntax>();
+        private readonly List<IdentifierNameSyntax> identifierNames = new();
 
         private IdentifierNameExecutionWalker()
         {

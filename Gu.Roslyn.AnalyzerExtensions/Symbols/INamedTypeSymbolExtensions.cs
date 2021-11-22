@@ -10,7 +10,7 @@
     // ReSharper disable once InconsistentNaming
     public static class INamedTypeSymbolExtensions
     {
-        private static readonly SymbolDisplayFormat Simple = new SymbolDisplayFormat(
+        private static readonly SymbolDisplayFormat Simple = new(
             SymbolDisplayGlobalNamespaceStyle.Omitted,
             SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             miscellaneousOptions: SymbolDisplayMiscellaneousOptions.ExpandNullable);

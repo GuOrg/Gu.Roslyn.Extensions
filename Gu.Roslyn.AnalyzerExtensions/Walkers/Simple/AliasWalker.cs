@@ -11,7 +11,7 @@
     /// </summary>
     public sealed class AliasWalker : AbstractUsingDirectiveWalker<AliasWalker>
     {
-        private readonly List<UsingDirectiveSyntax> aliases = new List<UsingDirectiveSyntax>();
+        private readonly List<UsingDirectiveSyntax> aliases = new();
 
         private AliasWalker()
         {

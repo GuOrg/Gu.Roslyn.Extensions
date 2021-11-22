@@ -13,7 +13,7 @@
     /// </summary>
     public sealed class UsingStaticWalker : AbstractUsingDirectiveWalker<UsingStaticWalker>
     {
-        private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
+        private readonly List<UsingDirectiveSyntax> usingDirectives = new();
 
         private UsingStaticWalker()
         {

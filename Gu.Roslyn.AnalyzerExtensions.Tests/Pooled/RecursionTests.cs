@@ -9,7 +9,7 @@
     public static class RecursionTests
     {
         private static readonly SymbolDisplayFormat Format =
-            new SymbolDisplayFormat(
+            new(
                 globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.OmittedAsContaining,
                 typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
                 propertyStyle: SymbolDisplayPropertyStyle.NameOnly,

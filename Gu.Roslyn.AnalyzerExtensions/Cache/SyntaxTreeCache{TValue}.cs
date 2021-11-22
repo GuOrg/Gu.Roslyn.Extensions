@@ -65,7 +65,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 #pragma warning disable SA1401 // Fields should be private
             internal static int RefCount;
 #pragma warning restore SA1401 // Fields should be private
-            private readonly object gate = new object();
+            private readonly object gate = new();
             private Compilation? compilation;
 
             /// <summary>

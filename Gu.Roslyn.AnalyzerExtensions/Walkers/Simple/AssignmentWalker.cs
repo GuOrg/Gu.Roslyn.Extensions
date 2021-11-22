@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class AssignmentWalker : PooledWalker<AssignmentWalker>
     {
-        private readonly List<AssignmentExpressionSyntax> assignments = new List<AssignmentExpressionSyntax>();
+        private readonly List<AssignmentExpressionSyntax> assignments = new();
 
         private AssignmentWalker()
         {

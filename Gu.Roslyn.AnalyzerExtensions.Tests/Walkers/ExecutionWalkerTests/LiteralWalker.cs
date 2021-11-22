@@ -8,7 +8,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
 
     internal class LiteralWalker : ExecutionWalker<LiteralWalker>
     {
-        private readonly List<LiteralExpressionSyntax> literals = new List<LiteralExpressionSyntax>();
+        private readonly List<LiteralExpressionSyntax> literals = new();
 
         internal IReadOnlyList<LiteralExpressionSyntax> Literals => this.literals;
 

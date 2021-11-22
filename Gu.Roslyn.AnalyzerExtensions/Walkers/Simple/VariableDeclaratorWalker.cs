@@ -10,7 +10,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public sealed class VariableDeclaratorWalker : PooledWalker<VariableDeclaratorWalker>
     {
-        private readonly List<VariableDeclaratorSyntax> variableDeclarators = new List<VariableDeclaratorSyntax>();
+        private readonly List<VariableDeclaratorSyntax> variableDeclarators = new();
 
         private VariableDeclaratorWalker()
         {

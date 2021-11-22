@@ -11,7 +11,7 @@
     public sealed class SimplifyNamesRewriter : CSharpSyntaxRewriter
     {
         /// <summary>The default instance.</summary>
-        public static readonly SimplifyNamesRewriter Default = new SimplifyNamesRewriter();
+        public static readonly SimplifyNamesRewriter Default = new();
 
         private SimplifyNamesRewriter()
             : base(visitIntoStructuredTrivia: true)

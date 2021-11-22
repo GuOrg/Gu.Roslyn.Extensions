@@ -11,7 +11,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// </summary>
     public sealed class UsingDirectiveWalker : AbstractUsingDirectiveWalker<UsingDirectiveWalker>
     {
-        private readonly List<UsingDirectiveSyntax> usingDirectives = new List<UsingDirectiveSyntax>();
+        private readonly List<UsingDirectiveSyntax> usingDirectives = new();
 
         /// <summary>
         /// Gets a collection with the <see cref="UsingDirectiveSyntax"/> found when walking.

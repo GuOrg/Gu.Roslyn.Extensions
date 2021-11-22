@@ -18,7 +18,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     public sealed class PooledSet<T> : IDisposable, IReadOnlyCollection<T>
     {
         private static readonly ConcurrentQueue<PooledSet<T>> Cache = new();
-        private readonly HashSet<T> inner = new HashSet<T>(GetComparer());
+        private readonly HashSet<T> inner = new(GetComparer());
 
         private int refCount;
 

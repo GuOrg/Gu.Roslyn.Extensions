@@ -12,7 +12,7 @@
     /// </summary>
     public sealed class SealRewriter : CSharpSyntaxRewriter
     {
-        private static readonly SealRewriter Default = new SealRewriter();
+        private static readonly SealRewriter Default = new();
 
         /// <summary>
         /// Rewrite <paramref name="classDeclaration"/> to sealed.

@@ -8,7 +8,7 @@
     public sealed class FieldSymbolComparer : IEqualityComparer<IFieldSymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly FieldSymbolComparer Default = new FieldSymbolComparer();
+        public static readonly FieldSymbolComparer Default = new();
 
         private FieldSymbolComparer()
         {

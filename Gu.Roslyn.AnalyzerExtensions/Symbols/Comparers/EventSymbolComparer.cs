@@ -9,7 +9,7 @@
     public sealed class EventSymbolComparer : IEqualityComparer<IEventSymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly EventSymbolComparer Default = new EventSymbolComparer();
+        public static readonly EventSymbolComparer Default = new();
 
         private EventSymbolComparer()
         {

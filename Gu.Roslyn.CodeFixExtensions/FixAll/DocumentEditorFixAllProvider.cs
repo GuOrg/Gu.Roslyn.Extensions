@@ -18,17 +18,17 @@
         /// <summary>
         /// Fix all in document.
         /// </summary>
-        public static readonly DocumentEditorFixAllProvider Document = new DocumentEditorFixAllProvider(ImmutableArray.Create(FixAllScope.Document));
+        public static readonly DocumentEditorFixAllProvider Document = new(ImmutableArray.Create(FixAllScope.Document));
 
         /// <summary>
         /// Fix all in project or document.
         /// </summary>
-        public static readonly DocumentEditorFixAllProvider Project = new DocumentEditorFixAllProvider(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project));
+        public static readonly DocumentEditorFixAllProvider Project = new(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project));
 
         /// <summary>
         /// Fix all in solution, project or document.
         /// </summary>
-        public static readonly DocumentEditorFixAllProvider Solution = new DocumentEditorFixAllProvider(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project, FixAllScope.Solution));
+        public static readonly DocumentEditorFixAllProvider Solution = new(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project, FixAllScope.Solution));
 
         private readonly ImmutableArray<FixAllScope> supportedFixAllScopes;
 

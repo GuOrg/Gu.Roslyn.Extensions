@@ -9,9 +9,9 @@
     /// <inheritdoc />
     public sealed class NullCheckWalker : PooledWalker<NullCheckWalker>
     {
-        private readonly List<BinaryExpressionSyntax> binaryExpressions = new List<BinaryExpressionSyntax>();
-        private readonly List<IsPatternExpressionSyntax> isPatterns = new List<IsPatternExpressionSyntax>();
-        private readonly List<InvocationExpressionSyntax> invocations = new List<InvocationExpressionSyntax>();
+        private readonly List<BinaryExpressionSyntax> binaryExpressions = new();
+        private readonly List<IsPatternExpressionSyntax> isPatterns = new();
+        private readonly List<InvocationExpressionSyntax> invocations = new();
 
         private NullCheckWalker()
         {

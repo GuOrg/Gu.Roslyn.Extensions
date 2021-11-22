@@ -11,7 +11,7 @@
     public sealed class MethodDeclarationComparer : IComparer<MethodDeclarationSyntax>
     {
         /// <summary> The default instance. </summary>
-        public static readonly MethodDeclarationComparer Default = new MethodDeclarationComparer();
+        public static readonly MethodDeclarationComparer Default = new();
 
         /// <summary>Compares two nodes and returns a value indicating whether one is less than, equal to, or greater than the other according to StyleCop.</summary>
         /// <returns>A signed integer that indicates if the node should be before the other according to StyleCop.</returns>

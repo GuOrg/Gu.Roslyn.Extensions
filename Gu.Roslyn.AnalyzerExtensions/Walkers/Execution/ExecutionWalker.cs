@@ -466,10 +466,10 @@
         private class TypeDeclarationWalker : PooledWalker<TypeDeclarationWalker>
         {
 #pragma warning disable SA1401 // Fields must be private
-            internal readonly List<EqualsValueClauseSyntax> Initializers = new List<EqualsValueClauseSyntax>();
-            internal readonly List<ConstructorDeclarationSyntax> Ctors = new List<ConstructorDeclarationSyntax>();
-            internal readonly List<MemberDeclarationSyntax> Members = new List<MemberDeclarationSyntax>();
-            internal readonly List<TypeDeclarationSyntax> Types = new List<TypeDeclarationSyntax>();
+            internal readonly List<EqualsValueClauseSyntax> Initializers = new();
+            internal readonly List<ConstructorDeclarationSyntax> Ctors = new();
+            internal readonly List<MemberDeclarationSyntax> Members = new();
+            internal readonly List<TypeDeclarationSyntax> Types = new();
 #pragma warning restore SA1401 // Fields must be private
 
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)

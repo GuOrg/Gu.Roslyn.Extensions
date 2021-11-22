@@ -16,7 +16,7 @@
 #pragma warning restore CA1063, IDISP025 // Implement IDisposable Correctly
         where T : PooledWalker<T>
     {
-        private static readonly ConcurrentQueue<PooledWalker<T>> Cache = new ConcurrentQueue<PooledWalker<T>>();
+        private static readonly ConcurrentQueue<PooledWalker<T>> Cache = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PooledWalker{T}"/> class.

@@ -9,7 +9,7 @@
     public sealed class TypeSymbolComparer : IEqualityComparer<ITypeSymbol>
     {
         /// <summary> The default instance. </summary>
-        public static readonly TypeSymbolComparer Default = new TypeSymbolComparer();
+        public static readonly TypeSymbolComparer Default = new();
 
         private TypeSymbolComparer()
         {
