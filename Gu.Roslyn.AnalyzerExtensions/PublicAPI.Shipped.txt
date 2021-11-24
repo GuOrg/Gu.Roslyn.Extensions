@@ -544,38 +544,95 @@ static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt(this Microsoft.Co
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, int index, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt(this Microsoft.CodeAnalysis.SyntaxTokenList source, int index, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt(this Microsoft.CodeAnalysis.SyntaxTriviaList source, int index, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, int index, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt<T>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, int index, out T! result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt<T>(this System.Collections.Generic.IEnumerable<T>! source, int index, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt<T>(this System.Collections.Generic.IReadOnlyList<T>! source, int index, out T result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt<T>(this System.Collections.Immutable.ImmutableArray<T> source, int index, out T result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.ChildSyntaxList source, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.ChildSyntaxList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxTokenList source, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxTriviaList source, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxTriviaList source, System.Func<Microsoft.CodeAnalysis.SyntaxTrivia, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, System.Func<T!, bool>! predicate, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, System.Func<T!, bool>! predicate, out T! result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Generic.IEnumerable<T>! source, out T result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Generic.IEnumerable<T>! source, System.Func<T, bool>! predicate, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Generic.IReadOnlyList<T>! source, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Generic.IReadOnlyList<T>! source, System.Func<T, bool>! predicate, out T result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Immutable.ImmutableArray<T> source, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<T, bool>! predicate, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, System.Func<TResult!, bool>! predicate, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, System.Func<TResult!, bool>! predicate, out TResult! result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Generic.IEnumerable<T>! source, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Generic.IEnumerable<T>! source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T>! source, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T>! source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.ChildSyntaxList source, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.ChildSyntaxList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxTokenList source, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxTriviaList source, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxTriviaList source, System.Func<Microsoft.CodeAnalysis.SyntaxTrivia, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, System.Func<T!, bool>! predicate, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, System.Func<T!, bool>! predicate, out T! result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Generic.IEnumerable<T>! source, out T result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Generic.IEnumerable<T>! source, System.Func<T, bool>! predicate, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Generic.IReadOnlyList<T>! source, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Generic.IReadOnlyList<T>! source, System.Func<T, bool>! predicate, out T result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Immutable.ImmutableArray<T> source, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<T, bool>! predicate, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, System.Func<TResult!, bool>! predicate, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, System.Func<TResult!, bool>! predicate, out TResult! result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Generic.IEnumerable<T>! source, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Generic.IEnumerable<T>! source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T>! source, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T>! source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.ChildSyntaxList source, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.ChildSyntaxList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxTokenList source, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxToken, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxTriviaList source, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxTriviaList source, System.Func<Microsoft.CodeAnalysis.SyntaxTrivia, bool>! predicate, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, System.Func<T!, bool>! predicate, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, out T! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, System.Func<T!, bool>! predicate, out T! result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Generic.IEnumerable<T>! source, out T result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Generic.IEnumerable<T>! source, System.Func<T, bool>! predicate, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Generic.IReadOnlyList<T>! source, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Generic.IReadOnlyList<T>! source, System.Func<T, bool>! predicate, out T result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Immutable.ImmutableArray<T> source, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<T, bool>! predicate, out T result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T!> source, System.Func<TResult!, bool>! predicate, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, out TResult! result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T!> source, System.Func<TResult!, bool>! predicate, out TResult! result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Generic.IEnumerable<T>! source, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Generic.IEnumerable<T>! source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T>! source, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T>! source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, out TResult result) -> bool
+static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<TResult, bool>! predicate, out TResult result) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.HasEqualityOperator(Microsoft.CodeAnalysis.ITypeSymbol! type) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.HasOverridenEqualityOperator(Microsoft.CodeAnalysis.ITypeSymbol! type) -> bool
 static Gu.Roslyn.AnalyzerExtensions.Equality.IsEqualityComparerEquals(Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax! candidate, Microsoft.CodeAnalysis.SemanticModel! semanticModel, System.Threading.CancellationToken cancellationToken, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax? comparer, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax? left, out Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax? right) -> bool
@@ -1092,60 +1149,3 @@ virtual Gu.Roslyn.AnalyzerExtensions.QualifiedType.Equals(Microsoft.CodeAnalysis
 virtual Gu.Roslyn.AnalyzerExtensions.QualifiedType.Equals(Microsoft.CodeAnalysis.ITypeSymbol? type) -> bool
 virtual Gu.Roslyn.AnalyzerExtensions.QualifiedType.GetTypeSymbol(Microsoft.CodeAnalysis.Compilation! compilation) -> Microsoft.CodeAnalysis.ITypeSymbol?
 virtual Gu.Roslyn.AnalyzerExtensions.QualifiedType.NameEquals(string! name) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, int index, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt<T>(this Microsoft.CodeAnalysis.SyntaxList<T> source, int index, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryElementAt<T>(this System.Collections.Generic.IReadOnlyList<T> source, int index, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.ChildSyntaxList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst(this Microsoft.CodeAnalysis.SyntaxTriviaList source, System.Func<Microsoft.CodeAnalysis.SyntaxTrivia, bool> predicate, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this Microsoft.CodeAnalysis.SyntaxList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this Microsoft.CodeAnalysis.SyntaxList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Generic.IReadOnlyList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Generic.IReadOnlyList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirst<T>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryFirstOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.ChildSyntaxList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast(this Microsoft.CodeAnalysis.SyntaxTriviaList source, System.Func<Microsoft.CodeAnalysis.SyntaxTrivia, bool> predicate, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this Microsoft.CodeAnalysis.SyntaxList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this Microsoft.CodeAnalysis.SyntaxList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Generic.IReadOnlyList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Generic.IReadOnlyList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLast<T>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TryLastOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.ChildSyntaxList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxNodeOrTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxNodeOrToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxNodeOrToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxTokenList source, System.Func<Microsoft.CodeAnalysis.SyntaxToken, bool> predicate, out Microsoft.CodeAnalysis.SyntaxToken result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle(this Microsoft.CodeAnalysis.SyntaxTriviaList source, System.Func<Microsoft.CodeAnalysis.SyntaxTrivia, bool> predicate, out Microsoft.CodeAnalysis.SyntaxTrivia result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this Microsoft.CodeAnalysis.SyntaxList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this Microsoft.CodeAnalysis.SyntaxList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Generic.IReadOnlyList<T> source, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Generic.IReadOnlyList<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingle<T>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<T, bool> predicate, out T result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this Microsoft.CodeAnalysis.SeparatedSyntaxList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this Microsoft.CodeAnalysis.SyntaxList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T> source, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Generic.IReadOnlyList<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
-~static Gu.Roslyn.AnalyzerExtensions.EnumerableExt.TrySingleOfType<T, TResult>(this System.Collections.Immutable.ImmutableArray<T> source, System.Func<TResult, bool> predicate, out TResult result) -> bool
