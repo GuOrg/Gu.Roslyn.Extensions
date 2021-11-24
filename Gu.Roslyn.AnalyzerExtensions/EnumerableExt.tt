@@ -2,6 +2,7 @@
 <#@ assembly name="System.Core" #>
 <#@ output extension="generated.cs" #>
 #pragma warning disable RS0041 // Public members should not use oblivious types
+#nullable enable
 
 namespace Gu.Roslyn.AnalyzerExtensions
 {

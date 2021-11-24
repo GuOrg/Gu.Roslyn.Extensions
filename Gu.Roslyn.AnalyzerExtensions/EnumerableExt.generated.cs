@@ -1,4 +1,5 @@
 ﻿#pragma warning disable RS0041 // Public members should not use oblivious types
+#nullable enable
 
 namespace Gu.Roslyn.AnalyzerExtensions
 {
