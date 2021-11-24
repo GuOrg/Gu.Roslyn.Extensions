@@ -1,3 +1,12 @@
+#### 0.16.2
+* Add missing annotation to T4 output.
+
+#### 0.16.1
+* Explicit #nullable enable needed
+
+#### 0.16.0
+* BREAKING: Update Roslyn dependency to 4.0.1
+
 #### 0.15.7
 * BUFIX: IMethodSymbol.FindArgument(parameter) when extension method invocation.
 
