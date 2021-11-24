@@ -55,7 +55,7 @@
                 return comment.ReplaceNode(old, summary);
             }
 
-            if (comment.Content.TryFirstOfType(out XmlElementSyntax? existing))
+            if (comment.Content.TryFirstOfType<XmlNodeSyntax, XmlElementSyntax>(out var existing))
             {
                 return comment.InsertBefore(existing, summary);
             }
