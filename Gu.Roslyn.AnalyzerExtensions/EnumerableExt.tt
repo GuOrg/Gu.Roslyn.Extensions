@@ -50,7 +50,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryElementAt<#= genericArg #>(this <#= colName #> source, int index, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(<#= itemName #>);
+            result = default;
             if (index < 0 ||
                 source.<#= count #> <= index)
             {
@@ -71,7 +71,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingle<#= genericArg #>(this <#= colName #> source, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(<#= itemName #>);
+            result = default;
             if (source.<#= count #> == 1)
             {
                 result = source[0];
@@ -94,7 +94,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(TResult);
+            result = default;
             for (var i = 0; i < source.<#= count #>; i++)
             {
                 if (source[i] is TResult item)
@@ -128,7 +128,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(TResult);
+            result = default;
             for (var i = 0; i < source.<#= count #>; i++)
             {
                 if (source[i] is TResult item &&
@@ -163,7 +163,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TrySingle<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(<#= itemName #>);
+            result = default;
             for (var i = 0; i < source.<#= count #>; i++)
             {
                 var item = source[i];
@@ -195,7 +195,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFirst<#= genericArg #>(this <#= colName #> source, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(<#= itemName #>);
+            result = default;
             if (source.<#= count #> == 0)
             {
                 return false;
@@ -214,11 +214,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
         /// <param name="source">The source collection, can be null.</param>
         /// <param name="result">The single element, can be null.</param>
         /// <returns>True if an element was found.</returns>
-        public static bool TryFirstOfType<T, TResult>(this <#= colName #> source, out TResult result)<#= constraint #>
+        public static bool TryFirstOfType<T, TResult>(this <#= colName #> source, [MaybeNullWhen(false)] out TResult result)<#= constraint #>
             where TResult : T
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(TResult);
+            result = default;
             for (var i = 0; i < source.<#= count #>; i++)
             {
                 if (source[i] is TResult item)
@@ -244,7 +244,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(TResult);
+            result = default;
             for (var i = 0; i < source.<#= count #>; i++)
             {
                 if (source[i] is TResult item &&
@@ -270,7 +270,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryFirst<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(<#= itemName #>);
+            result = default;
             foreach (var item in source)
             {
                 if (predicate(item))
@@ -293,7 +293,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryLast<#= genericArg #>(this <#= colName #> source, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(<#= itemName #>);
+            result = default;
             if (source.<#= count #> == 0)
             {
                 result = default(<#= itemName #>);
@@ -317,7 +317,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(TResult);
+            result = default;
             for (var i = source.<#= count #> - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item)
@@ -343,7 +343,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
             where TResult : T
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(TResult);
+            result = default;
             for (var i = source.<#= count #> - 1; i >= 0; i--)
             {
                 if (source[i] is TResult item &&
@@ -369,7 +369,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
         public static bool TryLast<#= genericArg #>(this <#= colName #> source, Func<<#= itemName #>, bool> predicate, [MaybeNullWhen(false)] out <#= itemName #> result)<#= constraint #>
         {
 <# this.WriteIfNullThrow(types); #>
-            result = default(<#= itemName #>);
+            result = default;
             for (var i = source.<#= count #> - 1; i >= 0; i--)
             {
                 var item = source[i];
