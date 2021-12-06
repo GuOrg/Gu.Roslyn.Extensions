@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -24,7 +24,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<SyntaxNode>(text);
             Assert.AreEqual(expected, node.IsInExpressionTree(semanticModel, CancellationToken.None));
@@ -48,7 +48,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<SyntaxNode>(text);
             Assert.AreEqual(expected, node.IsInExpressionTree(semanticModel, CancellationToken.None));
@@ -69,7 +69,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<SyntaxNode>(text);
             Assert.AreEqual(false, node.IsInExpressionTree(semanticModel, CancellationToken.None));
@@ -93,7 +93,7 @@ namespace N
     }
 }".AssertReplace("1", expression);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<SyntaxNode>(expression);
             Assert.AreEqual(false, node.IsInExpressionTree(semanticModel, CancellationToken.None));

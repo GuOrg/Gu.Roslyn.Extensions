@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ISymbolExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ISymbolExtTests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -23,7 +23,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindFieldDeclaration(name);
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
@@ -46,7 +46,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindPropertyDeclaration(name);
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
@@ -69,7 +69,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration(name);
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
@@ -92,7 +92,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration(name);
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
@@ -115,7 +115,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindPropertyDeclaration(name);
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None).GetMethod;
@@ -138,7 +138,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindPropertyDeclaration(name);
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None).GetMethod;
@@ -163,7 +163,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<VariableDeclaratorSyntax>(name);
             var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
@@ -186,7 +186,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<VariableDeclaratorSyntax>("value");
             var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
@@ -219,7 +219,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.Find<VariableDesignationSyntax>(name);
             var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);
@@ -242,7 +242,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindParameter(name);
             var symbol = semanticModel.GetDeclaredSymbolSafe(node, CancellationToken.None);

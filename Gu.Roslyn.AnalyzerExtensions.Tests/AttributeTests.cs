@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -25,7 +25,7 @@ namespace N
 }".AssertReplace("[Obsolete]", attribute);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var classDeclaration = syntaxTree.FindClassDeclaration("C");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var type = new QualifiedType("System.ObsoleteAttribute");
             Assert.AreEqual(true, Attribute.TryFind(classDeclaration.AttributeLists, type, semanticModel, CancellationToken.None, out var match));

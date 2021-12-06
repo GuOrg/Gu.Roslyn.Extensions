@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -72,7 +72,7 @@ namespace N.Properties {
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("Resources");
             var type = semanticModel.GetDeclaredSymbol(classDeclaration);
@@ -144,7 +144,7 @@ namespace N.Properties {
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("Resources");
             var type = semanticModel.GetDeclaredSymbol(classDeclaration);

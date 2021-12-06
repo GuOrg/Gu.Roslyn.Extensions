@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UnderscoreFields
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UnderscoreFields
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -73,7 +73,7 @@ namespace N
     {
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, Settings.Default.MetadataReferences);
             Assert.AreEqual(2, compilation.SyntaxTrees.Length);
             foreach (var tree in compilation.SyntaxTrees)
             {
@@ -102,7 +102,7 @@ namespace N
         private int value;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[0]);
             Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.UnderscoreFields(semanticModel));
 

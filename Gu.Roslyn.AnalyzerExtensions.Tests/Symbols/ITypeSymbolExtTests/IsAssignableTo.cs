@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ITypeSymbolExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ITypeSymbolExtTests
 {
     using System;
     using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace N
 }";
             code = code.AssertReplace("int value1, int value2", parameters);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("C"));
             var type1 = ctor.Parameters[0].Type;
@@ -60,7 +60,7 @@ namespace N
     }
 }".AssertReplace("int", typeString);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
             var source = property.Type;
@@ -107,7 +107,7 @@ namespace N
             code = code.AssertReplace("int value", parameters);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation =
-                CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("C"));
             var type = ctor.Parameters[0].Type;
@@ -131,7 +131,7 @@ namespace N
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation =
-                CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var a = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("A"));
             var b = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("B"));
@@ -155,7 +155,7 @@ namespace N
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation =
-                CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var a = semanticModel.GetTypeInfo(syntaxTree.Find<BaseTypeSyntax>("A<int>").Type).Type;
             var b = semanticModel.GetDeclaredSymbol(syntaxTree.FindClassDeclaration("B"));
@@ -180,7 +180,7 @@ namespace N
             code = code.AssertReplace("int value", parameter);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation =
-                CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+                CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var ctor = semanticModel.GetDeclaredSymbol(syntaxTree.FindConstructorDeclaration("C"));
             var type = ctor.Parameters[0].Type;

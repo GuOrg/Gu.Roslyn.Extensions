@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
 {
     using System.Linq;
     using System.Threading;
@@ -45,7 +45,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindParameter("i"), CancellationToken.None, out var parameter));
             using var walker = IdentifierNameWalker.For(parameter, semanticModel, CancellationToken.None);
@@ -70,7 +70,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindVariableDeclaration("i"), CancellationToken.None, out ILocalSymbol local));
             using var walker = IdentifierNameWalker.For(local, semanticModel, CancellationToken.None);
@@ -121,7 +121,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetDeclaredSymbolSafe(syntaxTree.FindParameter("int i"), CancellationToken.None);
             var node = syntaxTree.FindTypeDeclaration("C");
@@ -149,7 +149,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetDeclaredSymbolSafe(syntaxTree.FindParameter("int i"), CancellationToken.None);
             var node = syntaxTree.FindTypeDeclaration("C");

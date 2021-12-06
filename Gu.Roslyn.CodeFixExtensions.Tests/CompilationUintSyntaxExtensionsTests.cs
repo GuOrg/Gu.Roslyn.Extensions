@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -15,7 +15,7 @@ namespace N
 {
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
             var expected = @"
@@ -37,7 +37,7 @@ namespace N
 {
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
             var expected = @"
@@ -45,7 +45,7 @@ namespace N
 {
 usingSystem.Text;}";
             var compilationUnit = syntaxTree.GetCompilationUnitRoot(CancellationToken.None);
-            var type = compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("System.Text.StringBuilder");
+            var type = compilation.GetTypeByMetadataName("System.Text.StringBuilder");
             var updated = compilationUnit.AddUsing(type, semanticModel);
             CodeAssert.AreEqual(expected, updated.ToFullString());
         }
@@ -59,7 +59,7 @@ namespace N
     using System.Text;
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
             var expected = @"
@@ -68,7 +68,7 @@ namespace N
     using System.Text;
 }";
             var compilationUnit = syntaxTree.GetCompilationUnitRoot(CancellationToken.None);
-            var type = compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("System.Text.StringBuilder");
+            var type = compilation.GetTypeByMetadataName("System.Text.StringBuilder");
             var updated = compilationUnit.AddUsing(type, semanticModel);
             CodeAssert.AreEqual(expected, updated.ToFullString());
         }

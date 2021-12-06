@@ -28,7 +28,7 @@ namespace N
         public int ExpressionBody => GetOnly;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration(name));
             Assert.AreEqual(expected, property.IsAutoProperty());
@@ -52,7 +52,7 @@ namespace N
         public int ExpressionBody => GetOnly;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration(name));
             Assert.AreEqual(expected, property.IsGetOnly());

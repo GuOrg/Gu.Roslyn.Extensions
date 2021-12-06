@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ExpressionSyntaxExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ExpressionSyntaxExtTests
 {
     using System;
     using Gu.Roslyn.Asserts;
@@ -27,7 +27,7 @@ namespace N
     }
 }".AssertReplace("1", text);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var expression = syntaxTree.FindExpression(text);
             Assert.AreEqual(true, expression.IsAssignableTo(QualifiedType.FromType(type), semanticModel));
@@ -48,7 +48,7 @@ namespace N
     }
 }".AssertReplace("1", text);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var expression = syntaxTree.FindExpression(text);
             Assert.AreEqual(true, expression.IsAssignableTo(new QualifiedType(fullname), semanticModel));
@@ -70,7 +70,7 @@ namespace N
     }
 }".AssertReplace("1", text);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var expression = syntaxTree.FindExpression(text);
             Assert.AreEqual(true, expression.IsSameType(new QualifiedType(type.FullName), semanticModel));

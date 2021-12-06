@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.MemberPathTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.MemberPathTests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -47,7 +47,7 @@ namespace N
             Assert.AreEqual(true, MemberPath.TryFindLast(value, out var member));
             Assert.AreEqual(expected, member.ToString());
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetSymbolSafe(member, CancellationToken.None);
             Assert.AreEqual(expected, symbol.Name);

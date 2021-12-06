@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
 {
     using System.Linq;
     using System.Threading;
@@ -28,7 +28,7 @@ namespace N
 }";
             code = code.AssertReplace("this.value = 1", mutation);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("C");
             using var walker = MutationWalker.Borrow(classDeclaration, SearchScope.Instance, semanticModel, CancellationToken.None);
@@ -61,7 +61,7 @@ namespace N
 }";
             code = code.AssertReplace("out", modifier);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var classDeclaration = syntaxTree.FindClassDeclaration("C");
             using var walker = MutationWalker.Borrow(classDeclaration, SearchScope.Type, semanticModel, CancellationToken.None);

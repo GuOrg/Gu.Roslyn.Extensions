@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTests
 {
     using System.Threading;
     using Gu.Roslyn.AnalyzerExtensions;
@@ -90,7 +90,7 @@ namespace N
         public bool Selected { get; set; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var setter = syntaxTree.FindPropertyDeclaration("P2").Find<AccessorDeclarationSyntax>("set");
             using var assignedValues = AssignmentExecutionWalker.Borrow(setter, SearchScope.Recursive, semanticModel, CancellationToken.None);

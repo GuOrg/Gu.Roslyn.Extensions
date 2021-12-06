@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests
 {
     using System.Linq;
     using System.Threading;
@@ -44,7 +44,7 @@ namespace N
             Assert.AreEqual(expectedLeft,  left.ToString());
             Assert.AreEqual(expectedRight, right.ToString());
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true,          Equality.IsEqualsCheck(expression, semanticModel, CancellationToken.None, out left, out right));
             Assert.AreEqual(expectedLeft,  left.ToString());
@@ -93,7 +93,7 @@ namespace N
                 Assert.AreEqual(expectedRight, right.ToString());
             }
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(symbolExpected, Equality.IsObjectEquals(expression, semanticModel, CancellationToken.None, out left, out right));
             if (symbolExpected)
@@ -131,7 +131,7 @@ namespace N
                 Assert.AreEqual(expectedRight, right.ToString());
             }
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(symbolExpected, Equality.IsInstanceEquals(expression, semanticModel, CancellationToken.None, out left, out right));
             if (symbolExpected)
@@ -160,7 +160,7 @@ namespace N
             Assert.AreEqual("x",  left.ToString());
             Assert.AreEqual("y", right.ToString());
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true, Equality.IsInstanceEquals(expression, semanticModel, CancellationToken.None, out left, out right));
             Assert.AreEqual("x", left.ToString());
@@ -195,7 +195,7 @@ namespace N
                 Assert.AreEqual("null", right.ToString());
             }
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(expected, Equality.IsObjectReferenceEquals(expression, semanticModel, CancellationToken.None, out left, out right));
             if (expected)
@@ -235,7 +235,7 @@ namespace N
                 Assert.AreEqual("null", right.ToString());
             }
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(expected, Equality.IsRuntimeHelpersEquals(expression, semanticModel, CancellationToken.None, out left, out right));
             if (expected)
@@ -273,7 +273,7 @@ namespace N
                 Assert.AreEqual("y", right.ToString());
             }
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(expectedSymbol, Equality.IsNullableEquals(expression, semanticModel, CancellationToken.None, out left, out right));
             if (expectedSymbol)
@@ -312,7 +312,7 @@ namespace N
                 StringAssert.Contains("StringComparison.Ordinal", stringComparison.ToString());
             }
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(expectedSymbol, Equality.IsStringEquals(expression, semanticModel, CancellationToken.None, out left, out right, out stringComparison));
             if (expectedSymbol)
@@ -343,7 +343,7 @@ namespace N
 }".AssertReplace("M(string x, string y) => StringComparer.Ordinal.Equals(x, y)", check);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var expression = syntaxTree.FindInvocation("Equals");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(expected, Equality.IsEqualityComparerEquals(expression, semanticModel, CancellationToken.None, out var comparer, out var left, out var right));
             if (expected)
@@ -431,7 +431,7 @@ namespace N
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var declaration = syntaxTree.FindClassDeclaration("C");
             Assert.AreEqual(true, Equality.IsOverriden(declaration));
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true, semanticModel.TryGetNamedType(declaration, CancellationToken.None, out var type));
             Assert.AreEqual(true, Equality.IsOverriden(type));
@@ -454,7 +454,7 @@ namespace N
     }
 }".AssertReplace("int", typeSyntax);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true,     semanticModel.TryGetNamedType(syntaxTree.Find<TypeSyntax>(typeSyntax), CancellationToken.None, out var type));
             Assert.AreEqual(expected, Equality.HasEqualityOperator(type));
@@ -477,7 +477,7 @@ namespace N
     }
 }".AssertReplace("int", typeSyntax);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true,     semanticModel.TryGetNamedType(syntaxTree.Find<TypeSyntax>(typeSyntax), CancellationToken.None, out var type));
             Assert.AreEqual(expected, Equality.HasOverridenEqualityOperator(type));

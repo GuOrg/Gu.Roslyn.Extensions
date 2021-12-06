@@ -85,7 +85,7 @@ namespace N
             var compilation = CSharpCompilation.Create(
                 "test",
                 new[] { syntaxTree, CSharpSyntaxTree.ParseText(e) },
-                MetadataReferences.FromAttributes(),
+                Settings.Default.MetadataReferences,
                 CodeFactory.DllCompilationOptions.WithNullableContextOptions(NullableContextOptions.Enable));
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.FindInvocation(call);

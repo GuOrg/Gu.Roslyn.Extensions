@@ -25,7 +25,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -54,7 +54,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindTypeDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -83,7 +83,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindTypeDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -113,7 +113,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -145,7 +145,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("public C()");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -178,7 +178,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("public C()");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -204,7 +204,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindClassDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -230,7 +230,7 @@ namespace N
         private readonly int value = 1;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindClassDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -260,7 +260,7 @@ namespace N
         public int Value2 { get; set; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("new C() { Value2 = 3 }");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -285,7 +285,7 @@ namespace N
         public int Value2 { get; set; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("new C() { Value2 = 2 }");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -310,7 +310,7 @@ namespace N
         public int Value2 { get; set; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("new C { Value2 = 2 }");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);

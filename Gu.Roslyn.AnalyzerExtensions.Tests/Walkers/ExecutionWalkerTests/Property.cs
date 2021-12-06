@@ -30,7 +30,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -57,7 +57,7 @@ namespace N
         public static int Value => 1;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -87,7 +87,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -114,7 +114,7 @@ namespace N
         public int Value => 1;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -144,7 +144,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -176,7 +176,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -208,7 +208,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -240,7 +240,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -265,7 +265,7 @@ namespace N
         public bool M() => Value1 > Value2;
     }
 }".AssertReplace("Value1 > Value2", expression));
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("M");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -294,7 +294,7 @@ namespace N
         public object M() => Value1 ?? Value2;
     }
 }".AssertReplace("Value1 ?? Value2", expression));
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("M");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -321,7 +321,7 @@ namespace N
         public int Value => 1;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindConstructorDeclaration("C");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -349,7 +349,7 @@ namespace N
         protected override int P => 1 + base.P;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("Start");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -377,7 +377,7 @@ namespace N
         protected override int P => 1 + base.P;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("Start");
             using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);

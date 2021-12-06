@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests
 {
     using System.Linq;
     using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace N
     {
     }
 }";
-            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("E", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public)
                                                                       .WithSimplifiedNames();
@@ -50,7 +50,7 @@ namespace N
     {
     }
 }";
-            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("E", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public)
                                                                       .WithSimplifiedNames();
@@ -85,7 +85,7 @@ namespace N
         public event System.EventHandler E;
     }
 }";
-            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code);
             var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
             var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
             _ = editor.ReplaceNode(containingType, x => x.WithSimplifiedNames());

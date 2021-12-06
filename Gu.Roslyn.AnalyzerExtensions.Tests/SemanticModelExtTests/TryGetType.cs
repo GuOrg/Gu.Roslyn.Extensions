@@ -70,7 +70,7 @@ namespace N
         private readonly int bar;
     }
 }".AssertReplace("[Obsolete]", attribute));
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, Settings.Default.MetadataReferences);
             var node = syntaxTree.FindAttribute("Obsolete");
             var expected = compilation.GetSemanticModel(syntaxTree).GetTypeInfo(node).Type;
             Assert.AreEqual(true, compilation.GetSemanticModel(syntaxTree).TryGetType(node, CancellationToken.None, out var type));
@@ -104,7 +104,7 @@ namespace N
     {
     }
 }".AssertReplace("ObsoleteAttribute", typeName));
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var qualifiedType = QualifiedType.FromType(typeof(System.ObsoleteAttribute));
             var attribute = syntaxTree.Find<AttributeSyntax>(typeName);
@@ -128,7 +128,7 @@ namespace N
         public string? P { get; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, Settings.Default.MetadataReferences);
             var node = syntaxTree.FindPropertyDeclaration("P");
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var propertySymbol = semanticModel.GetDeclaredSymbol(node)!;
@@ -156,7 +156,7 @@ namespace N
         public string P { get; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, Settings.Default.MetadataReferences);
             var node = syntaxTree.FindPropertyDeclaration("P");
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var propertySymbol = semanticModel.GetDeclaredSymbol(node)!;
@@ -183,7 +183,7 @@ namespace N
         public string P { get; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree, OtherTree }, Settings.Default.MetadataReferences);
             var node = syntaxTree.FindPropertyDeclaration("P");
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var propertySymbol = semanticModel.GetDeclaredSymbol(node)!;

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
 {
     using System.Linq;
     using System.Threading;
@@ -29,7 +29,7 @@ namespace N
 }";
             code = code.AssertReplace("value = 1", mutation);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
             using var walker = MutationWalker.For(symbol, semanticModel, CancellationToken.None);

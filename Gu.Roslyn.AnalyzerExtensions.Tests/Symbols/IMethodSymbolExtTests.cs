@@ -31,7 +31,7 @@ namespace N
     }
 }".AssertReplace("new C(1, 2)", objectCreation);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindConstructorDeclaration("C(int n, int m)"), CancellationToken.None, out var method));
             Assert.AreEqual(true, method.TryFindParameter(syntaxTree.FindArgument(arg), out var parameter));
@@ -59,7 +59,7 @@ namespace N
     }
 }".AssertReplace("new C(1, 2)", objectCreation);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true, semanticModel.TryGetSymbol(syntaxTree.FindConstructorDeclaration("C(int n, params int[] ms)"), CancellationToken.None, out var method));
             Assert.AreEqual(true, method.TryFindParameter(syntaxTree.FindArgument(arg), out var parameter));
@@ -82,7 +82,7 @@ namespace N
     }
 }";
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(true,     semanticModel.TryGetSymbol(syntaxTree.FindInvocation("a.M(2)"), CancellationToken.None, out var method));
             Assert.AreEqual(expected,     method.TryFindParameter(name, out var parameter));

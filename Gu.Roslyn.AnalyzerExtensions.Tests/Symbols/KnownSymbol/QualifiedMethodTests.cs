@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -20,7 +20,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindMethodDeclaration("M"));
             var qualifiedMethod = new QualifiedMethod(new QualifiedType("N.C"), "M");

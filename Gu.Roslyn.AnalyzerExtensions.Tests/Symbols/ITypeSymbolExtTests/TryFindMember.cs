@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ITypeSymbolExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.ITypeSymbolExtTests
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -118,7 +118,7 @@ namespace N
         public override string ToString() => ""abc"";
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var type = semanticModel.GetDeclaredSymbol(typeDeclaration);
@@ -160,7 +160,7 @@ namespace N
     {
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var typeDeclaration = syntaxTree.FindClassDeclaration("C");
             var type = semanticModel.GetDeclaredSymbol(typeDeclaration);

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UsingDirectivesInsideNamespace
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UsingDirectivesInsideNamespace
 {
     using Gu.Roslyn.Asserts;
     using Microsoft.CodeAnalysis.CSharp;
@@ -14,7 +14,7 @@ namespace N
 {
 }");
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
         }
@@ -28,7 +28,7 @@ namespace N
     using System;
 }");
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
         }
@@ -44,7 +44,7 @@ namespace N
     using System.Collections;
 }");
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(CodeStyleResult.Mixed, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
         }
@@ -59,7 +59,7 @@ namespace N
 {
 }");
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             Assert.AreEqual(CodeStyleResult.No, CodeStyle.UsingDirectivesInsideNamespace(semanticModel));
         }

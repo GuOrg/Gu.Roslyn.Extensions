@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
 {
     using System.Linq;
     using System.Threading;
@@ -26,7 +26,7 @@ namespace N
         public string Text { get; set; } = text;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("new C()");
             using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -62,7 +62,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindExpression("ValuePropertyKey.DependencyProperty");
             using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -88,7 +88,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("M");
             using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
@@ -119,7 +119,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindMethodDeclaration("M");
             using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);

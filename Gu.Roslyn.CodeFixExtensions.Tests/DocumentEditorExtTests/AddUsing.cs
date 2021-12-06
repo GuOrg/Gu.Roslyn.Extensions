@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
 {
     using System.Linq;
     using System.Threading.Tasks;
@@ -86,7 +86,7 @@ namespace N
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code);
             var document = sln.Projects.First().Documents.First();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -107,7 +107,7 @@ namespace N
 namespace N
 {
 }";
-            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code);
             var document = sln.Projects.First().Documents.First();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -134,7 +134,7 @@ namespace N
 {
     using System.Text;
 }";
-            var sln = CodeFactory.CreateSolution(code, MetadataReferences.FromAttributes());
+            var sln = CodeFactory.CreateSolution(code);
             var document = sln.Projects.First().Documents.First();
             var editor = await DocumentEditor.CreateAsync(document).ConfigureAwait(false);
 
@@ -170,7 +170,7 @@ namespace N
 {
     using N.Extensions;
 }";
-            var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.Extensions.C");
+            var type = editor.SemanticModel.Compilation.GetTypeByMetadataName("N.Extensions.C");
             _ = editor.AddUsing(type);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
@@ -197,7 +197,7 @@ namespace A.B.C
 {
     using A.B.C.Extensions;
 }";
-            var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("A.B.C.Extensions.C");
+            var type = editor.SemanticModel.Compilation.GetTypeByMetadataName("A.B.C.Extensions.C");
             _ = editor.AddUsing(type);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
@@ -223,7 +223,7 @@ namespace N.Extensions
 namespace N.Extensions
 {
 }";
-            var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.C");
+            var type = editor.SemanticModel.Compilation.GetTypeByMetadataName("N.C");
             _ = editor.AddUsing(type);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
@@ -249,7 +249,7 @@ namespace A.B.C.Extensions
 namespace A.B.C.Extensions
 {
 }";
-            var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("A.B.C.C1");
+            var type = editor.SemanticModel.Compilation.GetTypeByMetadataName("A.B.C.C1");
             _ = editor.AddUsing(type);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
@@ -277,7 +277,7 @@ namespace N
 {
     class C2 { }
 }";
-            var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.C1");
+            var type = editor.SemanticModel.Compilation.GetTypeByMetadataName("N.C1");
             _ = editor.AddUsing(type);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
@@ -305,7 +305,7 @@ namespace A.B.C
 {
     class C2 { }
 }";
-            var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("A.B.C.C1");
+            var type = editor.SemanticModel.Compilation.GetTypeByMetadataName("A.B.C.C1");
             _ = editor.AddUsing(type);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
@@ -331,7 +331,7 @@ namespace N
 namespace N
 {
 }";
-            var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.C`1");
+            var type = editor.SemanticModel.Compilation.GetTypeByMetadataName("N.C`1");
             _ = editor.AddUsing(type);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }
@@ -357,7 +357,7 @@ namespace N
 namespace N
 {
 }";
-            var type = editor.SemanticModel.Compilation.ObjectType.ContainingAssembly.GetTypeByMetadataName("N.C1");
+            var type = editor.SemanticModel.Compilation.GetTypeByMetadataName("N.C1");
             _ = editor.AddUsing(type);
             CodeAssert.AreEqual(expected, editor.GetChangedDocument());
         }

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
 {
     using System.Threading;
     using Gu.Roslyn.Asserts;
@@ -44,7 +44,7 @@ namespace N
     public class C<T> { }
 }".AssertReplace("\"text\"", expression);
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var invocation = syntaxTree.Find<AttributeSyntax>("Obsolete").ArgumentList.Arguments[0];
             Assert.AreEqual(true,     invocation.TryGetStringValue(semanticModel, CancellationToken.None, out var name));

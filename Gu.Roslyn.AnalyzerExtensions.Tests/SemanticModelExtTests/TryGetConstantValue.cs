@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.SemanticModelExtTests
 {
     using System.Reflection;
     using System.Threading;
@@ -123,7 +123,7 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, MetadataReferences.FromAttributes());
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
             var semanticModel = compilation.GetSemanticModel(syntaxTree);
             var node = syntaxTree.FindEqualsValueClause("=").Value;
             Assert.AreEqual(true, semanticModel.TryGetConstantValue<BindingFlags>(node, CancellationToken.None, out var value));
