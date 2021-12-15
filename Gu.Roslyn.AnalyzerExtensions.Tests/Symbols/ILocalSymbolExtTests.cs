@@ -1,9 +1,12 @@
 ﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
 {
     using System.Threading;
+
     using Gu.Roslyn.Asserts;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
+
     using NUnit.Framework;
 
     // ReSharper disable once InconsistentNaming
@@ -107,6 +110,34 @@ namespace N
             Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out ILocalSymbol symbol));
             Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
             CodeAssert.AreEqual("(sender, args) =>\r\n            {\r\n                var i = 0;\r\n            }", scope.ToString());
+        }
+
+        [Test]
+        public static void LocalInForEach()
+        {
+            var code = @"
+namespace N
+{
+    using System;
+
+    class C
+    {
+        public void M()
+        {
+            foreach (var x in new[] { 1, 2 })
+            {
+                _  = x.ToString();
+            }
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindIdentifierName("x");
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out ILocalSymbol symbol));
+            Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
+            CodeAssert.AreEqual("{\r\n                _  = x.ToString();\r\n            }", scope.ToString());
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -22,6 +22,12 @@ namespace Gu.Roslyn.AnalyzerExtensions
         {
             if (local.TrySingleDeclaration(cancellationToken, out var declaration))
             {
+                if (declaration is ForEachStatementSyntax forEachStatement)
+                {
+                    scope = forEachStatement.Statement;
+                    return true;
+                }
+
                 if (declaration.TryFirstAncestor<AnonymousFunctionExpressionSyntax>(out var lambda))
                 {
                     scope = lambda;
