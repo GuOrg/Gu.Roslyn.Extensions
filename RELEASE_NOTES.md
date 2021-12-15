@@ -1,3 +1,6 @@
+#### 0.16.3
+* BUGFIX: Handle top level statements
+
 #### 0.16.2
 * Add missing annotation to T4 output.
 

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.16.0</Version>
+    <Version>0.16.3</Version>
     <Authors>Johan Larsson</Authors>
     <Description>Helpers &amp; extensions for writing Roslyn analyzers and code fixes.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -16,6 +16,8 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Roslyn.Extensions</RepositoryUrl>
     <PackageTags>Roslyn analyzer codefix</PackageTags>
     <PackageReleaseNotes>
+      0.16.3
+      BUGFIX: Handle top level statements
       0.16.0
       BREAKING: Update Roslyn dependency to 4.0.1
       0.15.7
