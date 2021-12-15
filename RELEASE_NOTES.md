@@ -1,3 +1,6 @@
+#### 0.16.4
+* AMEND: Fic warning 
+
 #### 0.16.3
 * BUGFIX: Handle top level statements
 
