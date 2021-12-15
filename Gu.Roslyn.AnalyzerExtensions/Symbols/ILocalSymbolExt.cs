@@ -40,6 +40,12 @@
                     return true;
                 }
 
+                if (declaration.TryFirstAncestor<GlobalStatementSyntax>(out var global))
+                {
+                    scope = global.Parent;
+                    return true;
+                }
+
                 if (declaration.TryFirstAncestor<MemberDeclarationSyntax>(out var member))
                 {
                     scope = member;

@@ -139,5 +139,20 @@ namespace N
             Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
             CodeAssert.AreEqual("{\r\n                _  = x.ToString();\r\n            }", scope.ToString());
         }
+
+        [Test]
+        public static void TopLevel()
+        {
+            var code = @"
+var x = 1;
+var y = 2;";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var node = syntaxTree.FindVariableDeclaration("x");
+            Assert.AreEqual(true, semanticModel.TryGetSymbol(node, CancellationToken.None, out ILocalSymbol symbol));
+            Assert.AreEqual(true, symbol.TryGetScope(CancellationToken.None, out var scope));
+            CodeAssert.AreEqual("var x = 1;\r\nvar y = 2;", scope.ToString());
+        }
     }
 }
