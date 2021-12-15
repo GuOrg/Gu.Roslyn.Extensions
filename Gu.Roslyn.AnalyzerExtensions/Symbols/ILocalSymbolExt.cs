@@ -43,7 +43,7 @@
                 if (declaration.TryFirstAncestor<GlobalStatementSyntax>(out var global))
                 {
                     scope = global.Parent;
-                    return true;
+                    return scope is not null;
                 }
 
                 if (declaration.TryFirstAncestor<MemberDeclarationSyntax>(out var member))
