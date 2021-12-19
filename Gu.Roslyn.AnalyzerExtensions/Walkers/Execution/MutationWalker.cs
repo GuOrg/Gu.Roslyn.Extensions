@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -235,7 +236,11 @@
         /// <inheritdoc />
         public override void VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
         {
-            this.postfixUnaries.Add(node);
+            if (!node.IsKind(SyntaxKind.SuppressNullableWarningExpression))
+            {
+                this.postfixUnaries.Add(node);
+            }
+
             base.VisitPostfixUnaryExpression(node);
         }
 

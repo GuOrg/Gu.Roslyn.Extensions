@@ -37,5 +37,28 @@ namespace N
             Assert.AreEqual(true, walker.TrySingle(out var single));
             Assert.AreEqual(mutation, single.ToString());
         }
+
+        [Test]
+        public static void IgnoresBang()
+        {
+            var code = @"
+namespace N
+{
+    public class C
+    {
+        public C()
+        {
+            string? value = null;
+            var x = value!;
+        }
+    }
+}";
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+            var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
+            using var walker = MutationWalker.For(symbol, semanticModel, CancellationToken.None);
+            Assert.AreEqual(true, walker.IsEmpty);
+        }
     }
 }
