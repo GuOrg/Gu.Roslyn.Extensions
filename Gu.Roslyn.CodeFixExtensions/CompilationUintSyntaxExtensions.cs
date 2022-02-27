@@ -94,6 +94,17 @@
                     return compilationUnit.ReplaceNode(compilationUnit, compilationUnit.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
                 }
 
+                if (compilationUnit.Members.TryFirst(out var first) &&
+                    first is FileScopedNamespaceDeclarationSyntax fsns)
+                {
+                    if (CodeStyle.UsingDirectivesInsideNamespace(semanticModel) == CodeStyleResult.Yes)
+                    {
+                        return compilationUnit.ReplaceNode(compilationUnit, compilationUnit.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
+                    }
+
+                    return compilationUnit.ReplaceNode(fsns, fsns.WithUsings(SyntaxFactory.SingletonList(usingDirective)));
+                }
+
                 return compilationUnit;
             }
 
