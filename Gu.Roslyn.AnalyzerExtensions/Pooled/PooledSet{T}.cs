@@ -13,7 +13,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
     /// A <see cref="HashSet{T}"/> for re-use.
     /// </summary>
     /// <typeparam name="T">The type of items in the set.</typeparam>
-    [DebuggerTypeProxy(typeof(PooledSetDebugView<>))]
+    [DebuggerTypeProxy(typeof(PooledSet<>.DebugView))]
     [DebuggerDisplay("Count = {this.Count}, refCount = {this.refCount}")]
     public sealed class PooledSet<T> : IDisposable, IReadOnlyCollection<T>
     {
@@ -157,6 +157,19 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 Debug.Assert(this.refCount == 0, $"{nameof(this.ThrowIfDisposed)} set.refCount == {this.refCount}");
                 throw new ObjectDisposedException(typeof(PooledSet<T>).FullName);
             }
+        }
+
+        private sealed class DebugView
+        {
+            private readonly PooledSet<T> set;
+
+            internal DebugView(PooledSet<T> set)
+            {
+                this.set = set ?? throw new ArgumentNullException(nameof(set));
+            }
+
+            [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+            internal T[] Items => this.set.ToArray();
         }
     }
 }

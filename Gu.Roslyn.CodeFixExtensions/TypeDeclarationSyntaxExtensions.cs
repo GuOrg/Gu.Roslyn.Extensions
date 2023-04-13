@@ -333,7 +333,7 @@
             return (TContaining)containingType.WithMembers(containingType.Members.Move(oldIndex, newIndex));
         }
 
-        private class IndentCommentRewriter : CSharpSyntaxRewriter
+        private sealed class IndentCommentRewriter : CSharpSyntaxRewriter
         {
             private readonly string whitespace;
             private int n;

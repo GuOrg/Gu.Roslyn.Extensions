@@ -75,7 +75,7 @@ namespace N
         }
 
 #pragma warning disable CA1812, GURA07 // Avoid uninstantiated internal classes
-        private class Nested
+        private sealed class Nested
 #pragma warning restore CA1812, GURA07 // Avoid uninstantiated internal classes
         {
         }

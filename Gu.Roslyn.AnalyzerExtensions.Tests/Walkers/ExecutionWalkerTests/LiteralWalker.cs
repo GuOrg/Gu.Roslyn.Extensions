@@ -1,4 +1,4 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
 {
     using System.Collections.Generic;
     using System.Threading;
@@ -6,7 +6,7 @@ namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    internal class LiteralWalker : ExecutionWalker<LiteralWalker>
+    internal sealed class LiteralWalker : ExecutionWalker<LiteralWalker>
     {
         private readonly List<LiteralExpressionSyntax> literals = new();
 
