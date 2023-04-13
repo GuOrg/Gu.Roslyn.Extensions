@@ -38,7 +38,7 @@
         /// <inheritdoc />
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
-            if (node is { Identifier: { ValueText: { } candidate } } &&
+            if (node is { Identifier.ValueText: { } candidate } &&
                 candidate == this.valueText)
             {
                 this.identifierNames.Add(node);

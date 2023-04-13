@@ -30,9 +30,9 @@
             {
                 switch (returned)
                 {
-                    case MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _, Name: { Identifier: { ValueText: { } name } } }:
+                    case MemberAccessExpressionSyntax { Expression: ThisExpressionSyntax _, Name.Identifier.ValueText: { } name }:
                         return type.TryFindField(name, out backingField);
-                    case IdentifierNameSyntax { Identifier: { ValueText: { } name } }:
+                    case IdentifierNameSyntax { Identifier.ValueText: { } name }:
                         return type.TryFindField(name, out backingField);
                 }
             }
@@ -56,7 +56,7 @@
 
             switch (property)
             {
-                case { ExpressionBody: { Expression: { } expression } }:
+                case { ExpressionBody.Expression: { } expression }:
                     result = expression;
                     return true;
             }
@@ -65,10 +65,10 @@
             {
                 switch (getter)
                 {
-                    case { ExpressionBody: { Expression: { } expression } }:
+                    case { ExpressionBody.Expression: { } expression }:
                         result = expression;
                         return true;
-                    case { Body: { Statements: { Count: 1 } statements } }
+                    case { Body.Statements: { Count: 1 } statements }
                         when statements.TrySingle(out var statement) &&
                              statement is ReturnStatementSyntax { Expression: { } expression }:
                         result = expression;

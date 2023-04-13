@@ -133,7 +133,7 @@
                 throw new System.ArgumentNullException(nameof(property));
             }
 
-            return property is { AccessorList: { Accessors: { Count: 1 } accessors } } &&
+            return property is { AccessorList.Accessors: { Count: 1 } accessors } &&
                    accessors[0] is { Body: null, ExpressionBody: null } accessor &&
                    accessor.IsKind(SyntaxKind.GetAccessorDeclaration);
         }

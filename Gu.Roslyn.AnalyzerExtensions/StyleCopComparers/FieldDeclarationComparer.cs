@@ -140,7 +140,7 @@
         private static bool TryGetMember(FieldDeclarationSyntax field, [NotNullWhen(true)] out MemberDeclarationSyntax? result)
         {
             result = null;
-            if (field is { Declaration: { Variables: { Count: 1 } variables }, Parent: { } } &&
+            if (field is { Declaration.Variables: { Count: 1 } variables, Parent: { } } &&
                 variables[0].Identifier is { ValueText: { } name })
             {
                 using var walker = SpecificIdentifierNameWalker.Borrow(field.Parent, name);
@@ -180,7 +180,7 @@
                     return accessor.FirstAncestor<PropertyDeclarationSyntax>();
                 }
 
-                if (usage.Parent is ArgumentSyntax { Parent: ArgumentListSyntax { Arguments: { Count: 2 }, Parent: InvocationExpressionSyntax setValue } } &&
+                if (usage.Parent is ArgumentSyntax { Parent: ArgumentListSyntax { Arguments.Count: 2, Parent: InvocationExpressionSyntax setValue } } &&
                     setValue.TryGetMethodName(out var methodName) &&
                     methodName == "SetValue")
                 {
@@ -199,7 +199,7 @@
                     }
                 }
 
-                if (usage.Parent is ArgumentSyntax { Parent: ArgumentListSyntax { Arguments: { Count: 1 }, Parent: InvocationExpressionSyntax getValue } } &&
+                if (usage.Parent is ArgumentSyntax { Parent: ArgumentListSyntax { Arguments.Count: 1, Parent: InvocationExpressionSyntax getValue } } &&
                     getValue.TryGetMethodName(out methodName) &&
                     methodName == "GetValue")
                 {
@@ -224,8 +224,8 @@
                 {
                     return usage switch
                     {
-                        { Parent: AssignmentExpressionSyntax { Right: IdentifierNameSyntax { Identifier: { ValueText: "value" } } } } => true,
-                        { Parent: ArgumentSyntax { RefKindKeyword: { ValueText: "ref" }, Parent: ArgumentListSyntax { Arguments: { } arguments } } }
+                        { Parent: AssignmentExpressionSyntax { Right: IdentifierNameSyntax { Identifier.ValueText: "value" } } } => true,
+                        { Parent: ArgumentSyntax { RefKindKeyword.ValueText: "ref", Parent: ArgumentListSyntax { Arguments: { } arguments } } }
                             when arguments.Count >= 2
                             => true,
                         _ => false,

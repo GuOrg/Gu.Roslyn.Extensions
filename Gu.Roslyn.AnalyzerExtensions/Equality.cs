@@ -329,7 +329,7 @@
 
                 return candidate.Expression switch
                 {
-                    MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier: { ValueText: "RuntimeHelpers" } } } => true,
+                    MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier.ValueText: "RuntimeHelpers" } } => true,
                     MemberAccessExpressionSyntax { Expression: { } expression }
                         when MemberPath.TryFindLast(expression, out var last) &&
                              last.ValueText == "RuntimeHelpers"
@@ -383,7 +383,7 @@
 
                 return candidate.Expression switch
                 {
-                    MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier: { ValueText: "Nullable" } } } => true,
+                    MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier.ValueText: "Nullable" } } => true,
                     MemberAccessExpressionSyntax memberAccess
                         when MemberPath.TryFindLast(memberAccess.Expression, out var last) &&
                              last.ValueText == "Nullable"
@@ -490,7 +490,7 @@
             bool IsCorrectSymbol()
             {
                 return semanticModel.TryGetSymbol(candidate, cancellationToken, out var method) &&
-                       method is { IsStatic: false, Parameters: { Length: 2 } } &&
+                       method is { IsStatic: false, Parameters.Length: 2 } &&
                        method.ContainingType.Is(QualifiedType.System.Collections.Generic.IEqualityComparerOfT);
             }
         }
@@ -635,7 +635,7 @@
 
             foreach (var member in candidate.Members)
             {
-                if (member is MethodDeclarationSyntax { ParameterList: { Parameters: { } parameters } } method &&
+                if (member is MethodDeclarationSyntax { ParameterList.Parameters: { } parameters } method &&
                     method.Modifiers.Any(SyntaxKind.OverrideKeyword))
                 {
                     if (parameters.Count == 0 &&
@@ -664,7 +664,7 @@
         public static bool IsOverriden(INamedTypeSymbol candidate)
         {
             return candidate.TryFindFirstMethod(nameof(Equals), x => x.Parameters.TrySingle(out var parameter) && parameter.Type == QualifiedType.System.Object && x.IsOverride, out _) ||
-                   candidate.TryFindFirstMethod(nameof(GetHashCode), x => x is { IsOverride: true, Parameters: { Length: 0 } }, out _);
+                   candidate.TryFindFirstMethod(nameof(GetHashCode), x => x is { IsOverride: true, Parameters.Length: 0 }, out _);
         }
 
         /// <summary>

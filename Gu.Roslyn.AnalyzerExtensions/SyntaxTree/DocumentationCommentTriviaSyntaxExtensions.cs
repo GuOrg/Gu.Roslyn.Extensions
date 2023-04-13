@@ -23,7 +23,7 @@
             }
 
             element = null;
-            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag: { Name: { LocalName: { Text: "summary" } } } }, out element);
+            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag.Name.LocalName.Text: "summary" }, out element);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@
             }
 
             element = null;
-            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag: { Name: { LocalName: { Text: "returns" } } } }, out element);
+            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag.Name.LocalName.Text: "returns" }, out element);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@
             }
 
             element = null;
-            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag: { Name: { LocalName: { Text: "param" } } } } && x.HasNameAttribute(parameterName), out element);
+            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag.Name.LocalName.Text: "param" } && x.HasNameAttribute(parameterName), out element);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@
             }
 
             element = null;
-            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag: { Name: { LocalName: { Text: "typeparam" } } } } && x.HasNameAttribute(parameterName), out element);
+            return comment.Content.TrySingleOfType<XmlNodeSyntax, XmlElementSyntax>(x => x is { StartTag.Name.LocalName.Text: "typeparam" } && x.HasNameAttribute(parameterName), out element);
         }
     }
 }

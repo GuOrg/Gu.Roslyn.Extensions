@@ -66,7 +66,7 @@
             return candidate switch
             {
                 { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
-                { Name: { Identifier: { ValueText: { } valueText } } } => valueText == symbol.Name &&
+                { Name.Identifier.ValueText: { } valueText } => valueText == symbol.Name &&
                                                                           semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
                                                                           candidateSymbol == symbol,
                 _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
@@ -98,7 +98,7 @@
             return candidate switch
             {
                 { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
-                { Name: { Identifier: { ValueText: { } valueText } } } => valueText == symbol.Name &&
+                { Name.Identifier.ValueText: { } valueText } => valueText == symbol.Name &&
                                                                           semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
                                                                           candidateSymbol == symbol,
                 _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
@@ -130,7 +130,7 @@
             return candidate switch
             {
                 { Name: IdentifierNameSyntax identifier } => identifier.IsSymbol(symbol, semanticModel, cancellationToken),
-                { Name: { Identifier: { ValueText: { } valueText } } } => valueText == symbol.Name &&
+                { Name.Identifier.ValueText: { } valueText } => valueText == symbol.Name &&
                                                                           semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&
                                                                           candidateSymbol == symbol,
                 _ => semanticModel.TryGetSymbol(candidate, cancellationToken, out var candidateSymbol) &&

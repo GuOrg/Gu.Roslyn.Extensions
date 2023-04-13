@@ -73,7 +73,7 @@
                 using var walker = Borrow(root);
                 foreach (var candidate in walker.aliases)
                 {
-                    if (candidate is { Alias: { Name: { Identifier: { ValueText: { } valueText } } } } &&
+                    if (candidate is { Alias.Name.Identifier.ValueText: { } valueText } &&
                         valueText == name)
                     {
                         result = candidate;

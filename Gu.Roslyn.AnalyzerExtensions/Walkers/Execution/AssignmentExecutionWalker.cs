@@ -118,7 +118,7 @@
                 {
                     if (declaration.Declaration is { Variables: { } variables } &&
                         variables.TryFirst(x => x.Initializer is { }, out var variable) &&
-                        variable is { Initializer: { Value: { } value } } &&
+                        variable is { Initializer.Value: { } value } &&
                         IsMatch(currentSymbol, value, semanticModel, cancellationToken) &&
                         semanticModel.TryGetSymbol(variable, cancellationToken, out ILocalSymbol? local))
                     {
@@ -131,7 +131,7 @@
                 {
                     foreach (var argument in walker.arguments)
                     {
-                        if (argument is { Expression: IdentifierNameSyntax { Identifier: { ValueText: { } name } }, Parent: ArgumentListSyntax { Parent: { } } } &&
+                        if (argument is { Expression: IdentifierNameSyntax { Identifier.ValueText: { } name }, Parent: ArgumentListSyntax { Parent: { } } } &&
                             name == currentSymbol.Name &&
                             walker.Recursion.Target(argument) is { Symbol: { } parameter, Declaration: { } target })
                         {
@@ -336,7 +336,7 @@
                     return IsMatch(symbol, left, semanticModel, cancellationToken);
                 case CastExpressionSyntax { Expression: { } castee }:
                     return IsMatch(symbol, castee, semanticModel, cancellationToken);
-                case ObjectCreationExpressionSyntax { ArgumentList: { Arguments: { } arguments } }:
+                case ObjectCreationExpressionSyntax { ArgumentList.Arguments: { } arguments }:
                     foreach (var argument in arguments)
                     {
                         if (IsMatch(symbol, argument.Expression, semanticModel, cancellationToken))

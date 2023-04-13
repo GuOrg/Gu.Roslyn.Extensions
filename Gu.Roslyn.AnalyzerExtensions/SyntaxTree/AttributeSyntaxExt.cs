@@ -22,7 +22,7 @@
             }
 
             argument = null;
-            return attribute is { ArgumentList: { Arguments: { Count: 1 } arguments } } &&
+            return attribute is { ArgumentList.Arguments: { Count: 1 } arguments } &&
                    arguments.TrySingle(out argument);
         }
 
@@ -47,9 +47,9 @@
                 {
                     switch (candidate)
                     {
-                        case { NameColon: { Name: { Identifier: { } nameColon } } }
+                        case { NameColon.Name.Identifier: { } nameColon }
                             when nameColon.ValueText == name:
-                        case { NameEquals: { Name: { Identifier: { } nameEquals } } }
+                        case { NameEquals.Name.Identifier: { } nameEquals }
                             when nameEquals.ValueText == name:
                             argument = candidate;
                             return true;

@@ -275,7 +275,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
                 {
                     CastExpressionSyntax { Expression: { } e }
                         => IsRepresentationPreservingConversion(semanticModel, e, destination),
-                    BinaryExpressionSyntax { Left: { } e, OperatorToken: { ValueText: "as" } }
+                    BinaryExpressionSyntax { Left: { } e, OperatorToken.ValueText: "as" }
                         => IsRepresentationPreservingConversion(semanticModel, e, destination),
                     _ => false,
                 };

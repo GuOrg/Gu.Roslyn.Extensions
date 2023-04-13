@@ -180,11 +180,11 @@ namespace Gu.Roslyn.AnalyzerExtensions
             {
                 switch (member)
                 {
-                    case EventDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration
+                    case EventDeclarationSyntax { Identifier.ValueText: { } valueText } declaration
                         when valueText == name:
                         match = declaration;
                         return true;
-                    case EventFieldDeclarationSyntax { Declaration: { Variables: { } variables } } eventField
+                    case EventFieldDeclarationSyntax { Declaration.Variables: { } variables } eventField
                         when variables.TrySingle(x => x.Identifier.ValueText == name, out _):
                         match = eventField;
                         return true;
@@ -227,7 +227,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             foreach (var member in type.Members)
             {
-                if (member is PropertyDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration &&
+                if (member is PropertyDeclarationSyntax { Identifier.ValueText: { } valueText } declaration &&
                     valueText == name)
                 {
                     match = declaration;
@@ -397,7 +397,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             foreach (var member in type.Members)
             {
-                if (member is MethodDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration &&
+                if (member is MethodDeclarationSyntax { Identifier.ValueText: { } valueText } declaration &&
                     valueText == name)
                 {
                     match = declaration;
@@ -436,7 +436,7 @@ namespace Gu.Roslyn.AnalyzerExtensions
 
             foreach (var member in type.Members)
             {
-                if (member is MethodDeclarationSyntax { Identifier: { ValueText: { } valueText } } declaration &&
+                if (member is MethodDeclarationSyntax { Identifier.ValueText: { } valueText } declaration &&
                     valueText == name &&
                     predicate(declaration))
                 {

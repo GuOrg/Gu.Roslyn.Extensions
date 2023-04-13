@@ -22,7 +22,7 @@
                 throw new System.ArgumentNullException(nameof(element));
             }
 
-            if (element.StartTag is { Name: { LocalName: { Text: { } text } } })
+            if (element.StartTag is { Name.LocalName.Text: { } text })
             {
                 localName = text;
                 return true;
@@ -84,7 +84,7 @@
         public static bool HasNameAttribute(this XmlElementSyntax element, string name)
         {
             return element.TryGetNameAttribute(out var attribute) &&
-                   attribute.Identifier is { Identifier: { ValueText: { } valueText } } &&
+                   attribute.Identifier is { Identifier.ValueText: { } valueText } &&
                    valueText == name;
         }
     }

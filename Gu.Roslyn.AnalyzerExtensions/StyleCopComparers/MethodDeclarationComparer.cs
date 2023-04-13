@@ -71,7 +71,7 @@
                 {
                     foreach (var @using in usings)
                     {
-                        if (@using.Name is QualifiedNameSyntax { Left: IdentifierNameSyntax { Identifier: { ValueText: "System" } }, Right: IdentifierNameSyntax { Identifier: { ValueText: "Windows" } } })
+                        if (@using.Name is QualifiedNameSyntax { Left: IdentifierNameSyntax { Identifier.ValueText: "System" }, Right: IdentifierNameSyntax { Identifier.ValueText: "Windows" } })
                         {
                             return true;
                         }
@@ -100,30 +100,30 @@
             long callbackStart = int.MaxValue;
             result = method switch
             {
-                { Identifier: { ValueText: { } name }, ParameterList: { Parameters: { Count: 1 } } }
+                { Identifier.ValueText: { } name, ParameterList.Parameters.Count: 1 }
                     when name.StartsWith("Get", StringComparison.Ordinal) &&
-                         FindInvocation(method, "GetValue") is { ArgumentList: { Arguments: { Count: 1 } arguments } } &&
+                         FindInvocation(method, "GetValue") is { ArgumentList.Arguments: { Count: 1 } arguments } &&
                          arguments[0].Expression is IdentifierNameSyntax fieldName &&
                          FindDeclaration(fieldName) is { } field
                     => field.SpanStart,
-                { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "void" } }, Identifier: { ValueText: { } name }, ParameterList: { Parameters: { Count: 2 } parameters } }
+                { ReturnType: PredefinedTypeSyntax { Keyword.ValueText: "void" }, Identifier.ValueText: { } name, ParameterList.Parameters: { Count: 2 } parameters }
                     when
-                    name.StartsWith("Set", StringComparison.Ordinal) && FindInvocation(method, "SetValue") is { ArgumentList: { Arguments: { Count: 2 } arguments } } &&
+                    name.StartsWith("Set", StringComparison.Ordinal) && FindInvocation(method, "SetValue") is { ArgumentList.Arguments: { Count: 2 } arguments } &&
                     arguments[0].Expression is IdentifierNameSyntax fieldName && arguments[1].Expression is IdentifierNameSyntax arg1 &&
                     arg1.Identifier.ValueText == parameters[1].Identifier.ValueText && FindDeclaration(fieldName) is { } field
                     => field.Declaration.SpanStart,
-                { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "void" } }, ParameterList: { Parameters: { Count: 2 } parameters } }
-                    when parameters[0].Type is IdentifierNameSyntax { Identifier: { ValueText: "DependencyObject" } } &&
-                         parameters[1].Type is IdentifierNameSyntax { Identifier: { ValueText: "DependencyPropertyChangedEventArgs" } } &&
+                { ReturnType: PredefinedTypeSyntax { Keyword.ValueText: "void" }, ParameterList.Parameters: { Count: 2 } parameters }
+                    when parameters[0].Type is IdentifierNameSyntax { Identifier.ValueText: "DependencyObject" } &&
+                         parameters[1].Type is IdentifierNameSyntax { Identifier.ValueText: "DependencyPropertyChangedEventArgs" } &&
                          FindCallbackInvocation() is { } usage
                     => callbackStart + usage.SpanStart,
-                { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "object" } }, ParameterList: { Parameters: { Count: 2 } parameters } }
-                    when parameters[0].Type is IdentifierNameSyntax { Identifier: { ValueText: "DependencyObject" } } &&
-                         parameters[1].Type is PredefinedTypeSyntax { Keyword: { ValueText: "object" } } &&
+                { ReturnType: PredefinedTypeSyntax { Keyword.ValueText: "object" }, ParameterList.Parameters: { Count: 2 } parameters }
+                    when parameters[0].Type is IdentifierNameSyntax { Identifier.ValueText: "DependencyObject" } &&
+                         parameters[1].Type is PredefinedTypeSyntax { Keyword.ValueText: "object" } &&
                          FindCallbackInvocation() is { } usage
                     => callbackStart + usage.SpanStart,
-                { ReturnType: PredefinedTypeSyntax { Keyword: { ValueText: "bool" } }, ParameterList: { Parameters: { Count: 1 } parameters } }
-                    when parameters[0].Type is PredefinedTypeSyntax { Keyword: { ValueText: "object" } } &&
+                { ReturnType: PredefinedTypeSyntax { Keyword.ValueText: "bool" }, ParameterList.Parameters: { Count: 1 } parameters }
+                    when parameters[0].Type is PredefinedTypeSyntax { Keyword.ValueText: "object" } &&
                          FindCallbackInvocation() is { } usage
                     => callbackStart + usage.SpanStart,
                 _ => -1,
@@ -159,8 +159,8 @@
                 return expression switch
                 {
                     IdentifierNameSyntax identifierName
-                        when FindField(identifierName.Identifier.ValueText) is { Declaration: { Variables: { Count: 1 } variables } } field &&
-                             variables[0] is { Initializer: { Value: { } value } }
+                        when FindField(identifierName.Identifier.ValueText) is { Declaration.Variables: { Count: 1 } variables } field &&
+                             variables[0] is { Initializer.Value: { } value }
                         =>
                         value switch
                         {

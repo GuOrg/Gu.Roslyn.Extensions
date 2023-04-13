@@ -33,7 +33,7 @@
                 {
                     case IfStatementSyntax { Statement: BlockSyntax whenTrue } when ContainsGoto(whenTrue):
                         return true;
-                    case IfStatementSyntax { Else: { Statement: BlockSyntax elseBlock } } when ContainsGoto(elseBlock):
+                    case IfStatementSyntax { Else.Statement: BlockSyntax elseBlock } when ContainsGoto(elseBlock):
                         return true;
                 }
             }

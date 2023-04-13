@@ -20,7 +20,7 @@
                 throw new System.ArgumentNullException(nameof(parameter));
             }
 
-            if (parameter is { Type: { SpecialType: SpecialType.System_String }, HasExplicitDefaultValue: true })
+            if (parameter is { Type.SpecialType: SpecialType.System_String, HasExplicitDefaultValue: true })
             {
                 foreach (var attribute in parameter.GetAttributes())
                 {

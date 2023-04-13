@@ -134,13 +134,13 @@
         {
             switch (expression)
             {
-                case IdentifierNameSyntax { Identifier: { ValueText: { } valueText } }:
+                case IdentifierNameSyntax { Identifier.ValueText: { } valueText }:
                     name = valueText;
                     return true;
-                case MemberAccessExpressionSyntax { Name: { Identifier: { ValueText: { } valueText } } }:
+                case MemberAccessExpressionSyntax { Name.Identifier.ValueText: { } valueText }:
                     name = valueText;
                     return true;
-                case MemberBindingExpressionSyntax { Name: { Identifier: { ValueText: { } valueText } } }:
+                case MemberBindingExpressionSyntax { Name.Identifier.ValueText: { } valueText }:
                     name = valueText;
                     return true;
                 case ConditionalAccessExpressionSyntax { WhenNotNull: { } whenNotNull }:
@@ -207,7 +207,7 @@
                     case CastExpressionSyntax cast:
                         base.Visit(cast.Expression);
                         return;
-                    case PostfixUnaryExpressionSyntax { OperatorToken: { ValueText: "!" } } postfix:
+                    case PostfixUnaryExpressionSyntax { OperatorToken.ValueText: "!" } postfix:
                         base.Visit(postfix.Operand);
                         return;
                     case InvocationExpressionSyntax { Expression: IdentifierNameSyntax _ }:

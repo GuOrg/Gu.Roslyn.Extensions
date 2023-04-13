@@ -44,7 +44,7 @@
 
             switch (argumentList)
             {
-                case { Arguments: { Count: 0 } }:
+                case { Arguments.Count: 0 }:
                     argument = null;
                     return false;
                 case { Arguments: { } arguments }:
@@ -166,7 +166,7 @@
 
             foreach (var candidate in argumentList.Arguments)
             {
-                if (candidate.NameColon is { Name: { Identifier: { ValueText: { } valueText } } } &&
+                if (candidate.NameColon is { Name.Identifier.ValueText: { } valueText } &&
                     valueText == name)
                 {
                     argument = candidate;

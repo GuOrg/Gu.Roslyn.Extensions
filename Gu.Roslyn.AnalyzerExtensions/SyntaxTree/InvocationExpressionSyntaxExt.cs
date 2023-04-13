@@ -99,13 +99,13 @@
 
             switch (invocation.Expression)
             {
-                case SimpleNameSyntax { Identifier: { ValueText: { } valueText } }:
+                case SimpleNameSyntax { Identifier.ValueText: { } valueText }:
                     name = valueText;
                     return true;
-                case MemberAccessExpressionSyntax { Name: { Identifier: { ValueText: { } valueText } } }:
+                case MemberAccessExpressionSyntax { Name.Identifier.ValueText: { } valueText }:
                     name = valueText;
                     return true;
-                case MemberBindingExpressionSyntax { Name: { Identifier: { ValueText: { } valueText } } }:
+                case MemberBindingExpressionSyntax { Name.Identifier.ValueText: { } valueText }:
                     name = valueText;
                     return true;
                 default:

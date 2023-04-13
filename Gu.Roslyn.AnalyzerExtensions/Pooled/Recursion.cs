@@ -283,7 +283,7 @@
         {
             if (this.visited.Add((caller, line, node)) &&
                 this.EffectiveSymbol<IPropertySymbol>(node) is { } property &&
-                property is { SetMethod: { Parameters: { Length: 1 } } set })
+                property is { SetMethod: { Parameters.Length: 1 } set })
             {
                 _ = set.TrySingleDeclaration(this.CancellationToken, out AccessorDeclarationSyntax? declaration);
                 return AnalyzerExtensions.Target.Create(node, set.Parameters[0], declaration);

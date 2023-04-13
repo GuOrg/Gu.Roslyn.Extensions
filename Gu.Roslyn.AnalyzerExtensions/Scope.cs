@@ -47,7 +47,7 @@
                         return false;
                     case ParenthesizedLambdaExpressionSyntax { ParameterList: { } lambdaParameters }
                         when HasParameter(lambdaParameters):
-                    case SimpleLambdaExpressionSyntax { Parameter: { Identifier: { ValueText: { } valueText } } }
+                    case SimpleLambdaExpressionSyntax { Parameter.Identifier.ValueText: { } valueText }
                         when valueText == name:
                     case LocalFunctionStatementSyntax { ParameterList: { } parameterList }
                         when HasParameter(parameterList):
@@ -181,7 +181,7 @@
             {
                 return memberDeclaration switch
                 {
-                    FieldDeclarationSyntax { Declaration: { Variables: { } variables } } declaration
+                    FieldDeclarationSyntax { Declaration.Variables: { } variables } declaration
                         => declaration.Modifiers.Any(SyntaxKind.StaticKeyword, SyntaxKind.ConstKeyword) ||
                            (variables.TryLast(out var last) &&
                             last.Initializer?.Contains(node) == true),

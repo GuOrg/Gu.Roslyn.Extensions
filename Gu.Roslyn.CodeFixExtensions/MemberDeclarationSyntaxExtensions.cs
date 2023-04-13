@@ -103,7 +103,7 @@
                 {
                     for (var i = 0; i < x.Count; i++)
                     {
-                        if (x[i].Kind() != y[i].Kind())
+                        if (x[i].RawKind != y[i].RawKind)
                         {
                             return false;
                         }

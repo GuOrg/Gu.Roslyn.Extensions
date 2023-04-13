@@ -80,7 +80,7 @@
 
             if (method.ParameterList is { Parameters: { } parameters })
             {
-                if (argument.NameColon is { Name: { Identifier: { } name } })
+                if (argument.NameColon is { Name.Identifier: { } name })
                 {
                     foreach (var candidate in parameters)
                     {

@@ -42,7 +42,7 @@
                     return true;
                 case CastExpressionSyntax { Expression: { } cast }:
                     return TryGetStringValue(cast, semanticModel, cancellationToken, out text);
-                case InvocationExpressionSyntax { ArgumentList: { Arguments: { Count: 1 } arguments } } invocation when invocation.IsNameOf():
+                case InvocationExpressionSyntax { ArgumentList.Arguments: { Count: 1 } arguments } invocation when invocation.IsNameOf():
                     if (arguments.TrySingle(out var nameofArg))
                     {
                         switch (nameofArg.Expression)
@@ -50,7 +50,7 @@
                             case IdentifierNameSyntax identifierName:
                                 text = identifierName.Identifier.ValueText;
                                 return true;
-                            case MemberAccessExpressionSyntax { Name: { Identifier: { } identifier } }:
+                            case MemberAccessExpressionSyntax { Name.Identifier: { } identifier }:
                                 text = identifier.ValueText;
                                 return true;
                             default:
@@ -67,11 +67,11 @@
                     }
 
                     return false;
-                case MemberAccessExpressionSyntax { Expression: PredefinedTypeSyntax { Keyword: { ValueText: "string" } }, Name: { Identifier: { ValueText: "Empty" } } }:
-                case MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier: { ValueText: "string" } }, Name: { Identifier: { ValueText: "Empty" } } }:
-                case MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier: { ValueText: "String" } }, Name: { Identifier: { ValueText: "Empty" } } }:
-                case MemberAccessExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name: { Identifier: { ValueText: "string" } } }, Name: { Identifier: { ValueText: "Empty" } } }:
-                case MemberAccessExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name: { Identifier: { ValueText: "String" } } }, Name: { Identifier: { ValueText: "Empty" } } }:
+                case MemberAccessExpressionSyntax { Expression: PredefinedTypeSyntax { Keyword.ValueText: "string" }, Name.Identifier.ValueText: "Empty" }:
+                case MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier.ValueText: "string" }, Name.Identifier.ValueText: "Empty" }:
+                case MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax { Identifier.ValueText: "String" }, Name.Identifier.ValueText: "Empty" }:
+                case MemberAccessExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "string" }, Name.Identifier.ValueText: "Empty" }:
+                case MemberAccessExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "String" }, Name.Identifier.ValueText: "Empty" }:
                     text = string.Empty;
                     return true;
             }
