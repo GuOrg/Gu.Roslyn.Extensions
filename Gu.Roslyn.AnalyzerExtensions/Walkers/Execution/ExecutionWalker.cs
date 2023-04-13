@@ -463,7 +463,7 @@
             this.Recursion = null!;
         }
 
-        private class TypeDeclarationWalker : PooledWalker<TypeDeclarationWalker>
+        private sealed class TypeDeclarationWalker : PooledWalker<TypeDeclarationWalker>
         {
 #pragma warning disable SA1401 // Fields must be private
             internal readonly List<EqualsValueClauseSyntax> Initializers = new();

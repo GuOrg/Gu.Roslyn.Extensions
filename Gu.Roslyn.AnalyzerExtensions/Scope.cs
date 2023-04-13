@@ -36,15 +36,11 @@
                     case BaseMethodDeclarationSyntax method:
                         return HasParameter(method.ParameterList);
                     case AccessorDeclarationSyntax accessor:
-                        switch (accessor.Kind())
+                        return accessor.Kind() switch
                         {
-                            case SyntaxKind.AddAccessorDeclaration:
-                            case SyntaxKind.RemoveAccessorDeclaration:
-                            case SyntaxKind.SetAccessorDeclaration:
-                                return name == "value";
-                        }
-
-                        return false;
+                            SyntaxKind.AddAccessorDeclaration or SyntaxKind.RemoveAccessorDeclaration or SyntaxKind.SetAccessorDeclaration => name == "value",
+                            _ => false,
+                        };
                     case ParenthesizedLambdaExpressionSyntax { ParameterList: { } lambdaParameters }
                         when HasParameter(lambdaParameters):
                     case SimpleLambdaExpressionSyntax { Parameter.Identifier.ValueText: { } valueText }
