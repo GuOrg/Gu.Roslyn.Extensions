@@ -1,20 +1,19 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
-{
-    using Microsoft.CodeAnalysis;
+﻿namespace Gu.Roslyn.AnalyzerExtensions;
 
+using Microsoft.CodeAnalysis;
+
+/// <summary>
+/// For comparison with roslyn <see cref="IPropertySymbol"/>.
+/// </summary>
+public class QualifiedField : QualifiedMember<IFieldSymbol>
+{
     /// <summary>
-    /// For comparison with roslyn <see cref="IPropertySymbol"/>.
+    /// Initializes a new instance of the <see cref="QualifiedField"/> class.
     /// </summary>
-    public class QualifiedField : QualifiedMember<IFieldSymbol>
+    /// <param name="containingType">The containing type.</param>
+    /// <param name="name">The name.</param>
+    public QualifiedField(QualifiedType containingType, string name)
+        : base(containingType, name)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QualifiedField"/> class.
-        /// </summary>
-        /// <param name="containingType">The containing type.</param>
-        /// <param name="name">The name.</param>
-        public QualifiedField(QualifiedType containingType, string name)
-            : base(containingType, name)
-        {
-        }
     }
 }

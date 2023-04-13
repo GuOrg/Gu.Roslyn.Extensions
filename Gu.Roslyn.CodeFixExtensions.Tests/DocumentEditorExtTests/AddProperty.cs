@@ -1,19 +1,19 @@
-﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
-{
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Editing;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests;
 
-    public static class AddProperty
+using System.Linq;
+using System.Threading.Tasks;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
+using NUnit.Framework;
+
+public static class AddProperty
+{
+    [Test]
+    public static async Task BeforePropertyWhenFirstMember()
     {
-        [Test]
-        public static async Task BeforePropertyWhenFirstMember()
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     public class C
@@ -21,12 +21,12 @@ namespace N
         internal int P { get; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public class C
@@ -36,14 +36,14 @@ namespace N
         internal int P { get; }
     }
 }";
-            _ = editor.AddProperty(containingType, property);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddProperty(containingType, property);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task AfterProperty()
-        {
-            var code = @"
+    [Test]
+    public static async Task AfterProperty()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -53,12 +53,12 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public class C
@@ -70,14 +70,14 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            _ = editor.AddProperty(containingType, property);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddProperty(containingType, property);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task AfterPropertyWhenLastMember()
-        {
-            var code = @"
+    [Test]
+    public static async Task AfterPropertyWhenLastMember()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -85,12 +85,12 @@ namespace N
         public int P { get; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public class C
@@ -100,14 +100,14 @@ namespace N
         public int NewProperty => 1;
     }
 }";
-            _ = editor.AddProperty(containingType, property);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddProperty(containingType, property);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task BeforePropertyInConditional()
-        {
-            var code = @"
+    [Test]
+    public static async Task BeforePropertyInConditional()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -117,12 +117,12 @@ namespace N
 #endif
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public class C
@@ -134,14 +134,14 @@ namespace N
 #endif
     }
 }";
-            _ = editor.AddProperty(containingType, property);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddProperty(containingType, property);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task AfterPropertyInConditional()
-        {
-            var code = @"
+    [Test]
+    public static async Task AfterPropertyInConditional()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -151,12 +151,12 @@ namespace N
 #endif
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var property = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public class C
@@ -168,14 +168,14 @@ namespace N
         public int NewProperty => 1;
     }
 }";
-            _ = editor.AddProperty(containingType, property);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddProperty(containingType, property);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task TypicalClass()
-        {
-            var code = @"
+    [Test]
+    public static async Task TypicalClass()
+    {
+        var code = @"
 namespace N
 {
     public abstract class C
@@ -198,12 +198,12 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var declaration = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty { get; set; }");
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            _ = editor.AddProperty(containingType, declaration);
-            var expected = @"
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var declaration = (PropertyDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewProperty { get; set; }");
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        _ = editor.AddProperty(containingType, declaration);
+        var expected = @"
 namespace N
 {
     public abstract class C
@@ -228,7 +228,6 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
     }
 }

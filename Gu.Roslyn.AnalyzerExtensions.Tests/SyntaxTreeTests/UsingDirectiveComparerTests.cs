@@ -1,31 +1,30 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests;
+
+using System;
+using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class UsingDirectiveComparerTests
 {
-    using System;
-    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
-
-    public static class UsingDirectiveComparerTests
+    [TestCase("System", "System", 0)]
+    [TestCase("System", "System.Collections", -1)]
+    [TestCase("A", "B", -1)]
+    public static void Simple(string s1, string s2, int expected)
     {
-        [TestCase("System", "System", 0)]
-        [TestCase("System", "System.Collections", -1)]
-        [TestCase("A", "B", -1)]
-        public static void Simple(string s1, string s2, int expected)
-        {
-            var ud1 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s1));
-            var ud2 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s2));
-            Assert.AreEqual(expected, UsingDirectiveComparer.Compare(ud1, ud2));
-            Assert.AreEqual(-expected, UsingDirectiveComparer.Compare(ud2, ud1));
-            Assert.AreEqual(expected, Math.Sign(StringComparer.OrdinalIgnoreCase.Compare(s1, s2)));
-        }
+        var ud1 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s1));
+        var ud2 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s2));
+        Assert.AreEqual(expected, UsingDirectiveComparer.Compare(ud1, ud2));
+        Assert.AreEqual(-expected, UsingDirectiveComparer.Compare(ud2, ud1));
+        Assert.AreEqual(expected, Math.Sign(StringComparer.OrdinalIgnoreCase.Compare(s1, s2)));
+    }
 
-        [TestCase("System", "B", -1)]
-        public static void SystemFirst(string s1, string s2, int expected)
-        {
-            var ud1 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s1));
-            var ud2 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s2));
-            Assert.AreEqual(expected, UsingDirectiveComparer.Compare(ud1, ud2));
-            Assert.AreEqual(-expected, UsingDirectiveComparer.Compare(ud2, ud1));
-        }
+    [TestCase("System", "B", -1)]
+    public static void SystemFirst(string s1, string s2, int expected)
+    {
+        var ud1 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s1));
+        var ud2 = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(s2));
+        Assert.AreEqual(expected, UsingDirectiveComparer.Compare(ud1, ud2));
+        Assert.AreEqual(-expected, UsingDirectiveComparer.Compare(ud2, ud1));
     }
 }

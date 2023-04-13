@@ -1,30 +1,30 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.TriviaTests
-{
-    using Gu.Roslyn.Asserts;
-    using Gu.Roslyn.CodeFixExtensions;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.TriviaTests;
 
-    public static class LeadingWhitespace
+using Gu.Roslyn.Asserts;
+using Gu.Roslyn.CodeFixExtensions;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class LeadingWhitespace
+{
+    [Test]
+    public static void Class()
     {
-        [Test]
-        public static void Class()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
     {
     }
 }");
-            var node = syntaxTree.FindClassDeclaration("C");
-            CodeAssert.AreEqual("    ", node.LeadingWhitespace());
-        }
+        var node = syntaxTree.FindClassDeclaration("C");
+        CodeAssert.AreEqual("    ", node.LeadingWhitespace());
+    }
 
-        [Test]
-        public static void ClassWithPragmaAndDocs()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void ClassWithPragmaAndDocs()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
@@ -35,14 +35,14 @@ namespace N
     {
     }
 }");
-            var node = syntaxTree.FindClassDeclaration("C");
-            CodeAssert.AreEqual("    ", node.LeadingWhitespace());
-        }
+        var node = syntaxTree.FindClassDeclaration("C");
+        CodeAssert.AreEqual("    ", node.LeadingWhitespace());
+    }
 
-        [Test]
-        public static void ClassWithDocs()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void ClassWithDocs()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     /// <summary>
@@ -52,14 +52,14 @@ namespace N
     {
     }
 }");
-            var node = syntaxTree.FindClassDeclaration("C");
-            CodeAssert.AreEqual("    ", node.LeadingWhitespace());
-        }
+        var node = syntaxTree.FindClassDeclaration("C");
+        CodeAssert.AreEqual("    ", node.LeadingWhitespace());
+    }
 
-        [Test]
-        public static void Constructor()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void Constructor()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -70,14 +70,14 @@ namespace N
         }
     }
 }");
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            CodeAssert.AreEqual("        ", node.LeadingWhitespace());
-        }
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        CodeAssert.AreEqual("        ", node.LeadingWhitespace());
+    }
 
-        [Test]
-        public static void ConstructorWithDocs()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void ConstructorWithDocs()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -87,14 +87,14 @@ namespace N
         }
     }
 }");
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            CodeAssert.AreEqual("        ", node.LeadingWhitespace());
-        }
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        CodeAssert.AreEqual("        ", node.LeadingWhitespace());
+    }
 
-        [Test]
-        public static void Property()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void Property()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -105,14 +105,14 @@ namespace N
         public int Value { get; set; }
     }
 }");
-            var node = syntaxTree.FindPropertyDeclaration("Value");
-            CodeAssert.AreEqual("        ", node.LeadingWhitespace());
-        }
+        var node = syntaxTree.FindPropertyDeclaration("Value");
+        CodeAssert.AreEqual("        ", node.LeadingWhitespace());
+    }
 
-        [Test]
-        public static void Method()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void Method()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -120,14 +120,14 @@ namespace N
         public int Id(int i) => i;
     }
 }");
-            var node = syntaxTree.FindMethodDeclaration("Id");
-            CodeAssert.AreEqual("        ", node.LeadingWhitespace());
-        }
+        var node = syntaxTree.FindMethodDeclaration("Id");
+        CodeAssert.AreEqual("        ", node.LeadingWhitespace());
+    }
 
-        [Test]
-        public static void MethodWithDocs()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void MethodWithDocs()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -140,8 +140,7 @@ namespace N
         public int Id(int i) => i;
     }
 }");
-            var node = syntaxTree.FindMethodDeclaration("Id");
-            CodeAssert.AreEqual("        ", node.LeadingWhitespace());
-        }
+        var node = syntaxTree.FindMethodDeclaration("Id");
+        CodeAssert.AreEqual("        ", node.LeadingWhitespace());
     }
 }

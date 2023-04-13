@@ -1,19 +1,19 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
-{
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Editing;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests;
 
-    public static class AddMethod
+using System.Linq;
+using System.Threading.Tasks;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
+using NUnit.Framework;
+
+public static class AddMethod
+{
+    [Test]
+    public static async Task Private()
     {
-        [Test]
-        public static async Task Private()
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     public abstract class C
@@ -52,12 +52,12 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private int NewMethod() => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("private int NewMethod() => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public abstract class C
@@ -98,14 +98,14 @@ namespace N
         private int NewMethod() => 1;
     }
 }";
-            _ = editor.AddMethod(containingType, method);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddMethod(containingType, method);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task Public()
-        {
-            var code = @"
+    [Test]
+    public static async Task Public()
+    {
+        var code = @"
 namespace N
 {
     public abstract class C
@@ -144,12 +144,12 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public abstract class C
@@ -190,14 +190,14 @@ namespace N
         }
     }
 }";
-            _ = editor.AddMethod(containingType, method);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddMethod(containingType, method);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task AfterPropertyWithPragma()
-        {
-            var code = @"
+    [Test]
+    public static async Task AfterPropertyWithPragma()
+    {
+        var code = @"
 namespace N
 {
     public abstract class C
@@ -207,12 +207,12 @@ namespace N
 #pragma warning restore INPC002 // Mutable public property should notify.
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public abstract class C
@@ -224,14 +224,14 @@ namespace N
         public int NewMethod() => 1;
     }
 }";
-            _ = editor.AddMethod(containingType, method);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddMethod(containingType, method);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task AfterPropertyInConditional()
-        {
-            var code = @"
+    [Test]
+    public static async Task AfterPropertyInConditional()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -241,48 +241,12 @@ namespace N
 #endif
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
 
-            var expected = @"
-namespace N
-{
-    public class C
-    {
-#if true
-        public int P { get; }
-#endif
-
-        public int NewMethod() => 1;
-    }
-}";
-            _ = editor.AddMethod(containingType, method);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
-
-        [Test]
-        public static async Task AfterPropertyInConditionalWithMethodAfter()
-        {
-            var code = @"
-namespace N
-{
-    public class C
-    {
-#if true
-        public int P { get; }
-#endif
-
-        private int M() => 1;
-    }
-}";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
-
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public class C
@@ -292,52 +256,16 @@ namespace N
 #endif
 
         public int NewMethod() => 1;
-
-        private int M() => 1;
     }
 }";
-            _ = editor.AddMethod(containingType, method);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.AddMethod(containingType, method);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task BeforeMethodInConditional()
-        {
-            var code = @"
-namespace N
-{
-    public class C
+    [Test]
+    public static async Task AfterPropertyInConditionalWithMethodAfter()
     {
-#if true
-        private int M() => 1;
-#endif
-    }
-}";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
-
-            var expected = @"
-namespace N
-{
-    public class C
-    {
-        public int NewMethod() => 1;
-
-#if true
-        private int M() => 1;
-#endif
-    }
-}";
-            _ = editor.AddMethod(containingType, method);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
-
-        [Test]
-        public static async Task BetweenInConditionalDirectives()
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     public class C
@@ -346,17 +274,15 @@ namespace N
         public int P { get; }
 #endif
 
-#if true
         private int M() => 1;
-#endif
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     public class C
@@ -367,13 +293,86 @@ namespace N
 
         public int NewMethod() => 1;
 
+        private int M() => 1;
+    }
+}";
+        _ = editor.AddMethod(containingType, method);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
+
+    [Test]
+    public static async Task BeforeMethodInConditional()
+    {
+        var code = @"
+namespace N
+{
+    public class C
+    {
 #if true
         private int M() => 1;
 #endif
     }
 }";
-            _ = editor.AddMethod(containingType, method);
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
+
+        var expected = @"
+namespace N
+{
+    public class C
+    {
+        public int NewMethod() => 1;
+
+#if true
+        private int M() => 1;
+#endif
+    }
+}";
+        _ = editor.AddMethod(containingType, method);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
+
+    [Test]
+    public static async Task BetweenInConditionalDirectives()
+    {
+        var code = @"
+namespace N
+{
+    public class C
+    {
+#if true
+        public int P { get; }
+#endif
+
+#if true
+        private int M() => 1;
+#endif
+    }
+}";
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        var method = (MethodDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration("public int NewMethod() => 1;");
+
+        var expected = @"
+namespace N
+{
+    public class C
+    {
+#if true
+        public int P { get; }
+#endif
+
+        public int NewMethod() => 1;
+
+#if true
+        private int M() => 1;
+#endif
+    }
+}";
+        _ = editor.AddMethod(containingType, method);
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
     }
 }

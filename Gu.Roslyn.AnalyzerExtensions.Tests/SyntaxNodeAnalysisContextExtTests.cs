@@ -1,18 +1,18 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests
-{
-    using System.Threading;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests;
 
-    public static class SyntaxNodeAnalysisContextExtTests
+using System.Threading;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
+using NUnit.Framework;
+
+public static class SyntaxNodeAnalysisContextExtTests
+{
+    [Test]
+    public static void PropertiesResourcesCompilerGeneratedAttribute()
     {
-        [Test]
-        public static void PropertiesResourcesCompilerGeneratedAttribute()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            @"
 namespace N.Properties {
     using System;
 
@@ -72,19 +72,19 @@ namespace N.Properties {
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var classDeclaration = syntaxTree.FindClassDeclaration("Resources");
-            var type = semanticModel.GetDeclaredSymbol(classDeclaration);
-            var context = new SyntaxNodeAnalysisContext(classDeclaration, type, semanticModel, null, null, null, CancellationToken.None);
-            Assert.AreEqual(true, context.IsExcludedFromAnalysis());
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var classDeclaration = syntaxTree.FindClassDeclaration("Resources");
+        var type = semanticModel.GetDeclaredSymbol(classDeclaration);
+        var context = new SyntaxNodeAnalysisContext(classDeclaration, type, semanticModel, null, null, null, CancellationToken.None);
+        Assert.AreEqual(true, context.IsExcludedFromAnalysis());
+    }
 
-        [Test]
-        public static void PropertiesResourcesGeneratedCodeAttribute()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
+    [Test]
+    public static void PropertiesResourcesGeneratedCodeAttribute()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            @"
 namespace N.Properties {
     using System;
 
@@ -144,12 +144,11 @@ namespace N.Properties {
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var classDeclaration = syntaxTree.FindClassDeclaration("Resources");
-            var type = semanticModel.GetDeclaredSymbol(classDeclaration);
-            var context = new SyntaxNodeAnalysisContext(classDeclaration, type, semanticModel, null, null, null, CancellationToken.None);
-            Assert.AreEqual(true, context.IsExcludedFromAnalysis());
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var classDeclaration = syntaxTree.FindClassDeclaration("Resources");
+        var type = semanticModel.GetDeclaredSymbol(classDeclaration);
+        var context = new SyntaxNodeAnalysisContext(classDeclaration, type, semanticModel, null, null, null, CancellationToken.None);
+        Assert.AreEqual(true, context.IsExcludedFromAnalysis());
     }
 }

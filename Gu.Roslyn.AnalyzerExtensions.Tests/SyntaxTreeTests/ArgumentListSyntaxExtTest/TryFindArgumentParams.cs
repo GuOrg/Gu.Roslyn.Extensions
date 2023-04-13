@@ -1,17 +1,17 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ArgumentListSyntaxExtTest
-{
-    using System.Threading;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.ArgumentListSyntaxExtTest;
 
-    public static class TryFindArgumentParams
+using System.Threading;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class TryFindArgumentParams
+{
+    [Test]
+    public static void Ordinal()
     {
-        [Test]
-        public static void Ordinal()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            @"
 namespace N
 {
     internal class C
@@ -26,15 +26,14 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var invocation = syntaxTree.FindInvocation("M(1, 2, 3)");
-            var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
-            Assert.AreEqual(true, invocation.TryFindArgumentParams(method.Parameters[1], out var arguments));
-            Assert.AreEqual("2, 3", string.Join(", ", arguments));
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var invocation = syntaxTree.FindInvocation("M(1, 2, 3)");
+        var method = semanticModel.GetSymbolSafe(invocation, CancellationToken.None);
+        Assert.AreEqual(true, invocation.TryFindArgumentParams(method.Parameters[1], out var arguments));
+        Assert.AreEqual("2, 3", string.Join(", ", arguments));
 
-            Assert.AreEqual(true, invocation.ArgumentList.TryFindParams(method.Parameters[1], out arguments));
-            Assert.AreEqual("2, 3", string.Join(", ", arguments));
-        }
+        Assert.AreEqual(true, invocation.ArgumentList.TryFindParams(method.Parameters[1], out arguments));
+        Assert.AreEqual("2, 3", string.Join(", ", arguments));
     }
 }

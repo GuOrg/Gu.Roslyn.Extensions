@@ -1,125 +1,124 @@
 ﻿// ReSharper disable InconsistentNaming
-namespace Gu.Roslyn.AnalyzerExtensions
-{
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
+namespace Gu.Roslyn.AnalyzerExtensions;
 
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+/// <summary>
+/// Helpers for working with <see cref="IPropertySymbol"/>.
+/// </summary>
+public static class IPropertySymbolExt
+{
+    /// <summary>
+    /// Get the declaration of the GetMethod if any.
+    /// Can be the expression body or the get accessor.
+    /// </summary>
+    /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+    /// <param name="declaration">The declaration.</param>
+    /// <returns>True if a declaration was found.</returns>
+    public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out SyntaxNode? declaration)
+    {
+        if (property is null)
+        {
+            throw new System.ArgumentNullException(nameof(property));
+        }
+
+        declaration = null;
+        return property.GetMethod is { } getMethod &&
+               getMethod.TrySingleDeclaration(cancellationToken, out declaration);
+    }
 
     /// <summary>
-    /// Helpers for working with <see cref="IPropertySymbol"/>.
+    /// Get the get accessor if any.
     /// </summary>
-    public static class IPropertySymbolExt
+    /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+    /// <param name="getter">The declaration.</param>
+    /// <returns>True if a declaration was found.</returns>
+    public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out AccessorDeclarationSyntax? getter)
     {
-        /// <summary>
-        /// Get the declaration of the GetMethod if any.
-        /// Can be the expression body or the get accessor.
-        /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="declaration">The declaration.</param>
-        /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetGetMethodDeclaration(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out SyntaxNode? declaration)
+        if (property is null)
         {
-            if (property is null)
-            {
-                throw new System.ArgumentNullException(nameof(property));
-            }
-
-            declaration = null;
-            return property.GetMethod is { } getMethod &&
-                   getMethod.TrySingleDeclaration(cancellationToken, out declaration);
+            throw new System.ArgumentNullException(nameof(property));
         }
 
-        /// <summary>
-        /// Get the get accessor if any.
-        /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="getter">The declaration.</param>
-        /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetGetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out AccessorDeclarationSyntax? getter)
-        {
-            if (property is null)
-            {
-                throw new System.ArgumentNullException(nameof(property));
-            }
+        getter = null;
+        return property.GetMethod is { } &&
+               property.TrySingleDeclaration(cancellationToken, out var declaration) &&
+               declaration.TryGetGetter(out getter);
+    }
 
-            getter = null;
-            return property.GetMethod is { } &&
-                   property.TrySingleDeclaration(cancellationToken, out var declaration) &&
-                   declaration.TryGetGetter(out getter);
+    /// <summary>
+    /// Get the set accessor if any.
+    /// </summary>
+    /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+    /// <param name="setter">The declaration.</param>
+    /// <returns>True if a declaration was found.</returns>
+    public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out AccessorDeclarationSyntax? setter)
+    {
+        if (property is null)
+        {
+            throw new System.ArgumentNullException(nameof(property));
         }
 
-        /// <summary>
-        /// Get the set accessor if any.
-        /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="setter">The declaration.</param>
-        /// <returns>True if a declaration was found.</returns>
-        public static bool TryGetSetter(this IPropertySymbol property, CancellationToken cancellationToken, [NotNullWhen(true)] out AccessorDeclarationSyntax? setter)
-        {
-            if (property is null)
-            {
-                throw new System.ArgumentNullException(nameof(property));
-            }
+        setter = null;
+        return property.SetMethod is { } &&
+               property.TrySingleDeclaration(cancellationToken, out var declaration) &&
+               declaration.TryGetSetter(out setter);
+    }
 
-            setter = null;
-            return property.SetMethod is { } &&
-                   property.TrySingleDeclaration(cancellationToken, out var declaration) &&
-                   declaration.TryGetSetter(out setter);
+    /// <summary>
+    /// Check if the property is an auto property with get only.
+    /// public int Value { get; }.
+    /// </summary>
+    /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+    /// <returns>True if the property is an auto property with get only.</returns>
+    public static bool IsGetOnly(this IPropertySymbol property)
+    {
+        if (property is null)
+        {
+            throw new System.ArgumentNullException(nameof(property));
         }
 
-        /// <summary>
-        /// Check if the property is an auto property with get only.
-        /// public int Value { get; }.
-        /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
-        /// <returns>True if the property is an auto property with get only.</returns>
-        public static bool IsGetOnly(this IPropertySymbol property)
-        {
-            if (property is null)
-            {
-                throw new System.ArgumentNullException(nameof(property));
-            }
+        return property.SetMethod is null &&
+               property.IsAutoProperty();
+    }
 
-            return property.SetMethod is null &&
-                   property.IsAutoProperty();
+    /// <summary>
+    /// Check if the property is an auto property.
+    /// public int Value { get; private set; }.
+    /// </summary>
+    /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
+    /// <returns>True if the property is an auto property.</returns>
+    public static bool IsAutoProperty(this IPropertySymbol property)
+    {
+        if (property is null)
+        {
+            throw new System.ArgumentNullException(nameof(property));
         }
 
-        /// <summary>
-        /// Check if the property is an auto property.
-        /// public int Value { get; private set; }.
-        /// </summary>
-        /// <param name="property">The <see cref="IPropertySymbol"/>.</param>
-        /// <returns>True if the property is an auto property.</returns>
-        public static bool IsAutoProperty(this IPropertySymbol property)
+        if (property is { IsAbstract: true })
         {
-            if (property is null)
-            {
-                throw new System.ArgumentNullException(nameof(property));
-            }
+            return true;
+        }
 
-            if (property is { IsAbstract: true })
+        if (property.ContainingType is { } containingType)
+        {
+            foreach (var member in containingType.GetMembers())
             {
-                return true;
-            }
-
-            if (property.ContainingType is { } containingType)
-            {
-                foreach (var member in containingType.GetMembers())
+                if (member is IFieldSymbol { AssociatedSymbol: IPropertySymbol associatedSymbol } &&
+                   PropertySymbolComparer.Equal(associatedSymbol, property))
                 {
-                    if (member is IFieldSymbol { AssociatedSymbol: IPropertySymbol associatedSymbol } &&
-                       PropertySymbolComparer.Equal(associatedSymbol, property))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
-
-            return false;
         }
+
+        return false;
     }
 }

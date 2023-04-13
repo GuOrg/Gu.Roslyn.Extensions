@@ -1,21 +1,21 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NUnit.Framework;
+
+public static class MethodDeclarationComparerTests
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using NUnit.Framework;
+    private static readonly FieldInfo PositionField = typeof(SyntaxNode).GetField("<Position>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
-    public static class MethodDeclarationComparerTests
-    {
-        private static readonly FieldInfo PositionField = typeof(SyntaxNode).GetField("<Position>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
-
-        private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases(
+        @"
 namespace N
 {
     public class C : IC
@@ -40,10 +40,10 @@ namespace N
         object Public();
     }
 }",
-            stripLines: false);
+        stripLines: false);
 
-        private static readonly IReadOnlyList<TestCaseData> AttachedPropertySource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> AttachedPropertySource = CreateTestCases(
+        @"
 namespace N
 {
     using System;
@@ -159,72 +159,71 @@ namespace N
     }
 }
 ",
-            stripLines: true);
+        stripLines: true);
 
-        [TestCaseSource(nameof(TestCaseSource))]
-        public static void Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+    [TestCaseSource(nameof(TestCaseSource))]
+    public static void Compare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, MethodDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1, MethodDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0, MethodDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0, MethodDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCaseSource(nameof(TestCaseSource))]
+    public static void MemberDeclarationComparerCompare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCaseSource(nameof(AttachedPropertySource))]
+    public static void CompareAttachedPropertyMethods(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, MethodDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  MethodDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  MethodDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  MethodDeclarationComparer.Compare(y, y));
+
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+    }
+
+    public static TestCaseData[] CreateTestCases(string code, bool stripLines)
+    {
+        var tree = CSharpSyntaxTree.ParseText(code);
+
+        return All().Select(x =>
         {
-            Assert.AreEqual(-1, MethodDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, MethodDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, MethodDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, MethodDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCaseSource(nameof(TestCaseSource))]
-        public static void MemberDeclarationComparerCompare(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCaseSource(nameof(AttachedPropertySource))]
-        public static void CompareAttachedPropertyMethods(MethodDeclarationSyntax x, MethodDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, MethodDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MethodDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MethodDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MethodDeclarationComparer.Compare(y, y));
-
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
-        }
-
-        public static TestCaseData[] CreateTestCases(string code, bool stripLines)
-        {
-            var tree = CSharpSyntaxTree.ParseText(code);
-
-            return All().Select(x =>
+            if (stripLines)
             {
-                if (stripLines)
-                {
-                    PositionField!.SetValue(x.Item1, 1);
-                    PositionField.SetValue(x.Item2, 1);
-                }
+                PositionField!.SetValue(x.Item1, 1);
+                PositionField.SetValue(x.Item2, 1);
+            }
 
-                return new TestCaseData(x.Item1, x.Item2);
-            }).ToArray();
+            return new TestCaseData(x.Item1, x.Item2);
+        }).ToArray();
 
-            List<(MethodDeclarationSyntax, MethodDeclarationSyntax)> All()
+        List<(MethodDeclarationSyntax, MethodDeclarationSyntax)> All()
+        {
+            var pairs = new List<(MethodDeclarationSyntax, MethodDeclarationSyntax)>();
+            var c = tree.FindClassDeclaration("C");
+            foreach (var member1 in c.Members.OfType<MethodDeclarationSyntax>())
             {
-                var pairs = new List<(MethodDeclarationSyntax, MethodDeclarationSyntax)>();
-                var c = tree.FindClassDeclaration("C");
-                foreach (var member1 in c.Members.OfType<MethodDeclarationSyntax>())
+                foreach (var member2 in c.Members.OfType<MethodDeclarationSyntax>())
                 {
-                    foreach (var member2 in c.Members.OfType<MethodDeclarationSyntax>())
+                    if (member1.SpanStart < member2.SpanStart)
                     {
-                        if (member1.SpanStart < member2.SpanStart)
-                        {
-                            pairs.Add((member1, member2));
-                        }
+                        pairs.Add((member1, member2));
                     }
                 }
-
-                return pairs;
             }
+
+            return pairs;
         }
     }
 }

@@ -1,173 +1,220 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions;
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis;
+
+/// <summary>
+/// Helpers for finding members of <see cref="ITypeSymbol"/> or base types.
+/// </summary>
+// ReSharper disable once InconsistentNaming
+public static partial class ITypeSymbolExt
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.CodeAnalysis;
+    /// <summary>
+    /// Try finding the <see cref="IFieldSymbol"/> by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the field.</param>
+    /// <param name="field">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindFieldRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IFieldSymbol? field)
+    {
+        return type.TryFindFirstMemberRecursive(name, out field);
+    }
 
     /// <summary>
-    /// Helpers for finding members of <see cref="ITypeSymbol"/> or base types.
+    /// Try finding the <see cref="IEventSymbol"/> by name.
+    /// Look in <paramref name="type"/> and base types.
     /// </summary>
-    // ReSharper disable once InconsistentNaming
-    public static partial class ITypeSymbolExt
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the event.</param>
+    /// <param name="event">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindEventRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IEventSymbol? @event)
     {
-        /// <summary>
-        /// Try finding the <see cref="IFieldSymbol"/> by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the field.</param>
-        /// <param name="field">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindFieldRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IFieldSymbol? field)
+        return type.TryFindFirstMemberRecursive(name, out @event);
+    }
+
+    /// <summary>
+    /// Try finding the <see cref="IPropertySymbol"/> by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the property.</param>
+    /// <param name="property">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindPropertyRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IPropertySymbol? property)
+    {
+        if (name == "Item[]")
         {
-            return type.TryFindFirstMemberRecursive(name, out field);
+            return type.TryFindFirstMemberRecursive(x => x.IsIndexer, out property);
         }
 
-        /// <summary>
-        /// Try finding the <see cref="IEventSymbol"/> by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the event.</param>
-        /// <param name="event">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindEventRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IEventSymbol? @event)
+        return type.TryFindFirstMemberRecursive(name, out property);
+    }
+
+    /// <summary>
+    /// Try finding the <see cref="IMethodSymbol"/> by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="result">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IMethodSymbol? result)
+    {
+        return type.TryFindFirstMemberRecursive(name, out result);
+    }
+
+    /// <summary>
+    /// Try finding the <see cref="IMethodSymbol"/> by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="predicate">The func to filter by.</param>
+    /// <param name="result">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
+    {
+        return type.TryFindFirstMemberRecursive(predicate, out result);
+    }
+
+    /// <summary>
+    /// Try finding the only <see cref="IMethodSymbol"/> by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="result">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IMethodSymbol? result)
+    {
+        return type.TryFindSingleMemberRecursive(name, out result);
+    }
+
+    /// <summary>
+    /// Try finding the only <see cref="IMethodSymbol"/> by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="predicate">The func to filter by.</param>
+    /// <param name="result">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
+    {
+        return type.TryFindSingleMemberRecursive(predicate, out result);
+    }
+
+    /// <summary>
+    /// Try finding the only <see cref="IMethodSymbol"/> by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="predicate">The func to filter by.</param>
+    /// <param name="result">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
+    {
+        return type.TryFindSingleMemberRecursive(name, predicate, out result);
+    }
+
+    /// <summary>
+    /// Try finding the first matching <see cref="IMethodSymbol"/>.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="predicate">The func to filter by.</param>
+    /// <param name="result">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
+    {
+        return type.TryFindFirstMemberRecursive(name, predicate, out result);
+    }
+
+    /// <summary>
+    /// Try finding the first member by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="result">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindFirstMemberRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out ISymbol? result)
+    {
+        return type.TryFindFirstMemberRecursive<ISymbol>(name, out result);
+    }
+
+    /// <summary>
+    /// Try finding the single matching <typeparamref name="TMember"/>.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <typeparam name="TMember">The type of the member.</typeparam>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="member">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, [NotNullWhen(true)] out TMember? member)
+        where TMember : class, ISymbol
+    {
+        if (string.IsNullOrEmpty(name))
         {
-            return type.TryFindFirstMemberRecursive(name, out @event);
+            throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
         }
 
-        /// <summary>
-        /// Try finding the <see cref="IPropertySymbol"/> by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the property.</param>
-        /// <param name="property">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindPropertyRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IPropertySymbol? property)
+        member = null;
+        while (type is { })
         {
-            if (name == "Item[]")
+            foreach (var symbol in type.GetMembers(name))
             {
-                return type.TryFindFirstMemberRecursive(x => x.IsIndexer, out property);
+                if (member is { })
+                {
+                    member = null;
+                    return false;
+                }
+
+                member = symbol as TMember;
             }
 
-            return type.TryFindFirstMemberRecursive(name, out property);
-        }
-
-        /// <summary>
-        /// Try finding the <see cref="IMethodSymbol"/> by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="result">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IMethodSymbol? result)
-        {
-            return type.TryFindFirstMemberRecursive(name, out result);
-        }
-
-        /// <summary>
-        /// Try finding the <see cref="IMethodSymbol"/> by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="predicate">The func to filter by.</param>
-        /// <param name="result">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
-        {
-            return type.TryFindFirstMemberRecursive(predicate, out result);
-        }
-
-        /// <summary>
-        /// Try finding the only <see cref="IMethodSymbol"/> by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="result">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out IMethodSymbol? result)
-        {
-            return type.TryFindSingleMemberRecursive(name, out result);
-        }
-
-        /// <summary>
-        /// Try finding the only <see cref="IMethodSymbol"/> by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="predicate">The func to filter by.</param>
-        /// <param name="result">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
-        {
-            return type.TryFindSingleMemberRecursive(predicate, out result);
-        }
-
-        /// <summary>
-        /// Try finding the only <see cref="IMethodSymbol"/> by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="predicate">The func to filter by.</param>
-        /// <param name="result">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindSingleMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
-        {
-            return type.TryFindSingleMemberRecursive(name, predicate, out result);
-        }
-
-        /// <summary>
-        /// Try finding the first matching <see cref="IMethodSymbol"/>.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="predicate">The func to filter by.</param>
-        /// <param name="result">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindFirstMethodRecursive(this ITypeSymbol type, string name, Func<IMethodSymbol, bool> predicate, [NotNullWhen(true)] out IMethodSymbol? result)
-        {
-            return type.TryFindFirstMemberRecursive(name, predicate, out result);
-        }
-
-        /// <summary>
-        /// Try finding the first member by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="result">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindFirstMemberRecursive(this ITypeSymbol type, string name, [NotNullWhen(true)] out ISymbol? result)
-        {
-            return type.TryFindFirstMemberRecursive<ISymbol>(name, out result);
-        }
-
-        /// <summary>
-        /// Try finding the single matching <typeparamref name="TMember"/>.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="member">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, [NotNullWhen(true)] out TMember? member)
-            where TMember : class, ISymbol
-        {
-            if (string.IsNullOrEmpty(name))
+            if (member?.IsOverride == true)
             {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+                return true;
             }
 
-            member = null;
-            while (type is { })
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+        }
+
+        return member is { };
+    }
+
+    /// <summary>
+    /// Try finding the single matching <typeparamref name="TMember"/>.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <typeparam name="TMember">The type of the member.</typeparam>
+    /// <param name="type">The containing type.</param>
+    /// <param name="predicate">The func to filter by.</param>
+    /// <param name="member">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
+        where TMember : class, ISymbol
+    {
+        if (predicate is null)
+        {
+            throw new ArgumentNullException(nameof(predicate));
+        }
+
+        member = null;
+        while (type is { })
+        {
+            foreach (var symbol in type.GetMembers())
             {
-                foreach (var symbol in type.GetMembers(name))
+                if (symbol is TMember candidate &&
+                    predicate(candidate))
                 {
                     if (member is { })
                     {
@@ -175,217 +222,169 @@ namespace Gu.Roslyn.AnalyzerExtensions
                         return false;
                     }
 
-                    member = symbol as TMember;
+                    member = candidate;
                 }
+            }
 
-                if (member?.IsOverride == true)
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+        }
+
+        return member is { };
+    }
+
+    /// <summary>
+    /// Try finding the single matching <typeparamref name="TMember"/>.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <typeparam name="TMember">The type of the member.</typeparam>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="predicate">The func to filter by.</param>
+    /// <param name="member">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
+        where TMember : class, ISymbol
+    {
+        if (predicate is null)
+        {
+            throw new ArgumentNullException(nameof(predicate));
+        }
+
+        member = null;
+
+        while (type is { })
+        {
+            foreach (var symbol in type.GetMembers(name))
+            {
+                if (symbol is TMember candidate &&
+                    predicate(candidate))
                 {
+                    if (member is { })
+                    {
+                        member = null;
+                        return false;
+                    }
+
+                    member = candidate;
+                }
+            }
+
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+        }
+
+        return member is { };
+    }
+
+    /// <summary>
+    /// Try finding the first matching <typeparamref name="TMember"/>.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <typeparam name="TMember">The type of the member.</typeparam>
+    /// <param name="type">The containing type.</param>
+    /// <param name="predicate">The func to filter by.</param>
+    /// <param name="member">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
+        where TMember : class, ISymbol
+    {
+        if (predicate is null)
+        {
+            throw new ArgumentNullException(nameof(predicate));
+        }
+
+        member = null;
+        while (type is { })
+        {
+            foreach (var symbol in type.GetMembers())
+            {
+                if (symbol is TMember candidate &&
+                    predicate(candidate))
+                {
+                    member = candidate;
                     return true;
                 }
-
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                type = type.BaseType;
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
 
-            return member is { };
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            type = type.BaseType;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         }
 
-        /// <summary>
-        /// Try finding the single matching <typeparamref name="TMember"/>.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
-        /// <param name="type">The containing type.</param>
-        /// <param name="predicate">The func to filter by.</param>
-        /// <param name="member">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
-            where TMember : class, ISymbol
+        return false;
+    }
+
+    /// <summary>
+    /// Try finding the first member by name.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <typeparam name="TMember">The type of the member.</typeparam>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="member">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, [NotNullWhen(true)] out TMember? member)
+        where TMember : class, ISymbol
+    {
+        member = null;
+        while (type is { })
         {
-            if (predicate is null)
+            foreach (var symbol in type.GetMembers(name))
             {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            member = null;
-            while (type is { })
-            {
-                foreach (var symbol in type.GetMembers())
+                if (symbol is TMember candidate)
                 {
-                    if (symbol is TMember candidate &&
-                        predicate(candidate))
-                    {
-                        if (member is { })
-                        {
-                            member = null;
-                            return false;
-                        }
-
-                        member = candidate;
-                    }
+                    member = candidate;
+                    return true;
                 }
+            }
 
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                type = type.BaseType;
+            type = type.BaseType;
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-            }
-
-            return member is { };
         }
 
-        /// <summary>
-        /// Try finding the single matching <typeparamref name="TMember"/>.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="predicate">The func to filter by.</param>
-        /// <param name="member">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindSingleMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
-            where TMember : class, ISymbol
+        return false;
+    }
+
+    /// <summary>
+    /// Try finding the first matching <typeparamref name="TMember"/>.
+    /// Look in <paramref name="type"/> and base types.
+    /// </summary>
+    /// <typeparam name="TMember">The type of the member.</typeparam>
+    /// <param name="type">The containing type.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="predicate">The func to filter by.</param>
+    /// <param name="member">The match.</param>
+    /// <returns>True if a match was found.</returns>
+    public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
+        where TMember : class, ISymbol
+    {
+        if (predicate is null)
         {
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            member = null;
-
-            while (type is { })
-            {
-                foreach (var symbol in type.GetMembers(name))
-                {
-                    if (symbol is TMember candidate &&
-                        predicate(candidate))
-                    {
-                        if (member is { })
-                        {
-                            member = null;
-                            return false;
-                        }
-
-                        member = candidate;
-                    }
-                }
-
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                type = type.BaseType;
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-            }
-
-            return member is { };
+            throw new ArgumentNullException(nameof(predicate));
         }
 
-        /// <summary>
-        /// Try finding the first matching <typeparamref name="TMember"/>.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
-        /// <param name="type">The containing type.</param>
-        /// <param name="predicate">The func to filter by.</param>
-        /// <param name="member">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
-            where TMember : class, ISymbol
+        member = null;
+        while (type is { })
         {
-            if (predicate is null)
+            foreach (var symbol in type.GetMembers(name))
             {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            member = null;
-            while (type is { })
-            {
-                foreach (var symbol in type.GetMembers())
+                if (symbol is TMember candidate &&
+                    predicate(candidate))
                 {
-                    if (symbol is TMember candidate &&
-                        predicate(candidate))
-                    {
-                        member = candidate;
-                        return true;
-                    }
+                    member = candidate;
+                    return true;
                 }
+            }
 
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                type = type.BaseType;
+            type = type.BaseType;
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-            }
-
-            return false;
         }
 
-        /// <summary>
-        /// Try finding the first member by name.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="member">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, [NotNullWhen(true)] out TMember? member)
-            where TMember : class, ISymbol
-        {
-            member = null;
-            while (type is { })
-            {
-                foreach (var symbol in type.GetMembers(name))
-                {
-                    if (symbol is TMember candidate)
-                    {
-                        member = candidate;
-                        return true;
-                    }
-                }
-
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                type = type.BaseType;
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Try finding the first matching <typeparamref name="TMember"/>.
-        /// Look in <paramref name="type"/> and base types.
-        /// </summary>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
-        /// <param name="type">The containing type.</param>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="predicate">The func to filter by.</param>
-        /// <param name="member">The match.</param>
-        /// <returns>True if a match was found.</returns>
-        public static bool TryFindFirstMemberRecursive<TMember>(this ITypeSymbol type, string name, Func<TMember, bool> predicate, [NotNullWhen(true)] out TMember? member)
-            where TMember : class, ISymbol
-        {
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            member = null;
-            while (type is { })
-            {
-                foreach (var symbol in type.GetMembers(name))
-                {
-                    if (symbol is TMember candidate &&
-                        predicate(candidate))
-                    {
-                        member = candidate;
-                        return true;
-                    }
-                }
-
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                type = type.BaseType;
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-            }
-
-            return false;
-        }
+        return false;
     }
 }

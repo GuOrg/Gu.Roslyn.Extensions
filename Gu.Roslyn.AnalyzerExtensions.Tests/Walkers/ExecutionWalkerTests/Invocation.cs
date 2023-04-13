@@ -1,19 +1,19 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
-{
-    using System.Threading;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests;
 
-    public static class Invocation
+using System.Threading;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class Invocation
+{
+    [TestCase(SearchScope.Member, "2, 3")]
+    [TestCase(SearchScope.Instance, "1, 2, 3")]
+    [TestCase(SearchScope.Type, "1, 2, 3")]
+    [TestCase(SearchScope.Recursive, "1, 2, 3")]
+    public static void StatementBody(SearchScope scope, string expected)
     {
-        [TestCase(SearchScope.Member, "2, 3")]
-        [TestCase(SearchScope.Instance, "1, 2, 3")]
-        [TestCase(SearchScope.Type, "1, 2, 3")]
-        [TestCase(SearchScope.Recursive, "1, 2, 3")]
-        public static void StatementBody(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -30,20 +30,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "2, 3")]
-        [TestCase(SearchScope.Instance, "2, 3")]
-        [TestCase(SearchScope.Type, "1, 2, 3")]
-        [TestCase(SearchScope.Recursive, "1, 2, 3")]
-        public static void Static(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "2, 3")]
+    [TestCase(SearchScope.Instance, "2, 3")]
+    [TestCase(SearchScope.Type, "1, 2, 3")]
+    [TestCase(SearchScope.Recursive, "1, 2, 3")]
+    public static void Static(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -60,20 +60,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "2, 3")]
-        [TestCase(SearchScope.Instance, "2, 3")]
-        [TestCase(SearchScope.Type, "2, 3")]
-        [TestCase(SearchScope.Recursive, "1, 2, 3")]
-        public static void StaticOtherType(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "2, 3")]
+    [TestCase(SearchScope.Instance, "2, 3")]
+    [TestCase(SearchScope.Type, "2, 3")]
+    [TestCase(SearchScope.Recursive, "1, 2, 3")]
+    public static void StaticOtherType(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public static class C1
@@ -90,20 +90,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "2, 3")]
-        [TestCase(SearchScope.Instance, "1, 2, 3")]
-        [TestCase(SearchScope.Type, "1, 2, 3")]
-        [TestCase(SearchScope.Recursive, "1, 2, 3")]
-        public static void ExpressionBody(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "2, 3")]
+    [TestCase(SearchScope.Instance, "1, 2, 3")]
+    [TestCase(SearchScope.Type, "1, 2, 3")]
+    [TestCase(SearchScope.Recursive, "1, 2, 3")]
+    public static void ExpressionBody(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -117,20 +117,20 @@ namespace N
         public int Value() => 1;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "1")]
-        [TestCase(SearchScope.Instance, "1, 2")]
-        [TestCase(SearchScope.Type, "1, 2")]
-        [TestCase(SearchScope.Recursive, "1, 2")]
-        public static void WalkOverridden(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "1")]
+    [TestCase(SearchScope.Instance, "1, 2")]
+    [TestCase(SearchScope.Type, "1, 2")]
+    [TestCase(SearchScope.Recursive, "1, 2")]
+    public static void WalkOverridden(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class CBase
@@ -143,20 +143,20 @@ namespace N
         protected override int M() => 1 * base.M();
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindMethodDeclaration("protected override int M()");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindMethodDeclaration("protected override int M()");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "2, 3")]
-        [TestCase(SearchScope.Instance, "1, 2, 3")]
-        [TestCase(SearchScope.Type, "1, 2, 3")]
-        [TestCase(SearchScope.Recursive, "1, 2, 3")]
-        public static void InvocationAsArgument(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "2, 3")]
+    [TestCase(SearchScope.Instance, "1, 2, 3")]
+    [TestCase(SearchScope.Type, "1, 2, 3")]
+    [TestCase(SearchScope.Recursive, "1, 2, 3")]
+    public static void InvocationAsArgument(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -170,20 +170,20 @@ namespace N
         public int Value() => 1;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "1, 3")]
-        [TestCase(SearchScope.Instance, "1, 2, 3")]
-        [TestCase(SearchScope.Type, "1, 2, 3")]
-        [TestCase(SearchScope.Recursive, "1, 2, 3")]
-        public static void InvocationVirtual(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "1, 3")]
+    [TestCase(SearchScope.Instance, "1, 2, 3")]
+    [TestCase(SearchScope.Type, "1, 2, 3")]
+    [TestCase(SearchScope.Recursive, "1, 2, 3")]
+    public static void InvocationVirtual(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using System;
@@ -206,20 +206,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindMethodDeclaration("public void Dispose()");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindMethodDeclaration("public void Dispose()");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "3")]
-        [TestCase(SearchScope.Instance, "1, 2, 3")]
-        [TestCase(SearchScope.Type, "1, 2, 3")]
-        [TestCase(SearchScope.Recursive, "1, 2, 3")]
-        public static void ArgumentBeforeInvocation(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "3")]
+    [TestCase(SearchScope.Instance, "1, 2, 3")]
+    [TestCase(SearchScope.Type, "1, 2, 3")]
+    [TestCase(SearchScope.Recursive, "1, 2, 3")]
+    public static void ArgumentBeforeInvocation(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -238,20 +238,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "3")]
-        [TestCase(SearchScope.Instance, "1, 3")]
-        [TestCase(SearchScope.Type, "1, 2, 3")]
-        [TestCase(SearchScope.Recursive, "1, 2, 3")]
-        public static void ArgumentBeforeInvocationStaticAndInstance(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "3")]
+    [TestCase(SearchScope.Instance, "1, 3")]
+    [TestCase(SearchScope.Type, "1, 2, 3")]
+    [TestCase(SearchScope.Recursive, "1, 2, 3")]
+    public static void ArgumentBeforeInvocationStaticAndInstance(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -270,20 +270,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "")]
-        [TestCase(SearchScope.Instance, "2")]
-        [TestCase(SearchScope.Type, "2")]
-        [TestCase(SearchScope.Recursive, "2")]
-        public static void ExplicitBase(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "")]
+    [TestCase(SearchScope.Instance, "2")]
+    [TestCase(SearchScope.Type, "2")]
+    [TestCase(SearchScope.Recursive, "2")]
+    public static void ExplicitBase(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class BaseClass
@@ -305,20 +305,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindMethodDeclaration("Start");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindMethodDeclaration("Start");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "")]
-        [TestCase(SearchScope.Instance, "1, 2")]
-        [TestCase(SearchScope.Type, "1, 2")]
-        [TestCase(SearchScope.Recursive, "1, 2")]
-        public static void OverrideCallingBase(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "")]
+    [TestCase(SearchScope.Instance, "1, 2")]
+    [TestCase(SearchScope.Type, "1, 2")]
+    [TestCase(SearchScope.Recursive, "1, 2")]
+    public static void OverrideCallingBase(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class BaseClass
@@ -340,20 +340,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindMethodDeclaration("Start");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindMethodDeclaration("Start");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member, "")]
-        [TestCase(SearchScope.Instance, "1, 2")]
-        [TestCase(SearchScope.Type, "1, 2")]
-        [TestCase(SearchScope.Recursive, "1, 2")]
-        public static void OverrideCallingBaseStartingFromBase(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member, "")]
+    [TestCase(SearchScope.Instance, "1, 2")]
+    [TestCase(SearchScope.Type, "1, 2")]
+    [TestCase(SearchScope.Recursive, "1, 2")]
+    public static void OverrideCallingBaseStartingFromBase(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class BaseClass
@@ -377,20 +377,20 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindMethodDeclaration("Start");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindMethodDeclaration("Start");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
+    }
 
-        [TestCase(SearchScope.Member,    "1")]
-        [TestCase(SearchScope.Instance,  "1, 2, 2, 2, 2")]
-        [TestCase(SearchScope.Type,      "1, 2, 2, 2, 2")]
-        [TestCase(SearchScope.Recursive, "1, 2, 2, 2, 2")]
-        public static void Chained(SearchScope scope, string expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase(SearchScope.Member,    "1")]
+    [TestCase(SearchScope.Instance,  "1, 2, 2, 2, 2")]
+    [TestCase(SearchScope.Type,      "1, 2, 2, 2, 2")]
+    [TestCase(SearchScope.Recursive, "1, 2, 2, 2, 2")]
+    public static void Chained(SearchScope scope, string expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public static class C
@@ -406,11 +406,10 @@ namespace N
         public static int M(this int i) => j + 2;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var node = syntaxTree.FindConstructorDeclaration("C");
-            using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
-            Assert.AreEqual(expected, string.Join(", ", walker.Literals));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var node = syntaxTree.FindConstructorDeclaration("C");
+        using var walker = LiteralWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
+        Assert.AreEqual(expected, string.Join(", ", walker.Literals));
     }
 }

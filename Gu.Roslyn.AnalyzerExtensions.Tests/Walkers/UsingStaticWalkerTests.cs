@@ -1,16 +1,16 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
-{
-    using System.Linq;
-    using System.Threading;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers;
 
-    public static class UsingStaticWalkerTests
+using System.Linq;
+using System.Threading;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class UsingStaticWalkerTests
+{
+    [Test]
+    public static void Borrow()
     {
-        [Test]
-        public static void Borrow()
-        {
-            var tree = CSharpSyntaxTree.ParseText(@"
+        var tree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using static NUnit.Framework.Assert;
@@ -23,21 +23,21 @@ namespace N
         }
     }
 }");
-            using (var walker = UsingStaticWalker.Borrow(tree))
-            {
-                CollectionAssert.AreEqual(new[] { "using static NUnit.Framework.Assert;" }, walker.UsingDirectives.Select(x => x.ToString()));
-            }
-
-            using (var walker = UsingStaticWalker.Borrow(tree.GetRoot(CancellationToken.None)))
-            {
-                CollectionAssert.AreEqual(new[] { "using static NUnit.Framework.Assert;" }, walker.UsingDirectives.Select(x => x.ToString()));
-            }
+        using (var walker = UsingStaticWalker.Borrow(tree))
+        {
+            CollectionAssert.AreEqual(new[] { "using static NUnit.Framework.Assert;" }, walker.UsingDirectives.Select(x => x.ToString()));
         }
 
-        [Test]
-        public static void TryGetForType()
+        using (var walker = UsingStaticWalker.Borrow(tree.GetRoot(CancellationToken.None)))
         {
-            var tree = CSharpSyntaxTree.ParseText(@"
+            CollectionAssert.AreEqual(new[] { "using static NUnit.Framework.Assert;" }, walker.UsingDirectives.Select(x => x.ToString()));
+        }
+    }
+
+    [Test]
+    public static void TryGetForType()
+    {
+        var tree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using static NUnit.Framework.Assert;
@@ -50,8 +50,7 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(true, UsingStaticWalker.TryGet(tree, new QualifiedType("NUnit.Framework.Assert"), out var directive));
-            Assert.AreEqual("using static NUnit.Framework.Assert;", directive.ToString());
-        }
+        Assert.AreEqual(true, UsingStaticWalker.TryGet(tree, new QualifiedType("NUnit.Framework.Assert"), out var directive));
+        Assert.AreEqual("using static NUnit.Framework.Assert;", directive.ToString());
     }
 }

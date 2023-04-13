@@ -1,18 +1,17 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools
-{
-    using NUnit.Framework;
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Pools;
 
-    public static class StringBuilderPoolTests
+using NUnit.Framework;
+
+public static class StringBuilderPoolTests
+{
+    [Test]
+    public static void BorrowAppendLineReturn()
     {
-        [Test]
-        public static void BorrowAppendLineReturn()
-        {
-            var text = StringBuilderPool.Borrow()
-                                        .AppendLine("a")
-                                        .AppendLine()
-                                        .AppendLine("b")
-                                        .Return();
-            Assert.AreEqual("a\r\n\r\nb\r\n", text);
-        }
+        var text = StringBuilderPool.Borrow()
+                                    .AppendLine("a")
+                                    .AppendLine()
+                                    .AppendLine("b")
+                                    .Return();
+        Assert.AreEqual("a\r\n\r\nb\r\n", text);
     }
 }

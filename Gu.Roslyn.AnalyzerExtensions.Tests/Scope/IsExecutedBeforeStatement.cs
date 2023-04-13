@@ -1,17 +1,17 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Scope
-{
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Scope;
 
-    public static class IsExecutedBeforeStatement
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class IsExecutedBeforeStatement
+{
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "1", ExecutedBefore.No)]
+    public static void SameBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
     {
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "1", ExecutedBefore.No)]
-        public static void SameBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -23,17 +23,17 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.Maybe)]
-        [TestCase("1", "1", ExecutedBefore.Maybe)]
-        public static void DeclaredInWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.Maybe)]
+    [TestCase("1", "1", ExecutedBefore.Maybe)]
+    public static void DeclaredInWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -48,22 +48,22 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("0", "0", ExecutedBefore.No)]
-        [TestCase("1", "1", ExecutedBefore.Maybe)]
-        [TestCase("0", "1", ExecutedBefore.Yes)]
-        [TestCase("0", "2", ExecutedBefore.Yes)]
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.Maybe)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("3", "1", ExecutedBefore.No)]
-        public static void DeclaredBeforeWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("0", "0", ExecutedBefore.No)]
+    [TestCase("1", "1", ExecutedBefore.Maybe)]
+    [TestCase("0", "1", ExecutedBefore.Yes)]
+    [TestCase("0", "2", ExecutedBefore.Yes)]
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.Maybe)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("3", "1", ExecutedBefore.No)]
+    public static void DeclaredBeforeWhileLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -81,17 +81,17 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.Maybe)]
-        [TestCase("1", "1", ExecutedBefore.Maybe)]
-        public static void DeclaredInForeachLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.Maybe)]
+    [TestCase("1", "1", ExecutedBefore.Maybe)]
+    public static void DeclaredInForeachLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -106,17 +106,17 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.Maybe)]
-        [TestCase("1", "1", ExecutedBefore.Maybe)]
-        public static void DeclaredInForLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.Maybe)]
+    [TestCase("1", "1", ExecutedBefore.Maybe)]
+    public static void DeclaredInForLoop(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -132,20 +132,20 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("3", "1", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.Maybe)]
-        [TestCase("3", "2", ExecutedBefore.No)]
-        public static void IfBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("3", "1", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.Maybe)]
+    [TestCase("3", "2", ExecutedBefore.No)]
+    public static void IfBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -162,25 +162,25 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "4", ExecutedBefore.Yes)]
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("3", "1", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.No)]
-        [TestCase("3", "2", ExecutedBefore.No)]
-        [TestCase("2", "4", ExecutedBefore.Maybe)]
-        [TestCase("3", "4", ExecutedBefore.Maybe)]
-        [TestCase("4", "2", ExecutedBefore.No)]
-        [TestCase("4", "3", ExecutedBefore.No)]
-        public static void IfElseBlocks(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "4", ExecutedBefore.Yes)]
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("3", "1", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.No)]
+    [TestCase("3", "2", ExecutedBefore.No)]
+    [TestCase("2", "4", ExecutedBefore.Maybe)]
+    [TestCase("3", "4", ExecutedBefore.Maybe)]
+    [TestCase("4", "2", ExecutedBefore.No)]
+    [TestCase("4", "3", ExecutedBefore.No)]
+    public static void IfElseBlocks(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -201,25 +201,25 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "4", ExecutedBefore.Yes)]
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("3", "1", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.No)]
-        [TestCase("3", "2", ExecutedBefore.No)]
-        [TestCase("2", "4", ExecutedBefore.Maybe)]
-        [TestCase("3", "4", ExecutedBefore.Maybe)]
-        [TestCase("4", "2", ExecutedBefore.No)]
-        [TestCase("4", "3", ExecutedBefore.No)]
-        public static void IfElseStatements(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "4", ExecutedBefore.Yes)]
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("3", "1", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.No)]
+    [TestCase("3", "2", ExecutedBefore.No)]
+    [TestCase("2", "4", ExecutedBefore.Maybe)]
+    [TestCase("3", "4", ExecutedBefore.Maybe)]
+    [TestCase("4", "2", ExecutedBefore.No)]
+    [TestCase("4", "3", ExecutedBefore.No)]
+    public static void IfElseStatements(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -236,20 +236,20 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("3", "1", ExecutedBefore.No)]
-        [TestCase("3", "2", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.No)]
-        public static void InsideIfBlockCurlyElse(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("3", "1", ExecutedBefore.No)]
+    [TestCase("3", "2", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.No)]
+    public static void InsideIfBlockCurlyElse(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -266,23 +266,23 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("1", "4", ExecutedBefore.Yes)]
-        [TestCase("2", "4", ExecutedBefore.Maybe)]
-        [TestCase("3", "4", ExecutedBefore.Maybe)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("3", "1", ExecutedBefore.No)]
-        [TestCase("3", "2", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.No)]
-        public static void InsideIfSingleStatement(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("1", "4", ExecutedBefore.Yes)]
+    [TestCase("2", "4", ExecutedBefore.Maybe)]
+    [TestCase("3", "4", ExecutedBefore.Maybe)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("3", "1", ExecutedBefore.No)]
+    [TestCase("3", "2", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.No)]
+    public static void InsideIfSingleStatement(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -298,23 +298,23 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "6", ExecutedBefore.Yes)]
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "3", ExecutedBefore.Yes)]
-        [TestCase("2", "6", ExecutedBefore.No)]
-        [TestCase("1", "5", ExecutedBefore.Yes)]
-        [TestCase("5", "6", ExecutedBefore.No)]
-        [TestCase("6", "2", ExecutedBefore.No)]
-        [TestCase("4", "5", ExecutedBefore.Yes)]
-        [TestCase("6", "5", ExecutedBefore.No)]
-        public static void IfReturnBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "6", ExecutedBefore.Yes)]
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "3", ExecutedBefore.Yes)]
+    [TestCase("2", "6", ExecutedBefore.No)]
+    [TestCase("1", "5", ExecutedBefore.Yes)]
+    [TestCase("5", "6", ExecutedBefore.No)]
+    [TestCase("6", "2", ExecutedBefore.No)]
+    [TestCase("4", "5", ExecutedBefore.Yes)]
+    [TestCase("6", "5", ExecutedBefore.No)]
+    public static void IfReturnBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -339,21 +339,21 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "4", ExecutedBefore.Maybe)]
-        [TestCase("1", "2", ExecutedBefore.Maybe)]
-        [TestCase("2", "4", ExecutedBefore.Maybe)]
-        [TestCase("1", "3", ExecutedBefore.Maybe)]
-        [TestCase("3", "4", ExecutedBefore.Maybe)]
-        [TestCase("4", "2", ExecutedBefore.Maybe)]
-        [TestCase("4", "3", ExecutedBefore.Maybe)]
-        public static void IfReturnBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "4", ExecutedBefore.Maybe)]
+    [TestCase("1", "2", ExecutedBefore.Maybe)]
+    [TestCase("2", "4", ExecutedBefore.Maybe)]
+    [TestCase("1", "3", ExecutedBefore.Maybe)]
+    [TestCase("3", "4", ExecutedBefore.Maybe)]
+    [TestCase("4", "2", ExecutedBefore.Maybe)]
+    [TestCase("4", "3", ExecutedBefore.Maybe)]
+    public static void IfReturnBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -379,21 +379,21 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "4", ExecutedBefore.Yes)]
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "4", ExecutedBefore.No)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("3", "4", ExecutedBefore.No)]
-        [TestCase("4", "2", ExecutedBefore.No)]
-        [TestCase("4", "3", ExecutedBefore.No)]
-        public static void IfThrowBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "4", ExecutedBefore.Yes)]
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "4", ExecutedBefore.No)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("3", "4", ExecutedBefore.No)]
+    [TestCase("4", "2", ExecutedBefore.No)]
+    [TestCase("4", "3", ExecutedBefore.No)]
+    public static void IfThrowBlock(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using System;
@@ -418,21 +418,21 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "4", ExecutedBefore.Maybe)]
-        [TestCase("1", "2", ExecutedBefore.Maybe)]
-        [TestCase("2", "4", ExecutedBefore.Maybe)]
-        [TestCase("1", "3", ExecutedBefore.Maybe)]
-        [TestCase("3", "4", ExecutedBefore.Maybe)]
-        [TestCase("4", "2", ExecutedBefore.Maybe)]
-        [TestCase("4", "3", ExecutedBefore.Maybe)]
-        public static void IfThrowBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "4", ExecutedBefore.Maybe)]
+    [TestCase("1", "2", ExecutedBefore.Maybe)]
+    [TestCase("2", "4", ExecutedBefore.Maybe)]
+    [TestCase("1", "3", ExecutedBefore.Maybe)]
+    [TestCase("3", "4", ExecutedBefore.Maybe)]
+    [TestCase("4", "2", ExecutedBefore.Maybe)]
+    [TestCase("4", "3", ExecutedBefore.Maybe)]
+    public static void IfThrowBlockWhenGoto(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using System;
@@ -460,16 +460,16 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        public static void LambdaLocal(string firstInt, string otherInt, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    public static void LambdaLocal(string firstInt, string otherInt, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using System;
@@ -488,24 +488,24 @@ namespace N
         public event EventHandler E;
     }
 }");
-            var first = syntaxTree.FindStatement(firstInt);
-            var other = syntaxTree.FindStatement(otherInt);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstInt);
+        var other = syntaxTree.FindStatement(otherInt);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("3", "1", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.Maybe)]
-        [TestCase("3", "2", ExecutedBefore.Maybe)]
-        [TestCase("4", "5", ExecutedBefore.Yes)]
-        [TestCase("5", "4", ExecutedBefore.No)]
-        [TestCase("3", "4", ExecutedBefore.Maybe)]
-        [TestCase("4", "3", ExecutedBefore.Maybe)]
-        public static void LambdaLocalClosure(string firstInt, string otherInt, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("3", "1", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.Maybe)]
+    [TestCase("3", "2", ExecutedBefore.Maybe)]
+    [TestCase("4", "5", ExecutedBefore.Yes)]
+    [TestCase("5", "4", ExecutedBefore.No)]
+    [TestCase("3", "4", ExecutedBefore.Maybe)]
+    [TestCase("4", "3", ExecutedBefore.Maybe)]
+    public static void LambdaLocalClosure(string firstInt, string otherInt, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using System;
@@ -530,24 +530,24 @@ namespace N
         public event EventHandler E;
     }
 }");
-            var first = syntaxTree.FindStatement(firstInt);
-            var other = syntaxTree.FindStatement(otherInt);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstInt);
+        var other = syntaxTree.FindStatement(otherInt);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "3", ExecutedBefore.Yes)]
-        [TestCase("3", "1", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.Maybe)]
-        [TestCase("3", "2", ExecutedBefore.Maybe)]
-        [TestCase("4", "5", ExecutedBefore.Yes)]
-        [TestCase("5", "4", ExecutedBefore.No)]
-        [TestCase("3", "4", ExecutedBefore.Maybe)]
-        [TestCase("4", "3", ExecutedBefore.Maybe)]
-        public static void LambdaParameterClosure(string firstInt, string otherInt, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "3", ExecutedBefore.Yes)]
+    [TestCase("3", "1", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.Maybe)]
+    [TestCase("3", "2", ExecutedBefore.Maybe)]
+    [TestCase("4", "5", ExecutedBefore.Yes)]
+    [TestCase("5", "4", ExecutedBefore.No)]
+    [TestCase("3", "4", ExecutedBefore.Maybe)]
+    [TestCase("4", "3", ExecutedBefore.Maybe)]
+    public static void LambdaParameterClosure(string firstInt, string otherInt, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using System;
@@ -572,26 +572,26 @@ namespace N
         public event EventHandler E;
     }
 }");
-            var first = syntaxTree.FindStatement(firstInt);
-            var other = syntaxTree.FindStatement(otherInt);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstInt);
+        var other = syntaxTree.FindStatement(otherInt);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "1", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.Yes)]
-        [TestCase("3", "2", ExecutedBefore.No)]
-        [TestCase("3", "4", ExecutedBefore.No)]
-        [TestCase("3", "6", ExecutedBefore.Maybe)]
-        [TestCase("3", "5", ExecutedBefore.Maybe)]
-        [TestCase("2", "4", ExecutedBefore.Yes)]
-        [TestCase("2", "5", ExecutedBefore.Yes)]
-        [TestCase("1", "5", ExecutedBefore.Yes)]
-        [TestCase("5", "6", ExecutedBefore.Yes)]
-        public static void TryCatchCatchFinally(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "1", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.Yes)]
+    [TestCase("3", "2", ExecutedBefore.No)]
+    [TestCase("3", "4", ExecutedBefore.No)]
+    [TestCase("3", "6", ExecutedBefore.Maybe)]
+    [TestCase("3", "5", ExecutedBefore.Maybe)]
+    [TestCase("2", "4", ExecutedBefore.Yes)]
+    [TestCase("2", "5", ExecutedBefore.Yes)]
+    [TestCase("1", "5", ExecutedBefore.Yes)]
+    [TestCase("5", "6", ExecutedBefore.Yes)]
+    public static void TryCatchCatchFinally(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -620,26 +620,26 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "1", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.No)]
-        [TestCase("3", "2", ExecutedBefore.No)]
-        [TestCase("3", "4", ExecutedBefore.No)]
-        [TestCase("4", "3", ExecutedBefore.No)]
-        [TestCase("2", "4", ExecutedBefore.No)]
-        [TestCase("2", "5", ExecutedBefore.Maybe)]
-        [TestCase("3", "5", ExecutedBefore.Maybe)]
-        [TestCase("4", "5", ExecutedBefore.Maybe)]
-        [TestCase("1", "5", ExecutedBefore.Yes)]
-        public static void Switch(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "1", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.No)]
+    [TestCase("3", "2", ExecutedBefore.No)]
+    [TestCase("3", "4", ExecutedBefore.No)]
+    [TestCase("4", "3", ExecutedBefore.No)]
+    [TestCase("2", "4", ExecutedBefore.No)]
+    [TestCase("2", "5", ExecutedBefore.Maybe)]
+    [TestCase("3", "5", ExecutedBefore.Maybe)]
+    [TestCase("4", "5", ExecutedBefore.Maybe)]
+    [TestCase("1", "5", ExecutedBefore.Yes)]
+    public static void Switch(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -664,26 +664,26 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
+    }
 
-        [TestCase("1", "2", ExecutedBefore.Yes)]
-        [TestCase("2", "1", ExecutedBefore.No)]
-        [TestCase("1", "1", ExecutedBefore.No)]
-        [TestCase("2", "3", ExecutedBefore.No)]
-        [TestCase("3", "2", ExecutedBefore.No)]
-        [TestCase("3", "4", ExecutedBefore.No)]
-        [TestCase("4", "3", ExecutedBefore.No)]
-        [TestCase("2", "4", ExecutedBefore.No)]
-        [TestCase("2", "5", ExecutedBefore.Maybe)]
-        [TestCase("3", "5", ExecutedBefore.Maybe)]
-        [TestCase("4", "5", ExecutedBefore.Maybe)]
-        [TestCase("1", "5", ExecutedBefore.Yes)]
-        public static void SwitchPattern(string firstStatement, string otherStatement, ExecutedBefore expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("1", "2", ExecutedBefore.Yes)]
+    [TestCase("2", "1", ExecutedBefore.No)]
+    [TestCase("1", "1", ExecutedBefore.No)]
+    [TestCase("2", "3", ExecutedBefore.No)]
+    [TestCase("3", "2", ExecutedBefore.No)]
+    [TestCase("3", "4", ExecutedBefore.No)]
+    [TestCase("4", "3", ExecutedBefore.No)]
+    [TestCase("2", "4", ExecutedBefore.No)]
+    [TestCase("2", "5", ExecutedBefore.Maybe)]
+    [TestCase("3", "5", ExecutedBefore.Maybe)]
+    [TestCase("4", "5", ExecutedBefore.Maybe)]
+    [TestCase("1", "5", ExecutedBefore.Yes)]
+    public static void SwitchPattern(string firstStatement, string otherStatement, ExecutedBefore expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     internal class C
@@ -708,9 +708,8 @@ namespace N
         }
     }
 }");
-            var first = syntaxTree.FindStatement(firstStatement);
-            var other = syntaxTree.FindStatement(otherStatement);
-            Assert.AreEqual(expected, first.IsExecutedBefore(other));
-        }
+        var first = syntaxTree.FindStatement(firstStatement);
+        var other = syntaxTree.FindStatement(otherStatement);
+        Assert.AreEqual(expected, first.IsExecutedBefore(other));
     }
 }

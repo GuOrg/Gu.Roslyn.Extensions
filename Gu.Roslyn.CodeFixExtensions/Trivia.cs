@@ -1,584 +1,583 @@
-﻿namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using Gu.Roslyn.AnalyzerExtensions;
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+/// <summary>
+/// Helper for processing <see cref="SyntaxTrivia"/>.
+/// </summary>
+public static class Trivia
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    /// <summary>
+    /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
+    /// </summary>
+    /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+    /// <param name="trivia">The <see cref="SyntaxTriviaList"/>.</param>
+    /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
+    public static bool TryGetLeadingTrivia(this MemberDeclarationSyntax member, out SyntaxTriviaList trivia)
+    {
+        if (member is null)
+        {
+            throw new System.ArgumentNullException(nameof(member));
+        }
 
-    using Gu.Roslyn.AnalyzerExtensions;
+        if (member.HasLeadingTrivia)
+        {
+            trivia = member.GetLeadingTrivia();
+            return true;
+        }
 
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
+        trivia = default;
+        return false;
+    }
 
     /// <summary>
-    /// Helper for processing <see cref="SyntaxTrivia"/>.
+    /// Get the leading whitespace for the accessor.
     /// </summary>
-    public static class Trivia
+    /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+    /// <returns>The string with the leading whitespace.</returns>
+    public static string? LeadingWhitespace(this MemberDeclarationSyntax member)
     {
-        /// <summary>
-        /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
-        /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <param name="trivia">The <see cref="SyntaxTriviaList"/>.</param>
-        /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
-        public static bool TryGetLeadingTrivia(this MemberDeclarationSyntax member, out SyntaxTriviaList trivia)
+        if (member is null)
         {
-            if (member is null)
-            {
-                throw new System.ArgumentNullException(nameof(member));
-            }
-
-            if (member.HasLeadingTrivia)
-            {
-                trivia = member.GetLeadingTrivia();
-                return true;
-            }
-
-            trivia = default;
-            return false;
+            throw new System.ArgumentNullException(nameof(member));
         }
 
-        /// <summary>
-        /// Get the leading whitespace for the accessor.
-        /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <returns>The string with the leading whitespace.</returns>
-        public static string? LeadingWhitespace(this MemberDeclarationSyntax member)
+        if (member.TryGetLeadingTrivia(out var triviaList) &&
+            triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
         {
-            if (member is null)
-            {
-                throw new System.ArgumentNullException(nameof(member));
-            }
-
-            if (member.TryGetLeadingTrivia(out var triviaList) &&
-                triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
-            {
-                return trivia.ToString();
-            }
-
-            return null;
+            return trivia.ToString();
         }
 
-        /// <summary>
-        /// Get the leading whitespace for the accessor.
-        /// </summary>
-        /// <param name="accessor">The <see cref="AccessorDeclarationSyntax"/>.</param>
-        /// <returns>The string with the leading whitespace.</returns>
-        public static string? LeadingWhitespace(this AccessorDeclarationSyntax accessor)
+        return null;
+    }
+
+    /// <summary>
+    /// Get the leading whitespace for the accessor.
+    /// </summary>
+    /// <param name="accessor">The <see cref="AccessorDeclarationSyntax"/>.</param>
+    /// <returns>The string with the leading whitespace.</returns>
+    public static string? LeadingWhitespace(this AccessorDeclarationSyntax accessor)
+    {
+        if (accessor is null)
         {
-            if (accessor is null)
-            {
-                throw new System.ArgumentNullException(nameof(accessor));
-            }
-
-            if (accessor.HasLeadingTrivia &&
-                accessor.GetLeadingTrivia() is var triviaList &&
-                triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
-            {
-                return trivia.ToString();
-            }
-
-            return null;
+            throw new System.ArgumentNullException(nameof(accessor));
         }
 
-        /// <summary>
-        /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
-        /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <param name="trivia">The <see cref="SyntaxTriviaList"/>.</param>
-        /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
-        public static bool TryGetTrailingTrivia(this MemberDeclarationSyntax member, out SyntaxTriviaList trivia)
+        if (accessor.HasLeadingTrivia &&
+            accessor.GetLeadingTrivia() is var triviaList &&
+            triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out var trivia))
         {
-            if (member is null)
-            {
-                throw new System.ArgumentNullException(nameof(member));
-            }
-
-            if (member.HasTrailingTrivia)
-            {
-                trivia = member.GetTrailingTrivia();
-                return true;
-            }
-
-            trivia = default;
-            return false;
+            return trivia.ToString();
         }
 
-        /// <summary>
-        /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
-        /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>True if leading <see cref="SyntaxKind.WhitespaceTrivia"/> exists.</returns>
-        public static bool TryGetLeadingWhitespace(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
-        {
-            if (member is null)
-            {
-                throw new System.ArgumentNullException(nameof(member));
-            }
+        return null;
+    }
 
-            trivia = default;
-            return member.HasLeadingTrivia &&
-                   member.GetLeadingTrivia() is { } triviaList &&
-                   triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out trivia);
+    /// <summary>
+    /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
+    /// </summary>
+    /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+    /// <param name="trivia">The <see cref="SyntaxTriviaList"/>.</param>
+    /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
+    public static bool TryGetTrailingTrivia(this MemberDeclarationSyntax member, out SyntaxTriviaList trivia)
+    {
+        if (member is null)
+        {
+            throw new System.ArgumentNullException(nameof(member));
         }
 
-        /// <summary>
-        /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
-        /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
-        public static bool TryGetLeadingNewLine(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
+        if (member.HasTrailingTrivia)
         {
-            if (member is null)
-            {
-                throw new System.ArgumentNullException(nameof(member));
-            }
-
-            trivia = default;
-            return member.HasLeadingTrivia &&
-                   member.GetLeadingTrivia() is SyntaxTriviaList triviaList &&
-                   triviaList.TryFirst(out trivia) &&
-                   trivia.IsKind(SyntaxKind.EndOfLineTrivia);
+            trivia = member.GetTrailingTrivia();
+            return true;
         }
 
-        /// <summary>
-        /// Get the trailing <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
-        /// </summary>
-        /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
-        /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>True if trailing <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
-        public static bool TryGetTrailingNewLine(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
-        {
-            if (member is null)
-            {
-                throw new System.ArgumentNullException(nameof(member));
-            }
+        trivia = default;
+        return false;
+    }
 
-            trivia = default;
-            return member.HasTrailingTrivia &&
-                   member.GetTrailingTrivia() is SyntaxTriviaList triviaList &&
-                   triviaList.TryLast(out trivia) &&
-                   trivia.IsKind(SyntaxKind.EndOfLineTrivia);
+    /// <summary>
+    /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
+    /// </summary>
+    /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+    /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>True if leading <see cref="SyntaxKind.WhitespaceTrivia"/> exists.</returns>
+    public static bool TryGetLeadingWhitespace(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
+    {
+        if (member is null)
+        {
+            throw new System.ArgumentNullException(nameof(member));
         }
 
-        /// <summary>
-        /// Add <paramref name="trivia"/> before existing trivia.
-        /// </summary>
-        /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>The node with updated trivia.</returns>
-        public static T PrependLeadingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
-            where T : SyntaxNode
+        trivia = default;
+        return member.HasLeadingTrivia &&
+               member.GetLeadingTrivia() is { } triviaList &&
+               triviaList.TryFirst(x => x.IsKind(SyntaxKind.WhitespaceTrivia), out trivia);
+    }
+
+    /// <summary>
+    /// Get the leading <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
+    /// </summary>
+    /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+    /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>True if leading <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
+    public static bool TryGetLeadingNewLine(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
+    {
+        if (member is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasLeadingTrivia)
-            {
-                return node.WithLeadingTrivia(trivia.Concat(node.GetLeadingTrivia()));
-            }
-
-            return node.WithLeadingTrivia(trivia);
+            throw new System.ArgumentNullException(nameof(member));
         }
 
-        /// <summary>
-        /// Add <paramref name="trivia"/> before existing trivia.
-        /// </summary>
-        /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>The node with updated trivia.</returns>
-        public static T PrependLeadingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
-            where T : SyntaxNode
+        trivia = default;
+        return member.HasLeadingTrivia &&
+               member.GetLeadingTrivia() is SyntaxTriviaList triviaList &&
+               triviaList.TryFirst(out trivia) &&
+               trivia.IsKind(SyntaxKind.EndOfLineTrivia);
+    }
+
+    /// <summary>
+    /// Get the trailing <see cref="SyntaxKind.EndOfLineTrivia"/> if exists.
+    /// </summary>
+    /// <param name="member">The <see cref="MemberDeclarationSyntax"/>.</param>
+    /// <param name="trivia">The <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>True if trailing <see cref="SyntaxKind.EndOfLineTrivia"/> exists.</returns>
+    public static bool TryGetTrailingNewLine(this MemberDeclarationSyntax member, out SyntaxTrivia trivia)
+    {
+        if (member is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasLeadingTrivia)
-            {
-                return node.WithLeadingTrivia(trivia.Concat(node.GetLeadingTrivia()));
-            }
-
-            return node.WithLeadingTrivia(trivia);
+            throw new System.ArgumentNullException(nameof(member));
         }
 
-        /// <summary>
-        /// Add <paramref name="trivia"/> after existing trivia.
-        /// </summary>
-        /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>The node with updated trivia.</returns>
-        public static T AppendLeadingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
-            where T : SyntaxNode
+        trivia = default;
+        return member.HasTrailingTrivia &&
+               member.GetTrailingTrivia() is SyntaxTriviaList triviaList &&
+               triviaList.TryLast(out trivia) &&
+               trivia.IsKind(SyntaxKind.EndOfLineTrivia);
+    }
+
+    /// <summary>
+    /// Add <paramref name="trivia"/> before existing trivia.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>The node with updated trivia.</returns>
+    public static T PrependLeadingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
+        where T : SyntaxNode
+    {
+        if (node is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasLeadingTrivia)
-            {
-                return node.WithLeadingTrivia(node.GetLeadingTrivia().Concat(trivia));
-            }
-
-            return node.WithLeadingTrivia(trivia);
+            throw new System.ArgumentNullException(nameof(node));
         }
 
-        /// <summary>
-        /// Add <paramref name="trivia"/> after existing trivia.
-        /// </summary>
-        /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>The node with updated trivia.</returns>
-        public static T AppendLeadingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
-            where T : SyntaxNode
+        if (node.HasLeadingTrivia)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasLeadingTrivia)
-            {
-                return node.WithLeadingTrivia(node.GetLeadingTrivia().Concat(trivia));
-            }
-
-            return node.WithLeadingTrivia(trivia);
+            return node.WithLeadingTrivia(trivia.Concat(node.GetLeadingTrivia()));
         }
 
-        /// <summary>
-        /// Add <paramref name="trivia"/> before existing trivia.
-        /// </summary>
-        /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>The node with updated trivia.</returns>
-        public static T PrependTrailingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
-            where T : SyntaxNode
+        return node.WithLeadingTrivia(trivia);
+    }
+
+    /// <summary>
+    /// Add <paramref name="trivia"/> before existing trivia.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>The node with updated trivia.</returns>
+    public static T PrependLeadingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
+        where T : SyntaxNode
+    {
+        if (node is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasTrailingTrivia)
-            {
-                return node.WithTrailingTrivia(trivia.Concat(node.GetTrailingTrivia()));
-            }
-
-            return node.WithTrailingTrivia(trivia);
+            throw new System.ArgumentNullException(nameof(node));
         }
 
-        /// <summary>
-        /// Add <paramref name="trivia"/> before existing trivia.
-        /// </summary>
-        /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>The node with updated trivia.</returns>
-        public static T PrependTrailingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
-            where T : SyntaxNode
+        if (node.HasLeadingTrivia)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasTrailingTrivia)
-            {
-                return node.WithTrailingTrivia(trivia.Concat(node.GetTrailingTrivia()));
-            }
-
-            return node.WithTrailingTrivia(trivia);
+            return node.WithLeadingTrivia(trivia.Concat(node.GetLeadingTrivia()));
         }
 
-        /// <summary>
-        /// Add <paramref name="trivia"/> after existing trivia.
-        /// </summary>
-        /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>The node with updated trivia.</returns>
-        public static T AppendTrailingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
-            where T : SyntaxNode
+        return node.WithLeadingTrivia(trivia);
+    }
+
+    /// <summary>
+    /// Add <paramref name="trivia"/> after existing trivia.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>The node with updated trivia.</returns>
+    public static T AppendLeadingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
+        where T : SyntaxNode
+    {
+        if (node is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasTrailingTrivia)
-            {
-                return node.WithTrailingTrivia(node.GetTrailingTrivia().Concat(trivia));
-            }
-
-            return node.WithTrailingTrivia(trivia);
+            throw new System.ArgumentNullException(nameof(node));
         }
 
-        /// <summary>
-        /// Add <paramref name="trivia"/> after existing trivia.
-        /// </summary>
-        /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
-        /// <returns>The node with updated trivia.</returns>
-        public static T AppendTrailingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
-            where T : SyntaxNode
+        if (node.HasLeadingTrivia)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasTrailingTrivia)
-            {
-                return node.WithTrailingTrivia(node.GetTrailingTrivia().Concat(trivia));
-            }
-
-            return node.WithTrailingTrivia(trivia);
+            return node.WithLeadingTrivia(node.GetLeadingTrivia().Concat(trivia));
         }
 
-        /// <summary>
-        /// Copy leading trivia from <paramref name="target"/> to <paramref name="source"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="target">The target to copy trivia to.</param>
-        /// <param name="source">The source to copy trivia from.</param>
-        /// <returns><paramref name="target"/> with trivia from <paramref name="source"/>.</returns>
-        public static T WithLeadingTriviaFrom<T>(this T target, SyntaxNode source)
-            where T : SyntaxNode
-        {
-            if (source is null)
-            {
-                throw new System.ArgumentNullException(nameof(source));
-            }
+        return node.WithLeadingTrivia(trivia);
+    }
 
-            return source.HasLeadingTrivia
-                ? target.WithLeadingTrivia(source.GetLeadingTrivia())
-                : target;
+    /// <summary>
+    /// Add <paramref name="trivia"/> after existing trivia.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>The node with updated trivia.</returns>
+    public static T AppendLeadingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
         }
 
-        /// <summary>
-        /// Copy trailing trivia from <paramref name="target"/> to <paramref name="source"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="target">The target to copy trivia to.</param>
-        /// <param name="source">The source to copy trivia from.</param>
-        /// <returns><paramref name="target"/> with trivia from <paramref name="source"/>.</returns>
-        public static T WithTrailingTriviaFrom<T>(this T target, SyntaxNode source)
-            where T : SyntaxNode
+        if (node.HasLeadingTrivia)
         {
-            if (source is null)
-            {
-                throw new System.ArgumentNullException(nameof(source));
-            }
-
-            return source.HasTrailingTrivia
-                ? target.WithTrailingTrivia(source.GetTrailingTrivia())
-                : target;
+            return node.WithLeadingTrivia(node.GetLeadingTrivia().Concat(trivia));
         }
 
-        /// <summary>
-        /// Add leading elastic line feed to <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <returns><paramref name="node"/> with leading elastic line feed.</returns>
-        public static T WithLeadingElasticLineFeed<T>(this T node)
-            where T : SyntaxNode
+        return node.WithLeadingTrivia(trivia);
+    }
+
+    /// <summary>
+    /// Add <paramref name="trivia"/> before existing trivia.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>The node with updated trivia.</returns>
+    public static T PrependTrailingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
+        where T : SyntaxNode
+    {
+        if (node is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasLeadingTrivia)
-            {
-                return node.WithLeadingTrivia(
-                    node.GetLeadingTrivia()
-                        .Insert(0, SyntaxFactory.ElasticLineFeed));
-            }
-
-            return node.WithLeadingTrivia(SyntaxFactory.ElasticLineFeed);
+            throw new System.ArgumentNullException(nameof(node));
         }
 
-        /// <summary>
-        /// Add leading elastic line feed to <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <returns><paramref name="node"/> with leading elastic line feed.</returns>
-        public static T WithLeadingElasticSpace<T>(this T node)
-            where T : SyntaxNode
+        if (node.HasTrailingTrivia)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasLeadingTrivia)
-            {
-                return node.WithLeadingTrivia(
-                    node.GetLeadingTrivia()
-                        .Insert(0, SyntaxFactory.ElasticSpace));
-            }
-
-            return node.WithLeadingTrivia(SyntaxFactory.ElasticSpace);
+            return node.WithTrailingTrivia(trivia.Concat(node.GetTrailingTrivia()));
         }
 
-        /// <summary>
-        /// Add leading line feed to <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <returns><paramref name="node"/> with leading line feed.</returns>
-        public static T WithLeadingLineFeed<T>(this T node)
-            where T : SyntaxNode
+        return node.WithTrailingTrivia(trivia);
+    }
+
+    /// <summary>
+    /// Add <paramref name="trivia"/> before existing trivia.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>The node with updated trivia.</returns>
+    public static T PrependTrailingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
+        where T : SyntaxNode
+    {
+        if (node is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasLeadingTrivia)
-            {
-                return node.WithLeadingTrivia(
-                    node.GetLeadingTrivia()
-                        .Insert(0, SyntaxFactory.LineFeed));
-            }
-
-            return node.WithLeadingTrivia(SyntaxFactory.LineFeed);
+            throw new System.ArgumentNullException(nameof(node));
         }
 
-        /// <summary>
-        /// Add leading line feed to <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <returns><paramref name="node"/> with leading line feed.</returns>
-        public static T WithoutLeadingLineFeed<T>(this T node)
-            where T : SyntaxNode
+        if (node.HasTrailingTrivia)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasLeadingTrivia &&
-                node.GetLeadingTrivia() is SyntaxTriviaList triviaList &&
-                triviaList.TryFirst(out var first) &&
-                first.IsKind(SyntaxKind.EndOfLineTrivia))
-            {
-                return node.WithLeadingTrivia(triviaList.Skip(1));
-            }
-
-            return node;
+            return node.WithTrailingTrivia(trivia.Concat(node.GetTrailingTrivia()));
         }
 
-        /// <summary>
-        /// Add leading line feed to <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <returns><paramref name="node"/> with leading line feed.</returns>
-        public static T WithoutTrailingLineFeed<T>(this T node)
-            where T : SyntaxNode
+        return node.WithTrailingTrivia(trivia);
+    }
+
+    /// <summary>
+    /// Add <paramref name="trivia"/> after existing trivia.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>The node with updated trivia.</returns>
+    public static T AppendTrailingTrivia<T>(this T node, params SyntaxTrivia[] trivia)
+        where T : SyntaxNode
+    {
+        if (node is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasTrailingTrivia &&
-                node.GetTrailingTrivia() is { } triviaList &&
-                triviaList.TryLast(out var first) &&
-                first.IsKind(SyntaxKind.EndOfLineTrivia))
-            {
-                return node.WithTrailingTrivia(triviaList.Take(triviaList.Count - 2));
-            }
-
-            return node;
+            throw new System.ArgumentNullException(nameof(node));
         }
 
-        /// <summary>
-        /// Add leading line feed to <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <returns><paramref name="node"/> with leading line feed.</returns>
-        public static T WithoutTrailingWhiteSpace<T>(this T node)
-            where T : SyntaxNode
+        if (node.HasTrailingTrivia)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasTrailingTrivia &&
-                node.GetTrailingTrivia() is { } triviaList &&
-                triviaList.TryLast(out var first) &&
-                first.IsKind(SyntaxKind.WhitespaceTrivia))
-            {
-                return node.WithTrailingTrivia(triviaList.Take(triviaList.Count - 2));
-            }
-
-            return node;
+            return node.WithTrailingTrivia(node.GetTrailingTrivia().Concat(trivia));
         }
 
-        /// <summary>
-        /// Add trailing elastic line feed to <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <returns><paramref name="node"/> with trailing elastic line feed.</returns>
-        public static T WithTrailingElasticLineFeed<T>(this T node)
-            where T : SyntaxNode
+        return node.WithTrailingTrivia(trivia);
+    }
+
+    /// <summary>
+    /// Add <paramref name="trivia"/> after existing trivia.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <param name="trivia">The array of <see cref="SyntaxTrivia"/>.</param>
+    /// <returns>The node with updated trivia.</returns>
+    public static T AppendTrailingTrivia<T>(this T node, IEnumerable<SyntaxTrivia> trivia)
+        where T : SyntaxNode
+    {
+        if (node is null)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasTrailingTrivia)
-            {
-                return node.WithTrailingTrivia(
-                    node.GetTrailingTrivia()
-                        .Add(SyntaxFactory.ElasticLineFeed));
-            }
-
-            return node.WithTrailingTrivia(SyntaxFactory.ElasticLineFeed);
+            throw new System.ArgumentNullException(nameof(node));
         }
 
-        /// <summary>
-        /// Add trailing line feed to <paramref name="node"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
-        /// <param name="node">The <typeparamref name="T"/>.</param>
-        /// <returns><paramref name="node"/> with trailing line feed.</returns>
-        public static T WithTrailingLineFeed<T>(this T node)
-            where T : SyntaxNode
+        if (node.HasTrailingTrivia)
         {
-            if (node is null)
-            {
-                throw new System.ArgumentNullException(nameof(node));
-            }
-
-            if (node.HasTrailingTrivia)
-            {
-                return node.WithTrailingTrivia(
-                    node.GetTrailingTrivia()
-                        .Add(SyntaxFactory.LineFeed));
-            }
-
-            return node.WithTrailingTrivia(SyntaxFactory.LineFeed);
+            return node.WithTrailingTrivia(node.GetTrailingTrivia().Concat(trivia));
         }
+
+        return node.WithTrailingTrivia(trivia);
+    }
+
+    /// <summary>
+    /// Copy leading trivia from <paramref name="target"/> to <paramref name="source"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="target">The target to copy trivia to.</param>
+    /// <param name="source">The source to copy trivia from.</param>
+    /// <returns><paramref name="target"/> with trivia from <paramref name="source"/>.</returns>
+    public static T WithLeadingTriviaFrom<T>(this T target, SyntaxNode source)
+        where T : SyntaxNode
+    {
+        if (source is null)
+        {
+            throw new System.ArgumentNullException(nameof(source));
+        }
+
+        return source.HasLeadingTrivia
+            ? target.WithLeadingTrivia(source.GetLeadingTrivia())
+            : target;
+    }
+
+    /// <summary>
+    /// Copy trailing trivia from <paramref name="target"/> to <paramref name="source"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="target">The target to copy trivia to.</param>
+    /// <param name="source">The source to copy trivia from.</param>
+    /// <returns><paramref name="target"/> with trivia from <paramref name="source"/>.</returns>
+    public static T WithTrailingTriviaFrom<T>(this T target, SyntaxNode source)
+        where T : SyntaxNode
+    {
+        if (source is null)
+        {
+            throw new System.ArgumentNullException(nameof(source));
+        }
+
+        return source.HasTrailingTrivia
+            ? target.WithTrailingTrivia(source.GetTrailingTrivia())
+            : target;
+    }
+
+    /// <summary>
+    /// Add leading elastic line feed to <paramref name="node"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <returns><paramref name="node"/> with leading elastic line feed.</returns>
+    public static T WithLeadingElasticLineFeed<T>(this T node)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
+        }
+
+        if (node.HasLeadingTrivia)
+        {
+            return node.WithLeadingTrivia(
+                node.GetLeadingTrivia()
+                    .Insert(0, SyntaxFactory.ElasticLineFeed));
+        }
+
+        return node.WithLeadingTrivia(SyntaxFactory.ElasticLineFeed);
+    }
+
+    /// <summary>
+    /// Add leading elastic line feed to <paramref name="node"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <returns><paramref name="node"/> with leading elastic line feed.</returns>
+    public static T WithLeadingElasticSpace<T>(this T node)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
+        }
+
+        if (node.HasLeadingTrivia)
+        {
+            return node.WithLeadingTrivia(
+                node.GetLeadingTrivia()
+                    .Insert(0, SyntaxFactory.ElasticSpace));
+        }
+
+        return node.WithLeadingTrivia(SyntaxFactory.ElasticSpace);
+    }
+
+    /// <summary>
+    /// Add leading line feed to <paramref name="node"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <returns><paramref name="node"/> with leading line feed.</returns>
+    public static T WithLeadingLineFeed<T>(this T node)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
+        }
+
+        if (node.HasLeadingTrivia)
+        {
+            return node.WithLeadingTrivia(
+                node.GetLeadingTrivia()
+                    .Insert(0, SyntaxFactory.LineFeed));
+        }
+
+        return node.WithLeadingTrivia(SyntaxFactory.LineFeed);
+    }
+
+    /// <summary>
+    /// Add leading line feed to <paramref name="node"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <returns><paramref name="node"/> with leading line feed.</returns>
+    public static T WithoutLeadingLineFeed<T>(this T node)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
+        }
+
+        if (node.HasLeadingTrivia &&
+            node.GetLeadingTrivia() is SyntaxTriviaList triviaList &&
+            triviaList.TryFirst(out var first) &&
+            first.IsKind(SyntaxKind.EndOfLineTrivia))
+        {
+            return node.WithLeadingTrivia(triviaList.Skip(1));
+        }
+
+        return node;
+    }
+
+    /// <summary>
+    /// Add leading line feed to <paramref name="node"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <returns><paramref name="node"/> with leading line feed.</returns>
+    public static T WithoutTrailingLineFeed<T>(this T node)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
+        }
+
+        if (node.HasTrailingTrivia &&
+            node.GetTrailingTrivia() is { } triviaList &&
+            triviaList.TryLast(out var first) &&
+            first.IsKind(SyntaxKind.EndOfLineTrivia))
+        {
+            return node.WithTrailingTrivia(triviaList.Take(triviaList.Count - 2));
+        }
+
+        return node;
+    }
+
+    /// <summary>
+    /// Add leading line feed to <paramref name="node"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <returns><paramref name="node"/> with leading line feed.</returns>
+    public static T WithoutTrailingWhiteSpace<T>(this T node)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
+        }
+
+        if (node.HasTrailingTrivia &&
+            node.GetTrailingTrivia() is { } triviaList &&
+            triviaList.TryLast(out var first) &&
+            first.IsKind(SyntaxKind.WhitespaceTrivia))
+        {
+            return node.WithTrailingTrivia(triviaList.Take(triviaList.Count - 2));
+        }
+
+        return node;
+    }
+
+    /// <summary>
+    /// Add trailing elastic line feed to <paramref name="node"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <returns><paramref name="node"/> with trailing elastic line feed.</returns>
+    public static T WithTrailingElasticLineFeed<T>(this T node)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
+        }
+
+        if (node.HasTrailingTrivia)
+        {
+            return node.WithTrailingTrivia(
+                node.GetTrailingTrivia()
+                    .Add(SyntaxFactory.ElasticLineFeed));
+        }
+
+        return node.WithTrailingTrivia(SyntaxFactory.ElasticLineFeed);
+    }
+
+    /// <summary>
+    /// Add trailing line feed to <paramref name="node"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of <see cref="SyntaxNode"/>.</typeparam>
+    /// <param name="node">The <typeparamref name="T"/>.</param>
+    /// <returns><paramref name="node"/> with trailing line feed.</returns>
+    public static T WithTrailingLineFeed<T>(this T node)
+        where T : SyntaxNode
+    {
+        if (node is null)
+        {
+            throw new System.ArgumentNullException(nameof(node));
+        }
+
+        if (node.HasTrailingTrivia)
+        {
+            return node.WithTrailingTrivia(
+                node.GetTrailingTrivia()
+                    .Add(SyntaxFactory.LineFeed));
+        }
+
+        return node.WithTrailingTrivia(SyntaxFactory.LineFeed);
     }
 }

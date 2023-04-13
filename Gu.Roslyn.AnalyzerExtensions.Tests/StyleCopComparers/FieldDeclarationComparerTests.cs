@@ -1,24 +1,24 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
+using Gu.Roslyn.Asserts;
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using NUnit.Framework;
+
+public static class FieldDeclarationComparerTests
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+    private static readonly FieldInfo PositionField = typeof(SyntaxNode).GetField("<Position>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
-    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
-    using Gu.Roslyn.Asserts;
-
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-    using NUnit.Framework;
-
-    public static class FieldDeclarationComparerTests
-    {
-        private static readonly FieldInfo PositionField = typeof(SyntaxNode).GetField("<Position>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
-
-        private static readonly IReadOnlyList<TestCaseData> ModifiersSource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> ModifiersSource = CreateTestCases(
+        @"
 namespace N
 {
     class C
@@ -43,10 +43,10 @@ namespace N
         int Private5;
     }
 }",
-            stripLines: false);
+        stripLines: false);
 
-        private static readonly IReadOnlyList<TestCaseData> BackingFieldSource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> BackingFieldSource = CreateTestCases(
+        @"
 namespace N
 {
     using System.Collections.Generic;
@@ -167,10 +167,10 @@ namespace N
         }
     }
 }",
-            stripLines: true);
+        stripLines: true);
 
-        private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(
+        @"
 namespace N
 {
     class C
@@ -180,10 +180,10 @@ namespace N
         public const int PublicConst3 = PublicConst2 * PublicConst1;
     }
 }",
-            stripLines: true);
+        stripLines: true);
 
-        private static readonly IReadOnlyList<TestCaseData> DependencyPropertySource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> DependencyPropertySource = CreateTestCases(
+        @"
 namespace N
 {
     using System.Windows;
@@ -324,10 +324,10 @@ namespace N
         }
     }
 }",
-            stripLines: true);
+        stripLines: true);
 
-        private static readonly IReadOnlyList<TestCaseData> AttachedPropertySource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> AttachedPropertySource = CreateTestCases(
+        @"
 namespace N
 {
     using System;
@@ -443,110 +443,109 @@ namespace N
     }
 }
 ",
-            stripLines: true);
+        stripLines: true);
 
-        [TestCaseSource(nameof(ModifiersSource))]
-        public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+    [TestCaseSource(nameof(ModifiersSource))]
+    public static void Compare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCaseSource(nameof(ModifiersSource))]
+    public static void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCaseSource(nameof(InitializedSource))]
+    public static void InitializedWithOther(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCaseSource(nameof(BackingFieldSource))]
+    public static void BackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCaseSource(nameof(DependencyPropertySource))]
+    public static void DependencyProperty(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCaseSource(nameof(AttachedPropertySource))]
+    public static void AttachedProperty(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+    }
+
+    public static TestCaseData[] CreateTestCases(string code, bool stripLines)
+    {
+        var tree = CSharpSyntaxTree.ParseText(code);
+
+        return All().Select(x =>
         {
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCaseSource(nameof(ModifiersSource))]
-        public static void MemberDeclarationComparerCompare(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCaseSource(nameof(InitializedSource))]
-        public static void InitializedWithOther(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCaseSource(nameof(BackingFieldSource))]
-        public static void BackingField(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCaseSource(nameof(DependencyPropertySource))]
-        public static void DependencyProperty(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCaseSource(nameof(AttachedPropertySource))]
-        public static void AttachedProperty(FieldDeclarationSyntax x, FieldDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, FieldDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  FieldDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  FieldDeclarationComparer.Compare(y, y));
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
-        }
-
-        public static TestCaseData[] CreateTestCases(string code, bool stripLines)
-        {
-            var tree = CSharpSyntaxTree.ParseText(code);
-
-            return All().Select(x =>
+            if (stripLines)
             {
-                if (stripLines)
-                {
-                    PositionField!.SetValue(x.Item1, 1);
-                    PositionField.SetValue(x.Item2, 1);
-                }
+                PositionField!.SetValue(x.Item1, 1);
+                PositionField.SetValue(x.Item2, 1);
+            }
 
-                return new TestCaseData(x.Item1, x.Item2);
-            }).ToArray();
+            return new TestCaseData(x.Item1, x.Item2);
+        }).ToArray();
 
-            List<(FieldDeclarationSyntax, FieldDeclarationSyntax)> All()
+        List<(FieldDeclarationSyntax, FieldDeclarationSyntax)> All()
+        {
+            var pairs = new List<(FieldDeclarationSyntax, FieldDeclarationSyntax)>();
+            var c = tree.FindClassDeclaration("C");
+            foreach (var member1 in c.Members.OfType<FieldDeclarationSyntax>())
             {
-                var pairs = new List<(FieldDeclarationSyntax, FieldDeclarationSyntax)>();
-                var c = tree.FindClassDeclaration("C");
-                foreach (var member1 in c.Members.OfType<FieldDeclarationSyntax>())
+                foreach (var member2 in c.Members.OfType<FieldDeclarationSyntax>())
                 {
-                    foreach (var member2 in c.Members.OfType<FieldDeclarationSyntax>())
+                    if (member1.SpanStart < member2.SpanStart)
                     {
-                        if (member1.SpanStart < member2.SpanStart)
-                        {
-                            pairs.Add((member1, member2));
-                        }
+                        pairs.Add((member1, member2));
                     }
                 }
-
-                return pairs;
             }
+
+            return pairs;
         }
     }
 }

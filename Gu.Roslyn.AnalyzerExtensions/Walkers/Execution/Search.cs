@@ -1,18 +1,17 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions;
+
+/// <summary>
+/// Controls how recursion is handled when walking.
+/// </summary>
+public enum Search
 {
     /// <summary>
-    /// Controls how recursion is handled when walking.
+    /// Search current scope only.
     /// </summary>
-    public enum Search
-    {
-        /// <summary>
-        /// Search current scope only.
-        /// </summary>
-        TopLevel,
+    TopLevel,
 
-        /// <summary>
-        /// Follow method calls etc, this means the search is more expensive.
-        /// </summary>
-        Recursive,
-    }
+    /// <summary>
+    /// Follow method calls etc, this means the search is more expensive.
+    /// </summary>
+    Recursive,
 }

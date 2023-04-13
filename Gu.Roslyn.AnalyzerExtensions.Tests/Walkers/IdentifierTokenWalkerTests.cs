@@ -1,16 +1,16 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
-{
-    using System.Linq;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers;
 
-    public static class IdentifierTokenWalkerTests
+using System.Linq;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class IdentifierTokenWalkerTests
+{
+    [Test]
+    public static void Test()
     {
-        [Test]
-        public static void Test()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -21,12 +21,11 @@ namespace N
         }
     }
 }");
-            var node = syntaxTree.FindTypeDeclaration("C");
-            using var walker = IdentifierTokenWalker.Borrow(node);
-            CollectionAssert.AreEqual(new[] { "C", "C", "var", "i" }, walker.IdentifierTokens.Select(x => x.ValueText));
-            Assert.AreEqual(true, walker.TryFind("i", out var match));
-            Assert.AreEqual("i", match.ValueText);
-            Assert.AreEqual(false, walker.TryFind("missing", out _));
-        }
+        var node = syntaxTree.FindTypeDeclaration("C");
+        using var walker = IdentifierTokenWalker.Borrow(node);
+        CollectionAssert.AreEqual(new[] { "C", "C", "var", "i" }, walker.IdentifierTokens.Select(x => x.ValueText));
+        Assert.AreEqual(true, walker.TryFind("i", out var match));
+        Assert.AreEqual("i", match.ValueText);
+        Assert.AreEqual(false, walker.TryFind("missing", out _));
     }
 }

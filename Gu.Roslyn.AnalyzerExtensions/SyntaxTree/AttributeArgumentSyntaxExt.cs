@@ -1,63 +1,62 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions;
+
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+/// <summary>
+/// Extension methods for <see cref="ArgumentSyntax"/>.
+/// </summary>
+public static class AttributeArgumentSyntaxExt
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
+    /// <summary>
+    /// Try get the value of the argument if it is a constant string.
+    /// </summary>
+    /// <param name="argument">The <see cref="AttributeArgumentSyntax"/>.</param>
+    /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+    /// <param name="result">The string contents of <paramref name="argument"/>.</param>
+    /// <returns>True if the argument expression was a constant string.</returns>
+    public static bool TryGetStringValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string? result)
+    {
+        if (argument is null)
+        {
+            throw new System.ArgumentNullException(nameof(argument));
+        }
+
+        if (semanticModel is null)
+        {
+            throw new System.ArgumentNullException(nameof(semanticModel));
+        }
+
+        result = null;
+        return argument.Expression is { } expression &&
+               expression.TryGetStringValue(semanticModel, cancellationToken, out result);
+    }
 
     /// <summary>
-    /// Extension methods for <see cref="ArgumentSyntax"/>.
+    /// Try get the value of the argument if it is a typeof() call.
     /// </summary>
-    public static class AttributeArgumentSyntaxExt
+    /// <param name="argument">The <see cref="AttributeArgumentSyntax"/>.</param>
+    /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
+    /// <param name="result">The string contents of <paramref name="argument"/>.</param>
+    /// <returns>True if the call is typeof() and we could figure out the type.</returns>
+    public static bool TryGetTypeofValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out ITypeSymbol? result)
     {
-        /// <summary>
-        /// Try get the value of the argument if it is a constant string.
-        /// </summary>
-        /// <param name="argument">The <see cref="AttributeArgumentSyntax"/>.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="result">The string contents of <paramref name="argument"/>.</param>
-        /// <returns>True if the argument expression was a constant string.</returns>
-        public static bool TryGetStringValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, out string? result)
+        if (argument is null)
         {
-            if (argument is null)
-            {
-                throw new System.ArgumentNullException(nameof(argument));
-            }
-
-            if (semanticModel is null)
-            {
-                throw new System.ArgumentNullException(nameof(semanticModel));
-            }
-
-            result = null;
-            return argument.Expression is { } expression &&
-                   expression.TryGetStringValue(semanticModel, cancellationToken, out result);
+            throw new System.ArgumentNullException(nameof(argument));
         }
 
-        /// <summary>
-        /// Try get the value of the argument if it is a typeof() call.
-        /// </summary>
-        /// <param name="argument">The <see cref="AttributeArgumentSyntax"/>.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <param name="result">The string contents of <paramref name="argument"/>.</param>
-        /// <returns>True if the call is typeof() and we could figure out the type.</returns>
-        public static bool TryGetTypeofValue(this AttributeArgumentSyntax argument, SemanticModel semanticModel, CancellationToken cancellationToken, [NotNullWhen(true)] out ITypeSymbol? result)
+        if (semanticModel is null)
         {
-            if (argument is null)
-            {
-                throw new System.ArgumentNullException(nameof(argument));
-            }
-
-            if (semanticModel is null)
-            {
-                throw new System.ArgumentNullException(nameof(semanticModel));
-            }
-
-            result = null;
-            return argument.Expression is TypeOfExpressionSyntax expression &&
-                   semanticModel.TryGetType(expression.Type, cancellationToken, out result);
+            throw new System.ArgumentNullException(nameof(semanticModel));
         }
+
+        result = null;
+        return argument.Expression is TypeOfExpressionSyntax expression &&
+               semanticModel.TryGetType(expression.Type, cancellationToken, out result);
     }
 }

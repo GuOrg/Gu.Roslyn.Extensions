@@ -1,21 +1,21 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
-{
-    using System.Linq;
-    using System.Threading;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests;
 
-    public static class ForField
+using System.Linq;
+using System.Threading;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NUnit.Framework;
+
+public static class ForField
+{
+    [TestCase("this.value = 1")]
+    [TestCase("this.value++")]
+    [TestCase("this.value += 1")]
+    public static void One(string mutation)
     {
-        [TestCase("this.value = 1")]
-        [TestCase("this.value++")]
-        [TestCase("this.value += 1")]
-        public static void One(string mutation)
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     public class C
@@ -28,21 +28,21 @@ namespace N
         }
     }
 }";
-            code = code.AssertReplace("this.value = 1", mutation);
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
-            using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
-            Assert.AreEqual(mutation, walker.All().Single().ToString());
-            Assert.AreEqual(true, walker.TrySingle(out var single));
-            Assert.AreEqual(mutation, single.ToString());
-        }
+        code = code.AssertReplace("this.value = 1", mutation);
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
+        using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
+        Assert.AreEqual(mutation, walker.All().Single().ToString());
+        Assert.AreEqual(true, walker.TrySingle(out var single));
+        Assert.AreEqual(mutation, single.ToString());
+    }
 
-        [Test]
-        public static void ObjectInitializer()
-        {
-            var code = @"
+    [Test]
+    public static void ObjectInitializer()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -52,20 +52,20 @@ namespace N
         public static C Create() => new C { value = 1 };
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
-            using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
-            Assert.AreEqual("value = 1", walker.All().Single().ToString());
-            Assert.AreEqual(true, walker.TrySingle(out var single));
-            Assert.AreEqual("value = 1", single.ToString());
-        }
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
+        using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
+        Assert.AreEqual("value = 1", walker.All().Single().ToString());
+        Assert.AreEqual(true, walker.TrySingle(out var single));
+        Assert.AreEqual("value = 1", single.ToString());
+    }
 
-        [Test]
-        public static void Ref()
-        {
-            var code = @"
+    [Test]
+    public static void Ref()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -83,20 +83,20 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
-            using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
-            Assert.AreEqual("ref this.value", walker.All().Single().ToString());
-            Assert.AreEqual(true, walker.TrySingle(out var single));
-            Assert.AreEqual("ref this.value", single.ToString());
-        }
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
+        using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
+        Assert.AreEqual("ref this.value", walker.All().Single().ToString());
+        Assert.AreEqual(true, walker.TrySingle(out var single));
+        Assert.AreEqual("ref this.value", single.ToString());
+    }
 
-        [Test]
-        public static void Out()
-        {
-            var code = @"
+    [Test]
+    public static void Out()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -114,14 +114,13 @@ namespace N
         }
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
-            using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
-            Assert.AreEqual("out this.value", walker.All().Single().ToString());
-            Assert.AreEqual(true, walker.TrySingle(out var single));
-            Assert.AreEqual("out this.value", single.ToString());
-        }
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var field = (IFieldSymbol)semanticModel.GetDeclaredSymbol(syntaxTree.Find<VariableDeclaratorSyntax>("value"));
+        using var walker = MutationWalker.For(field, semanticModel, CancellationToken.None);
+        Assert.AreEqual("out this.value", walker.All().Single().ToString());
+        Assert.AreEqual(true, walker.TrySingle(out var single));
+        Assert.AreEqual("out this.value", single.ToString());
     }
 }

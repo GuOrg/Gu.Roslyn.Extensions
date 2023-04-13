@@ -1,17 +1,17 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.QualifyEventAccess
-{
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Gu.Roslyn.Asserts;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.QualifyEventAccess;
 
-    public static class Document
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Gu.Roslyn.Asserts;
+using NUnit.Framework;
+
+public static class Document
+{
+    [Test]
+    public static async Task WhenUnknown()
     {
-        [Test]
-        public static async Task WhenUnknown()
-        {
-            var sln = CodeFactory.CreateSolution(@"
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     class C
@@ -25,19 +25,19 @@ namespace N
         }
     }
 }");
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
+    }
 
-        [TestCase("E?.Invoke();", CodeStyleResult.No)]
-        [TestCase("E.Invoke();", CodeStyleResult.No)]
-        [TestCase("E();", CodeStyleResult.No)]
-        [TestCase("this.E?.Invoke();", CodeStyleResult.Yes)]
-        [TestCase("this.E.Invoke();", CodeStyleResult.Yes)]
-        [TestCase("this.E();", CodeStyleResult.Yes)]
-        public static async Task RaisingInMethod(string expression, CodeStyleResult expected)
-        {
-            var sln = CodeFactory.CreateSolution(@"
+    [TestCase("E?.Invoke();", CodeStyleResult.No)]
+    [TestCase("E.Invoke();", CodeStyleResult.No)]
+    [TestCase("E();", CodeStyleResult.No)]
+    [TestCase("this.E?.Invoke();", CodeStyleResult.Yes)]
+    [TestCase("this.E.Invoke();", CodeStyleResult.Yes)]
+    [TestCase("this.E();", CodeStyleResult.Yes)]
+    public static async Task RaisingInMethod(string expression, CodeStyleResult expected)
+    {
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     using System;
@@ -53,8 +53,7 @@ namespace N
     }
 }".AssertReplace("E?.Invoke();", expression));
 
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await document.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(expected, await document.QualifyEventAccessAsync(CancellationToken.None).ConfigureAwait(false));
     }
 }

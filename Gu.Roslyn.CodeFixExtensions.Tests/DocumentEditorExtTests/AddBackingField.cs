@@ -1,17 +1,17 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
-{
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.Editing;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests;
 
-    public static class AddBackingField
+using System.Linq;
+using System.Threading.Tasks;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.Editing;
+using NUnit.Framework;
+
+public static class AddBackingField
+{
+    [Test]
+    public static async Task WhenNoBackingFields()
     {
-        [Test]
-        public static async Task WhenNoBackingFields()
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     public class C
@@ -22,12 +22,12 @@ namespace N
         public int Value { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value");
-            var field = editor.AddBackingField(property);
-            Assert.AreEqual("privateint value;", field.ToFullString());
-            var expected = @"
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value");
+        var field = editor.AddBackingField(property);
+        Assert.AreEqual("privateint value;", field.ToFullString());
+        var expected = @"
 namespace N
 {
     public class C
@@ -39,13 +39,13 @@ namespace N
         public int Value { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task WhenNameCollision()
-        {
-            var code = @"
+    [Test]
+    public static async Task WhenNameCollision()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -55,12 +55,12 @@ namespace N
         public int Value { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value");
-            var field = editor.AddBackingField(property);
-            Assert.AreEqual("privateint value_;", field.ToFullString());
-            var expected = @"
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value");
+        var field = editor.AddBackingField(property);
+        Assert.AreEqual("privateint value_;", field.ToFullString());
+        var expected = @"
 namespace N
 {
     public class C
@@ -71,13 +71,13 @@ namespace N
         public int Value { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task Between()
-        {
-            var code = @"
+    [Test]
+    public static async Task Between()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -100,12 +100,12 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
-            var field = editor.AddBackingField(property);
-            Assert.AreEqual("privateint value2;", field.ToFullString());
-            var expected = @"
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
+        var field = editor.AddBackingField(property);
+        Assert.AreEqual("privateint value2;", field.ToFullString());
+        var expected = @"
 namespace N
 {
     public class C
@@ -129,13 +129,13 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task AdjacentToProperty()
-        {
-            var code = @"
+    [Test]
+    public static async Task AdjacentToProperty()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -154,12 +154,12 @@ namespace N
         public int Value2 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
-            var field = editor.AddBackingField(property);
-            Assert.AreEqual("privateint value2;", field.ToFullString());
-            var expected = @"
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
+        var field = editor.AddBackingField(property);
+        Assert.AreEqual("privateint value2;", field.ToFullString());
+        var expected = @"
 namespace N
 {
     public class C
@@ -179,13 +179,13 @@ namespace N
         public int Value2 { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task AdjacentToPropertyNewLine()
-        {
-            var code = @"
+    [Test]
+    public static async Task AdjacentToPropertyNewLine()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -205,12 +205,12 @@ namespace N
         public int Value2 { get; set; }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
-            var field = editor.AddBackingField(property);
-            Assert.AreEqual("privateint value2;", field.ToFullString());
-            var expected = @"
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var property = editor.OriginalRoot.SyntaxTree.FindPropertyDeclaration("Value2");
+        var field = editor.AddBackingField(property);
+        Assert.AreEqual("privateint value2;", field.ToFullString());
+        var expected = @"
 namespace N
 {
     public class C
@@ -232,7 +232,6 @@ namespace N
         public int Value2 { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
     }
 }

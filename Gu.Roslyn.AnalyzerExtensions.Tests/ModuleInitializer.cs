@@ -1,15 +1,14 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests
-{
-    using System.Runtime.CompilerServices;
-    using Gu.Roslyn.Asserts;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests;
 
-    internal static class ModuleInitializer
+using System.Runtime.CompilerServices;
+using Gu.Roslyn.Asserts;
+
+internal static class ModuleInitializer
+{
+    [ModuleInitializer]
+    internal static void Initialize()
     {
-        [ModuleInitializer]
-        internal static void Initialize()
-        {
-            Settings.Default = Settings.Default
-                                       .WithMetadataReferences(MetadataReferences.Transitive(typeof(ModuleInitializer)));
-        }
+        Settings.Default = Settings.Default
+                                   .WithMetadataReferences(MetadataReferences.Transitive(typeof(ModuleInitializer)));
     }
 }

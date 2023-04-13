@@ -1,36 +1,35 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.ExecutionWalkerTests;
+
+using System.Collections.Generic;
+using System.Threading;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+internal sealed class LiteralWalker : ExecutionWalker<LiteralWalker>
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
+    private readonly List<LiteralExpressionSyntax> literals = new();
 
-    internal sealed class LiteralWalker : ExecutionWalker<LiteralWalker>
+    internal IReadOnlyList<LiteralExpressionSyntax> Literals => this.literals;
+
+    public override void VisitLiteralExpression(LiteralExpressionSyntax node)
     {
-        private readonly List<LiteralExpressionSyntax> literals = new();
-
-        internal IReadOnlyList<LiteralExpressionSyntax> Literals => this.literals;
-
-        public override void VisitLiteralExpression(LiteralExpressionSyntax node)
+        if (node.IsKind(SyntaxKind.NumericLiteralExpression))
         {
-            if (node.IsKind(SyntaxKind.NumericLiteralExpression))
-            {
-                this.literals.Add(node);
-            }
-
-            base.VisitLiteralExpression(node);
+            this.literals.Add(node);
         }
 
-        internal static LiteralWalker Borrow(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
-        {
-            return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new LiteralWalker());
-        }
+        base.VisitLiteralExpression(node);
+    }
 
-        protected override void Clear()
-        {
-            this.literals.Clear();
-            base.Clear();
-        }
+    internal static LiteralWalker Borrow(SyntaxNode node, SearchScope scope, SemanticModel semanticModel, CancellationToken cancellationToken)
+    {
+        return BorrowAndVisit(node, scope, semanticModel, cancellationToken, () => new LiteralWalker());
+    }
+
+    protected override void Clear()
+    {
+        this.literals.Clear();
+        base.Clear();
     }
 }

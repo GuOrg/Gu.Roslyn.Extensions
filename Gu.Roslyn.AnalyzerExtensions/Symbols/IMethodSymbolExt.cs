@@ -1,161 +1,160 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
-{
-    using System.Diagnostics.CodeAnalysis;
+﻿namespace Gu.Roslyn.AnalyzerExtensions;
 
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+/// <summary>
+/// Helpers for working with <see cref="IMethodSymbol"/>.
+/// </summary>
+// ReSharper disable once InconsistentNaming
+public static class IMethodSymbolExt
+{
+    /// <summary>
+    /// Find the matching parameter for the argument.
+    /// </summary>
+    /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+    /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
+    /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
+    public static IParameterSymbol? FindParameter(this IMethodSymbol method, ArgumentSyntax argument)
+    {
+        return TryFindParameter(method, argument, out var match) ? match : null;
+    }
 
     /// <summary>
-    /// Helpers for working with <see cref="IMethodSymbol"/>.
+    /// Find the matching parameter for the argument.
     /// </summary>
-    // ReSharper disable once InconsistentNaming
-    public static class IMethodSymbolExt
+    /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+    /// <param name="name">The name of the parameter.</param>
+    /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
+    public static IParameterSymbol? FindParameter(this IMethodSymbol method, string name)
     {
-        /// <summary>
-        /// Find the matching parameter for the argument.
-        /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
-        /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
-        public static IParameterSymbol? FindParameter(this IMethodSymbol method, ArgumentSyntax argument)
+        return TryFindParameter(method, name, out var match) ? match : null;
+    }
+
+    /// <summary>
+    /// Find the matching parameter for the argument.
+    /// </summary>
+    /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+    /// <param name="type">The type of the parameter.</param>
+    /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
+    public static IParameterSymbol? FindParameter(this IMethodSymbol method, QualifiedType type)
+    {
+        return TryFindParameter(method, type, out var match) ? match : null;
+    }
+
+    /// <summary>
+    /// Find the matching parameter for the argument.
+    /// </summary>
+    /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+    /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
+    /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
+    /// <returns>True if a matching parameter was found.</returns>
+    public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, [NotNullWhen(true)] out IParameterSymbol? parameter)
+    {
+        if (method is null)
         {
-            return TryFindParameter(method, argument, out var match) ? match : null;
+            throw new System.ArgumentNullException(nameof(method));
         }
 
-        /// <summary>
-        /// Find the matching parameter for the argument.
-        /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
-        /// <param name="name">The name of the parameter.</param>
-        /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
-        public static IParameterSymbol? FindParameter(this IMethodSymbol method, string name)
+        if (argument is null)
         {
-            return TryFindParameter(method, name, out var match) ? match : null;
+            throw new System.ArgumentNullException(nameof(argument));
         }
 
-        /// <summary>
-        /// Find the matching parameter for the argument.
-        /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
-        /// <param name="type">The type of the parameter.</param>
-        /// <returns><see cref="IParameterSymbol"/> if a matching parameter was found.</returns>
-        public static IParameterSymbol? FindParameter(this IMethodSymbol method, QualifiedType type)
+        if (argument.NameColon is { Name: { } name })
         {
-            return TryFindParameter(method, type, out var match) ? match : null;
+            return method.TryFindParameter(name.Identifier.ValueText, out parameter);
         }
 
-        /// <summary>
-        /// Find the matching parameter for the argument.
-        /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
-        /// <param name="argument">The <see cref="ArgumentSyntax"/>.</param>
-        /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
-        /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, ArgumentSyntax argument, [NotNullWhen(true)] out IParameterSymbol? parameter)
+        if (argument.Parent is ArgumentListSyntax argumentList)
         {
-            if (method is null)
+            var index = argumentList.Arguments.IndexOf(argument);
+            if (index >= method.Parameters.Length &&
+                method.Parameters.TryLast(out var last) &&
+                last.IsParams)
             {
-                throw new System.ArgumentNullException(nameof(method));
-            }
-
-            if (argument is null)
-            {
-                throw new System.ArgumentNullException(nameof(argument));
-            }
-
-            if (argument.NameColon is { Name: { } name })
-            {
-                return method.TryFindParameter(name.Identifier.ValueText, out parameter);
-            }
-
-            if (argument.Parent is ArgumentListSyntax argumentList)
-            {
-                var index = argumentList.Arguments.IndexOf(argument);
-                if (index >= method.Parameters.Length &&
-                    method.Parameters.TryLast(out var last) &&
-                    last.IsParams)
-                {
-                    parameter = last;
-                    return true;
-                }
-
-                return method.Parameters.TryElementAt(index, out parameter);
-            }
-
-            parameter = null;
-            return false;
-        }
-
-        /// <summary>
-        /// Find the parameter by name.
-        /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
-        /// <param name="name">The name of the parameter.</param>
-        /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
-        /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, string name, [NotNullWhen(true)] out IParameterSymbol? parameter)
-        {
-            if (method is null)
-            {
-                throw new System.ArgumentNullException(nameof(method));
-            }
-
-            if (name is null)
-            {
-                throw new System.ArgumentNullException(nameof(name));
-            }
-
-            foreach (var candidate in method.Parameters)
-            {
-                if (candidate.Name == name)
-                {
-                    parameter = candidate;
-                    return true;
-                }
-            }
-
-            // When extension method invocation
-            if (method.ReducedFrom is { Parameters: { Length: > 0 } parameters } &&
-                parameters[0].Name == name)
-            {
-                parameter = parameters[0];
+                parameter = last;
                 return true;
             }
 
-            parameter = null;
-            return false;
+            return method.Parameters.TryElementAt(index, out parameter);
         }
 
-        /// <summary>
-        /// Find the parameter by type.
-        /// </summary>
-        /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
-        /// <param name="type">The type of the parameter.</param>
-        /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
-        /// <returns>True if a matching parameter was found.</returns>
-        public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, [NotNullWhen(true)] out IParameterSymbol? parameter)
+        parameter = null;
+        return false;
+    }
+
+    /// <summary>
+    /// Find the parameter by name.
+    /// </summary>
+    /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+    /// <param name="name">The name of the parameter.</param>
+    /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
+    /// <returns>True if a matching parameter was found.</returns>
+    public static bool TryFindParameter(this IMethodSymbol method, string name, [NotNullWhen(true)] out IParameterSymbol? parameter)
+    {
+        if (method is null)
         {
-            if (method is null)
-            {
-                throw new System.ArgumentNullException(nameof(method));
-            }
-
-            if (type is null)
-            {
-                throw new System.ArgumentNullException(nameof(type));
-            }
-
-            foreach (var candidate in method.Parameters)
-            {
-                if (candidate.Type == type)
-                {
-                    parameter = candidate;
-                    return true;
-                }
-            }
-
-            parameter = null;
-            return false;
+            throw new System.ArgumentNullException(nameof(method));
         }
+
+        if (name is null)
+        {
+            throw new System.ArgumentNullException(nameof(name));
+        }
+
+        foreach (var candidate in method.Parameters)
+        {
+            if (candidate.Name == name)
+            {
+                parameter = candidate;
+                return true;
+            }
+        }
+
+        // When extension method invocation
+        if (method.ReducedFrom is { Parameters: { Length: > 0 } parameters } &&
+            parameters[0].Name == name)
+        {
+            parameter = parameters[0];
+            return true;
+        }
+
+        parameter = null;
+        return false;
+    }
+
+    /// <summary>
+    /// Find the parameter by type.
+    /// </summary>
+    /// <param name="method">The <see cref="IMethodSymbol"/>.</param>
+    /// <param name="type">The type of the parameter.</param>
+    /// <param name="parameter">The matching <see cref="IParameterSymbol"/>.</param>
+    /// <returns>True if a matching parameter was found.</returns>
+    public static bool TryFindParameter(this IMethodSymbol method, QualifiedType type, [NotNullWhen(true)] out IParameterSymbol? parameter)
+    {
+        if (method is null)
+        {
+            throw new System.ArgumentNullException(nameof(method));
+        }
+
+        if (type is null)
+        {
+            throw new System.ArgumentNullException(nameof(type));
+        }
+
+        foreach (var candidate in method.Parameters)
+        {
+            if (candidate.Type == type)
+            {
+                parameter = candidate;
+                return true;
+            }
+        }
+
+        parameter = null;
+        return false;
     }
 }

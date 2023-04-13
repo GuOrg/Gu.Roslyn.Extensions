@@ -1,15 +1,15 @@
-﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UnderscoreFields
-{
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.UnderscoreFields;
 
-    public static class SemanticModel
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class SemanticModel
+{
+    [Test]
+    public static void WhenUnknown()
     {
-        [Test]
-        public static void WhenUnknown()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C
@@ -26,18 +26,18 @@ namespace N
         public int P { get; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.UnderscoreFields(semanticModel));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.UnderscoreFields(semanticModel));
+    }
 
-        [TestCase("private int _f", CodeStyleResult.Yes)]
-        [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
-        [TestCase("private int f", CodeStyleResult.No)]
-        [TestCase("private readonly int f", CodeStyleResult.No)]
-        public static void WhenField(string declaration, CodeStyleResult expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [TestCase("private int _f", CodeStyleResult.Yes)]
+    [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
+    [TestCase("private int f", CodeStyleResult.No)]
+    [TestCase("private readonly int f", CodeStyleResult.No)]
+    public static void WhenField(string declaration, CodeStyleResult expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C
@@ -46,18 +46,18 @@ namespace N
     }
 }".AssertReplace("private int _f", declaration));
 
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            Assert.AreEqual(expected, CodeStyle.UnderscoreFields(semanticModel));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        Assert.AreEqual(expected, CodeStyle.UnderscoreFields(semanticModel));
+    }
 
-        [TestCase("private int _f", CodeStyleResult.Yes)]
-        [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
-        [TestCase("private int f", CodeStyleResult.No)]
-        [TestCase("private readonly int f", CodeStyleResult.No)]
-        public static void FiguresOutFromOtherTree(string declaration, CodeStyleResult expected)
-        {
-            var c1 = CSharpSyntaxTree.ParseText(@"
+    [TestCase("private int _f", CodeStyleResult.Yes)]
+    [TestCase("private readonly int _f = 1", CodeStyleResult.Yes)]
+    [TestCase("private int f", CodeStyleResult.No)]
+    [TestCase("private readonly int f", CodeStyleResult.No)]
+    public static void FiguresOutFromOtherTree(string declaration, CodeStyleResult expected)
+    {
+        var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C1
@@ -66,26 +66,26 @@ namespace N
     }
 }".AssertReplace("private int _f", declaration));
 
-            var c2 = CSharpSyntaxTree.ParseText(@"
+        var c2 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C2
     {
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, Settings.Default.MetadataReferences);
-            Assert.AreEqual(2, compilation.SyntaxTrees.Length);
-            foreach (var tree in compilation.SyntaxTrees)
-            {
-                var semanticModel = compilation.GetSemanticModel(tree);
-                Assert.AreEqual(expected, CodeStyle.UnderscoreFields(semanticModel));
-            }
-        }
-
-        [Test]
-        public static void ChecksContainingClassFirst()
+        var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, Settings.Default.MetadataReferences);
+        Assert.AreEqual(2, compilation.SyntaxTrees.Length);
+        foreach (var tree in compilation.SyntaxTrees)
         {
-            var c1 = CSharpSyntaxTree.ParseText(@"
+            var semanticModel = compilation.GetSemanticModel(tree);
+            Assert.AreEqual(expected, CodeStyle.UnderscoreFields(semanticModel));
+        }
+    }
+
+    [Test]
+    public static void ChecksContainingClassFirst()
+    {
+        var c1 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C1
@@ -94,7 +94,7 @@ namespace N
     }
 }");
 
-            var c2 = CSharpSyntaxTree.ParseText(@"
+        var c2 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     class C1
@@ -102,12 +102,11 @@ namespace N
         private int value;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[0]);
-            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.UnderscoreFields(semanticModel));
+        var compilation = CSharpCompilation.Create("test", new[] { c1, c2 }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[0]);
+        Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.UnderscoreFields(semanticModel));
 
-            semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[1]);
-            Assert.AreEqual(CodeStyleResult.No, CodeStyle.UnderscoreFields(semanticModel));
-        }
+        semanticModel = compilation.GetSemanticModel(compilation.SyntaxTrees[1]);
+        Assert.AreEqual(CodeStyleResult.No, CodeStyle.UnderscoreFields(semanticModel));
     }
 }

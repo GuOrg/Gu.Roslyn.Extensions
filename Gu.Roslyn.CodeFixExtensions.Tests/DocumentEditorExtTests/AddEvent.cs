@@ -1,20 +1,20 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
-{
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Editing;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests;
 
-    public static class AddEvent
+using System.Linq;
+using System.Threading.Tasks;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
+using NUnit.Framework;
+
+public static class AddEvent
+{
+    [Test]
+    public static async Task AddEventFieldDeclarationSyntax()
     {
-        [Test]
-        public static async Task AddEventFieldDeclarationSyntax()
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     public abstract class C
@@ -37,12 +37,12 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            _ = editor.AddEvent(containingType, eventDeclaration);
-            var expected = @"
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var eventDeclaration = (EventFieldDeclarationSyntax)editor.Generator.EventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        _ = editor.AddEvent(containingType, eventDeclaration);
+        var expected = @"
 namespace N
 {
     public abstract class C
@@ -67,13 +67,13 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static async Task AddEventDeclarationSyntax()
-        {
-            var code = @"
+    [Test]
+    public static async Task AddEventDeclarationSyntax()
+    {
+        var code = @"
 namespace N
 {
     public abstract class C
@@ -96,12 +96,12 @@ namespace N
         }
     }
 }";
-            var sln = CodeFactory.CreateSolution(code);
-            var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
-            var eventDeclaration = (EventDeclarationSyntax)editor.Generator.CustomEventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
-            var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
-            _ = editor.AddEvent(containingType, eventDeclaration);
-            var expected = @"
+        var sln = CodeFactory.CreateSolution(code);
+        var editor = await DocumentEditor.CreateAsync(sln.Projects.First().Documents.First()).ConfigureAwait(false);
+        var eventDeclaration = (EventDeclarationSyntax)editor.Generator.CustomEventDeclaration("SomeEvent", SyntaxFactory.ParseTypeName("System.EventHandler"), Accessibility.Public);
+        var containingType = editor.OriginalRoot.SyntaxTree.FindClassDeclaration("C");
+        _ = editor.AddEvent(containingType, eventDeclaration);
+        var expected = @"
 namespace N
 {
     public abstract class C
@@ -135,7 +135,6 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
     }
 }

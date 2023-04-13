@@ -1,16 +1,16 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol
-{
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.KnownSymbol;
 
-    public static class QualifiedMethodTests
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class QualifiedMethodTests
+{
+    [Test]
+    public static void SymbolEquality()
     {
-        [Test]
-        public static void SymbolEquality()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            @"
 namespace N
 {
     internal class C
@@ -20,12 +20,11 @@ namespace N
         }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindMethodDeclaration("M"));
-            var qualifiedMethod = new QualifiedMethod(new QualifiedType("N.C"), "M");
-            Assert.AreEqual(true, symbol == qualifiedMethod);
-            Assert.AreEqual(false, symbol != qualifiedMethod);
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var symbol = semanticModel.GetDeclaredSymbol(syntaxTree.FindMethodDeclaration("M"));
+        var qualifiedMethod = new QualifiedMethod(new QualifiedType("N.C"), "M");
+        Assert.AreEqual(true, symbol == qualifiedMethod);
+        Assert.AreEqual(false, symbol != qualifiedMethod);
     }
 }

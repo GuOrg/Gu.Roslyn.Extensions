@@ -1,18 +1,18 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTests
-{
-    using System.Threading;
-    using Gu.Roslyn.AnalyzerExtensions;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.AssignmentExecutionWalkerTests;
 
-    public static class Recursive
+using System.Threading;
+using Gu.Roslyn.AnalyzerExtensions;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NUnit.Framework;
+
+public static class Recursive
+{
+    [Test]
+    public static void Properties()
     {
-        [Test]
-        public static void Properties()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C1
@@ -90,13 +90,12 @@ namespace N
         public bool Selected { get; set; }
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var setter = syntaxTree.FindPropertyDeclaration("P2").Find<AccessorDeclarationSyntax>("set");
-            using var assignedValues = AssignmentExecutionWalker.Borrow(setter, SearchScope.Recursive, semanticModel, CancellationToken.None);
-            var actual = string.Join(", ", assignedValues.Assignments);
-            var expected = "this.P2 = null, this.P1 = null, this.P2 = null, this.bar1.Selected = false, this.bar1 = value, this.bar1.Selected = true, this.bar2.Selected = false, this.bar2 = value, this.bar2.Selected = true, this.bar1.Selected = false, this.bar1 = value, this.bar1.Selected = true";
-            Assert.AreEqual(expected, actual);
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var setter = syntaxTree.FindPropertyDeclaration("P2").Find<AccessorDeclarationSyntax>("set");
+        using var assignedValues = AssignmentExecutionWalker.Borrow(setter, SearchScope.Recursive, semanticModel, CancellationToken.None);
+        var actual = string.Join(", ", assignedValues.Assignments);
+        var expected = "this.P2 = null, this.P1 = null, this.P2 = null, this.bar1.Selected = false, this.bar1 = value, this.bar1.Selected = true, this.bar2.Selected = false, this.bar2 = value, this.bar2.Selected = true, this.bar1.Selected = false, this.bar1 = value, this.bar1.Selected = true";
+        Assert.AreEqual(expected, actual);
     }
 }

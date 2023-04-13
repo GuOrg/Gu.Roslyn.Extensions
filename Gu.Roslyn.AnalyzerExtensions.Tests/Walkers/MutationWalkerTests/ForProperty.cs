@@ -1,19 +1,19 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests
-{
-    using System.Linq;
-    using System.Threading;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers.MutationWalkerTests;
 
-    public static class ForProperty
+using System.Linq;
+using System.Threading;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class ForProperty
+{
+    [TestCase("this.Value = 1")]
+    [TestCase("this.Value++")]
+    [TestCase("this.Value += 1")]
+    public static void One(string mutation)
     {
-        [TestCase("this.Value = 1")]
-        [TestCase("this.Value++")]
-        [TestCase("this.Value += 1")]
-        public static void One(string mutation)
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     public class C
@@ -26,21 +26,21 @@ namespace N
         public int Value { get; }
     }
 }";
-            code = code.AssertReplace("this.Value = 1", mutation);
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
-            using var walker = MutationWalker.For(property, semanticModel, CancellationToken.None);
-            Assert.AreEqual(mutation, walker.All().Single().ToString());
-            Assert.AreEqual(true, walker.TrySingle(out var single));
-            Assert.AreEqual(mutation, single.ToString());
-        }
+        code = code.AssertReplace("this.Value = 1", mutation);
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
+        using var walker = MutationWalker.For(property, semanticModel, CancellationToken.None);
+        Assert.AreEqual(mutation, walker.All().Single().ToString());
+        Assert.AreEqual(true, walker.TrySingle(out var single));
+        Assert.AreEqual(mutation, single.ToString());
+    }
 
-        [Test]
-        public static void ObjectInitializer()
-        {
-            var code = @"
+    [Test]
+    public static void ObjectInitializer()
+    {
+        var code = @"
 namespace N
 {
     public class C
@@ -50,14 +50,13 @@ namespace N
         public static C Create() => new C { Value = 1 };
     }
 }";
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
-            using var walker = MutationWalker.For(property, semanticModel, CancellationToken.None);
-            Assert.AreEqual("Value = 1", walker.All().Single().ToString());
-            Assert.AreEqual(true, walker.TrySingle(out var single));
-            Assert.AreEqual("Value = 1", single.ToString());
-        }
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration("Value"));
+        using var walker = MutationWalker.For(property, semanticModel, CancellationToken.None);
+        Assert.AreEqual("Value = 1", walker.All().Single().ToString());
+        Assert.AreEqual(true, walker.TrySingle(out var single));
+        Assert.AreEqual("Value = 1", single.ToString());
     }
 }

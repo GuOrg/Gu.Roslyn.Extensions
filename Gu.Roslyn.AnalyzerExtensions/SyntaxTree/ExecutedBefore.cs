@@ -1,28 +1,27 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions;
+
+/// <summary>
+/// Result from StatementSyntaxExt.IsExecutedBefore.
+/// </summary>
+public enum ExecutedBefore
 {
     /// <summary>
-    /// Result from StatementSyntaxExt.IsExecutedBefore.
+    /// The analysis failed to analyze the code.
     /// </summary>
-    public enum ExecutedBefore
-    {
-        /// <summary>
-        /// The analysis failed to analyze the code.
-        /// </summary>
-        Unknown,
+    Unknown,
 
-        /// <summary>
-        /// Yes, analysis was certain.
-        /// </summary>
-        Yes,
+    /// <summary>
+    /// Yes, analysis was certain.
+    /// </summary>
+    Yes,
 
-        /// <summary>
-        /// No, analysis was certain.
-        /// </summary>
-        No,
+    /// <summary>
+    /// No, analysis was certain.
+    /// </summary>
+    No,
 
-        /// <summary>
-        /// For example when in a loop or in an event handler lambda or when there are goto.
-        /// </summary>
-        Maybe,
-    }
+    /// <summary>
+    /// For example when in a loop or in an event handler lambda or when there are goto.
+    /// </summary>
+    Maybe,
 }

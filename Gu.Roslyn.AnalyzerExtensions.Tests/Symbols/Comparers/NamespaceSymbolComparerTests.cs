@@ -1,45 +1,44 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers
-{
-    using System.Threading;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols.Comparers;
 
-    public static class NamespaceSymbolComparerTests
+using System.Threading;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NUnit.Framework;
+
+public static class NamespaceSymbolComparerTests
+{
+    [TestCase("N")]
+    [TestCase("A.B")]
+    [TestCase("A.B.C")]
+    public static void Equals(string namespaceName)
     {
-        [TestCase("N")]
-        [TestCase("A.B")]
-        [TestCase("A.B.C")]
-        public static void Equals(string namespaceName)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            @"
 namespace N
 {
 }".AssertReplace("N", namespaceName));
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var declaration = syntaxTree.Find<NamespaceDeclarationSyntax>(namespaceName);
-            var symbol = semanticModel.GetDeclaredSymbol(declaration, CancellationToken.None);
-            Assert.AreEqual(true, NamespaceSymbolComparer.Equals(symbol, namespaceName));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var declaration = syntaxTree.Find<NamespaceDeclarationSyntax>(namespaceName);
+        var symbol = semanticModel.GetDeclaredSymbol(declaration, CancellationToken.None);
+        Assert.AreEqual(true, NamespaceSymbolComparer.Equals(symbol, namespaceName));
+    }
 
-        [TestCase("N")]
-        [TestCase("A.B")]
-        [TestCase("A.B.C")]
-        public static void Equal(string namespaceName)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
+    [TestCase("N")]
+    [TestCase("A.B")]
+    [TestCase("A.B.C")]
+    public static void Equal(string namespaceName)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            @"
 namespace N
 {
 }".AssertReplace("N", namespaceName));
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var declaration = syntaxTree.Find<NamespaceDeclarationSyntax>(namespaceName);
-            var symbol = semanticModel.GetDeclaredSymbol(declaration, CancellationToken.None);
-            Assert.AreEqual(true, NamespaceSymbolComparer.Equal(symbol, symbol));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree });
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var declaration = syntaxTree.Find<NamespaceDeclarationSyntax>(namespaceName);
+        var symbol = semanticModel.GetDeclaredSymbol(declaration, CancellationToken.None);
+        Assert.AreEqual(true, NamespaceSymbolComparer.Equal(symbol, symbol));
     }
 }

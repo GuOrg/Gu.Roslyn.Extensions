@@ -1,76 +1,75 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions;
+
+using System;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+
+/// <summary>
+/// Get all <see cref="SyntaxToken"/> in the scope.
+/// </summary>
+public sealed class IdentifierTokenWalker : PooledWalker<IdentifierTokenWalker>
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
+    private readonly List<SyntaxToken> identifierTokens = new();
+
+    private IdentifierTokenWalker()
+        : base(SyntaxWalkerDepth.Token)
+    {
+    }
 
     /// <summary>
-    /// Get all <see cref="SyntaxToken"/> in the scope.
+    /// Gets the <see cref="SyntaxToken"/>s found in the scope.
     /// </summary>
-    public sealed class IdentifierTokenWalker : PooledWalker<IdentifierTokenWalker>
+    public IReadOnlyList<SyntaxToken> IdentifierTokens => this.identifierTokens;
+
+    /// <summary>
+    /// Get a walker that has visited <paramref name="node"/>.
+    /// </summary>
+    /// <param name="node">The scope.</param>
+    /// <returns>A walker that has visited <paramref name="node"/>.</returns>
+    public static IdentifierTokenWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new IdentifierTokenWalker());
+
+    /// <inheritdoc />
+    public override void VisitToken(SyntaxToken token)
     {
-        private readonly List<SyntaxToken> identifierTokens = new();
-
-        private IdentifierTokenWalker()
-            : base(SyntaxWalkerDepth.Token)
+        if (token.IsKind(SyntaxKind.IdentifierToken))
         {
+            this.identifierTokens.Add(token);
         }
 
-        /// <summary>
-        /// Gets the <see cref="SyntaxToken"/>s found in the scope.
-        /// </summary>
-        public IReadOnlyList<SyntaxToken> IdentifierTokens => this.identifierTokens;
+        base.VisitToken(token);
+    }
 
-        /// <summary>
-        /// Get a walker that has visited <paramref name="node"/>.
-        /// </summary>
-        /// <param name="node">The scope.</param>
-        /// <returns>A walker that has visited <paramref name="node"/>.</returns>
-        public static IdentifierTokenWalker Borrow(SyntaxNode node) => BorrowAndVisit(node, () => new IdentifierTokenWalker());
-
-        /// <inheritdoc />
-        public override void VisitToken(SyntaxToken token)
+    /// <summary>
+    /// Try find an <see cref="SyntaxToken"/> by name.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="identifierToken">The <see cref="SyntaxToken"/>.</param>
+    /// <returns>True if a match was found.</returns>
+    public bool TryFind(string name, out SyntaxToken identifierToken)
+    {
+        foreach (var candidate in this.IdentifierTokens)
         {
-            if (token.IsKind(SyntaxKind.IdentifierToken))
+            if (candidate.ValueText == name)
             {
-                this.identifierTokens.Add(token);
+                identifierToken = candidate;
+                return true;
             }
-
-            base.VisitToken(token);
         }
 
-        /// <summary>
-        /// Try find an <see cref="SyntaxToken"/> by name.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="identifierToken">The <see cref="SyntaxToken"/>.</param>
-        /// <returns>True if a match was found.</returns>
-        public bool TryFind(string name, out SyntaxToken identifierToken)
-        {
-            foreach (var candidate in this.IdentifierTokens)
-            {
-                if (candidate.ValueText == name)
-                {
-                    identifierToken = candidate;
-                    return true;
-                }
-            }
+        identifierToken = default;
+        return false;
+    }
 
-            identifierToken = default;
-            return false;
-        }
+    /// <summary>
+    /// Filters by <paramref name="match"/>.
+    /// </summary>
+    /// <param name="match">The predicate for finding items to remove.</param>
+    public void RemoveAll(Predicate<SyntaxToken> match) => this.identifierTokens.RemoveAll(match);
 
-        /// <summary>
-        /// Filters by <paramref name="match"/>.
-        /// </summary>
-        /// <param name="match">The predicate for finding items to remove.</param>
-        public void RemoveAll(Predicate<SyntaxToken> match) => this.identifierTokens.RemoveAll(match);
-
-        /// <inheritdoc />
-        protected override void Clear()
-        {
-            this.identifierTokens.Clear();
-        }
+    /// <inheritdoc />
+    protected override void Clear()
+    {
+        this.identifierTokens.Clear();
     }
 }

@@ -1,20 +1,20 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols
-{
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.Symbols;
 
-    // ReSharper disable once InconsistentNaming
-    public static class IPropertySymbolExtTests
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+// ReSharper disable once InconsistentNaming
+public static class IPropertySymbolExtTests
+{
+    [TestCase("GetOnly",        true)]
+    [TestCase("AutoGetSet",     true)]
+    [TestCase("AbstractGetSet", true)]
+    [TestCase("ExpressionBody", false)]
+    public static void IsAutoProperty(string name, bool expected)
     {
-        [TestCase("GetOnly",        true)]
-        [TestCase("AutoGetSet",     true)]
-        [TestCase("AbstractGetSet", true)]
-        [TestCase("ExpressionBody", false)]
-        public static void IsAutoProperty(string name, bool expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            @"
 namespace N
 {
     public abstract class C
@@ -28,19 +28,19 @@ namespace N
         public int ExpressionBody => GetOnly;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration(name));
-            Assert.AreEqual(expected, property.IsAutoProperty());
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration(name));
+        Assert.AreEqual(expected, property.IsAutoProperty());
+    }
 
-        [TestCase("GetOnly", true)]
-        [TestCase("AutoGetSet", false)]
-        [TestCase("ExpressionBody", false)]
-        public static void IsGetOnly(string name, bool expected)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(
-                @"
+    [TestCase("GetOnly", true)]
+    [TestCase("AutoGetSet", false)]
+    [TestCase("ExpressionBody", false)]
+    public static void IsGetOnly(string name, bool expected)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            @"
 namespace N
 {
     public class C
@@ -52,10 +52,9 @@ namespace N
         public int ExpressionBody => GetOnly;
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration(name));
-            Assert.AreEqual(expected, property.IsGetOnly());
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
+        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        var property = semanticModel.GetDeclaredSymbol(syntaxTree.FindPropertyDeclaration(name));
+        Assert.AreEqual(expected, property.IsGetOnly());
     }
 }

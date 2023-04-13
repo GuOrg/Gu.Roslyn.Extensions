@@ -1,37 +1,36 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions
+﻿namespace Gu.Roslyn.AnalyzerExtensions;
+
+using Microsoft.CodeAnalysis;
+
+/// <summary>
+/// Helpers for working with <see cref="IParameterSymbol"/>.
+/// </summary>
+// ReSharper disable once InconsistentNaming
+public static class IParameterSymbolExt
 {
-    using Microsoft.CodeAnalysis;
-
     /// <summary>
-    /// Helpers for working with <see cref="IParameterSymbol"/>.
+    /// Check if the parameter has [CallerMemberName].
     /// </summary>
-    // ReSharper disable once InconsistentNaming
-    public static class IParameterSymbolExt
+    /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
+    /// <returns>True if the parameter has [CallerMemberName].</returns>
+    public static bool IsCallerMemberName(this IParameterSymbol parameter)
     {
-        /// <summary>
-        /// Check if the parameter has [CallerMemberName].
-        /// </summary>
-        /// <param name="parameter">The <see cref="IParameterSymbol"/>.</param>
-        /// <returns>True if the parameter has [CallerMemberName].</returns>
-        public static bool IsCallerMemberName(this IParameterSymbol parameter)
+        if (parameter is null)
         {
-            if (parameter is null)
-            {
-                throw new System.ArgumentNullException(nameof(parameter));
-            }
+            throw new System.ArgumentNullException(nameof(parameter));
+        }
 
-            if (parameter is { Type.SpecialType: SpecialType.System_String, HasExplicitDefaultValue: true })
+        if (parameter is { Type.SpecialType: SpecialType.System_String, HasExplicitDefaultValue: true })
+        {
+            foreach (var attribute in parameter.GetAttributes())
             {
-                foreach (var attribute in parameter.GetAttributes())
+                if (attribute.AttributeClass == QualifiedType.System.Runtime.CompilerServices.CallerMemberNameAttribute)
                 {
-                    if (attribute.AttributeClass == QualifiedType.System.Runtime.CompilerServices.CallerMemberNameAttribute)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
-
-            return false;
         }
+
+        return false;
     }
 }

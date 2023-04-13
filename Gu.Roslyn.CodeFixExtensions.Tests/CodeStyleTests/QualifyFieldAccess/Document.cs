@@ -1,17 +1,17 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.QualifyFieldAccess
-{
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Gu.Roslyn.Asserts;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.QualifyFieldAccess;
 
-    public static class Document
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Gu.Roslyn.Asserts;
+using NUnit.Framework;
+
+public static class Document
+{
+    [Test]
+    public static async Task WhenUnknown()
     {
-        [Test]
-        public static async Task WhenUnknown()
-        {
-            var sln = CodeFactory.CreateSolution(@"
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     internal class C
@@ -25,19 +25,19 @@ namespace N
         }
     }
 }");
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+    }
 
-        [TestCase("_f1 = 1", CodeStyleResult.No)]
-        [TestCase("this._f1 = 1", CodeStyleResult.Yes)]
-        [TestCase("f2 = 1", CodeStyleResult.No)]
-        [TestCase("this.f2 = 1", CodeStyleResult.Yes)]
-        [TestCase("F3 = 1", CodeStyleResult.No)]
-        [TestCase("this.F3 = 1", CodeStyleResult.Yes)]
-        public static async Task AssigningInCtor(string expression, CodeStyleResult expected)
-        {
-            var sln = CodeFactory.CreateSolution(@"
+    [TestCase("_f1 = 1", CodeStyleResult.No)]
+    [TestCase("this._f1 = 1", CodeStyleResult.Yes)]
+    [TestCase("f2 = 1", CodeStyleResult.No)]
+    [TestCase("this.f2 = 1", CodeStyleResult.Yes)]
+    [TestCase("F3 = 1", CodeStyleResult.No)]
+    [TestCase("this.F3 = 1", CodeStyleResult.Yes)]
+    public static async Task AssigningInCtor(string expression, CodeStyleResult expected)
+    {
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     class C
@@ -53,14 +53,14 @@ namespace N
     }
 }".AssertReplace("_f1 = 1", expression));
 
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+    }
 
-        [Test]
-        public static async Task IgnoreObjectInitializer()
-        {
-            var sln = CodeFactory.CreateSolution(@"
+    [Test]
+    public static async Task IgnoreObjectInitializer()
+    {
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     class C
@@ -71,15 +71,15 @@ namespace N
     }
 }");
 
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(CodeStyleResult.NotFound, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+    }
 
-        [TestCase("this.f", CodeStyleResult.Yes)]
-        [TestCase("f", CodeStyleResult.No)]
-        public static async Task ReturningInMethodExpressionBody(string expression, CodeStyleResult expected)
-        {
-            var sln = CodeFactory.CreateSolution(@"
+    [TestCase("this.f", CodeStyleResult.Yes)]
+    [TestCase("f", CodeStyleResult.No)]
+    public static async Task ReturningInMethodExpressionBody(string expression, CodeStyleResult expected)
+    {
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     class C
@@ -90,15 +90,15 @@ namespace N
     }
 }".AssertReplace("this.f", expression));
 
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+    }
 
-        [TestCase("this.f", CodeStyleResult.Yes)]
-        [TestCase("f", CodeStyleResult.No)]
-        public static async Task ReturningInPropertyExpressionBody(string expression, CodeStyleResult expected)
-        {
-            var sln = CodeFactory.CreateSolution(@"
+    [TestCase("this.f", CodeStyleResult.Yes)]
+    [TestCase("f", CodeStyleResult.No)]
+    public static async Task ReturningInPropertyExpressionBody(string expression, CodeStyleResult expected)
+    {
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     class C
@@ -109,15 +109,15 @@ namespace N
     }
 }".AssertReplace("this.f", expression));
 
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+    }
 
-        [TestCase("this.f", CodeStyleResult.Yes)]
-        [TestCase("f", CodeStyleResult.No)]
-        public static async Task ReturningInPropertyGetterExpressionBody(string expression, CodeStyleResult expected)
-        {
-            var sln = CodeFactory.CreateSolution(@"
+    [TestCase("this.f", CodeStyleResult.Yes)]
+    [TestCase("f", CodeStyleResult.No)]
+    public static async Task ReturningInPropertyGetterExpressionBody(string expression, CodeStyleResult expected)
+    {
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     class C
@@ -131,15 +131,15 @@ namespace N
     }
 }".AssertReplace("this.f", expression));
 
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+    }
 
-        [TestCase("this.f", CodeStyleResult.Yes)]
-        [TestCase("f", CodeStyleResult.No)]
-        public static async Task ReturningInPropertyGetterStatementBody(string expression, CodeStyleResult expected)
-        {
-            var sln = CodeFactory.CreateSolution(@"
+    [TestCase("this.f", CodeStyleResult.Yes)]
+    [TestCase("f", CodeStyleResult.No)]
+    public static async Task ReturningInPropertyGetterStatementBody(string expression, CodeStyleResult expected)
+    {
+        var sln = CodeFactory.CreateSolution(@"
 namespace N
 {
     class C
@@ -153,18 +153,18 @@ namespace N
     }
 }".AssertReplace("this.f", expression));
 
-            var document = sln.Projects.Single().Documents.Single();
-            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
-        }
+        var document = sln.Projects.Single().Documents.Single();
+        Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
+    }
 
-        [TestCase("this.f = 1", CodeStyleResult.Yes)]
-        [TestCase("f = 1", CodeStyleResult.No)]
-        [TestCase("", CodeStyleResult.NotFound)]
-        public static async Task FiguresOutFromOtherClass(string expression, CodeStyleResult expected)
+    [TestCase("this.f = 1", CodeStyleResult.Yes)]
+    [TestCase("f = 1", CodeStyleResult.No)]
+    [TestCase("", CodeStyleResult.NotFound)]
+    public static async Task FiguresOutFromOtherClass(string expression, CodeStyleResult expected)
+    {
+        var sln = CodeFactory.CreateSolution(new[]
         {
-            var sln = CodeFactory.CreateSolution(new[]
-            {
-                @"
+            @"
 namespace N
 {
     class C1
@@ -177,19 +177,18 @@ namespace N
         }
     }
 }".AssertReplace("this.f = 1", expression),
-                @"
+            @"
 namespace N
 {
     class C2
     {
     }
 }",
-            });
+        });
 
-            foreach (var document in sln.Projects.Single().Documents)
-            {
-                Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
-            }
+        foreach (var document in sln.Projects.Single().Documents)
+        {
+            Assert.AreEqual(expected, await document.QualifyFieldAccessAsync(CancellationToken.None).ConfigureAwait(false));
         }
     }
 }

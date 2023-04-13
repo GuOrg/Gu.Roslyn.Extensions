@@ -1,17 +1,17 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
-{
-    using System.Linq;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Editing;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests;
 
-    public static class Move
+using System.Linq;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
+using NUnit.Framework;
+
+public static class Move
+{
+    [Test]
+    public static void MoveFieldBeforeFirst()
     {
-        [Test]
-        public static void MoveFieldBeforeFirst()
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     class C
@@ -21,10 +21,10 @@ namespace N
         private static readonly int F2 = 2;
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveBefore(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveBefore(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -34,75 +34,13 @@ namespace N
         public static readonly int F1 = 1;
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
-
-        [Test]
-        public static void MoveFieldBeforeFirstWithComments()
-        {
-            var code = @"
-namespace N
-{
-    class C
-    {
-        // F1
-        public static readonly int F1 = 1;
-
-        // F2
-        private static readonly int F2 = 2;
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
     }
-}";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveBefore(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"));
 
-            var expected = @"
-namespace N
-{
-    class C
+    [Test]
+    public static void MoveFieldBeforeFirstWithComments()
     {
-        // F2
-        private static readonly int F2 = 2;
-
-        // F1
-        public static readonly int F1 = 1;
-    }
-}";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
-
-        [Test]
-        public static void MoveFieldFirstAfterLast()
-        {
-            var code = @"
-namespace N
-{
-    class C
-    {
-        public static readonly int F1 = 1;
-
-        private static readonly int F2 = 2;
-    }
-}";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"));
-
-            var expected = @"
-namespace N
-{
-    class C
-    {
-        private static readonly int F2 = 2;
-
-        public static readonly int F1 = 1;
-    }
-}";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
-
-        [Test]
-        public static void MoveFieldFirstAfterLastWithComments()
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     class C
@@ -114,10 +52,10 @@ namespace N
         private static readonly int F2 = 2;
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveBefore(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -129,13 +67,75 @@ namespace N
         public static readonly int F1 = 1;
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MovePropertyBeforeFirst()
-        {
-            var code = @"
+    [Test]
+    public static void MoveFieldFirstAfterLast()
+    {
+        var code = @"
+namespace N
+{
+    class C
+    {
+        public static readonly int F1 = 1;
+
+        private static readonly int F2 = 2;
+    }
+}";
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"));
+
+        var expected = @"
+namespace N
+{
+    class C
+    {
+        private static readonly int F2 = 2;
+
+        public static readonly int F1 = 1;
+    }
+}";
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
+
+    [Test]
+    public static void MoveFieldFirstAfterLastWithComments()
+    {
+        var code = @"
+namespace N
+{
+    class C
+    {
+        // F1
+        public static readonly int F1 = 1;
+
+        // F2
+        private static readonly int F2 = 2;
+    }
+}";
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<FieldDeclarationSyntax>("F1"), editor.OriginalRoot.Find<FieldDeclarationSyntax>("F2"));
+
+        var expected = @"
+namespace N
+{
+    class C
+    {
+        // F2
+        private static readonly int F2 = 2;
+
+        // F1
+        public static readonly int F1 = 1;
+    }
+}";
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
+
+    [Test]
+    public static void MovePropertyBeforeFirst()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -145,10 +145,10 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveBefore(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveBefore(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -158,13 +158,13 @@ namespace N
         public int P1 { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MovePropertyBeforeSecond()
-        {
-            var code = @"
+    [Test]
+    public static void MovePropertyBeforeSecond()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -176,10 +176,10 @@ namespace N
         public int P3 { get; set; }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveBefore(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P3"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveBefore(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P3"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -191,13 +191,13 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MoveStatementBeforeFirst()
-        {
-            var code = @"
+    [Test]
+    public static void MoveStatementBeforeFirst()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -209,10 +209,10 @@ namespace N
         }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -224,13 +224,13 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MoveStatementBeforeIf()
-        {
-            var code = @"
+    [Test]
+    public static void MoveStatementBeforeIf()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -245,10 +245,10 @@ namespace N
         }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("if (true)"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("if (true)"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -262,13 +262,13 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MoveStatementBeforeSecond()
-        {
-            var code = @"
+    [Test]
+    public static void MoveStatementBeforeSecond()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -281,10 +281,10 @@ namespace N
         }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var c = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveBefore(editor.OriginalRoot.Find<StatementSyntax>("var c = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -297,13 +297,13 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MovePropertyAfterFirst()
-        {
-            var code = @"
+    [Test]
+    public static void MovePropertyAfterFirst()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -313,10 +313,10 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -326,13 +326,13 @@ namespace N
         public int P1 { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MovePropertyAfterSecond()
-        {
-            var code = @"
+    [Test]
+    public static void MovePropertyAfterSecond()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -344,10 +344,10 @@ namespace N
         public int P3 { get; set; }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P3"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P3"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -359,13 +359,13 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MoveStatementAfterFirst()
-        {
-            var code = @"
+    [Test]
+    public static void MoveStatementAfterFirst()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -377,10 +377,10 @@ namespace N
         }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -392,13 +392,13 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MoveStatementAfterIf()
-        {
-            var code = @"
+    [Test]
+    public static void MoveStatementAfterIf()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -412,10 +412,10 @@ namespace N
         }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"), editor.OriginalRoot.Find<StatementSyntax>("if (true)"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var a = 1;"), editor.OriginalRoot.Find<StatementSyntax>("if (true)"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -430,13 +430,13 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void MoveStatementAfterSecond()
-        {
-            var code = @"
+    [Test]
+    public static void MoveStatementAfterSecond()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -449,10 +449,10 @@ namespace N
         }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var c = 1;"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<StatementSyntax>("var b = 1;"), editor.OriginalRoot.Find<StatementSyntax>("var c = 1;"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -465,13 +465,12 @@ namespace N
         }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        private static DocumentEditor CreateDocumentEditor(string code)
-        {
-            var sln = CodeFactory.CreateSolution(code);
-            return DocumentEditor.CreateAsync(sln.Projects.Single().Documents.Single()).Result;
-        }
+    private static DocumentEditor CreateDocumentEditor(string code)
+    {
+        var sln = CodeFactory.CreateSolution(code);
+        return DocumentEditor.CreateAsync(sln.Projects.Single().Documents.Single()).Result;
     }
 }

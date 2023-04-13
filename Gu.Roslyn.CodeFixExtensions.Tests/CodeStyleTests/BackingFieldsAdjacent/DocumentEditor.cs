@@ -1,29 +1,29 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.BackingFieldsAdjacent
-{
-    using System.Linq;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.CodeStyleTests.BackingFieldsAdjacent;
 
-    public static class DocumentEditor
+using System.Linq;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class DocumentEditor
+{
+    [Test]
+    public static void WhenUnknown()
     {
-        [Test]
-        public static void WhenUnknown()
-        {
-            var editor = CreateDocumentEditor(@"
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
     {
     }
 }");
-            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(editor, out _));
-        }
+        Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(editor, out _));
+    }
 
-        [Test]
-        public static void WhenUnknownTwoDocuments()
-        {
-            var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void WhenUnknownTwoDocuments()
+    {
+        var syntaxTree1 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C1
@@ -31,22 +31,22 @@ namespace N
     }
 }");
 
-            var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree2 = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C2
     {
     }
 }");
-            var compilation = CSharpCompilation.Create("test", new[] { syntaxTree1, syntaxTree2 });
-            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree1), out _));
-            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree2), out _));
-        }
+        var compilation = CSharpCompilation.Create("test", new[] { syntaxTree1, syntaxTree2 });
+        Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree1), out _));
+        Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(compilation.GetSemanticModel(syntaxTree2), out _));
+    }
 
-        [Test]
-        public static void WhenUnknownOneProperty()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void WhenUnknownOneProperty()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -60,13 +60,13 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(editor, out _));
-        }
+        Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(editor, out _));
+    }
 
-        [Test]
-        public static void WhenUnknownOnePropertyFieldAbove()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void WhenUnknownOnePropertyFieldAbove()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -81,13 +81,13 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(editor, out _));
-        }
+        Assert.AreEqual(CodeStyleResult.NotFound, CodeStyle.BackingFieldsAdjacent(editor, out _));
+    }
 
-        [Test]
-        public static void OnePropertyCtorBetween()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void OnePropertyCtorBetween()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -105,13 +105,13 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.No, CodeStyle.BackingFieldsAdjacent(editor, out _));
-        }
+        Assert.AreEqual(CodeStyleResult.No, CodeStyle.BackingFieldsAdjacent(editor, out _));
+    }
 
-        [Test]
-        public static void OnePropertyCtorAbove()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void OnePropertyCtorAbove()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -129,14 +129,14 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
-            Assert.AreEqual(true, newLineBetween);
-        }
+        Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
+        Assert.AreEqual(true, newLineBetween);
+    }
 
-        [Test]
-        public static void TwoProperties()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void TwoProperties()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -158,14 +158,14 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
-            Assert.AreEqual(true, newLineBetween);
-        }
+        Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
+        Assert.AreEqual(true, newLineBetween);
+    }
 
-        [Test]
-        public static void TwoExpressionBodyProperties()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void TwoExpressionBodyProperties()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -177,14 +177,14 @@ namespace N
         public int P2 => this.f2;
     }
 }");
-            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
-            Assert.AreEqual(false, newLineBetween);
-        }
+        Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
+        Assert.AreEqual(false, newLineBetween);
+    }
 
-        [Test]
-        public static void WhenStyleCop()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void WhenStyleCop()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -202,13 +202,13 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.No, CodeStyle.BackingFieldsAdjacent(editor, out _));
-        }
+        Assert.AreEqual(CodeStyleResult.No, CodeStyle.BackingFieldsAdjacent(editor, out _));
+    }
 
-        [Test]
-        public static void WhenAdjacentNoEmptyLine()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void WhenAdjacentNoEmptyLine()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -225,14 +225,14 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
-            Assert.AreEqual(false, newLineBetween);
-        }
+        Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
+        Assert.AreEqual(false, newLineBetween);
+    }
 
-        [Test]
-        public static void WhenAdjacentWithEmptyLine()
-        {
-            var editor = CreateDocumentEditor(@"
+    [Test]
+    public static void WhenAdjacentWithEmptyLine()
+    {
+        var editor = CreateDocumentEditor(@"
 namespace N
 {
     public class C
@@ -250,13 +250,12 @@ namespace N
         }
     }
 }");
-            Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
-            Assert.AreEqual(true, newLineBetween);
-        }
+        Assert.AreEqual(CodeStyleResult.Yes, CodeStyle.BackingFieldsAdjacent(editor, out var newLineBetween));
+        Assert.AreEqual(true, newLineBetween);
+    }
 
-        private static Microsoft.CodeAnalysis.Editing.DocumentEditor CreateDocumentEditor(string code)
-        {
-            return Microsoft.CodeAnalysis.Editing.DocumentEditor.CreateAsync(CodeFactory.CreateSolution(code).Projects.Single().Documents.Single()).Result;
-        }
+    private static Microsoft.CodeAnalysis.Editing.DocumentEditor CreateDocumentEditor(string code)
+    {
+        return Microsoft.CodeAnalysis.Editing.DocumentEditor.CreateAsync(CodeFactory.CreateSolution(code).Projects.Single().Documents.Single()).Result;
     }
 }

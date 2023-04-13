@@ -1,17 +1,17 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentationCommentTriviaSyntaxExtensionsTests
-{
-    using Gu.Roslyn.AnalyzerExtensions;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentationCommentTriviaSyntaxExtensionsTests;
 
-    public static class WithSummary
+using Gu.Roslyn.AnalyzerExtensions;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NUnit.Framework;
+
+public static class WithSummary
+{
+    [Test]
+    public static void InsertBeforeRemarksSingleLineSummary()
     {
-        [Test]
-        public static void InsertBeforeRemarksSingleLineSummary()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -22,12 +22,12 @@ namespace N
         }
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("M");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out _));
+        var method = syntaxTree.FindMethodDeclaration("M");
+        Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+        var updated = comment.WithSummaryText("New text.");
+        Assert.AreEqual(true, updated.TryGetSummary(out _));
 
-            var expected = GetExpected(@"
+        var expected = GetExpected(@"
 namespace N
 {
     public class C
@@ -39,17 +39,17 @@ namespace N
         }
     }
 }");
-            RoslynAssert.Ast(expected, updated);
+        RoslynAssert.Ast(expected, updated);
 
-            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
-            Assert.AreEqual(true, updated.TryGetSummary(out _));
-            RoslynAssert.Ast(expected, updated);
-        }
+        updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
+        Assert.AreEqual(true, updated.TryGetSummary(out _));
+        RoslynAssert.Ast(expected, updated);
+    }
 
-        [Test]
-        public static void InsertBeforeRemarksSingleLineSummaryWhenPragma()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void InsertBeforeRemarksSingleLineSummaryWhenPragma()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -61,12 +61,12 @@ namespace N
         }
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("M");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out _));
+        var method = syntaxTree.FindMethodDeclaration("M");
+        Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+        var updated = comment.WithSummaryText("New text.");
+        Assert.AreEqual(true, updated.TryGetSummary(out _));
 
-            var expected = GetExpected(@"
+        var expected = GetExpected(@"
 namespace N
 {
     public class C
@@ -79,17 +79,17 @@ namespace N
         }
     }
 }");
-            RoslynAssert.Ast(expected, updated);
+        RoslynAssert.Ast(expected, updated);
 
-            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
-            Assert.AreEqual(true, updated.TryGetSummary(out _));
-            RoslynAssert.Ast(expected, updated);
-        }
+        updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
+        Assert.AreEqual(true, updated.TryGetSummary(out _));
+        RoslynAssert.Ast(expected, updated);
+    }
 
-        [Test]
-        public static void InsertBeforeRemarksMultiLineSummary()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void InsertBeforeRemarksMultiLineSummary()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -100,12 +100,12 @@ namespace N
         }
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("M");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("Line 1.\r\nLine 2.");
-            Assert.AreEqual(true, updated.TryGetSummary(out _));
+        var method = syntaxTree.FindMethodDeclaration("M");
+        Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+        var updated = comment.WithSummaryText("Line 1.\r\nLine 2.");
+        Assert.AreEqual(true, updated.TryGetSummary(out _));
 
-            var expected = GetExpected(@"
+        var expected = GetExpected(@"
 namespace N
 {
     public class C
@@ -120,13 +120,13 @@ namespace N
         }
     }
 }");
-            RoslynAssert.Ast(expected, updated);
-        }
+        RoslynAssert.Ast(expected, updated);
+    }
 
-        [Test]
-        public static void ReplaceSingleLineWithSingleLine()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void ReplaceSingleLineWithSingleLine()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -138,7 +138,7 @@ namespace N
         public T Id<T>(T i) => i;
     }
 }");
-            var expected = GetExpected(@"
+        var expected = GetExpected(@"
 namespace N
 {
     public class C
@@ -150,18 +150,18 @@ namespace N
         public T Id<T>(T i) => i;
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("Id");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
-            RoslynAssert.Ast(expected, updated);
-        }
+        var method = syntaxTree.FindMethodDeclaration("Id");
+        Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+        var updated = comment.WithSummaryText("New text.");
+        Assert.AreEqual(true, updated.TryGetSummary(out var summary));
+        Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
+        RoslynAssert.Ast(expected, updated);
+    }
 
-        [Test]
-        public static void ReplaceWhenPragma()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void ReplaceWhenPragma()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -174,7 +174,7 @@ namespace N
         public T Id<T>(T i) => i;
     }
 }");
-            var expected = GetExpected(@"
+        var expected = GetExpected(@"
 namespace N
 {
     public class C
@@ -187,18 +187,18 @@ namespace N
         public T Id<T>(T i) => i;
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("Id");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
-            RoslynAssert.Ast(expected, updated);
-        }
+        var method = syntaxTree.FindMethodDeclaration("Id");
+        Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+        var updated = comment.WithSummaryText("New text.");
+        Assert.AreEqual(true, updated.TryGetSummary(out var summary));
+        Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
+        RoslynAssert.Ast(expected, updated);
+    }
 
-        [Test]
-        public static void ReplaceMultiLineWithSingleLine()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void ReplaceMultiLineWithSingleLine()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -212,7 +212,7 @@ namespace N
         public T Id<T>(T i) => i;
     }
 }");
-            var expected = GetExpected(@"
+        var expected = GetExpected(@"
 namespace N
 {
     public class C
@@ -224,23 +224,22 @@ namespace N
         public T Id<T>(T i) => i;
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("Id");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            var updated = comment.WithSummaryText("New text.");
-            Assert.AreEqual(true, updated.TryGetSummary(out var summary));
-            Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
-            RoslynAssert.Ast(expected, updated);
+        var method = syntaxTree.FindMethodDeclaration("Id");
+        Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+        var updated = comment.WithSummaryText("New text.");
+        Assert.AreEqual(true, updated.TryGetSummary(out var summary));
+        Assert.AreEqual("<summary>New text.</summary>", summary.ToFullString());
+        RoslynAssert.Ast(expected, updated);
 
-            updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
-            RoslynAssert.Ast(expected, updated);
-        }
+        updated = comment.WithSummary(Parse.XmlElementSyntax("<summary>New text.</summary>", "        "));
+        RoslynAssert.Ast(expected, updated);
+    }
 
-        private static DocumentationCommentTriviaSyntax GetExpected(string code)
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var method = syntaxTree.FindMethodDeclaration("(");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
-            return comment;
-        }
+    private static DocumentationCommentTriviaSyntax GetExpected(string code)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        var method = syntaxTree.FindMethodDeclaration("(");
+        Assert.AreEqual(true, method.TryGetDocumentationComment(out var comment));
+        return comment;
     }
 }

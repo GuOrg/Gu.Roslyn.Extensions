@@ -1,15 +1,15 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.MemberDeclarationSyntaxExtensionsTests
-{
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.SyntaxTreeTests.MemberDeclarationSyntaxExtensionsTests;
 
-    public static class TryGetDocumentationComment
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class TryGetDocumentationComment
+{
+    [Test]
+    public static void Class()
     {
-        [Test]
-        public static void Class()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     /// <summary>
@@ -19,16 +19,16 @@ namespace N
     {
     }
 }");
-            var classDeclaration = syntaxTree.FindClassDeclaration("C");
-            Assert.AreEqual(true, classDeclaration.TryGetDocumentationComment(out var result));
-            var expected = "/// <summary>\r\n    /// The C\r\n    /// </summary>\r\n";
-            CodeAssert.AreEqual(expected, result.ToFullString());
-        }
+        var classDeclaration = syntaxTree.FindClassDeclaration("C");
+        Assert.AreEqual(true, classDeclaration.TryGetDocumentationComment(out var result));
+        var expected = "/// <summary>\r\n    /// The C\r\n    /// </summary>\r\n";
+        CodeAssert.AreEqual(expected, result.ToFullString());
+    }
 
-        [Test]
-        public static void Constructor()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void Constructor()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -39,16 +39,16 @@ namespace N
         }
     }
 }");
-            var ctor = syntaxTree.FindConstructorDeclaration("C");
-            Assert.AreEqual(true, ctor.TryGetDocumentationComment(out var result));
-            var expected = "/// <summary> Initializes a new instance of the <see cref=\"C\"/> class. </summary>\r\n";
-            CodeAssert.AreEqual(expected, result.ToFullString());
-        }
+        var ctor = syntaxTree.FindConstructorDeclaration("C");
+        Assert.AreEqual(true, ctor.TryGetDocumentationComment(out var result));
+        var expected = "/// <summary> Initializes a new instance of the <see cref=\"C\"/> class. </summary>\r\n";
+        CodeAssert.AreEqual(expected, result.ToFullString());
+    }
 
-        [Test]
-        public static void Property()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void Property()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -59,18 +59,18 @@ namespace N
         public int Value { get; set; }
     }
 }");
-            var property = syntaxTree.FindPropertyDeclaration("Value");
-            Assert.AreEqual(true, property.TryGetDocumentationComment(out var result));
-            var expected = "/// <summary>\r\n" +
-                           "        /// Gets or sets the value\r\n" +
-                           "        /// </summary>\r\n";
-            CodeAssert.AreEqual(expected, result.ToFullString());
-        }
+        var property = syntaxTree.FindPropertyDeclaration("Value");
+        Assert.AreEqual(true, property.TryGetDocumentationComment(out var result));
+        var expected = "/// <summary>\r\n" +
+                       "        /// Gets or sets the value\r\n" +
+                       "        /// </summary>\r\n";
+        CodeAssert.AreEqual(expected, result.ToFullString());
+    }
 
-        [Test]
-        public static void Method()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void Method()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     public class C
@@ -83,20 +83,20 @@ namespace N
         public int Id(int i) => i;
     }
 }");
-            var method = syntaxTree.FindMethodDeclaration("Id");
-            Assert.AreEqual(true, method.TryGetDocumentationComment(out var result));
-            var expected = "/// <summary>\r\n" +
-                           "        /// The identity function.\r\n" +
-                           "        /// </summary>\r\n" +
-                           "        /// <param name=\"i\">The value to return.</param>\r\n" +
-                           "        /// <returns><paramref name=\"i\"/></returns>\r\n";
-            CodeAssert.AreEqual(expected, result.ToFullString());
-        }
+        var method = syntaxTree.FindMethodDeclaration("Id");
+        Assert.AreEqual(true, method.TryGetDocumentationComment(out var result));
+        var expected = "/// <summary>\r\n" +
+                       "        /// The identity function.\r\n" +
+                       "        /// </summary>\r\n" +
+                       "        /// <param name=\"i\">The value to return.</param>\r\n" +
+                       "        /// <returns><paramref name=\"i\"/></returns>\r\n";
+        CodeAssert.AreEqual(expected, result.ToFullString());
+    }
 
-        [Test]
-        public static void ClassWithPragma()
-        {
-            var syntaxTree = CSharpSyntaxTree.ParseText(@"
+    [Test]
+    public static void ClassWithPragma()
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
 #pragma warning disable WPF0013 // CLR accessor for attached property must match registered type.
@@ -107,10 +107,9 @@ namespace N
     {
     }
 }");
-            var classDeclaration = syntaxTree.FindClassDeclaration("C");
-            Assert.AreEqual(true, classDeclaration.TryGetDocumentationComment(out var result));
-            var expected = "/// <summary>\r\n    /// The C\r\n    /// </summary>\r\n";
-            CodeAssert.AreEqual(expected, result.ToFullString());
-        }
+        var classDeclaration = syntaxTree.FindClassDeclaration("C");
+        Assert.AreEqual(true, classDeclaration.TryGetDocumentationComment(out var result));
+        var expected = "/// <summary>\r\n    /// The C\r\n    /// </summary>\r\n";
+        CodeAssert.AreEqual(expected, result.ToFullString());
     }
 }

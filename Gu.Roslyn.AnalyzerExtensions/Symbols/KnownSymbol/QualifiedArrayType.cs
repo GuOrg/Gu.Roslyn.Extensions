@@ -1,44 +1,43 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions;
+
+using System;
+using Microsoft.CodeAnalysis;
+
+/// <summary>
+/// For comparison with <see cref="ITypeSymbol"/>.
+/// </summary>
+public class QualifiedArrayType : QualifiedType
 {
-    using System;
-    using Microsoft.CodeAnalysis;
+    private static readonly NamespaceParts NamespaceParts = NamespaceParts.Create("System.Array");
 
     /// <summary>
-    /// For comparison with <see cref="ITypeSymbol"/>.
+    /// Initializes a new instance of the <see cref="QualifiedArrayType"/> class.
     /// </summary>
-    public class QualifiedArrayType : QualifiedType
+    /// <param name="elementType">The element type.</param>
+    public QualifiedArrayType(QualifiedType elementType)
+        : base(elementType?.FullName + "[]", NamespaceParts, elementType?.Type + "[]")
     {
-        private static readonly NamespaceParts NamespaceParts = NamespaceParts.Create("System.Array");
+        this.ElementType = elementType ?? throw new ArgumentNullException(nameof(elementType));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QualifiedArrayType"/> class.
-        /// </summary>
-        /// <param name="elementType">The element type.</param>
-        public QualifiedArrayType(QualifiedType elementType)
-            : base(elementType?.FullName + "[]", NamespaceParts, elementType?.Type + "[]")
+    /// <summary>
+    /// Gets the element type.
+    /// </summary>
+    public QualifiedType ElementType { get; }
+
+    /// <inheritdoc />
+    public override ITypeSymbol? GetTypeSymbol(Compilation compilation)
+    {
+        if (compilation is null)
         {
-            this.ElementType = elementType ?? throw new ArgumentNullException(nameof(elementType));
+            throw new ArgumentNullException(nameof(compilation));
         }
 
-        /// <summary>
-        /// Gets the element type.
-        /// </summary>
-        public QualifiedType ElementType { get; }
-
-        /// <inheritdoc />
-        public override ITypeSymbol? GetTypeSymbol(Compilation compilation)
+        if (this.ElementType.GetTypeSymbol(compilation) is { } elementType)
         {
-            if (compilation is null)
-            {
-                throw new ArgumentNullException(nameof(compilation));
-            }
-
-            if (this.ElementType.GetTypeSymbol(compilation) is { } elementType)
-            {
-                return compilation.CreateArrayTypeSymbol(elementType);
-            }
-
-            return null;
+            return compilation.CreateArrayTypeSymbol(elementType);
         }
+
+        return null;
     }
 }

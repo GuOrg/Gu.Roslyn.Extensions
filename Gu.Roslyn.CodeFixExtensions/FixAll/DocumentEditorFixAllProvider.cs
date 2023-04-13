@@ -1,74 +1,98 @@
-﻿namespace Gu.Roslyn.CodeFixExtensions
+﻿namespace Gu.Roslyn.CodeFixExtensions;
+
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Editing;
+
+/// <summary>
+/// A <see cref="FixAllProvider"/> that uses <see cref="DocumentEditor"/> for batch changes.
+/// </summary>
+public sealed class DocumentEditorFixAllProvider : FixAllProvider
 {
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CodeActions;
-    using Microsoft.CodeAnalysis.CodeFixes;
-    using Microsoft.CodeAnalysis.Editing;
+    /// <summary>
+    /// Fix all in document.
+    /// </summary>
+    public static readonly DocumentEditorFixAllProvider Document = new(ImmutableArray.Create(FixAllScope.Document));
 
     /// <summary>
-    /// A <see cref="FixAllProvider"/> that uses <see cref="DocumentEditor"/> for batch changes.
+    /// Fix all in project or document.
     /// </summary>
-    public sealed class DocumentEditorFixAllProvider : FixAllProvider
+    public static readonly DocumentEditorFixAllProvider Project = new(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project));
+
+    /// <summary>
+    /// Fix all in solution, project or document.
+    /// </summary>
+    public static readonly DocumentEditorFixAllProvider Solution = new(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project, FixAllScope.Solution));
+
+    private readonly ImmutableArray<FixAllScope> supportedFixAllScopes;
+
+    private DocumentEditorFixAllProvider(ImmutableArray<FixAllScope> supportedFixAllScopes)
     {
-        /// <summary>
-        /// Fix all in document.
-        /// </summary>
-        public static readonly DocumentEditorFixAllProvider Document = new(ImmutableArray.Create(FixAllScope.Document));
+        this.supportedFixAllScopes = supportedFixAllScopes;
+    }
 
-        /// <summary>
-        /// Fix all in project or document.
-        /// </summary>
-        public static readonly DocumentEditorFixAllProvider Project = new(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project));
+    /// <inheritdoc />
+    public override IEnumerable<FixAllScope> GetSupportedFixAllScopes() => this.supportedFixAllScopes;
 
-        /// <summary>
-        /// Fix all in solution, project or document.
-        /// </summary>
-        public static readonly DocumentEditorFixAllProvider Solution = new(ImmutableArray.Create(FixAllScope.Document, FixAllScope.Project, FixAllScope.Solution));
-
-        private readonly ImmutableArray<FixAllScope> supportedFixAllScopes;
-
-        private DocumentEditorFixAllProvider(ImmutableArray<FixAllScope> supportedFixAllScopes)
+    /// <inheritdoc />
+    public override async Task<CodeAction?> GetFixAsync(FixAllContext fixAllContext)
+    {
+        if (fixAllContext is null)
         {
-            this.supportedFixAllScopes = supportedFixAllScopes;
+            throw new System.ArgumentNullException(nameof(fixAllContext));
         }
 
-        /// <inheritdoc />
-        public override IEnumerable<FixAllScope> GetSupportedFixAllScopes() => this.supportedFixAllScopes;
-
-        /// <inheritdoc />
-        public override async Task<CodeAction?> GetFixAsync(FixAllContext fixAllContext)
+        if (fixAllContext.Document is null)
         {
-            if (fixAllContext is null)
+            throw new System.ArgumentNullException(nameof(fixAllContext));
+        }
+
+        if (fixAllContext.Scope == FixAllScope.Document)
+        {
+            var actions = await GetDocumentEditorActionsAsync(fixAllContext, fixAllContext.Document).ConfigureAwait(false);
+
+            if (actions.Length == 0)
             {
-                throw new System.ArgumentNullException(nameof(fixAllContext));
+                return null;
             }
 
-            if (fixAllContext.Document is null)
-            {
-                throw new System.ArgumentNullException(nameof(fixAllContext));
-            }
+            return CodeAction.Create(actions[0].Title, c => FixDocumentAsync(fixAllContext.Document, actions, c));
+        }
 
-            if (fixAllContext.Scope == FixAllScope.Document)
+        if (fixAllContext.Scope == FixAllScope.Project)
+        {
+            var docActions = new Dictionary<Document, ImmutableArray<CodeAction>>();
+            foreach (var document in fixAllContext.Project.Documents)
             {
-                var actions = await GetDocumentEditorActionsAsync(fixAllContext, fixAllContext.Document).ConfigureAwait(false);
-
+                var actions = await GetDocumentEditorActionsAsync(fixAllContext, document).ConfigureAwait(false);
                 if (actions.Length == 0)
                 {
-                    return null;
+                    continue;
                 }
 
-                return CodeAction.Create(actions[0].Title, c => FixDocumentAsync(fixAllContext.Document, actions, c));
+                docActions.Add(document, actions);
             }
 
-            if (fixAllContext.Scope == FixAllScope.Project)
+            if (docActions.Count == 0)
             {
-                var docActions = new Dictionary<Document, ImmutableArray<CodeAction>>();
-                foreach (var document in fixAllContext.Project.Documents)
+                return null;
+            }
+
+            return CodeAction.Create(docActions.First().Value.First().Title, c => FixDocumentsAsync(fixAllContext.Solution, docActions, c));
+        }
+
+        if (fixAllContext.Scope == FixAllScope.Solution)
+        {
+            var docActions = new Dictionary<Document, ImmutableArray<CodeAction>>();
+            foreach (var project in fixAllContext.Solution.Projects)
+            {
+                foreach (var document in project.Documents)
                 {
                     var actions = await GetDocumentEditorActionsAsync(fixAllContext, document).ConfigureAwait(false);
                     if (actions.Length == 0)
@@ -78,101 +102,76 @@
 
                     docActions.Add(document, actions);
                 }
-
-                if (docActions.Count == 0)
-                {
-                    return null;
-                }
-
-                return CodeAction.Create(docActions.First().Value.First().Title, c => FixDocumentsAsync(fixAllContext.Solution, docActions, c));
             }
 
-            if (fixAllContext.Scope == FixAllScope.Solution)
+            if (docActions.Count == 0)
             {
-                var docActions = new Dictionary<Document, ImmutableArray<CodeAction>>();
-                foreach (var project in fixAllContext.Solution.Projects)
-                {
-                    foreach (var document in project.Documents)
-                    {
-                        var actions = await GetDocumentEditorActionsAsync(fixAllContext, document).ConfigureAwait(false);
-                        if (actions.Length == 0)
-                        {
-                            continue;
-                        }
-
-                        docActions.Add(document, actions);
-                    }
-                }
-
-                if (docActions.Count == 0)
-                {
-                    return null;
-                }
-
-                return CodeAction.Create(docActions.First().Value.First().Title, c => FixDocumentsAsync(fixAllContext.Solution, docActions, c));
+                return null;
             }
 
-            return null;
+            return CodeAction.Create(docActions.First().Value.First().Title, c => FixDocumentsAsync(fixAllContext.Solution, docActions, c));
         }
 
-        private static async Task<ImmutableArray<CodeAction>> GetDocumentEditorActionsAsync(FixAllContext fixAllContext, Document document)
-        {
-            var diagnostics = await fixAllContext.GetDocumentDiagnosticsAsync(document)
-                                                 .ConfigureAwait(false);
-            var actions = new List<CodeAction>();
-            foreach (var diagnostic in diagnostics)
-            {
-                var codeFixContext = new CodeFixContext(
-                    document,
-                    diagnostic,
-                    (a, _) =>
-                    {
-                        if (a.EquivalenceKey == fixAllContext.CodeActionEquivalenceKey)
-                        {
-                            actions.Add(a);
-                        }
-                    },
-                    fixAllContext.CancellationToken);
-                await fixAllContext.CodeFixProvider.RegisterCodeFixesAsync(codeFixContext)
-                                   .ConfigureAwait(false);
-            }
+        return null;
+    }
 
-            return actions.ToImmutableArray();
-        }
-
-        private static async Task<Document> FixDocumentAsync(Document document, ImmutableArray<CodeAction> actions, CancellationToken cancellationToken)
-        {
-            var editor = await DocumentEditor.CreateAsync(document, cancellationToken)
+    private static async Task<ImmutableArray<CodeAction>> GetDocumentEditorActionsAsync(FixAllContext fixAllContext, Document document)
+    {
+        var diagnostics = await fixAllContext.GetDocumentDiagnosticsAsync(document)
                                              .ConfigureAwait(false);
-            foreach (var action in actions)
-            {
-                switch (action)
-                {
-                    case DocumentEditorAction docAction:
-                        docAction.Action(editor, cancellationToken);
-                        break;
-                    case AsyncDocumentEditorAction docAction:
-                        await docAction.Action(editor, cancellationToken).ConfigureAwait(false);
-                        break;
-                }
-            }
-
-            return editor.GetChangedDocument();
-        }
-
-        private static async Task<Solution> FixDocumentsAsync(Solution solution, Dictionary<Document, ImmutableArray<CodeAction>> docActions, CancellationToken cancellationToken)
+        var actions = new List<CodeAction>();
+        foreach (var diagnostic in diagnostics)
         {
-            foreach (var docAction in docActions)
-            {
-                var document = await FixDocumentAsync(docAction.Key, docAction.Value, cancellationToken).ConfigureAwait(false);
-                solution = solution.WithDocumentSyntaxRoot(
-                    document.Id,
-#pragma warning disable CS8604 // Possible null reference argument.
-                    await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false));
-#pragma warning restore CS8604 // Possible null reference argument.
-            }
-
-            return solution;
+            var codeFixContext = new CodeFixContext(
+                document,
+                diagnostic,
+                (a, _) =>
+                {
+                    if (a.EquivalenceKey == fixAllContext.CodeActionEquivalenceKey)
+                    {
+                        actions.Add(a);
+                    }
+                },
+                fixAllContext.CancellationToken);
+            await fixAllContext.CodeFixProvider.RegisterCodeFixesAsync(codeFixContext)
+                               .ConfigureAwait(false);
         }
+
+        return actions.ToImmutableArray();
+    }
+
+    private static async Task<Document> FixDocumentAsync(Document document, ImmutableArray<CodeAction> actions, CancellationToken cancellationToken)
+    {
+        var editor = await DocumentEditor.CreateAsync(document, cancellationToken)
+                                         .ConfigureAwait(false);
+        foreach (var action in actions)
+        {
+            switch (action)
+            {
+                case DocumentEditorAction docAction:
+                    docAction.Action(editor, cancellationToken);
+                    break;
+                case AsyncDocumentEditorAction docAction:
+                    await docAction.Action(editor, cancellationToken).ConfigureAwait(false);
+                    break;
+            }
+        }
+
+        return editor.GetChangedDocument();
+    }
+
+    private static async Task<Solution> FixDocumentsAsync(Solution solution, Dictionary<Document, ImmutableArray<CodeAction>> docActions, CancellationToken cancellationToken)
+    {
+        foreach (var docAction in docActions)
+        {
+            var document = await FixDocumentAsync(docAction.Key, docAction.Value, cancellationToken).ConfigureAwait(false);
+            solution = solution.WithDocumentSyntaxRoot(
+                document.Id,
+#pragma warning disable CS8604 // Possible null reference argument.
+                await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false));
+#pragma warning restore CS8604 // Possible null reference argument.
+        }
+
+        return solution;
     }
 }

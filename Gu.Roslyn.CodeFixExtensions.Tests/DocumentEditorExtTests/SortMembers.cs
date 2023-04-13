@@ -1,40 +1,40 @@
-namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests
-{
-    using System.Linq;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Editing;
-    using NUnit.Framework;
+namespace Gu.Roslyn.CodeFixExtensions.Tests.DocumentEditorExtTests;
 
-    public static class SortMembers
+using System.Linq;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
+using NUnit.Framework;
+
+public static class SortMembers
+{
+    [Test]
+    public static void EmptyClass()
     {
-        [Test]
-        public static void EmptyClass()
-        {
-            var code = @"
+        var code = @"
 namespace N
 {
     class C
     {
     }
 }";
-            var editor = CreateDocumentEditor(code);
+        var editor = CreateDocumentEditor(code);
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
     {
     }
 }";
-            _ = editor.SortMembers(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.SortMembers(editor.OriginalRoot.Find<ClassDeclarationSyntax>("class C"));
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void ClassWithMembers()
-        {
-            var code = @"
+    [Test]
+    public static void ClassWithMembers()
+    {
+        var code = @"
 namespace N
 {
     using System;
@@ -121,9 +121,9 @@ namespace N
         public int P16 { get; set; }
     }
 }";
-            var editor = CreateDocumentEditor(code);
+        var editor = CreateDocumentEditor(code);
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     using System;
@@ -222,14 +222,14 @@ namespace N
         class C2 { }
     }
 }";
-            _ = editor.SortMembers(editor.OriginalRoot.Find<ClassDeclarationSyntax>("public class WithMembers"));
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        _ = editor.SortMembers(editor.OriginalRoot.Find<ClassDeclarationSyntax>("public class WithMembers"));
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void InternalPropertyBeforePublic()
-        {
-            var code = @"
+    [Test]
+    public static void InternalPropertyBeforePublic()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -239,10 +239,10 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -252,13 +252,13 @@ namespace N
         internal int P1 { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        [Test]
-        public static void InternalPropertyBeforePublicWithComments()
-        {
-            var code = @"
+    [Test]
+    public static void InternalPropertyBeforePublicWithComments()
+    {
+        var code = @"
 namespace N
 {
     class C
@@ -270,10 +270,10 @@ namespace N
         public int P2 { get; set; }
     }
 }";
-            var editor = CreateDocumentEditor(code);
-            _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
+        var editor = CreateDocumentEditor(code);
+        _ = editor.MoveAfter(editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P1"), editor.OriginalRoot.Find<PropertyDeclarationSyntax>("P2"));
 
-            var expected = @"
+        var expected = @"
 namespace N
 {
     class C
@@ -285,13 +285,12 @@ namespace N
         internal int P1 { get; set; }
     }
 }";
-            CodeAssert.AreEqual(expected, editor.GetChangedDocument());
-        }
+        CodeAssert.AreEqual(expected, editor.GetChangedDocument());
+    }
 
-        private static DocumentEditor CreateDocumentEditor(string code)
-        {
-            var sln = CodeFactory.CreateSolution(code);
-            return DocumentEditor.CreateAsync(sln.Projects.Single().Documents.Single()).Result;
-        }
+    private static DocumentEditor CreateDocumentEditor(string code)
+    {
+        var sln = CodeFactory.CreateSolution(code);
+        return DocumentEditor.CreateAsync(sln.Projects.Single().Documents.Single()).Result;
     }
 }

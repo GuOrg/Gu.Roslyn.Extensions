@@ -1,49 +1,48 @@
-namespace Gu.Roslyn.AnalyzerExtensions
+namespace Gu.Roslyn.AnalyzerExtensions;
+
+using System;
+using Microsoft.CodeAnalysis;
+
+/// <summary>
+/// Helpers for <see cref="Accessibility"/>.
+/// </summary>
+public static class AccessibilityExt
 {
-    using System;
-    using Microsoft.CodeAnalysis;
+    /// <summary>
+    /// Check if <paramref name="accessibility"/> is either of <paramref name="x"/> or <paramref name="y"/>.
+    /// </summary>
+    /// <param name="accessibility">The <see cref="Accessibility"/>.</param>
+    /// <param name="x">The first kind.</param>
+    /// <param name="y">The other kind.</param>
+    /// <returns>True if <paramref name="accessibility"/> is either of <paramref name="x"/> or <paramref name="y"/>. </returns>
+    public static bool IsEither(this Accessibility accessibility, Accessibility x, Accessibility y) => accessibility == x || accessibility == y;
 
     /// <summary>
-    /// Helpers for <see cref="Accessibility"/>.
+    /// Check if <paramref name="accessibility"/> is either of <paramref name="x"/> or <paramref name="y"/> or <paramref name="z"/>.
     /// </summary>
-    public static class AccessibilityExt
+    /// <param name="accessibility">The <see cref="Accessibility"/>.</param>
+    /// <param name="x">The first kind.</param>
+    /// <param name="y">The other kind.</param>
+    /// <param name="z">The third kind.</param>
+    /// <returns>True if <paramref name="accessibility"/> is either of <paramref name="x"/> or <paramref name="y"/>. </returns>
+    public static bool IsEither(this Accessibility accessibility, Accessibility x, Accessibility y, Accessibility z) => accessibility == x || accessibility == y || accessibility == z;
+
+    /// <summary>
+    /// Return the string used in code for representing <paramref name="accessibility"/>.
+    /// </summary>
+    /// <param name="accessibility">The <see cref="Accessibility"/>.</param>
+    /// <returns>The string used in code for representing <paramref name="accessibility"/>.</returns>
+    public static string ToCodeString(this Accessibility accessibility)
     {
-        /// <summary>
-        /// Check if <paramref name="accessibility"/> is either of <paramref name="x"/> or <paramref name="y"/>.
-        /// </summary>
-        /// <param name="accessibility">The <see cref="Accessibility"/>.</param>
-        /// <param name="x">The first kind.</param>
-        /// <param name="y">The other kind.</param>
-        /// <returns>True if <paramref name="accessibility"/> is either of <paramref name="x"/> or <paramref name="y"/>. </returns>
-        public static bool IsEither(this Accessibility accessibility, Accessibility x, Accessibility y) => accessibility == x || accessibility == y;
-
-        /// <summary>
-        /// Check if <paramref name="accessibility"/> is either of <paramref name="x"/> or <paramref name="y"/> or <paramref name="z"/>.
-        /// </summary>
-        /// <param name="accessibility">The <see cref="Accessibility"/>.</param>
-        /// <param name="x">The first kind.</param>
-        /// <param name="y">The other kind.</param>
-        /// <param name="z">The third kind.</param>
-        /// <returns>True if <paramref name="accessibility"/> is either of <paramref name="x"/> or <paramref name="y"/>. </returns>
-        public static bool IsEither(this Accessibility accessibility, Accessibility x, Accessibility y, Accessibility z) => accessibility == x || accessibility == y || accessibility == z;
-
-        /// <summary>
-        /// Return the string used in code for representing <paramref name="accessibility"/>.
-        /// </summary>
-        /// <param name="accessibility">The <see cref="Accessibility"/>.</param>
-        /// <returns>The string used in code for representing <paramref name="accessibility"/>.</returns>
-        public static string ToCodeString(this Accessibility accessibility)
+        return accessibility switch
         {
-            return accessibility switch
-            {
-                Accessibility.Private => "private",
-                Accessibility.ProtectedAndInternal => "private protected",
-                Accessibility.Protected => "protected",
-                Accessibility.Internal => "internal",
-                Accessibility.ProtectedOrInternal => "internal protected",
-                Accessibility.Public => "public",
-                _ => throw new ArgumentOutOfRangeException(nameof(accessibility), accessibility, null),
-            };
-        }
+            Accessibility.Private => "private",
+            Accessibility.ProtectedAndInternal => "private protected",
+            Accessibility.Protected => "protected",
+            Accessibility.Internal => "internal",
+            Accessibility.ProtectedOrInternal => "internal protected",
+            Accessibility.Public => "public",
+            _ => throw new ArgumentOutOfRangeException(nameof(accessibility), accessibility, null),
+        };
     }
 }

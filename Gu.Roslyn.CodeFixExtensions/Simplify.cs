@@ -1,23 +1,22 @@
-namespace Gu.Roslyn.CodeFixExtensions
-{
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
+namespace Gu.Roslyn.CodeFixExtensions;
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+/// <summary>
+/// Helper for simplifying qualified type names.
+/// </summary>
+public static class Simplify
+{
     /// <summary>
-    /// Helper for simplifying qualified type names.
+    /// Walks the node and adds Simplifier.Annotation to all <see cref="QualifiedNameSyntax"/>.
     /// </summary>
-    public static class Simplify
+    /// <typeparam name="T">The type of the node.</typeparam>
+    /// <param name="node">The node.</param>
+    /// <returns>The node with simplifier annotations.</returns>
+    public static T WithSimplifiedNames<T>(this T node)
+        where T : SyntaxNode
     {
-        /// <summary>
-        /// Walks the node and adds Simplifier.Annotation to all <see cref="QualifiedNameSyntax"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the node.</typeparam>
-        /// <param name="node">The node.</param>
-        /// <returns>The node with simplifier annotations.</returns>
-        public static T WithSimplifiedNames<T>(this T node)
-            where T : SyntaxNode
-        {
-            return (T)SimplifyNamesRewriter.Simplify(node);
-        }
+        return (T)SimplifyNamesRewriter.Simplify(node);
     }
 }

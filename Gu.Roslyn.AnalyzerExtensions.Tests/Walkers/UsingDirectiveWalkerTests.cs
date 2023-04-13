@@ -1,16 +1,16 @@
-namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers
-{
-    using System.Linq;
-    using System.Threading;
-    using Microsoft.CodeAnalysis.CSharp;
-    using NUnit.Framework;
+namespace Gu.Roslyn.AnalyzerExtensions.Tests.Walkers;
 
-    public static class UsingDirectiveWalkerTests
+using System.Linq;
+using System.Threading;
+using Microsoft.CodeAnalysis.CSharp;
+using NUnit.Framework;
+
+public static class UsingDirectiveWalkerTests
+{
+    [Test]
+    public static void Borrow()
     {
-        [Test]
-        public static void Borrow()
-        {
-            var tree = CSharpSyntaxTree.ParseText(@"
+        var tree = CSharpSyntaxTree.ParseText(@"
 namespace N
 {
     using System;
@@ -24,16 +24,15 @@ namespace N
         }
     }
 }");
-            var expected = new[] { "using System;", "using static NUnit.Framework.Assert;" };
-            using (var walker = UsingDirectiveWalker.Borrow(tree))
-            {
-                CollectionAssert.AreEqual(expected, walker.UsingDirectives.Select(x => x.ToString()));
-            }
+        var expected = new[] { "using System;", "using static NUnit.Framework.Assert;" };
+        using (var walker = UsingDirectiveWalker.Borrow(tree))
+        {
+            CollectionAssert.AreEqual(expected, walker.UsingDirectives.Select(x => x.ToString()));
+        }
 
-            using (var walker = UsingDirectiveWalker.Borrow(tree.GetRoot(CancellationToken.None)))
-            {
-                CollectionAssert.AreEqual(expected, walker.UsingDirectives.Select(x => x.ToString()));
-            }
+        using (var walker = UsingDirectiveWalker.Borrow(tree.GetRoot(CancellationToken.None)))
+        {
+            CollectionAssert.AreEqual(expected, walker.UsingDirectives.Select(x => x.ToString()));
         }
     }
 }

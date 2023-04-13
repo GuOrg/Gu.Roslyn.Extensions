@@ -1,21 +1,21 @@
-﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers
+﻿namespace Gu.Roslyn.AnalyzerExtensions.Tests.StyleCopComparers;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
+using Gu.Roslyn.Asserts;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NUnit.Framework;
+
+public static class PropertyDeclarationComparerTests
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
-    using Gu.Roslyn.Asserts;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using NUnit.Framework;
+    private static readonly FieldInfo PositionField = typeof(SyntaxNode).GetField("<Position>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
-    public static class PropertyDeclarationComparerTests
-    {
-        private static readonly FieldInfo PositionField = typeof(SyntaxNode).GetField("<Position>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
-
-        private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> TestCaseSource = CreateTestCases(
+        @"
 namespace N
 {
     public class C : IC
@@ -80,10 +80,10 @@ namespace N
         object PublicGetSet { get; set; }
     }
 }",
-            stripLines: false);
+        stripLines: false);
 
-        private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(
-            @"
+    private static readonly IReadOnlyList<TestCaseData> InitializedSource = CreateTestCases(
+        @"
 namespace N
 {
     public class C : IC
@@ -95,83 +95,82 @@ namespace N
         public static int Static3 => Static1;
     }
 }",
-            stripLines: true);
+        stripLines: true);
 
-        [TestCaseSource(nameof(TestCaseSource))]
-        public static void Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+    [TestCaseSource(nameof(TestCaseSource))]
+    public static void Compare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0, PropertyDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0, PropertyDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCaseSource(nameof(TestCaseSource))]
+    public static void MemberDeclarationComparerCompare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
+    }
+
+    [TestCase("public int Value { get; }", "public int Value => 1;")]
+    [TestCase("public int Value => 1;", "public int Value { get; set; }")]
+    [TestCase("public int Value { get; private set; }", "public int Value { get; set; }")]
+    public static void NoSpan(string code1, string code2)
+    {
+        var x = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code1).Members.Single();
+        var y = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code2).Members.Single();
+        Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
+    }
+
+    [TestCaseSource(nameof(InitializedSource))]
+    public static void InitializedWithOther(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
+    {
+        Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  PropertyDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  PropertyDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  PropertyDeclarationComparer.Compare(y, y));
+
+        Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
+        Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
+        Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
+    }
+
+    public static TestCaseData[] CreateTestCases(string code, bool stripLines)
+    {
+        var tree = CSharpSyntaxTree.ParseText(code);
+
+        return All().Select(x =>
         {
-            Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, PropertyDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, PropertyDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCaseSource(nameof(TestCaseSource))]
-        public static void MemberDeclarationComparerCompare(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0, MemberDeclarationComparer.Compare(y, y));
-        }
-
-        [TestCase("public int Value { get; }", "public int Value => 1;")]
-        [TestCase("public int Value => 1;", "public int Value { get; set; }")]
-        [TestCase("public int Value { get; private set; }", "public int Value { get; set; }")]
-        public static void NoSpan(string code1, string code2)
-        {
-            var x = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code1).Members.Single();
-            var y = (PropertyDeclarationSyntax)SyntaxFactory.ParseCompilationUnit(code2).Members.Single();
-            Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1, PropertyDeclarationComparer.Compare(y, x));
-        }
-
-        [TestCaseSource(nameof(InitializedSource))]
-        public static void InitializedWithOther(PropertyDeclarationSyntax x, PropertyDeclarationSyntax y)
-        {
-            Assert.AreEqual(-1, PropertyDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  PropertyDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  PropertyDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  PropertyDeclarationComparer.Compare(y, y));
-
-            Assert.AreEqual(-1, MemberDeclarationComparer.Compare(x, y));
-            Assert.AreEqual(1,  MemberDeclarationComparer.Compare(y, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(x, x));
-            Assert.AreEqual(0,  MemberDeclarationComparer.Compare(y, y));
-        }
-
-        public static TestCaseData[] CreateTestCases(string code, bool stripLines)
-        {
-            var tree = CSharpSyntaxTree.ParseText(code);
-
-            return All().Select(x =>
+            if (stripLines)
             {
-                if (stripLines)
-                {
-                    PositionField!.SetValue(x.Item1, 1);
-                    PositionField.SetValue(x.Item2, 1);
-                }
+                PositionField!.SetValue(x.Item1, 1);
+                PositionField.SetValue(x.Item2, 1);
+            }
 
-                return new TestCaseData(x.Item1, x.Item2);
-            }).ToArray();
+            return new TestCaseData(x.Item1, x.Item2);
+        }).ToArray();
 
-            List<(PropertyDeclarationSyntax, PropertyDeclarationSyntax)> All()
+        List<(PropertyDeclarationSyntax, PropertyDeclarationSyntax)> All()
+        {
+            var pairs = new List<(PropertyDeclarationSyntax, PropertyDeclarationSyntax)>();
+            var c = tree.FindClassDeclaration("C");
+            foreach (var member1 in c.Members.OfType<PropertyDeclarationSyntax>())
             {
-                var pairs = new List<(PropertyDeclarationSyntax, PropertyDeclarationSyntax)>();
-                var c = tree.FindClassDeclaration("C");
-                foreach (var member1 in c.Members.OfType<PropertyDeclarationSyntax>())
+                foreach (var member2 in c.Members.OfType<PropertyDeclarationSyntax>())
                 {
-                    foreach (var member2 in c.Members.OfType<PropertyDeclarationSyntax>())
+                    if (member1.SpanStart < member2.SpanStart)
                     {
-                        if (member1.SpanStart < member2.SpanStart)
-                        {
-                            pairs.Add((member1, member2));
-                        }
+                        pairs.Add((member1, member2));
                     }
                 }
-
-                return pairs;
             }
+
+            return pairs;
         }
     }
 }
