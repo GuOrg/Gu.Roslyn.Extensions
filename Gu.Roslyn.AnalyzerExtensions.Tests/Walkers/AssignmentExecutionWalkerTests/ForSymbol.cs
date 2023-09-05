@@ -85,10 +85,13 @@ namespace N
         }
     }
 
-    [TestCase(SearchScope.Member)]
-    [TestCase(SearchScope.Instance)]
-    [TestCase(SearchScope.Recursive)]
-    public static void FieldPrivateCtorCalledByInitializer(SearchScope scope)
+    [TestCase("new C()", SearchScope.Member)]
+    [TestCase("new  ()", SearchScope.Member)]
+    [TestCase("new C()", SearchScope.Instance)]
+    [TestCase("new  ()", SearchScope.Instance)]
+    [TestCase("new C()", SearchScope.Recursive)]
+    [TestCase("new  ()", SearchScope.Recursive)]
+    public static void FieldPrivateCtorCalledByInitializer(string objectCreation, SearchScope scope)
     {
         var code = @"
 namespace N
@@ -103,7 +106,7 @@ namespace N
             this.value = 1;
         }
     }
-}";
+}".AssertReplace("new C()", objectCreation);
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
         var semanticModel = compilation.GetSemanticModel(syntaxTree);

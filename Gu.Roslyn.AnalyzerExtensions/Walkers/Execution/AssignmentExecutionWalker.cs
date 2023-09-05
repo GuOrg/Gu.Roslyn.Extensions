@@ -336,8 +336,8 @@ public sealed class AssignmentExecutionWalker : ExecutionWalker<AssignmentExecut
                 return IsMatch(symbol, left, semanticModel, cancellationToken);
             case CastExpressionSyntax { Expression: { } castee }:
                 return IsMatch(symbol, castee, semanticModel, cancellationToken);
-            case ObjectCreationExpressionSyntax { ArgumentList.Arguments: { } arguments }:
-                foreach (var argument in arguments)
+            case BaseObjectCreationExpressionSyntax { ArgumentList.Arguments: { } args }:
+                foreach (var argument in args)
                 {
                     if (IsMatch(symbol, argument.Expression, semanticModel, cancellationToken))
                     {

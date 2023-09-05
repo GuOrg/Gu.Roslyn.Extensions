@@ -96,11 +96,11 @@ public static partial class SemanticModelExt
     /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
     /// </summary>
     /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-    /// <param name="node">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+    /// <param name="node">The <see cref="BaseObjectCreationExpressionSyntax"/>.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
     /// <param name="symbol">The symbol if found.</param>
     /// <returns>True if a symbol was found.</returns>
-    public static bool TryGetSymbol(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, CancellationToken cancellationToken, [NotNullWhen(true)] out IMethodSymbol? symbol)
+    public static bool TryGetSymbol(this SemanticModel semanticModel, BaseObjectCreationExpressionSyntax node, CancellationToken cancellationToken, [NotNullWhen(true)] out IMethodSymbol? symbol)
     {
         if (semanticModel is null)
         {
@@ -121,12 +121,12 @@ public static partial class SemanticModelExt
     /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
     /// </summary>
     /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-    /// <param name="node">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+    /// <param name="node">The <see cref="BaseObjectCreationExpressionSyntax"/>.</param>
     /// <param name="expected">The expected method.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
     /// <param name="symbol">The symbol if found.</param>
     /// <returns>True if a symbol was found.</returns>
-    public static bool TryGetSymbol(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)] out IMethodSymbol? symbol)
+    public static bool TryGetSymbol(this SemanticModel semanticModel, BaseObjectCreationExpressionSyntax node, QualifiedType expected, CancellationToken cancellationToken, [NotNullWhen(true)] out IMethodSymbol? symbol)
     {
         if (semanticModel is null)
         {
@@ -143,7 +143,7 @@ public static partial class SemanticModelExt
             throw new System.ArgumentNullException(nameof(node));
         }
 
-        if (node.Type is SimpleNameSyntax typeName &&
+        if (node is ObjectCreationExpressionSyntax { Type: SimpleNameSyntax typeName } &&
             (typeName.Identifier.ValueText == expected.Type ||
              AliasWalker.TryGet(node.SyntaxTree, typeName.Identifier.ValueText, out _)))
         {
@@ -152,8 +152,15 @@ public static partial class SemanticModelExt
                    symbol.ContainingType == expected;
         }
 
-        if (node.Type is QualifiedNameSyntax { Right: { } right } &&
+        if (node is ObjectCreationExpressionSyntax { Type: QualifiedNameSyntax { Right: { } right } } &&
             right.Identifier.ValueText == expected.Type)
+        {
+            symbol = semanticModel.GetSymbolSafe(node, cancellationToken);
+            return symbol is { } &&
+                   symbol.ContainingType == expected;
+        }
+
+        if (node is ImplicitObjectCreationExpressionSyntax)
         {
             symbol = semanticModel.GetSymbolSafe(node, cancellationToken);
             return symbol is { } &&
@@ -312,10 +319,10 @@ public static partial class SemanticModelExt
     /// Gets the semantic model for the tree if the node is not in the tree corresponding to <paramref name="semanticModel"/>.
     /// </summary>
     /// <param name="semanticModel">The <see cref="SemanticModel"/>.</param>
-    /// <param name="node">The <see cref="ObjectCreationExpressionSyntax"/>.</param>
+    /// <param name="node">The <see cref="BaseObjectCreationExpressionSyntax"/>.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
     /// <returns>An <see cref="ISymbol"/> or null.</returns>
-    public static IMethodSymbol? GetSymbolSafe(this SemanticModel semanticModel, ObjectCreationExpressionSyntax node, CancellationToken cancellationToken)
+    public static IMethodSymbol? GetSymbolSafe(this SemanticModel semanticModel, BaseObjectCreationExpressionSyntax node, CancellationToken cancellationToken)
     {
         if (semanticModel is null)
         {
