@@ -151,6 +151,57 @@ public abstract class ExecutionWalker<T> : PooledWalker<T>
     }
 
     /// <inheritdoc />
+    public override void VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
+    {
+        if (node is null)
+        {
+            throw new ArgumentNullException(nameof(node));
+        }
+
+        if (this.SearchScope == SearchScope.Member)
+        {
+            base.VisitImplicitObjectCreationExpression(node);
+            return;
+        }
+
+        if (this.Recursion.TargetType(node) is { Symbol: { } containingType, Declaration: { } containingTypeDeclaration } &&
+            ShouldVisit(containingType))
+        {
+            using (var walker = TypeDeclarationWalker.Borrow(containingTypeDeclaration))
+            {
+                foreach (var memberInitializer in walker.Initializers)
+                {
+                    this.Visit(memberInitializer);
+                }
+            }
+
+            if (node.ArgumentList is { } argumentList)
+            {
+                this.VisitArgumentList(argumentList);
+            }
+
+            if (this.Recursion.Target(node) is { Symbol: { }, Declaration: { } declaration })
+            {
+                this.Visit(declaration);
+            }
+
+            if (node.Initializer is { } objectInitializer)
+            {
+                this.VisitInitializerExpression(objectInitializer);
+            }
+        }
+
+        bool ShouldVisit(ITypeSymbol type)
+        {
+            return this.SearchScope switch
+            {
+                SearchScope.Recursive => true,
+                _ => TypeSymbolComparer.Equal(type, this.ContainingType),
+            };
+        }
+    }
+
+    /// <inheritdoc />
     public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
         base.VisitInvocationExpression(node);

@@ -9,13 +9,21 @@ using NUnit.Framework;
 public static class IMethodSymbolExtTests
 {
     [TestCase("new C(1, 2)", "1", "n")]
+    [TestCase("new  (1, 2)", "1", "n")]
     [TestCase("new C(1, m: 2)", "1", "n")]
+    [TestCase("new  (1, m: 2)", "1", "n")]
     [TestCase("new C(n: 1, m: 2)", "n: 1", "n")]
+    [TestCase("new  (n: 1, m: 2)", "n: 1", "n")]
     [TestCase("new C(m: 2, n: 1)", "n: 1", "n")]
+    [TestCase("new  (m: 2, n: 1)", "n: 1", "n")]
     [TestCase("new C(1, 2)", "2", "m")]
+    [TestCase("new  (1, 2)", "2", "m")]
     [TestCase("new C(1, m: 2)", "m: 2", "m")]
+    [TestCase("new  (1, m: 2)", "m: 2", "m")]
     [TestCase("new C(n: 1, m: 2)", "m: 2", "m")]
+    [TestCase("new  (n: 1, m: 2)", "m: 2", "m")]
     [TestCase("new C(m: 2, n: 1)", "m: 2", "m")]
+    [TestCase("new  (m: 2, n: 1)", "m: 2", "m")]
     public static void TryFindParameter(string objectCreation, string arg, string expected)
     {
         var code = @"
@@ -39,11 +47,17 @@ namespace N
     }
 
     [TestCase("new C(1)", "1", "n")]
+    [TestCase("new  (1)", "1", "n")]
     [TestCase("new C(1, 2)", "1", "n")]
+    [TestCase("new  (1, 2)", "1", "n")]
     [TestCase("new C(1, 2, 3)", "1", "n")]
+    [TestCase("new  (1, 2, 3)", "1", "n")]
     [TestCase("new C(1, 2)", "2", "ms")]
+    [TestCase("new  (1, 2)", "2", "ms")]
     [TestCase("new C(1, 2, 3)", "2", "ms")]
+    [TestCase("new  (1, 2, 3)", "2", "ms")]
     [TestCase("new C(1, 2, 3)", "3", "ms")]
+    [TestCase("new  (1, 2, 3)", "3", "ms")]
     public static void TryFindParameterWhenParams(string objectCreation, string arg, string expected)
     {
         var code = @"

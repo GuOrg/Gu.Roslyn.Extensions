@@ -133,10 +133,13 @@ namespace N
         Assert.AreEqual("this.value = temp", walker.Assignments.Single().ToString());
     }
 
-    [TestCase(SearchScope.Member)]
-    [TestCase(SearchScope.Instance)]
-    [TestCase(SearchScope.Recursive)]
-    public static void FieldCtorArgInNested(SearchScope scope)
+    [TestCase("new StreamReader(stream)", SearchScope.Member)]
+    [TestCase("new             (stream)", SearchScope.Member)]
+    [TestCase("new StreamReader(stream)", SearchScope.Instance)]
+    [TestCase("new             (stream)", SearchScope.Instance)]
+    [TestCase("new StreamReader(stream)", SearchScope.Recursive)]
+    [TestCase("new             (stream)", SearchScope.Recursive)]
+    public static void FieldCtorArgInNested(string objectCreation, SearchScope scope)
     {
         var code = @"
 namespace N
@@ -152,7 +155,7 @@ namespace N
             this.reader = new StreamReader(stream);
         }
     }
-}";
+}".AssertReplace("new StreamReader(stream)", objectCreation);
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
         var semanticModel = compilation.GetSemanticModel(syntaxTree);
@@ -160,9 +163,9 @@ namespace N
         var ctor = syntaxTree.FindConstructorDeclaration("C(Stream stream)");
         var symbol = semanticModel.GetDeclaredSymbol(value, CancellationToken.None);
         Assert.AreEqual(true, AssignmentExecutionWalker.FirstWith(symbol, ctor, scope, semanticModel, CancellationToken.None, out var result));
-        Assert.AreEqual("this.reader = new StreamReader(stream)", result.ToString());
+        Assert.AreEqual("this.reader = new StreamReader(stream)".AssertReplace("new StreamReader(stream)", objectCreation), result.ToString());
         using var walker = AssignmentExecutionWalker.With(symbol, ctor, scope, semanticModel, CancellationToken.None);
-        Assert.AreEqual("this.reader = new StreamReader(stream)", walker.Assignments.Single().ToString());
+        Assert.AreEqual("this.reader = new StreamReader(stream)".AssertReplace("new StreamReader(stream)", objectCreation), walker.Assignments.Single().ToString());
     }
 
     [TestCase(SearchScope.Member)]

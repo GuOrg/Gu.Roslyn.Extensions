@@ -8,11 +8,15 @@ using NUnit.Framework;
 
 public static class IdentifierNameExecutionWalkerTests
 {
-    [TestCase(SearchScope.Member, "C")]
-    [TestCase(SearchScope.Instance, "text, C")]
-    [TestCase(SearchScope.Type, "text, C")]
-    [TestCase(SearchScope.Recursive, "text, C")]
-    public static void StaticInitializers(SearchScope scope, string expected)
+    [TestCase("new C()", SearchScope.Member, "C")]
+    [TestCase("new  ()", SearchScope.Member, "")]
+    [TestCase("new C()", SearchScope.Instance, "text, C")]
+    [TestCase("new  ()", SearchScope.Instance, "text")]
+    [TestCase("new C()", SearchScope.Type, "text, C")]
+    [TestCase("new  ()", SearchScope.Type, "text")]
+    [TestCase("new C()", SearchScope.Recursive, "text, C")]
+    [TestCase("new  ()", SearchScope.Recursive, "text")]
+    public static void StaticInitializers(string objectCreation, SearchScope scope, string expected)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -25,19 +29,23 @@ namespace N
         
         public string Text { get; set; } = text;
     }
-}");
+}".AssertReplace("new C()", objectCreation));
         var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
         var semanticModel = compilation.GetSemanticModel(syntaxTree);
-        var node = syntaxTree.FindExpression("new C()");
+        var node = syntaxTree.FindExpression(objectCreation);
         using var walker = IdentifierNameExecutionWalker.Borrow(node, scope, semanticModel, CancellationToken.None);
         Assert.AreEqual(expected, string.Join(", ", walker.IdentifierNames));
     }
 
-    [TestCase(SearchScope.Member, "ValuePropertyKey, DependencyProperty")]
-    [TestCase(SearchScope.Instance, "ValuePropertyKey, DependencyProperty")]
-    [TestCase(SearchScope.Type, "ValuePropertyKey, DependencyProperty")]
-    [TestCase(SearchScope.Recursive, "ValuePropertyKey, DependencyProperty")]
-    public static void DependencyPropertyRegisterReadOnly(SearchScope scope, string expected)
+    [TestCase("new PropertyMetadata(default(int))", SearchScope.Member, "ValuePropertyKey, DependencyProperty")]
+    [TestCase("new                 (default(int))", SearchScope.Member, "ValuePropertyKey, DependencyProperty")]
+    [TestCase("new PropertyMetadata(default(int))", SearchScope.Instance, "ValuePropertyKey, DependencyProperty")]
+    [TestCase("new                 (default(int))", SearchScope.Instance, "ValuePropertyKey, DependencyProperty")]
+    [TestCase("new PropertyMetadata(default(int))", SearchScope.Type, "ValuePropertyKey, DependencyProperty")]
+    [TestCase("new                 (default(int))", SearchScope.Type, "ValuePropertyKey, DependencyProperty")]
+    [TestCase("new PropertyMetadata(default(int))", SearchScope.Recursive, "ValuePropertyKey, DependencyProperty")]
+    [TestCase("new                 (default(int))", SearchScope.Recursive, "ValuePropertyKey, DependencyProperty")]
+    public static void DependencyPropertyRegisterReadOnly(string objectCreation, SearchScope scope, string expected)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(@"
 namespace N
@@ -61,7 +69,7 @@ namespace N
             private set => this.SetValue(ValuePropertyKey, value);
         }
     }
-}");
+}".AssertReplace("new PropertyMetadata(default(int))", objectCreation));
         var compilation = CSharpCompilation.Create("test", new[] { syntaxTree }, Settings.Default.MetadataReferences);
         var semanticModel = compilation.GetSemanticModel(syntaxTree);
         var node = syntaxTree.FindExpression("ValuePropertyKey.DependencyProperty");

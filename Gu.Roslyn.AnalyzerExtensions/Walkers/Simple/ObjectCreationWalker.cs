@@ -10,16 +10,16 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 /// </summary>
 public sealed class ObjectCreationWalker : PooledWalker<ObjectCreationWalker>
 {
-    private readonly List<ObjectCreationExpressionSyntax> objectCreations = new();
+    private readonly List<BaseObjectCreationExpressionSyntax> objectCreations = new();
 
     private ObjectCreationWalker()
     {
     }
 
     /// <summary>
-    /// Gets a collection with the <see cref="ObjectCreationExpressionSyntax"/> found when walking.
+    /// Gets a collection with the <see cref="BaseObjectCreationExpressionSyntax"/> found when walking.
     /// </summary>
-    public IReadOnlyList<ObjectCreationExpressionSyntax> ObjectCreations => this.objectCreations;
+    public IReadOnlyList<BaseObjectCreationExpressionSyntax> ObjectCreations => this.objectCreations;
 
     /// <summary>
     /// Get a walker that has visited <paramref name="node"/>.
@@ -35,11 +35,24 @@ public sealed class ObjectCreationWalker : PooledWalker<ObjectCreationWalker>
         base.VisitObjectCreationExpression(node);
     }
 
+    /// <inheritdoc />
+    public override void VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
+    {
+        this.objectCreations.Add(node);
+        base.VisitImplicitObjectCreationExpression(node);
+    }
+
     /// <summary>
     /// Filters by <paramref name="match"/>.
     /// </summary>
     /// <param name="match">The predicate for finding items to remove.</param>
-    public void RemoveAll(Predicate<ObjectCreationExpressionSyntax> match) => this.objectCreations.RemoveAll(match);
+    public void RemoveAll(Predicate<ObjectCreationExpressionSyntax> match) => this.objectCreations.RemoveAll(s => s is ObjectCreationExpressionSyntax syntax && match(syntax));
+
+    /// <summary>
+    /// Filters by <paramref name="match"/>.
+    /// </summary>
+    /// <param name="match">The predicate for finding items to remove.</param>
+    public void RemoveAll(Predicate<BaseObjectCreationExpressionSyntax> match) => this.objectCreations.RemoveAll(match);
 
     /// <inheritdoc/>
     protected override void Clear()

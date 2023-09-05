@@ -17,6 +17,7 @@ public sealed class Recursion : IDisposable
 {
     private static readonly ConcurrentQueue<Recursion> Cache = new();
     private readonly HashSet<(string?, int, SyntaxNode)> visited = new();
+    private readonly HashSet<(string?, int, SyntaxNode)> visitedForType = new();
 
     private Recursion()
     {
@@ -164,6 +165,48 @@ public sealed class Recursion : IDisposable
     /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
     /// <param name="caller">The invoking method.</param>
     /// <param name="line">Line number in <paramref name="caller"/>.</param>
+    /// <returns>A <see cref="SymbolAndDeclaration{INamedTypeSymbol,TypeDeclarationSyntax}"/>.</returns>
+#pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters - This does not overload any existing signature
+    public Target<ImplicitObjectCreationExpressionSyntax, IMethodSymbol, ConstructorDeclarationSyntax>? Target(ImplicitObjectCreationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+#pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
+    {
+        if (this.visited.Add((caller, line, node)) &&
+            this.SemanticModel.TryGetSymbol(node, this.CancellationToken, out var symbol))
+        {
+            _ = symbol.TrySingleDeclaration(this.CancellationToken, out ConstructorDeclarationSyntax? declaration);
+            return AnalyzerExtensions.Target.Create(node, symbol, declaration);
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Get the target symbol and declaration if exists.
+    /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+    /// </summary>
+    /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+    /// <param name="caller">The invoking method.</param>
+    /// <param name="line">Line number in <paramref name="caller"/>.</param>
+    /// <returns>A <see cref="SymbolAndDeclaration{INamedTypeSymbol,TypeDeclarationSyntax}"/>.</returns>
+    public Target<ImplicitObjectCreationExpressionSyntax, ITypeSymbol, TypeDeclarationSyntax>? TargetType(ImplicitObjectCreationExpressionSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
+    {
+        if (this.visitedForType.Add((caller, line, node)) &&
+            this.SemanticModel.TryGetType(node, this.CancellationToken, out var symbol))
+        {
+            _ = symbol.TrySingleDeclaration(this.CancellationToken, out TypeDeclarationSyntax? declaration);
+            return AnalyzerExtensions.Target.Create(node, symbol, declaration);
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Get the target symbol and declaration if exists.
+    /// Calling this is safe in case of recursion as it only returns a value once for each called for <paramref name="node"/>.
+    /// </summary>
+    /// <param name="node">The invocation that you want to walk the body of the declaration of if it exists.</param>
+    /// <param name="caller">The invoking method.</param>
+    /// <param name="line">Line number in <paramref name="caller"/>.</param>
     /// <returns>A <see cref="SymbolAndDeclaration{IMethodSymbol,ConstructorDeclarationSyntax}"/>.</returns>
     public Target<ConstructorInitializerSyntax, IMethodSymbol, ConstructorDeclarationSyntax>? Target(ConstructorInitializerSyntax node, [CallerMemberName] string? caller = null, [CallerLineNumber] int line = 0)
     {
@@ -266,7 +309,7 @@ public sealed class Recursion : IDisposable
         {
             InvocationExpressionSyntax invocation
             when this.Target(invocation, caller, line) is { } temp
-            => AnalyzerExtensions.Target.Create(temp.Source, (ISymbol)temp.Symbol, (SyntaxNode?)temp.Declaration),
+            => AnalyzerExtensions.Target.Create(temp.Source, temp.Symbol, (SyntaxNode?)temp.Declaration),
             _ => this.Target<ExpressionSyntax, ISymbol, SyntaxNode>(node, caller, line),
         };
     }
@@ -365,6 +408,7 @@ public sealed class Recursion : IDisposable
     public void Clear()
     {
         this.visited.Clear();
+        this.visitedForType.Clear();
         this.ContainingType = null!;
         this.SemanticModel = null!;
         this.CancellationToken = CancellationToken.None;
@@ -378,6 +422,7 @@ public sealed class Recursion : IDisposable
     public void Restart(SemanticModel semanticModel, CancellationToken cancellationToken)
     {
         this.visited.Clear();
+        this.visitedForType.Clear();
         this.SemanticModel = semanticModel ?? throw new ArgumentNullException(nameof(semanticModel));
         this.CancellationToken = cancellationToken;
     }
