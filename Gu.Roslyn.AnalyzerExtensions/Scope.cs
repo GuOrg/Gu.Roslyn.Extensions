@@ -270,7 +270,7 @@ public static class Scope
                 return ExecutedBefore.No;
             }
 
-            if (statement.TryFirstAncestor(out CatchClauseSyntax _))
+            if (statement.TryFirstAncestor<CatchClauseSyntax>(out _))
             {
                 return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
             }
@@ -411,7 +411,7 @@ public static class Scope
             return statement.IsExecutedBefore(otherStatement);
         }
 
-        if (node.TryFindSharedAncestorRecursive(other, out BinaryExpressionSyntax _))
+        if (node.TryFindSharedAncestorRecursive<BinaryExpressionSyntax>(other, out _))
         {
             return node.SpanStart < other.SpanStart ? ExecutedBefore.Yes : ExecutedBefore.No;
         }
