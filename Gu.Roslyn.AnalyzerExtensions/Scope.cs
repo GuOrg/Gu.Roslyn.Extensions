@@ -223,10 +223,10 @@ public static class Scope
         }
 
         if (statement.SpanStart >= other.SpanStart &&
-            (statement.TryFindSharedAncestorRecursive(other, out DoStatementSyntax _) ||
-             statement.TryFindSharedAncestorRecursive(other, out ForStatementSyntax _) ||
-             statement.TryFindSharedAncestorRecursive(other, out ForEachStatementSyntax _) ||
-             statement.TryFindSharedAncestorRecursive(other, out WhileStatementSyntax _)))
+            (statement.TryFindSharedAncestorRecursive<DoStatementSyntax>(other, out _) ||
+             statement.TryFindSharedAncestorRecursive<ForStatementSyntax>(other, out _) ||
+             statement.TryFindSharedAncestorRecursive<ForEachStatementSyntax>(other, out _) ||
+             statement.TryFindSharedAncestorRecursive<WhileStatementSyntax>(other, out _)))
         {
             return ExecutedBefore.Maybe;
         }
@@ -311,16 +311,16 @@ public static class Scope
                     return ExecutedBefore.Yes;
                 }
             }
-            else if (statement.TryFirstAncestor(out CatchClauseSyntax _))
+            else if (statement.TryFirstAncestor<CatchClauseSyntax>(out _))
             {
-                if (other.TryFirstAncestor(out CatchClauseSyntax _))
+                if (other.TryFirstAncestor<CatchClauseSyntax>(out _))
                 {
                     return ExecutedBefore.No;
                 }
 
                 return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
             }
-            else if (other.TryFirstAncestor(out CatchClauseSyntax _))
+            else if (other.TryFirstAncestor<CatchClauseSyntax>(out _))
             {
                 return statement.SpanStart < other.SpanStart ? ExecutedBefore.Maybe : ExecutedBefore.No;
             }
