@@ -193,7 +193,6 @@ public sealed class MemberDeclarationComparer : IComparer<MemberDeclarationSynta
         {
             if (IsEvent(y))
             {
-#pragma warning disable CS8604 // Possible null reference argument. bug in Roslyn
                 result = CompareAccessibility(Accessibility(x), Accessibility(y));
                 if (result != 0)
                 {
@@ -207,7 +206,6 @@ public sealed class MemberDeclarationComparer : IComparer<MemberDeclarationSynta
                 }
 
                 result = CompareSpanStart(x, y);
-#pragma warning restore CS8604 // Possible null reference argument.
                 return true;
             }
 
@@ -224,8 +222,7 @@ public sealed class MemberDeclarationComparer : IComparer<MemberDeclarationSynta
         result = 0;
         return false;
 
-        static bool IsEvent(MemberDeclarationSyntax? candidate) => candidate is EventDeclarationSyntax ||
-                                                                   candidate is EventFieldDeclarationSyntax;
+        static bool IsEvent(MemberDeclarationSyntax? candidate) => candidate is EventDeclarationSyntax or EventFieldDeclarationSyntax;
 
         static Accessibility Accessibility(MemberDeclarationSyntax member)
         {

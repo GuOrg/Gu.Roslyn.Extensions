@@ -41,7 +41,7 @@ public static partial class ISymbolExt
         where T1 : ISymbol
         where T2 : ISymbol
     {
-        return symbol is T1 || symbol is T2;
+        return symbol is T1 or T2;
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public static partial class ISymbolExt
         where T2 : ISymbol
         where T3 : ISymbol
     {
-        return symbol is T1 || symbol is T2 || symbol is T3;
+        return symbol is T1 or T2 or T3;
     }
 
     /// <summary>
