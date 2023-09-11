@@ -224,7 +224,7 @@ public sealed class MemberDeclarationComparer : IComparer<MemberDeclarationSynta
 
         static bool IsEvent(MemberDeclarationSyntax? candidate) => candidate is EventDeclarationSyntax or EventFieldDeclarationSyntax;
 
-        static Accessibility Accessibility(MemberDeclarationSyntax member)
+        static Accessibility Accessibility(MemberDeclarationSyntax? member)
         {
             switch (member)
             {
