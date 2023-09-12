@@ -242,7 +242,7 @@ public sealed class MemberDeclarationComparer : IComparer<MemberDeclarationSynta
             }
         }
 
-        static SyntaxTokenList Modifiers(MemberDeclarationSyntax member)
+        static SyntaxTokenList Modifiers(MemberDeclarationSyntax? member)
         {
             return member switch
             {
