@@ -1,3 +1,6 @@
+#### 0.17.1
+BUGFIX: handle target typed new
+
 #### 0.16.5
 * BUGFIX: Handle SuppressNullableWarningExpression
 
