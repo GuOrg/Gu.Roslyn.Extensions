@@ -109,7 +109,7 @@ public sealed class MemberDeclarationComparer : IComparer<MemberDeclarationSynta
     /// <param name="x">The first modifiers.</param>
     /// <param name="y">The other modifiers.</param>
     /// <returns>A signed integer that indicates if the node is before or after the other in the document.</returns>
-    public static int CompareSpanStart(SyntaxNode x, SyntaxNode y)
+    public static int CompareSpanStart(SyntaxNode? x, SyntaxNode? y)
     {
         if (x is null)
         {
