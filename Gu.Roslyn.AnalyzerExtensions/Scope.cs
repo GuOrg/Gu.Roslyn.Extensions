@@ -264,8 +264,8 @@ public static class Scope
             }
 
             if (statement.Parent is BlockSyntax { Statements: { } statements } &&
-                (statements.TryFirstOfType(out ReturnStatementSyntax _) ||
-                 statements.TryFirstOfType(out ThrowStatementSyntax _)))
+                (statements.TryFirstOfType<StatementSyntax, ReturnStatementSyntax>(out _) ||
+                 statements.TryFirstOfType<StatementSyntax, ThrowStatementSyntax>(out _)))
             {
                 return ExecutedBefore.No;
             }
