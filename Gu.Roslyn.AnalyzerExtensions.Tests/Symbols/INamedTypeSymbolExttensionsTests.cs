@@ -21,6 +21,8 @@ public class INamedTypeSymbolExtensionsTests
     [TestCase(typeof(List<>))]
     [TestCase(typeof(Dictionary<,>))]
     [TestCase(typeof(Nested))]
+    [TestCase(typeof(Action))]
+    [TestCase(typeof(Action<>))]
     public static void FullName(Type type)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(
@@ -48,6 +50,7 @@ namespace N
     [TestCase(typeof(IEnumerable<IEnumerable<Nested>>))]
     [TestCase(typeof(List<int>))]
     [TestCase(typeof(Dictionary<int, string>))]
+    [TestCase(typeof(Action<int>))]
     public void FullNameWithTypeArgs(Type type)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(
