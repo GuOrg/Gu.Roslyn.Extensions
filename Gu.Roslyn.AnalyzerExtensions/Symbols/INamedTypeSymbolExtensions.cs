@@ -36,6 +36,7 @@ public static class INamedTypeSymbolExtensions
                 case SymbolDisplayPartKind.ClassName:
                 case SymbolDisplayPartKind.InterfaceName:
                 case SymbolDisplayPartKind.StructName:
+                case SymbolDisplayPartKind.DelegateName:
                 case SymbolDisplayPartKind.NamespaceName:
                     if (part.Symbol is { } symbol)
                     {
